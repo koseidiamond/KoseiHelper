@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Sprites>
+    <koseiHelper_goomba path="objects/KoseiHelper/Goomba/" start="idle">
+        <Justify x="0.5" y="0.5" />
+        <Anim id="idle" path="idle" delay="0.1" frames="00" />
+		<Loop id="walk" path="walk" delay="0.1" frames="00-01" />
+		
+		<Anim id="wideidle" path="wideidle" delay="0.1" frames="00" />
+		<Loop id="widewalk" path="widewalk" delay="0.1" frames="00-01" />
+		
+		<Anim id="wingedidle" path="wingedidle" delay="0.1" frames="00" />
+		<Loop id="winged" path="winged" delay="0.1" frames="00-01" />
+		
+		<Loop id="widewingedidle" path="widewingedidle" delay="0.1" frames="00-01" />
+		<Loop id="widewinged" path="widewinged" delay="0.1" frames="00-01" />
+		
+    </koseiHelper_goomba>
+	
+	<koseiHelper_maryBlock path="objects/KoseiHelper/MaryBlock/" start="idle">
+		<Justify x="0.5" y="0.5" />
+		<Loop id="idle" path="idle" delay="0.1" frames="00-01" />
+		<Loop id="potted" path="potted" delay="0.1" frames="00" />
+	</koseiHelper_maryBlock>
+	
+	<koseiHelper_boundRefill path="objects/KoseiHelper/Refills/">
+		<Justify x="0.5" y="0.5" />
+		<Loop id="OutBound" path="OutBoundRefill/unbounded" frames="00-04" />
+		<Loop id="InBound" path="InBoundRefill/bounded" frames="00-04" />
+		<Anim id="NoBound" path="OutBoundRefill/bounddisappear" frames="00-05" />
+	</koseiHelper_boundRefill>
+	
+	<koseiHelper_tileRefill path="objects/KoseiHelper/Refills/">
+		<Justify x="0.5" y="0.5" />
+		<Loop id="tiles" path="TileRefill/tiles" frames="00-04" />
+	</koseiHelper_tileRefill>
+</Sprites>

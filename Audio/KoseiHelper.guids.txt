@@ -1,0 +1,3 @@
+{d802eb06-3489-48e9-b0e9-daab511758f5} event:/KoseiHelper/goomba
+{3edaffa9-2a67-4163-abaa-c1ecd21b5f9f} event:/KoseiHelper/mary
+{ba8e885e-d7ef-474b-9ea8-20ba14e4943e} bank:/KoseiHelper

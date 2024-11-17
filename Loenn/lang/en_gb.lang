@@ -1,0 +1,39 @@
+#ENTITIES
+
+# Goomba
+entities.KoseiHelper/Goomba.placements.name.goomba=Goomba
+entities.KoseiHelper/Goomba.placements.description.Goomba=These creatures chase the player and have several customization options.
+entities.KoseiHelper/Goomba.attributes.description.speed=The horizontal speed that the goomba will move at.
+entities.KoseiHelper/Goomba.attributes.description.outline=If the goomba will render with an outline.
+entities.KoseiHelper/Goomba.attributes.description.isWide=If the goomba will be wider than normal.
+entities.KoseiHelper/Goomba.attributes.description.isWinged=If the goomba will have wings.
+entities.KoseiHelper/Goomba.attributes.description.canBeBounced=If the goomba can be killed by landing on its head.
+entities.KoseiHelper/Goomba.attributes.description.spawnMinis=If the goomba can spawn minigoombas.\n(Limited to 10 max)
+entities.KoseiHelper/Goomba.attributes.description.flyAway=If the winged goombas should fly away like strawberries when the player dashes.
+entities.KoseiHelper/Goomba.attributes.description.timeToSpawnMinis=Time that needs to pass after a minigoomba is spawned.
+
+# MaryBlock
+entities.KoseiHelper/MaryBlock.placements.name.maryblock=Mary Block
+entities.KoseiHelper/MaryBlock.placements.description.Mary Block=These blocks bounce the player from both sides, like a spring but with less strength.
+entities.KoseiHelper/MaryBlock.attributes.description.potted=Potted Mary launches the player like puffers/bumpers.
+
+# IRL Controller
+entities.KoseiHelper/IRLController.placements.name.IRLController=IRL Controller
+entities.KoseiHelper/IRLController.placements.description.IRLController=This controllers sets flags for the time of the day and month:\nFor example, if it's 17:00 and November the flags kosei_irlHour17 and kosei_irlMonth11 will be set.\nIt also sets the flags kosei_irlMorning, kosei_irlAfternoon and kosei_irlNight.
+entities.KoseiHelper/IRLController.attributes.description.changesDarknessLevel=If the darkness level should adapt to the irl time.
+
+#Bound Refill
+entities.KoseiHelper/BoundRefill.placements.name.boundRefill=Bound Refill
+entities.KoseiHelper/BoundRefill.placements.description.Bound Refill=OutBound refills allow the player to never transition and be outside of the current room (and force the camera to follow the player).\nInBound refills allow the player to immediately transition to the room they are in ("bounded" again).\nWarning: being too far from a room will make you unable to grab or jump from walls!
+entities.KoseiHelper/BoundRefill.attributes.description.outBound=If this is true, this will be an OutBound refill. These are generally placed inside a room.\nIf it's false, it will be an InBound refill. These are generally placed out of bounds, overlapping with a different room.
+
+#Tile Refill
+entities.KoseiHelper/TileRefill.placements.name.tileRefill=Tile Refill
+entities.KoseiHelper/TileRefill.placements.description.Tile Refill=Tile refills enable or disable foreground tiles on the room.
+entities.KoseiHelper/TileRefill.attributes.description.collidable=If the refill should affect collidability of tiles.
+entities.KoseiHelper/TileRefill.attributes.description.visible=If the refill should affect visibility of tiles.
+entities.KoseiHelper/TileRefill.attributes.description.oneUse=If the refill can respawn.
+
+#TRIGGERS
+triggers.KoseiHelper/ForceThrowTrigger.placements.name.ForceThrowTrigger=Force Throw Trigger
+triggers.KoseiHelper/ForceThrowTrigger.placements.description.Force Throw Trigger=The player is forced to throw the holdable when touching the trigger.
