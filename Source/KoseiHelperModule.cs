@@ -1,6 +1,7 @@
 ﻿using MonoMod.ModInterop;
 using System;
 using MonoMod.Utils;
+using Celeste.Mod.KoseiHelper.Entities;
 
 namespace Celeste.Mod.KoseiHelper;
 
@@ -31,14 +32,17 @@ public class KoseiHelperModule : EverestModule {
     public static class ExtendedVariantImports
     {
         public static Action<string, float, bool> TriggerFloatVariant;
+        public static Action<string, float, bool> TriggerBooleanVariant;
+        public static Action<string, float, bool> TriggerIntegerVariant;
         public static Func<string, object> GetCurrentVariantValue;
     }
 
     public override void Load() {
         typeof(ExtendedVariantImports).ModInterop();
+        TopDownViewController.Load();
     }
 
     public override void Unload() {
-        // TODO: unapply any hooks applied in Load()
+        TopDownViewController.Unload();
     }
 }

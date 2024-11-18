@@ -20,7 +20,6 @@ public class BoundRefill : Entity
     private readonly bool outBound;
     public bool outline;
     public float respawnTimer;
-    private bool hasTransitioned;
 
     public BoundRefill (EntityData data, Vector2 offset) : base(data.Position + offset)
     {

@@ -34,6 +34,9 @@ entities.KoseiHelper/IRLController.placements.name.IRLController=IRL Controller
 entities.KoseiHelper/IRLController.placements.description.IRLController=This controller sets flags for the time of the day and month:\nFor example, if it's 17:00 and November the flags kosei_irlHour17 and kosei_irlMonth11 will be set.\nIt also sets the flags kosei_irlMorning, kosei_irlAfternoon and kosei_irlNight.
 entities.KoseiHelper/IRLController.attributes.description.changesDarknessLevel=If the darkness level should adapt to the irl time.
 
+#Top Down View Controller
+entities.KoseiHelper/TopDownViewController.placements.name.TopDownViewController=Top Down View Controller
+entities.KoseiHelper/TopDownViewController.placements.description.Top Down View Controller=This controller allows the player to move similarly to top-down view RPGs.
 
 # Custom Pause Controller
 entities.KoseiHelper/CustomPauseController.placements.name.CustomPauseController= Custom Pause Controller

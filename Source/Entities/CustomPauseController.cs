@@ -9,7 +9,6 @@ namespace Celeste.Mod.KoseiHelper.Entities;
 public class CustomPauseController : Entity
 {
     private Level level;
-    private LevelExit levelExit;
     public bool canPause = true;
     public bool canRetry = true;
     public bool canSaveAndQuit = true;
