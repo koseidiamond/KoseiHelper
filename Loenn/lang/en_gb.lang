@@ -34,6 +34,16 @@ entities.KoseiHelper/IRLController.placements.name.IRLController=IRL Controller
 entities.KoseiHelper/IRLController.placements.description.IRLController=This controller sets flags for the time of the day and month:\nFor example, if it's 17:00 and November the flags kosei_irlHour17 and kosei_irlMonth11 will be set.\nIt also sets the flags kosei_irlMorning, kosei_irlAfternoon and kosei_irlNight.
 entities.KoseiHelper/IRLController.attributes.description.changesDarknessLevel=If the darkness level should adapt to the irl time.
 
+
+# Custom Pause Controller
+entities.KoseiHelper/CustomPauseController.placements.name.CustomPauseController= Custom Pause Controller
+entities.KoseiHelper/CustomPauseController.placements.description.Custom Pause Controller=This controller can disallow several options regarding the Pause Menu.
+entities.KoseiHelper/CustomPauseController.attributes.description.canPause=If the player should be able to open the Pause Menu.
+entities.KoseiHelper/CustomPauseController.attributes.description.canRetry=If the Retry option should be enabled in the Pause Menu.
+entities.KoseiHelper/CustomPauseController.attributes.description.canSaveAndQuit=If the Save And Quit option should be enabled in the Pause Menu.
+entities.KoseiHelper/CustomPauseController.attributes.description.timerIsStopped=If the timer for the map should stop running while the player is in the room.
+entities.KoseiHelper/CustomPauseController.attributes.description.dieOnUnpause=If the player should be punished with death after pausing the game.\nPrevents pause buffering.
+
 # Spawn Controller
 entities.KoseiHelper/SpawnController.placements.name.SpawnController=Spawn Controller
 entities.KoseiHelper/SpawnController.placements.description.SpawnController=This controller spawns something.
