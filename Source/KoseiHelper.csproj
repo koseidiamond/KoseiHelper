@@ -30,8 +30,14 @@
       <Reference Include="Celeste">
         <HintPath>..\lib\Celeste.dll</HintPath>
       </Reference>
+      <Reference Include="ExtendedVariantMode">
+        <HintPath>..\lib\ExtendedVariantMode.dll</HintPath>
+      </Reference>
       <Reference Include="FNA">
         <HintPath>..\lib\FNA.dll</HintPath>
+      </Reference>
+      <Reference Include="LuaCutscenes">
+        <HintPath>..\lib\LuaCutscenes.dll</HintPath>
       </Reference>
       <Reference Include="MMHOOK_Celeste">
         <HintPath>..\lib\MMHOOK_Celeste.dll</HintPath>

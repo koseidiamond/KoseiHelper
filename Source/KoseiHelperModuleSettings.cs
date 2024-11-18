@@ -1,5 +1,9 @@
 namespace Celeste.Mod.KoseiHelper;
 
-public class KoseiHelperModuleSettings : EverestModuleSettings {
+using Microsoft.Xna.Framework.Input;
 
+public class KoseiHelperModuleSettings : EverestModuleSettings {
+    [DefaultButtonBinding(Buttons.LeftShoulder, Keys.Tab)]
+    [SettingName("SpawnButton")]
+    public ButtonBinding SpawnButton { get; set; }
 }

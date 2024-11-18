@@ -4,3 +4,5 @@
   Dependencies:
     - Name: EverestCore
       Version: 1.5105.0
+    - Name: ExtendedVariantMode
+      Version: 0.26.3

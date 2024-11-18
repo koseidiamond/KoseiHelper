@@ -11,7 +11,7 @@
 		<Anim id="wingedidle" path="wingedidle" delay="0.1" frames="00" />
 		<Loop id="winged" path="winged" delay="0.1" frames="00-01" />
 		
-		<Loop id="widewingedidle" path="widewingedidle" delay="0.1" frames="00-01" />
+		<Loop id="widewingedidle" path="widewingedidle" delay="0.1" frames="00" />
 		<Loop id="widewinged" path="widewinged" delay="0.1" frames="00-01" />
 		
     </koseiHelper_goomba>

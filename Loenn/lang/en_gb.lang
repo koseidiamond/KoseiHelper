@@ -17,11 +17,6 @@ entities.KoseiHelper/MaryBlock.placements.name.maryblock=Mary Block
 entities.KoseiHelper/MaryBlock.placements.description.Mary Block=These blocks bounce the player from both sides, like a spring but with less strength.
 entities.KoseiHelper/MaryBlock.attributes.description.potted=Potted Mary launches the player like puffers/bumpers.
 
-# IRL Controller
-entities.KoseiHelper/IRLController.placements.name.IRLController=IRL Controller
-entities.KoseiHelper/IRLController.placements.description.IRLController=This controllers sets flags for the time of the day and month:\nFor example, if it's 17:00 and November the flags kosei_irlHour17 and kosei_irlMonth11 will be set.\nIt also sets the flags kosei_irlMorning, kosei_irlAfternoon and kosei_irlNight.
-entities.KoseiHelper/IRLController.attributes.description.changesDarknessLevel=If the darkness level should adapt to the irl time.
-
 #Bound Refill
 entities.KoseiHelper/BoundRefill.placements.name.boundRefill=Bound Refill
 entities.KoseiHelper/BoundRefill.placements.description.Bound Refill=OutBound refills allow the player to never transition and be outside of the current room (and force the camera to follow the player).\nInBound refills allow the player to immediately transition to the room they are in ("bounded" again).\nWarning: being too far from a room will make you unable to grab or jump from walls!
@@ -33,6 +28,18 @@ entities.KoseiHelper/TileRefill.placements.description.Tile Refill=Tile refills 
 entities.KoseiHelper/TileRefill.attributes.description.collidable=If the refill should affect collidability of tiles.
 entities.KoseiHelper/TileRefill.attributes.description.visible=If the refill should affect visibility of tiles.
 entities.KoseiHelper/TileRefill.attributes.description.oneUse=If the refill can respawn.
+
+# IRL Controller
+entities.KoseiHelper/IRLController.placements.name.IRLController=IRL Controller
+entities.KoseiHelper/IRLController.placements.description.IRLController=This controller sets flags for the time of the day and month:\nFor example, if it's 17:00 and November the flags kosei_irlHour17 and kosei_irlMonth11 will be set.\nIt also sets the flags kosei_irlMorning, kosei_irlAfternoon and kosei_irlNight.
+entities.KoseiHelper/IRLController.attributes.description.changesDarknessLevel=If the darkness level should adapt to the irl time.
+
+# Spawn Controller
+entities.KoseiHelper/SpawnController.placements.name.SpawnController=Spawn Controller
+entities.KoseiHelper/SpawnController.placements.description.SpawnController=This controller spawns something.
+entities.KoseiHelper/SpawnController.attributes.description.offsetX=Horizontal offset relative to the player position where the entity will spawn.
+entities.KoseiHelper/SpawnController.attributes.description.offsetY=Vertical offset relative to the player position where the entity will spawn.
+entities.KoseiHelper/SpawnController.attributes.description.entityData=The data of the entity that you want to spawn.\nSee https://github.com/koseidiamond/KoseiHelper for an example.
 
 #TRIGGERS
 triggers.KoseiHelper/ForceThrowTrigger.placements.name.ForceThrowTrigger=Force Throw Trigger

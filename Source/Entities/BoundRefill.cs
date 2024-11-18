@@ -20,6 +20,7 @@ public class BoundRefill : Entity
     private readonly bool outBound;
     public bool outline;
     public float respawnTimer;
+    private bool hasTransitioned;
 
     public BoundRefill (EntityData data, Vector2 offset) : base(data.Position + offset)
     {
@@ -89,8 +90,12 @@ public class BoundRefill : Entity
         Add(new Coroutine(RefillRoutine(player)));
         if (outBound)
             player.EnforceLevelBounds = false;
+
         else
+        {
             player.EnforceLevelBounds = true;
+            //Ideally this should check if the refill is not on the level bounds, and set a new spawn, to make filler rooms possible to transition to
+        }
     }
 
     private IEnumerator RefillRoutine(Player player)
@@ -101,7 +106,7 @@ public class BoundRefill : Entity
         sprite.Visible = false;
         outline = true;
         base.Depth = 8999;
-        //yield return 0.05f;
+        yield return 0.05f;
         float angle = player.Speed.Angle();
         level.ParticlesFG.Emit(P_Shatter, 5, Position, Vector2.One * 4f, angle - (float)Math.PI / 2f);
         level.ParticlesFG.Emit(P_Shatter, 5, Position, Vector2.One * 4f, angle + (float)Math.PI / 2f);

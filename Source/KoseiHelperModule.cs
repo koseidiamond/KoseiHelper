@@ -1,4 +1,6 @@
-﻿using System;
+﻿using MonoMod.ModInterop;
+using System;
+using MonoMod.Utils;
 
 namespace Celeste.Mod.KoseiHelper;
 
@@ -25,8 +27,15 @@ public class KoseiHelperModule : EverestModule {
 #endif
     }
 
+    [ModImportName("ExtendedVariantMode")]
+    public static class ExtendedVariantImports
+    {
+        public static Action<string, float, bool> TriggerFloatVariant;
+        public static Func<string, object> GetCurrentVariantValue;
+    }
+
     public override void Load() {
-        // TODO: apply any hooks that should always be active
+        typeof(ExtendedVariantImports).ModInterop();
     }
 
     public override void Unload() {
