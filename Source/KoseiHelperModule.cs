@@ -1,6 +1,5 @@
 ﻿using MonoMod.ModInterop;
 using System;
-using MonoMod.Utils;
 using Celeste.Mod.KoseiHelper.Entities;
 
 namespace Celeste.Mod.KoseiHelper;

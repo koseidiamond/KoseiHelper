@@ -29,6 +29,18 @@ entities.KoseiHelper/TileRefill.attributes.description.collidable=If the refill 
 entities.KoseiHelper/TileRefill.attributes.description.visible=If the refill should affect visibility of tiles.
 entities.KoseiHelper/TileRefill.attributes.description.oneUse=If the refill can respawn.
 
+#Spring Ball
+entities.KoseiHelper/SpringBall.placements.name.SpringBall= Spring Ball
+entities.KoseiHelper/SpringBall.placements.description.Spring Ball=Spring balls (snowball+spring) will appear on the screen.
+entities.KoseiHelper/SpringBall.attributes.description.speed=The speed the balls will be travelling at.\n(Positive speed: right-to-left or bottom-to-top)\n(Negative speed: left-to-right or top-to-bottom)
+entities.KoseiHelper/SpringBall.attributes.description.orientation=The orientation of the spring ball.
+entities.KoseiHelper/SpringBall.attributes.description.sineLength=The length of the sine.
+entities.KoseiHelper/SpringBall.attributes.description.sineSpeed=The speed of the sine.
+entities.KoseiHelper/SpringBall.attributes.description.vertical=If the spring ball should be travelling vertically instead of horizontally.
+entities.KoseiHelper/SpringBall.attributes.description.color=The color of the ball.
+entities.KoseiHelper/SpringBall.attributes.description.visible=If the ball/arrows should be visible.\nDisable to see only the springs.
+entities.KoseiHelper/SpringBall.attributes.description.spawnSound=The sound the spring balls make when respawning.
+
 # IRL Controller
 entities.KoseiHelper/IRLController.placements.name.IRLController=IRL Controller
 entities.KoseiHelper/IRLController.placements.description.IRLController=This controller sets flags for the time of the day and month:\nFor example, if it's 17:00 and November the flags kosei_irlHour17 and kosei_irlMonth11 will be set.\nIt also sets the flags kosei_irlMorning, kosei_irlAfternoon and kosei_irlNight.

@@ -3,7 +3,6 @@ using Monocle;
 using System;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
-using System.ComponentModel;
 
 namespace Celeste.Mod.KoseiHelper.Entities;
 
