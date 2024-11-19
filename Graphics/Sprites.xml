@@ -34,7 +34,7 @@
 		<Loop id="tiles" path="TileRefill/tiles" frames="00-04" />
 	</koseiHelper_tileRefill>
 	
-	<koseiHelper_springBall path="objects/KoseiHelper/SpringBall/">
+	<koseiHelper_springBall path="objects/KoseiHelper/Balls/">
 		<Justify x="0.5" y="0.5" />
 		<Loop id="spin" path="ball" frames="00-11" />
 		<Loop id="arrow" path="ballArrow" frames="00" />
