@@ -86,7 +86,7 @@ public class PufferBall : Puffer
             if (((!vertical && speed >= 0 && player.Right < (level.Bounds.Right - 64)) ||
                 (!vertical && speed < 0 && player.Left > level.Bounds.Left + 64) ||
                 (vertical && speed >= 0 && player.Bottom < level.Bounds.Bottom - 48) ||
-                (vertical && speed < 0 && player.Top < level.Bounds.Top + 48)))
+                (vertical && speed < 0 && player.Top > level.Bounds.Top + 48)))
             {
                 spawnSfx.Play(spawnSound);
                 Collidable = Visible = true;

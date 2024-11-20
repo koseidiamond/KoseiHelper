@@ -77,7 +77,7 @@ public class SpringBall : Spring
             if ((!vertical && speed >= 0 && player.Right < (level.Bounds.Right - 40)) ||
                 (!vertical && speed < 0 && player.Left > level.Bounds.Left + 40) ||
                 (vertical && speed >= 0 && player.Bottom < level.Bounds.Bottom - 32) ||
-                (vertical && speed < 0 && player.Top < level.Bounds.Top + 32))
+                (vertical && speed < 0 && player.Top > level.Bounds.Top + 32))
             {
                 spawnSfx.Play(spawnSound);
                 Collidable = Visible = true;
