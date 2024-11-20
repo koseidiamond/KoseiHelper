@@ -4,7 +4,7 @@
 entities.KoseiHelper/Goomba.placements.name.goomba=Goomba
 entities.KoseiHelper/Goomba.placements.description.Goomba=These creatures chase the player and have several customization options.
 entities.KoseiHelper/Goomba.attributes.description.speed=The horizontal speed that the goomba will move at.
-entities.KoseiHelper/Goomba.attributes.description.outline=If the goomba will render with an outline.
+entities.KoseiHelper/Goomba.attributes.description.outline=If the sprite should be rendered with an outline.
 entities.KoseiHelper/Goomba.attributes.description.isWide=If the goomba will be wider than normal.
 entities.KoseiHelper/Goomba.attributes.description.isWinged=If the goomba will have wings.
 entities.KoseiHelper/Goomba.attributes.description.canBeBounced=If the goomba can be killed by landing on its head.
@@ -16,6 +16,7 @@ entities.KoseiHelper/Goomba.attributes.description.timeToSpawnMinis=Time that ne
 entities.KoseiHelper/MaryBlock.placements.name.maryblock=Mary Block
 entities.KoseiHelper/MaryBlock.placements.description.Mary Block=These blocks bounce the player from both sides, like a spring but with less strength.
 entities.KoseiHelper/MaryBlock.attributes.description.potted=Potted Mary launches the player like puffers/bumpers.
+entities.KoseiHelper/MaryBlock.attributes.description.outline=If the sprite should be rendered with an outline.
 
 #Bound Refill
 entities.KoseiHelper/BoundRefill.placements.name.boundRefill=Bound Refill
@@ -33,13 +34,15 @@ entities.KoseiHelper/TileRefill.attributes.description.oneUse=If the refill can 
 entities.KoseiHelper/SpringBall.placements.name.SpringBall= Spring Ball
 entities.KoseiHelper/SpringBall.placements.description.Spring Ball=Spring balls (snowball+spring) will appear on the screen.\n(The position determines where they spawn for the first time,\ne.g. during a transition)
 entities.KoseiHelper/SpringBall.attributes.description.speed=The speed the balls will be travelling at.\n(Positive speed: right-to-left or bottom-to-top)\n(Negative speed: left-to-right or top-to-bottom)
-entities.KoseiHelper/SpringBall.attributes.description.orientation=The orientation of the spring ball.
+entities.KoseiHelper/SpringBall.attributes.description.orientation=The orientation of the spring ball.\n(WallLeft = the spring faces right, and WallRight = the spring faces left!)
 entities.KoseiHelper/SpringBall.attributes.description.sineLength=The length of the sine.
 entities.KoseiHelper/SpringBall.attributes.description.sineSpeed=The speed of the sine.
 entities.KoseiHelper/SpringBall.attributes.description.vertical=If the spring ball should be travelling vertically instead of horizontally.
 entities.KoseiHelper/SpringBall.attributes.description.color=The color of the ball.
 entities.KoseiHelper/SpringBall.attributes.description.visible=If the ball/arrows should be visible.\nDisable to see only the springs.
 entities.KoseiHelper/SpringBall.attributes.description.spawnSound=The sound the spring balls make when respawning.
+entities.KoseiHelper/SpringBall.attributes.description.offset=The offset that the spring balls will spawn at, in pixels.\n(Vertical offset if moving horizontally, or horizontal offset if moving vertically)
+entities.KoseiHelper/SpringBall.attributes.description.flag=The flag that needs to be active for the spring balls to start spawning.\nLeave empty for no flag required.
 
 #Puffer Ball
 entities.KoseiHelper/PufferBall.placements.name.PufferBall= Puffer Ball
@@ -50,6 +53,8 @@ entities.KoseiHelper/PufferBall.attributes.description.sineSpeed=The speed of th
 entities.KoseiHelper/PufferBall.attributes.description.vertical=If the puffer should be travelling vertically instead of horizontally.
 entities.KoseiHelper/PufferBall.attributes.description.spawnSound=The sound the puffer makes when respawning.
 entities.KoseiHelper/PufferBall.attributes.description.horizontalFix=Set to false if the puffers should not be pushed downwards when bounced on.\nAllows sine movement to work when false.
+entities.KoseiHelper/PufferBall.attributes.description.offset=The offset that the puffers will spawn at, in pixels.\n(Vertical offset if moving horizontally, or horizontal offset if moving vertically)
+entities.KoseiHelper/PufferBall.attributes.description.flag=The flag that needs to be active for the puffers to start spawning.\nLeave empty for no flag required.
 
 # IRL Controller
 entities.KoseiHelper/IRLController.placements.name.IRLController=IRL Controller

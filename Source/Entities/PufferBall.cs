@@ -27,6 +27,8 @@ public class PufferBall : Puffer
     public string spawnSound;
     private static bool currentPufferFacesRight;
     public bool horizontalFix;
+    public float spawnOffset;
+    public string flag;
 
     public PufferBall(EntityData data, Vector2 offset)
         : base(data.Position + offset, data.Float("speed") < 0)
@@ -39,6 +41,8 @@ public class PufferBall : Puffer
         vertical = data.Bool("vertical", false);
         spawnSound = data.Attr("spawnSound", "event:/none");
         horizontalFix = data.Bool("horizontalFix", true);
+        spawnOffset = data.Float("offset", 0f);
+        flag = data.Attr("flag", "");
         Add(sine = new SineWave(sineSpeed, 0f));
         Add(spawnSfx = new SoundSource());
         Get<SineWave>()?.RemoveSelf();
@@ -67,8 +71,11 @@ public class PufferBall : Puffer
         base.Added(scene);
         level = SceneAs<Level>();
         Collidable = Visible = false;
-        ResetPosition();
-        state = States.Gone;
+        if (string.IsNullOrEmpty(flag) || level.Session.GetFlag(flag) && !string.IsNullOrEmpty(flag))
+        {
+            ResetPosition();
+            state = States.Gone;
+        }
     }
 
     private void ResetPosition()
@@ -87,17 +94,17 @@ public class PufferBall : Puffer
                 if (!vertical)// Set position to offscreen right/left and same vertical position as player
                 {
                     if (speed >= 0)
-                        spawnPosition = new Vector2(level.Camera.Right + 10f, player.CenterY);
+                        spawnPosition = new Vector2(level.Camera.Right + 10f, player.CenterY + spawnOffset);
                     else
-                        spawnPosition = new Vector2(level.Camera.Left - 10f, player.CenterY);
+                        spawnPosition = new Vector2(level.Camera.Left - 10f, player.CenterY + spawnOffset);
                     atY = spawnPosition.Y;
                 }
                 else// Set position to offscreen bottom/top and same horizontal position as player
                 {
                     if (speed >= 0)
-                        spawnPosition = new Vector2(player.CenterX, level.Camera.Bottom + 16f);
+                        spawnPosition = new Vector2(player.CenterX + spawnOffset, level.Camera.Bottom + 16f);
                     else
-                        spawnPosition = new Vector2(player.CenterX, level.Camera.Top - 16f);
+                        spawnPosition = new Vector2(player.CenterX + spawnOffset, level.Camera.Top - 16f);
                     atX = spawnPosition.X;
                 }
                 sine.Reset();
@@ -114,37 +121,43 @@ public class PufferBall : Puffer
     public override void Update()
     {
         base.Update();
-            if (!vertical)
+        if (string.IsNullOrEmpty(flag) || level.Session.GetFlag(flag) && !string.IsNullOrEmpty(flag))
         {
-            base.X -= speed * Engine.DeltaTime;
-            if (!horizontalFix)
-                base.Y = atY + sineLength * sine.Value;
-
-            // Check if it's off-screen (left/right)
-            if (base.X < level.Camera.Left - 60f || (speed < 0 && base.X > level.Camera.Right + 60f))
+            if (!vertical)
             {
-                resetTimer += Engine.DeltaTime;
-                if (resetTimer >= ResetTime)
+                base.X -= speed * Engine.DeltaTime;
+                if (!horizontalFix)
+                    base.Y = atY + sineLength * sine.Value;
+
+                // Check if it's off-screen (left/right)
+                if (base.X < level.Camera.Left - 60f || (speed < 0 && base.X > level.Camera.Right + 60f))
                 {
-                    ResetPosition();
+                    resetTimer += Engine.DeltaTime;
+                    if (resetTimer >= ResetTime)
+                    {
+                        ResetPosition();
+                    }
+                }
+            }
+            else
+            {
+                base.Y -= speed * Engine.DeltaTime;
+                base.X = atX + sineLength * sine.Value;
+
+                // Check if it's off-screen (top/bottom)
+                if (base.Y < level.Camera.Top - 60f || (speed < 0 && base.Y > level.Camera.Bottom + 60f))
+                {
+                    resetTimer += Engine.DeltaTime;
+                    if (resetTimer >= ResetTime)
+                    {
+                        ResetPosition();
+                    }
                 }
             }
         }
         else
-        {
-            base.Y -= speed * Engine.DeltaTime;
-            base.X = atX + sineLength * sine.Value;
+            Collidable = Visible = false;
 
-            // Check if it's off-screen (top/bottom)
-            if (base.Y < level.Camera.Top - 60f || (speed < 0 && base.Y > level.Camera.Bottom + 60f))
-            {
-                resetTimer += Engine.DeltaTime;
-                if (resetTimer >= ResetTime)
-                {
-                    ResetPosition();
-                }
-            }
-        }
     }
 
     private static void onPufferConstructor(ILContext il) // IL hook made by Maddie480!

@@ -15,10 +15,12 @@ public class MaryBlock : Entity
     public bool potted;
     private int direction = -1;
     public static ParticleType maryParticle = SwitchGate.P_Behind;
+    public bool outline;
     public MaryBlock (EntityData data, Vector2 offset) : base(data.Position + offset)
     {
         Depth = -9500;
         potted = data.Bool("potted", false);
+        outline = data.Bool("outline", false);
         Add(sprite = GFX.SpriteBank.Create("koseiHelper_maryBlock"));
         if (potted)
         {
@@ -72,6 +74,8 @@ public class MaryBlock : Entity
     public override void Render()
     {
         base.Render();
+        if (outline)
+            sprite.DrawOutline();
     }
 
 

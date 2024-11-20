@@ -30,6 +30,9 @@
       <Reference Include="Celeste">
         <HintPath>..\lib\Celeste.dll</HintPath>
       </Reference>
+      <Reference Include="CollabUtils2">
+        <HintPath>..\lib\CollabUtils2.dll</HintPath>
+      </Reference>
       <Reference Include="ExtendedVariantMode">
         <HintPath>..\lib\ExtendedVariantMode.dll</HintPath>
       </Reference>

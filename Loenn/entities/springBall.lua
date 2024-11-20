@@ -16,7 +16,9 @@ SpringBall.placements = {
         color = "FFFFFF",
         visible = true,
         spawnSound = "event:/game/04_cliffside/snowball_spawn",
-        trackTheo = false
+		offset = 0,
+        trackTheo = false,
+		flag = ""
     }
 }
 
@@ -31,8 +33,8 @@ SpringBall.fieldInformation = {
 }
 
 function SpringBall.selection(room, entity)
-    local width, height = 32, 32
-    return utils.rectangle(entity.x - width / 2, entity.y - height / 2, width, height)
+    local width, height = 24, 24
+    return utils.rectangle(entity.x - width / 2, entity.y - height / 2, width, height - 1)
 end
 
 local function hexToRGB(hex)

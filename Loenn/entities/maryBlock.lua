@@ -7,10 +7,16 @@ MaryBlock.placements = {
 	{
 		name = "Mary Block",
 		data = {
-			potted = false
+			potted = false,
+			outline = false
 		},
 	},
 }
+
+function MaryBlock.selection(room, entity)
+    local width, height = 16, 16
+    return utils.rectangle(entity.x - width / 2, entity.y - height / 2, width, height + 8)
+end
 
 function MaryBlock.texture(room, entity)
     local potted = entity.potted
