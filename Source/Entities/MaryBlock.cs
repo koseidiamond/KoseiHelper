@@ -73,9 +73,9 @@ public class MaryBlock : Entity
 
     public override void Render()
     {
-        base.Render();
         if (outline)
             sprite.DrawOutline();
+        base.Render();
     }
 
 
