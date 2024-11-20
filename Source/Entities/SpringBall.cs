@@ -1,6 +1,7 @@
 using Celeste.Mod.Entities;
 using Monocle;
 using Microsoft.Xna.Framework;
+using System.Collections;
 
 namespace Celeste.Mod.KoseiHelper.Entities;
 
@@ -65,7 +66,7 @@ public class SpringBall : Spring
         level = SceneAs<Level>();
         Collidable = Visible = false;
         if (string.IsNullOrEmpty(flag) || level.Session.GetFlag(flag) && !string.IsNullOrEmpty(flag))
-            ResetPosition();
+            waitABit();
     }
 
     private void ResetPosition()
@@ -184,5 +185,13 @@ public class SpringBall : Spring
     {
             sprite.DrawOutline();
         base.Render();
+    }
+
+    private IEnumerator waitABit() // Waits a bit to spawn for the first time, to prevent softlocks when transitioning
+    {
+        yield return 0.5f;
+        if (Scene.Tracker.GetEntity<Player>() is not { } player)
+            yield break;
+        ResetPosition();
     }
 }

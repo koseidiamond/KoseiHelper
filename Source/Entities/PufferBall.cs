@@ -5,7 +5,7 @@ using MonoMod.Cil;
 using System.Reflection;
 using System;
 using Mono.Cecil.Cil;
-using MonoMod.Utils;
+using System.Collections;
 
 namespace Celeste.Mod.KoseiHelper.Entities;
 
@@ -73,7 +73,7 @@ public class PufferBall : Puffer
         Collidable = Visible = false;
         if (string.IsNullOrEmpty(flag) || level.Session.GetFlag(flag) && !string.IsNullOrEmpty(flag))
         {
-            ResetPosition();
+            waitABit();
             state = States.Gone;
         }
     }
@@ -187,5 +187,13 @@ public class PufferBall : Puffer
 
         }
         orig(self);
+    }
+
+    private IEnumerator waitABit() // Waits a bit to spawn for the first time, to prevent softlocks when transitioning
+    {
+        yield return 0.5f;
+        if (Scene.Tracker.GetEntity<Player>() is not { } player)
+            yield break;
+        ResetPosition();
     }
 }
