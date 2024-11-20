@@ -1,13 +1,13 @@
 # KoseiHelper
 Celeste mod with several random mechanics.
 ### Customization
-All entities are customizable through Sprites.xml. Feel free to change the animations as you need. You can copy the sprite tags and paste them into your own Sprites.xml, just make sure your path is unique.
+All entities are customizable through Sprites.xml. Feel free to change the animations as you need. You can copy the sprite tags and paste them into your own Sprites.xml. Make sure your path is unique.
 
 # Entities
 ### Goomba
 This entity follows the player horizontally, killing on contact, and can optionally be bounced on. It has several customizable options, including spawning mini versions each x seconds, flying away like strawberries, or be winged. They can also interact with springs.
 ### Mary Block
-Single-use flowers that launch you with more or less strength.
+Single-use flowers that launch you with more or less strength depending on the mode.
 ### Tile Refill
 Can enable or disable the Collidable and Visible properties of foreground tiles.
 ### Bound Refill
@@ -17,9 +17,10 @@ Sets flags depending on the time of the day, day and month. For example, if it's
 ### Custom Pause Controller
 Allows customization of the Pause Menu, disabling Retry, Save&Quit, disable pausing, killing player after pausing, or preventing the timer from running on rooms with the controller.
 ### Balls
-**Puffer balls** and **Spring balls** are a variation of Snowballs. They are customizable, supporting all 4 directions, sine variations, and multiple of them per screen.
-Additionally, spring balls have some visual options and can track Theo instead of Madeline.
-Note: Unlike most controller entities, the position of this entity determines where they will first appear on the chosen axis.
+**Puffer balls** and **Spring balls** are a combination of Snowballs and Puffers/Springs. They are customizable, supporting all 4 directions, sine variations, flags, offsets, and multiple of them per screen.
+Additionally, spring balls have some visual options and can track Theo instead.
+
+*Note: Unlike controller entities, the position of these entities determines where they will first appear on the chosen axis.*
 
 # Triggers
 ### Force Throw Trigger
