@@ -8,7 +8,7 @@ namespace Celeste.Mod.KoseiHelper.Entities;
 public class SpringBall : Spring
 {
     private const float ResetTime = 0.8f;
-    private Sprite sprite;
+    private new Sprite sprite;
     private Sprite arrow;
     private float resetTimer;
     private Level level;

@@ -31,7 +31,7 @@ entities.KoseiHelper/TileRefill.attributes.description.oneUse=If the refill can 
 
 #Spring Ball
 entities.KoseiHelper/SpringBall.placements.name.SpringBall= Spring Ball
-entities.KoseiHelper/SpringBall.placements.description.Spring Ball=Spring balls (snowball+spring) will appear on the screen.
+entities.KoseiHelper/SpringBall.placements.description.Spring Ball=Spring balls (snowball+spring) will appear on the screen.\n(The position determines where they spawn for the first time,\ne.g. during a transition)
 entities.KoseiHelper/SpringBall.attributes.description.speed=The speed the balls will be travelling at.\n(Positive speed: right-to-left or bottom-to-top)\n(Negative speed: left-to-right or top-to-bottom)
 entities.KoseiHelper/SpringBall.attributes.description.orientation=The orientation of the spring ball.
 entities.KoseiHelper/SpringBall.attributes.description.sineLength=The length of the sine.
@@ -40,6 +40,16 @@ entities.KoseiHelper/SpringBall.attributes.description.vertical=If the spring ba
 entities.KoseiHelper/SpringBall.attributes.description.color=The color of the ball.
 entities.KoseiHelper/SpringBall.attributes.description.visible=If the ball/arrows should be visible.\nDisable to see only the springs.
 entities.KoseiHelper/SpringBall.attributes.description.spawnSound=The sound the spring balls make when respawning.
+
+#Puffer Ball
+entities.KoseiHelper/PufferBall.placements.name.PufferBall= Puffer Ball
+entities.KoseiHelper/PufferBall.placements.description.Puffer Ball=Puffer balls (snowball+puffer) will appear on the screen.\n(The position determines where they spawn for the first time,\ne.g. during a transition)
+entities.KoseiHelper/PufferBall.attributes.description.speed=The speed the puffers will be travelling at.\n(Positive speed: right-to-left or bottom-to-top)\n(Negative speed: left-to-right or top-to-bottom)
+entities.KoseiHelper/PufferBall.attributes.description.sineLength=The length of the sine.
+entities.KoseiHelper/PufferBall.attributes.description.sineSpeed=The speed of the sine.
+entities.KoseiHelper/PufferBall.attributes.description.vertical=If the puffer should be travelling vertically instead of horizontally.
+entities.KoseiHelper/PufferBall.attributes.description.spawnSound=The sound the puffer makes when respawning.
+entities.KoseiHelper/PufferBall.attributes.description.horizontalFix=Set to false if the puffers should not be pushed downwards when bounced on.\nAllows sine movement to work when false.
 
 # IRL Controller
 entities.KoseiHelper/IRLController.placements.name.IRLController=IRL Controller

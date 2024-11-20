@@ -26,50 +26,60 @@ public class PufferBall : Puffer
     public bool vertical;
     public string spawnSound;
     private static bool currentPufferFacesRight;
+    public bool horizontalFix;
 
     public PufferBall(EntityData data, Vector2 offset)
         : base(data.Position + offset, data.Float("speed") < 0)
     {
         base.Depth = -12500;
         base.Collider = new Hitbox(12f, 12f, -6f, -6f);
-        speed = data.Float("speed", 200f);
+        speed = data.Float("speed", 100f);
         sineLength = data.Float("sineLength", 4f);
         sineSpeed = data.Float("sineSpeed", 0.5f);
         vertical = data.Bool("vertical", false);
         spawnSound = data.Attr("spawnSound", "event:/none");
+        horizontalFix = data.Bool("horizontalFix", true);
         Add(sine = new SineWave(sineSpeed, 0f));
         Add(spawnSfx = new SoundSource());
         Get<SineWave>()?.RemoveSelf();
     }
 
-    public void Load()
+    public static void Load()
     {
-        IL.Celeste.Puffer.ctor_Vector2_bool -= onPufferConstructor;
+        IL.Celeste.Puffer.ctor_Vector2_bool += onPufferConstructor;
         On.Celeste.Puffer.GotoGone += modPufferGotoGone;
     }
 
-    public void Unload()
+    public static void Unload()
     {
         IL.Celeste.Puffer.ctor_Vector2_bool -= onPufferConstructor;
         On.Celeste.Puffer.GotoGone -= modPufferGotoGone;
+    }
+
+    public override void Awake(Scene scene)
+    {
+        base.Awake(scene);
+        Collidable = Visible = false;
     }
 
     public override void Added(Scene scene)
     {
         base.Added(scene);
         level = SceneAs<Level>();
+        Collidable = Visible = false;
         ResetPosition();
+        state = States.Gone;
     }
 
     private void ResetPosition()
     {
         Player player = level.Tracker.GetEntity<Player>();
         if (player != null)
-        { // Makes sure that the player is not close to the bounds of the screen
-            if ((!vertical && speed >= 0 && player.Right < (level.Bounds.Right - 40)) ||
-                (!vertical && speed < 0 && player.Left > level.Bounds.Left + 40) ||
-                (vertical && speed >= 0 && player.Bottom < level.Bounds.Bottom - 32) ||
-                (vertical && speed < 0 && player.Top < level.Bounds.Top + 32))
+        { // Makes sure that the player is not close to the bounds of the screen. TODO: fix transitions
+            if (((!vertical && speed >= 0 && player.Right < (level.Bounds.Right - 64)) ||
+                (!vertical && speed < 0 && player.Left > level.Bounds.Left + 64) ||
+                (vertical && speed >= 0 && player.Bottom < level.Bounds.Bottom - 48) ||
+                (vertical && speed < 0 && player.Top < level.Bounds.Top + 48)))
             {
                 spawnSfx.Play(spawnSound);
                 Collidable = Visible = true;
@@ -104,10 +114,11 @@ public class PufferBall : Puffer
     public override void Update()
     {
         base.Update();
-        if (!vertical)
+            if (!vertical)
         {
             base.X -= speed * Engine.DeltaTime;
-            base.Y = atY + sineLength * sine.Value;
+            if (!horizontalFix)
+                base.Y = atY + sineLength * sine.Value;
 
             // Check if it's off-screen (left/right)
             if (base.X < level.Camera.Left - 60f || (speed < 0 && base.X > level.Camera.Right + 60f))
@@ -142,7 +153,6 @@ public class PufferBall : Puffer
 
         while (cursor.TryGotoNext(MoveType.After, instr => instr.MatchCallvirt<SineWave>("Randomize")))
         {
-
             cursor.Emit(OpCodes.Ldarg_0);
             cursor.Emit(OpCodes.Ldarg_0);
             cursor.Emit(OpCodes.Ldfld, typeof(Puffer).GetField("idleSine", BindingFlags.NonPublic | BindingFlags.Instance));
@@ -160,7 +170,7 @@ public class PufferBall : Puffer
         if (self is PufferBall pufferball)
         {
             self.startPosition = spawnPosition;
-            self.returnCurve = new SimpleCurve(self.Position, spawnPosition, self.Position + (spawnPosition - self.Position) * 0.5f);
+            self.returnCurve = new SimpleCurve(spawnPosition, spawnPosition, spawnPosition);
 
         }
         orig(self);

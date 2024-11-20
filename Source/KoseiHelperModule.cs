@@ -5,6 +5,7 @@ using Celeste.Mod.KoseiHelper.Entities;
 namespace Celeste.Mod.KoseiHelper;
 
 public class KoseiHelperModule : EverestModule {
+    // Did you know? You can add tags to entities by doing base.Tag = Tags.smth in the ctor!
     public static KoseiHelperModule Instance { get; private set; }
 
     public override Type SettingsType => typeof(KoseiHelperModuleSettings);
@@ -45,6 +46,7 @@ public class KoseiHelperModule : EverestModule {
     public override void Load() {
         typeof(ExtendedVariantImports).ModInterop();
         TopDownViewController.Load();
+        PufferBall.Load();
     }
 
     public override void Unload() {
