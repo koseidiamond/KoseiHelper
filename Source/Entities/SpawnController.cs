@@ -2,6 +2,7 @@ using Celeste.Mod.Entities;
 using Monocle;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
+using System;
 
 namespace Celeste.Mod.KoseiHelper.Entities;
 
@@ -37,7 +38,9 @@ public class SpawnController : Entity
     public EntityType entityToSpawn;
     public float spawnCooldown, spawnTime;
     public bool relativeToPlayerFacing;
-    private int entityID = 2388544;
+    private int entityID = 7388544; // Very high value so it doesn't conflict with other ids (hopefully)
+    private List<EntityWithTTL> spawnedEntitiesWithTTL = new List<EntityWithTTL>();
+    public static ParticleType poofParticle = TouchSwitch.P_FireWhite;
 
     //entity specific data
     public bool cloudFragile;
@@ -61,6 +64,8 @@ public class SpawnController : Entity
     public bool flagValue;
     private List<Entity> spawnedEntities = new List<Entity>();
     public Entity spawnedEntity = null;
+    public float timeToLive;
+    public string audio;
 
     public SpawnController(EntityData data, Vector2 offset) : base(data.Position + offset)
     {
@@ -71,7 +76,7 @@ public class SpawnController : Entity
         removeDash = data.Bool("removeDash", true);
         relativeToPlayerFacing = data.Bool("relativeToPlayerFacing", true);
         timeToLive = data.Float("timeToLive", -1f);
-
+        audio = data.Attr("audio", "event:/KoseiHelper/spawn");
         //entity specific data
         boosterRed = data.Bool("boosterRed", false);
         iceBlockWidth = data.Int("iceBlockWidth", 16);
@@ -123,6 +128,7 @@ public class SpawnController : Entity
                     spawnPosition = new Vector2(player.Position.X - offsetX, player.Position.Y + offsetY);
                 else
                     spawnPosition = new Vector2(player.Position.X + offsetX, player.Position.Y + offsetY);
+                float entityTTL = timeToLive;
                 switch (entityToSpawn)
                 { // If relativeToPlayerFacing is true, a positive X value will spawn in front of the player, and a negative X value will spawn behind the player
                     case EntityType.Puffer:
@@ -141,7 +147,7 @@ public class SpawnController : Entity
                         spawnedEntity = new Bumper(spawnPosition, null);
                         break;
                     case EntityType.IceBlock:
-                        spawnedEntity = new IceBlock(spawnPosition, 8, 8);
+                        spawnedEntity = new IceBlock(spawnPosition, iceBlockWidth, iceBlockHeight);
                         break;
                     case EntityType.Heart:
                         spawnedEntity = new FakeHeart(spawnPosition);
@@ -174,19 +180,29 @@ public class SpawnController : Entity
                 if (spawnedEntity != null)
                 {
                     Scene.Add(spawnedEntity);
-                    spawnedEntities.Add(spawnedEntity);
+                    spawnedEntitiesWithTTL.Add(new EntityWithTTL(spawnedEntity, entityTTL));
                 }
                 spawnCooldown = spawnTime;
-                Audio.Play("event:/KoseiHelper/spawn", player.Position);
+                Audio.Play(audio, player.Position);
             }
         }
-    }
-    public void RemoveEntity(Entity entity)
-    {
-        if (spawnedEntities.Contains(entity))
+        List<EntityWithTTL> toRemove = new List<EntityWithTTL>();
+        foreach (var wrapper in spawnedEntitiesWithTTL)
         {
-            Scene.Remove(entity);
-            spawnedEntities.Remove(entity);
+            wrapper.TimeToLive -= Engine.RawDeltaTime;
+            if (wrapper.TimeToLive <= 0) // The instance of the entity will (literally) make poof
+            {
+                level.ParticlesFG.Emit(poofParticle, 5, wrapper.Entity.Position, Vector2.One * 4f, 0 - (float)Math.PI / 2f);
+                if (wrapper.Entity is BadelineBoost && player.StateMachine.State == 11) //Fix being stuck in StDummy
+                    player.StateMachine.State = 0;
+                Scene.Remove(wrapper.Entity);
+                toRemove.Add(wrapper);
+            }
+        }
+        // Remove the entities from the list after they have been removed from the scene
+        foreach (var wrapper in toRemove)
+        {
+            spawnedEntitiesWithTTL.Remove(wrapper);
         }
     }
 }

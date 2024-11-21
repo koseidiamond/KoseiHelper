@@ -8,6 +8,7 @@ using System.Reflection.Metadata;
 namespace Celeste.Mod.KoseiHelper.Entities;
 
 [CustomEntity("KoseiHelper/Goomba")]
+[Tracked]
 public class Goomba : Actor
 {
 

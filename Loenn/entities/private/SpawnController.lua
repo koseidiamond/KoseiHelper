@@ -20,6 +20,8 @@ SpawnController.placements = {
 		flag = "",
 		flagValue = true,
 		relativeToPlayerFacing = true,
+		timeToLive = -1,
+		audio = "",
 		-- Entity-specific attributes
 		boosterRed = false,
 		cloudFragile = true,

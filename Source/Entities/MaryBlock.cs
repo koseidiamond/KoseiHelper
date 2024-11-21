@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework;
 namespace Celeste.Mod.KoseiHelper.Entities;
 
 [CustomEntity("KoseiHelper/MaryBlock")]
+[Tracked]
 public class MaryBlock : Entity
 {
 
