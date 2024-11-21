@@ -2,6 +2,7 @@ using Celeste.Mod.Entities;
 using Monocle;
 using System;
 using Microsoft.Xna.Framework;
+using System.Net.Sockets;
 
 namespace Celeste.Mod.KoseiHelper.Entities;
 
@@ -14,6 +15,8 @@ public class IRLController : Entity
     private bool changesDarknessLevel;
     public IRLController (EntityData data, Vector2 offset) : base(data.Position + offset)
     {
+        if (data.Bool("persistent", true))
+            base.Tag = Tags.Persistent;
         changesDarknessLevel = data.Bool("changesDarknessLevel", false);
     }
 

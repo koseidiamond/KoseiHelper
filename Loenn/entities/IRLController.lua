@@ -7,6 +7,7 @@ IRLController.placements = {
 	{
 		name = "IRLController",
 		data = {
+			persistent = false,
 			changesDarknessLevel = false
 		}
 	}

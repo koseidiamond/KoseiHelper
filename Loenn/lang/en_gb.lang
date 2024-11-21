@@ -59,6 +59,7 @@ entities.KoseiHelper/PufferBall.attributes.description.flag=The flag that needs 
 # IRL Controller
 entities.KoseiHelper/IRLController.placements.name.IRLController=IRL Controller
 entities.KoseiHelper/IRLController.placements.description.IRLController=This controller sets flags for the time of the day and month:\nFor example, if it's 17:00 and November the flags kosei_irlHour17 and kosei_irlMonth11 will be set.\nIt also sets the flags kosei_irlMorning, kosei_irlAfternoon and kosei_irlNight.
+entities.KoseiHelper/IRLController.attributes.description.persistent=If the controller should persist after exiting the room.
 entities.KoseiHelper/IRLController.attributes.description.changesDarknessLevel=If the darkness level should adapt to the irl time.
 
 #Top Down View Controller
