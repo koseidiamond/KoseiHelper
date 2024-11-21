@@ -75,12 +75,49 @@ entities.KoseiHelper/CustomPauseController.attributes.description.canSaveAndQuit
 entities.KoseiHelper/CustomPauseController.attributes.description.timerIsStopped=If the timer for the map should stop running while the player is in the room.
 entities.KoseiHelper/CustomPauseController.attributes.description.dieOnUnpause=If the player should be punished with death after pausing the game.\nPrevents pause buffering.
 
-# Spawn Controller
+# Spawn Controller - General attributes
 entities.KoseiHelper/SpawnController.placements.name.SpawnController=Spawn Controller
-entities.KoseiHelper/SpawnController.placements.description.SpawnController=This controller spawns something on a button press.\nSome entities may have custom attributes!
+entities.KoseiHelper/SpawnController.placements.description.SpawnController=This controller spawns something on a button press.\nCertain entities may have custom attributes!
 entities.KoseiHelper/SpawnController.attributes.description.offsetX=Horizontal offset relative to the player position where the entity will spawn.
 entities.KoseiHelper/SpawnController.attributes.description.offsetY=Vertical offset relative to the player position where the entity will spawn.
-entities.KoseiHelper/SpawnController.attributes.description.entityData=The data of the entity that you want to spawn.\nSee https://github.com/koseidiamond/KoseiHelper for an example.
+entities.KoseiHelper/SpawnController.attributes.description.entityToSpawn=The type of entity that you want to spawn.\nSave and reopen to see the specific entity attributes. Some notes:\n-Core entities change on the core mode and don't appear on "None" core mode (including bumpers).\nDash blocks don't freeze the game for 3f when broken/poofing, unlike vanilla.\n-Seekers can't patrol, they will stay in their original spawn point.
+entities.KoseiHelper/SpawnController.attributes.description.spawnCooldown=The time that needs to pass until you can spawn another entity.\nLeave as 0 for no cooldown.
+entities.KoseiHelper/SpawnController.attributes.description.removeDash=If spawning an entity should consume a dash.
+entities.KoseiHelper/SpawnController.attributes.description.removeStamina=If spawning an entity should consume all stamina.
+entities.KoseiHelper/SpawnController.attributes.description.flag=If the ability should only be available once the flag is set to the correct Flag Value.\nLeave empty for no flag required.
+entities.KoseiHelper/SpawnController.attributes.description.flagValue=If the flag should be active (true) or inactive (false).\nIf you're not using a flag, don't worry about this.
+entities.KoseiHelper/SpawnController.attributes.description.relativeToPlayerFacing=A relative Offset X means that the entity will always appear\nin front of the player if the value is positive,\nor behind the player if the value is negative.\nIf the offset is not relative, the entity will always spawn to the left/right.
+entities.KoseiHelper/SpawnController.attributes.description.timeToLive=The time the entity spawned can exist before poofing into nonexistence.\nLeave as 0 if the entity should not expire with time (until transition or respawn).
+entities.KoseiHelper/SpawnController.attributes.description.appearSound=The sound that will play when an entity is spawned.
+entities.KoseiHelper/SpawnController.attributes.description.disappearSound=The sound that will play when an entity poofs into nonexistence.\n(Only works if the Time To Live is > 0)
+entities.KoseiHelper/SpawnController.attributes.description.nodeRelativeToPlayerFacing=Similar option to "Relative To Player Facing" but applies to the node of the entity.
+entities.KoseiHelper/SpawnController.attributes.description.nodeX=Horizontal offset relative to the player position where the node of the entity will be.
+entities.KoseiHelper/SpawnController.attributes.description.nodeY=Vertical offset relative to the player position where the node of the entity will be.
+#Spawn Controller - specific entity attributes
+entities.KoseiHelper/SpawnController.attributes.description.boosterRed=If the spawned boosters should be red or green.
+entities.KoseiHelper/SpawnController.attributes.description.cloudFragile=If the cloud spawned should be fragile (pink) or more permanent (blue).
+entities.KoseiHelper/SpawnController.attributes.description.featherShielded=If the feather should be inside a shield/bubble.
+entities.KoseiHelper/SpawnController.attributes.description.featherSingleUse=If the feather should be instantly consumed after used.
+entities.KoseiHelper/SpawnController.attributes.description.dashBlockTileType=The tileset that the dash block should use.
+entities.KoseiHelper/SpawnController.attributes.description.dashBlockWidth=The width of the spawned dash blocks.
+entities.KoseiHelper/SpawnController.attributes.description.dashBlockHeight=The height of the spawned dash blocks.
+entities.KoseiHelper/SpawnController.attributes.description.dashBlockCanDash=If the dash block should be destroyed with a dash or not.\n(They can still be destroyed through other means, e.g. red boosters)
+entities.KoseiHelper/SpawnController.attributes.description.iceballSpeed=The speed of the fireball/iceball.
+entities.KoseiHelper/SpawnController.attributes.description.iceballAlwaysIce=If the entity spawned should be always an iceball regardless of Core Mode.
+entities.KoseiHelper/SpawnController.attributes.description.iceBlockWidth=Width of the ice block/lava barrier.
+entities.KoseiHelper/SpawnController.attributes.description.iceBlockHeight=Height of the ice block/lava barrier.
+entities.KoseiHelper/SpawnController.attributes.description.moveBlockDirection=The direction the move block should be moving towards.
+entities.KoseiHelper/SpawnController.attributes.description.moveBlockWidth=The width of the move block.
+entities.KoseiHelper/SpawnController.attributes.description.moveBlockHeight=The height of the move block.
+entities.KoseiHelper/SpawnController.attributes.description.moveBlockCanSteer=If the move block can steer.
+entities.KoseiHelper/SpawnController.attributes.description.moveBlockFast=If the move block should be slightly faster than normal.
+entities.KoseiHelper/SpawnController.attributes.description.swapBlockWidth=The width of the swap block.
+entities.KoseiHelper/SpawnController.attributes.description.swapBlockHeight=The height of the swap block.
+entities.KoseiHelper/SpawnController.attributes.description.swapBlockTheme=The theme (sprite) of the swap block.
+entities.KoseiHelper/SpawnController.attributes.description.zipMoverWidth=The width of the zip mover.
+entities.KoseiHelper/SpawnController.attributes.description.zipMoverHeight=The height of the zip mover.
+entities.KoseiHelper/SpawnController.attributes.description.zipMoverTheme=The theme (sprite) of the zip mover.
+
 
 #TRIGGERS
 triggers.KoseiHelper/ForceThrowTrigger.placements.name.ForceThrowTrigger=Force Throw Trigger

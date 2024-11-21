@@ -13,16 +13,17 @@ SpawnController.placements = {
 		offsetY = 8,
 		entityToSpawn = "Puffer",
 		spawnCooldown = 1,
-		iceBlockWidth = 16,
-		iceBlockHeight = 16,
-		removeDash = true,
+		removeDash = false,
 		removeStamina = false,
 		flag = "",
 		flagValue = true,
 		relativeToPlayerFacing = true,
 		timeToLive = -1,
-		audio = "",
+		appearSound = "event:/none",
+		disappearSound = "event:/KoseiHelper/spawn",
 		-- Entity-specific attributes
+		nodeX = 0,
+		nodeY = 0,
 		boosterRed = false,
 		cloudFragile = true,
 		featherShielded = false,
@@ -33,6 +34,8 @@ SpawnController.placements = {
 		dashBlockCanDash = true,
 		iceballSpeed = 1,
 		iceballAlwaysIce = false,
+		iceBlockWidth = 16,
+		iceBlockHeight = 16,
 		moveBlockDirection = "Down",
 		moveBlockWidth = 16,
 		moveBlockHeight = 16,
@@ -40,13 +43,9 @@ SpawnController.placements = {
 		moveBlockFast = true,
 		swapBlockWidth = 16,
 		swapBlockHeight = 16,
-		swapBlockNodeX = 0,
-		swapBlockNodeY = 0,
 		swapBlockTheme = "Normal",
 		zipMoverWidth = 16,
 		zipMoverHeight = 16,
-		zipMoverNodeX = 0,
-		zipMoverNodeY = 0,
 		zipMoverTheme = "Normal"
 		}
 	}
@@ -76,6 +75,9 @@ SpawnController.fieldInformation = {
 	spawnCooldown = {
 		minimumValue = 0
 	},
+	timeToLive = {
+		minimumValue = 0
+	},
 	iceBlockWidth = { fieldType = "integer"},
 	iceBlockHeight = { fieldType = "integer"},
 	dashBlockWidth = { fieldType = "integer"},
@@ -88,6 +90,20 @@ SpawnController.fieldInformation = {
 		"Down"
 		},
 		editable = false
+	},
+	swapBlockTheme = {
+		options = {
+		"Normal",
+		"Moon"
+		},
+		editable = false
+	},
+	zipMoverTheme = {
+		options = {
+		"Normal",
+		"Moon"
+		},
+		editable = false
 	}
 }
 
@@ -95,6 +111,8 @@ function SpawnController.ignoredFields(entity)
 	local ignored = {
 	"_name",
 	"_id",
+	"nodeX",
+	"nodeY",
 	"iceBlockWidth",
 	"iceBlockHeight",
 	"boosterRed",
@@ -114,13 +132,9 @@ function SpawnController.ignoredFields(entity)
 	"moveBlockFast",
 	"swapBlockWidth",
 	"swapBlockHeight",
-	"swapBlockNodeX",
-	"swapBlockNodeY",
 	"swapBlockTheme",
 	"zipMoverWidth",
 	"zipMoverHeight",
-	"zipMoverNodeX",
-	"zipMoverNodeY",
 	"zipMoverTheme"
 	}
     local function doNotIgnore(value)
@@ -165,17 +179,18 @@ function SpawnController.ignoredFields(entity)
 	if entity.entityToSpawn == "SwapBlock" then
 		doNotIgnore("swapBlockWidth")
 		doNotIgnore("swapBlockHeight")
-		doNotIgnore("swapBlockNodeX")
-		doNotIgnore("swapBlockNodeY")
 		doNotIgnore("swapBlockTheme")
 	end
 	if entity.entityToSpawn == "ZipMover" then
 		doNotIgnore("zipMoverWidth")
 		doNotIgnore("zipMoverHeight")
-		doNotIgnore("zipMoverNodeX")
-		doNotIgnore("zipMoverNodeY")
 		doNotIgnore("zipMoverTheme")
 	end
+	if entity.entityToSpawn == "ZipMover" or entity.entityToSpawn == "SwapBlock" then
+		doNotIgnore("nodeX")
+		doNotIgnore("nodeY")
+	end
+
 	return ignored
 end
 
