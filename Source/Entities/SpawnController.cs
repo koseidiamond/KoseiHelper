@@ -1,6 +1,7 @@
 using Celeste.Mod.Entities;
 using Monocle;
 using Microsoft.Xna.Framework;
+using System.Collections.Generic;
 
 namespace Celeste.Mod.KoseiHelper.Entities;
 
@@ -58,6 +59,8 @@ public class SpawnController : Entity
     public ZipMover.Themes zipMoverTheme;
     public string flag;
     public bool flagValue;
+    private List<Entity> spawnedEntities = new List<Entity>();
+    public Entity spawnedEntity = null;
 
     public SpawnController(EntityData data, Vector2 offset) : base(data.Position + offset)
     {
@@ -67,6 +70,7 @@ public class SpawnController : Entity
         spawnCooldown = spawnTime = data.Float("spawnCooldown", 0f);
         removeDash = data.Bool("removeDash", true);
         relativeToPlayerFacing = data.Bool("relativeToPlayerFacing", true);
+        timeToLive = data.Float("timeToLive", -1f);
 
         //entity specific data
         boosterRed = data.Bool("boosterRed", false);
@@ -122,54 +126,67 @@ public class SpawnController : Entity
                 switch (entityToSpawn)
                 { // If relativeToPlayerFacing is true, a positive X value will spawn in front of the player, and a negative X value will spawn behind the player
                     case EntityType.Puffer:
-                        Scene.Add(new Puffer(spawnPosition, player.Facing == Facings.Right));
+                        spawnedEntity = new Puffer(spawnPosition, player.Facing == Facings.Right);
                         break;
                     case EntityType.Cloud:
-                        Scene.Add(new Cloud(new Vector2(player.Position.X + offsetX, player.Position.Y + offsetY), true));
+                        spawnedEntity = new Cloud(spawnPosition, true);
                         break;
                     case EntityType.BadelineBoost:
-                        Scene.Add(new BadelineBoost(new Vector2[] { new Vector2(player.Position.X + offsetX, player.Position.Y + offsetY), new Vector2(player.Position.X + offsetX, level.Bounds.Top - 200) }, false, false, false, false, false));
+                        spawnedEntity = new BadelineBoost(new Vector2[] { new Vector2(player.Position.X + offsetX, player.Position.Y + offsetY), new Vector2(player.Position.X + offsetX, level.Bounds.Top - 200) }, false, false, false, false, false);
                         break;
                     case EntityType.Booster:
-                        Scene.Add(new Booster(new Vector2(player.Position.X + offsetX, player.Position.Y + offsetY), boosterRed));
+                        spawnedEntity = new Booster(spawnPosition, boosterRed);
                         break;
                     case EntityType.Bumper:
-                        Scene.Add(new Bumper(new Vector2(player.Position.X + offsetX, player.Position.Y + offsetY), null));
+                        spawnedEntity = new Bumper(spawnPosition, null);
                         break;
                     case EntityType.IceBlock:
-                        Scene.Add(new IceBlock(new Vector2(player.Position.X + offsetX, player.Position.Y + offsetY), 8, 8));
+                        spawnedEntity = new IceBlock(spawnPosition, 8, 8);
                         break;
                     case EntityType.Heart:
-                        Scene.Add(new FakeHeart(new Vector2(player.Position.X + offsetX, player.Position.Y + offsetY)));
+                        spawnedEntity = new FakeHeart(spawnPosition);
                         break;
                     case EntityType.DashBlock:
-                        Scene.Add(new DashBlock(new Vector2(player.Position.X + offsetX, player.Position.Y + offsetY), dashBlockTileType, dashBlockWidth, dashBlockHeight, false, true, dashBlockCanDash, new EntityID("koseiHelper_spawnedDashBlock", entityID)));
+                        spawnedEntity = new DashBlock(spawnPosition, dashBlockTileType, dashBlockWidth, dashBlockHeight, false, true, dashBlockCanDash, new EntityID("koseiHelper_spawnedDashBlock", entityID));
                         entityID += 1;
                         break;
                     case EntityType.Feather:
-                        Scene.Add(new FlyFeather(new Vector2(player.Position.X + offsetX, player.Position.Y + offsetY), featherShielded, featherSingleUse));
+                        spawnedEntity = new FlyFeather(spawnPosition, featherShielded, featherSingleUse);
                         break;
                     case EntityType.Iceball:
-                        Scene.Add(new FireBall(new Vector2[] { new Vector2(player.Position.X + offsetX, player.Position.Y + offsetY) }, 1, 1, 0, iceballSpeed, iceballAlwaysIce));
+                        spawnedEntity = new FireBall(new Vector2[] { spawnPosition }, 1, 1, 0, iceballSpeed, iceballAlwaysIce);
                         break;
                     case EntityType.MoveBlock:
-                        Scene.Add(new MoveBlock(new Vector2(player.Position.X + offsetX, player.Position.Y + offsetY), moveBlockWidth, moveBlockHeight, moveBlockDirection, moveBlockCanSteer, moveBlockFast));
+                        spawnedEntity = new MoveBlock(spawnPosition, moveBlockWidth, moveBlockHeight, moveBlockDirection, moveBlockCanSteer, moveBlockFast);
                         break;
                     case EntityType.Seeker:
-                        Scene.Add(new Seeker(new Vector2(player.Position.X + offsetX, player.Position.Y + offsetY), new Vector2[] { new Vector2(player.Position.X + offsetX, player.Position.Y + offsetY) }));
+                        spawnedEntity = new Seeker(spawnPosition, new Vector2[] { spawnPosition });
                         break;
                     case EntityType.SwapBlock:
-                        Scene.Add(new SwapBlock(new Vector2(player.Position.X + offsetX, player.Position.Y + offsetY), swapBlockWidth, swapBlockHeight, new Vector2(player.Position.X + swapBlockNodeX, player.Position.Y + swapBlockNodeY), swapBlockTheme));
+                        spawnedEntity = new SwapBlock(spawnPosition, swapBlockWidth, swapBlockHeight, new Vector2(player.Position.X + swapBlockNodeX, player.Position.Y + swapBlockNodeY), swapBlockTheme);
                         break;
                     case EntityType.ZipMover:
-                        Scene.Add(new ZipMover(new Vector2(player.Position.X + offsetX, player.Position.Y + offsetY), zipMoverWidth, zipMoverHeight, new Vector2(player.Position.X + zipMoverNodeX, player.Position.Y + zipMoverNodeY), zipMoverTheme));
+                        spawnedEntity = new ZipMover(spawnPosition, zipMoverWidth, zipMoverHeight, new Vector2(player.Position.X + zipMoverNodeX, player.Position.Y + zipMoverNodeY), zipMoverTheme);
                         break;
                     default:
                         break;
                 }
+                if (spawnedEntity != null)
+                {
+                    Scene.Add(spawnedEntity);
+                    spawnedEntities.Add(spawnedEntity);
+                }
                 spawnCooldown = spawnTime;
                 Audio.Play("event:/KoseiHelper/spawn", player.Position);
             }
+        }
+    }
+    public void RemoveEntity(Entity entity)
+    {
+        if (spawnedEntities.Contains(entity))
+        {
+            Scene.Remove(entity);
+            spawnedEntities.Remove(entity);
         }
     }
 }
