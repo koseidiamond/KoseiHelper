@@ -48,7 +48,7 @@ public class CustomWhiteBlock : JumpThru
     }
     private void MakeOpaque()
     {
-        Logger.Debug(nameof(KoseiHelperModule), $"The custom white block is opaque!");
+        //Logger.Debug(nameof(KoseiHelperModule), $"The custom white block is opaque!");
         enabled = true;
         sprite.Color = color * 1f;
         Collidable = true;

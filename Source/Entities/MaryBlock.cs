@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework;
 namespace Celeste.Mod.KoseiHelper.Entities;
 
 [CustomEntity("KoseiHelper/MaryBlock")]
-public class BaseCoyoteMeterDisplay : Entity
+public class MaryBlock : Entity
 {
 
     private Level level;
@@ -16,7 +16,7 @@ public class BaseCoyoteMeterDisplay : Entity
     private int direction = -1;
     public static ParticleType maryParticle = SwitchGate.P_Behind;
     public bool outline;
-    public BaseCoyoteMeterDisplay (EntityData data, Vector2 offset) : base(data.Position + offset)
+    public MaryBlock(EntityData data, Vector2 offset) : base(data.Position + offset)
     {
         Depth = -9500;
         potted = data.Bool("potted", false);

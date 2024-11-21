@@ -1,10 +1,28 @@
 using Celeste.Mod.Entities;
 using Monocle;
-using System;
 using Microsoft.Xna.Framework;
-using System.Collections.Generic;
 
 namespace Celeste.Mod.KoseiHelper.Entities;
+
+
+public enum EntityType
+{
+    Puffer,
+    Cloud,
+    BadelineBoost,
+    Booster,
+    Bumper,
+    IceBlock,
+    Heart,
+    DashBlock,
+    FallingBlock,
+    Feather,
+    Iceball,
+    MoveBlock,
+    Seeker,
+    SwapBlock,
+    ZipMover
+}
 
 [CustomEntity("KoseiHelper/SpawnController")]
 public class SpawnController : Entity
@@ -14,16 +32,58 @@ public class SpawnController : Entity
     private Player player;
     public int offsetY;
     public int offsetX;
-    public string entityName;
-    public string entityData;
     public bool removeDash;
+    public EntityType entityToSpawn;
+    public float spawnCooldown, spawnTime;
+    public bool relativeToPlayerFacing;
+    private int entityID = 2388544;
+
+    //entity specific data
+    public bool cloudFragile;
+    public bool boosterRed;
+    public int iceBlockWidth, iceBlockHeight = 16;
+    public bool featherShielded;
+    public bool featherSingleUse;
+    public char dashBlockTileType;
+    public int dashBlockWidth, dashBlockHeight = 16;
+    public bool dashBlockCanDash;
+    public float iceballSpeed;
+    public bool iceballAlwaysIce;
+    public int moveBlockWidth, moveBlockHeight;
+    public bool moveBlockCanSteer, moveBlockFast;
+    public MoveBlock.Directions moveBlockDirection;
+    public int swapBlockWidth, swapBlockHeight, swapBlockNodeX, swapBlockNodeY;
+    public SwapBlock.Themes swapBlockTheme;
+    public int zipMoverWidth, zipMoverHeight, zipMoverNodeX, zipMoverNodeY;
+    public ZipMover.Themes zipMoverTheme;
+    public string flag;
+    public bool flagValue;
+
     public SpawnController(EntityData data, Vector2 offset) : base(data.Position + offset)
     {
         offsetX = data.Int("offsetX", 0);
         offsetY = data.Int("offsetY", 8);
-        entityName = data.Attr("entityName");
-        entityData = data.Attr("entityData");
+        entityToSpawn = data.Enum("entityToSpawn", EntityType.Puffer);
+        spawnCooldown = spawnTime = data.Float("spawnCooldown", 0f);
         removeDash = data.Bool("removeDash", true);
+        relativeToPlayerFacing = data.Bool("relativeToPlayerFacing", true);
+
+        //entity specific data
+        boosterRed = data.Bool("boosterRed", false);
+        iceBlockWidth = data.Int("iceBlockWidth", 16);
+        iceBlockHeight = data.Int("iceBlockHeight", 16);
+        cloudFragile = data.Bool("cloudFragile", true);
+        featherShielded = data.Bool("featherShielded", false);
+        featherSingleUse = data.Bool("featherSingleUse", true);
+        dashBlockTileType = data.Char("dashBlockTileType", '3');
+        dashBlockWidth = data.Int("dashBlockWidth", 16);
+        dashBlockHeight = data.Int("dashBlockHeight", 16);
+        dashBlockCanDash = data.Bool("dashBlockCanDash", true);
+        iceballSpeed = data.Float("iceballSpeed", 1f);
+        iceballAlwaysIce = data.Bool("iceballAlwaysIce", false);
+        moveBlockDirection = data.Enum("moveBlockDirection", MoveBlock.Directions.Down);
+        flag = data.Attr("flag", "");
+        flagValue = data.Bool("flagValue", true);
     }
 
     public override void Awake(Scene scene)
@@ -37,65 +97,79 @@ public class SpawnController : Entity
         base.Added(scene);
         level = SceneAs<Level>();
 
-
     }
 
     public override void Update()
     {
         base.Update();
+        if (spawnCooldown > 0)
+            spawnCooldown -= Engine.RawDeltaTime;
+        else
+            spawnCooldown = 0f;
         player = Scene.Tracker.GetEntity<Player>();
-        if (KoseiHelperModule.Settings.SpawnButton.Pressed)
-        {
-            if (removeDash)
-                player.Dashes -= 1;
-            var parsedAttributes = ParseEntityData(entityData);
-            if (!string.IsNullOrEmpty(entityName))
+        if ((flagValue && level.Session.GetFlag(flag)) || string.IsNullOrEmpty(flag) || (!flagValue && !level.Session.GetFlag(flag)))
+        { // If the flag is true, or if no flag is required, spawn the entity
+            if (KoseiHelperModule.Settings.SpawnButton.Pressed && spawnCooldown == 0)
             {
+                if (removeDash && player.Dashes > 0)
+                    player.Dashes -= 1;
                 var spawnPosition = new Vector2(player.Position.X + offsetX, player.Position.Y + offsetY);
-                Type entityType = Type.GetType(entityName);
-                    //var constructor = entityType.GetConstructor(new Type[] { typeof(Vector2), typeof(Dictionary<string, object>) });
-                    //object entity = constructor.Invoke(new object[] { spawnPosition, parsedAttributes });
-                    this.Scene.Add(new Puffer(new Vector2(player.Position.X + offsetX, player.Position.Y + offsetY), false));
-                    //this.Scene.Add((Entity)entity);
+                bool useNegativeOffset = relativeToPlayerFacing && player.Facing == Facings.Left;
+                if (useNegativeOffset)
+                    spawnPosition = new Vector2(player.Position.X - offsetX, player.Position.Y + offsetY);
+                else
+                    spawnPosition = new Vector2(player.Position.X + offsetX, player.Position.Y + offsetY);
+                switch (entityToSpawn)
+                { // If relativeToPlayerFacing is true, a positive X value will spawn in front of the player, and a negative X value will spawn behind the player
+                    case EntityType.Puffer:
+                        Scene.Add(new Puffer(spawnPosition, player.Facing == Facings.Right));
+                        break;
+                    case EntityType.Cloud:
+                        Scene.Add(new Cloud(new Vector2(player.Position.X + offsetX, player.Position.Y + offsetY), true));
+                        break;
+                    case EntityType.BadelineBoost:
+                        Scene.Add(new BadelineBoost(new Vector2[] { new Vector2(player.Position.X + offsetX, player.Position.Y + offsetY), new Vector2(player.Position.X + offsetX, level.Bounds.Top - 200) }, false, false, false, false, false));
+                        break;
+                    case EntityType.Booster:
+                        Scene.Add(new Booster(new Vector2(player.Position.X + offsetX, player.Position.Y + offsetY), boosterRed));
+                        break;
+                    case EntityType.Bumper:
+                        Scene.Add(new Bumper(new Vector2(player.Position.X + offsetX, player.Position.Y + offsetY), null));
+                        break;
+                    case EntityType.IceBlock:
+                        Scene.Add(new IceBlock(new Vector2(player.Position.X + offsetX, player.Position.Y + offsetY), 8, 8));
+                        break;
+                    case EntityType.Heart:
+                        Scene.Add(new FakeHeart(new Vector2(player.Position.X + offsetX, player.Position.Y + offsetY)));
+                        break;
+                    case EntityType.DashBlock:
+                        Scene.Add(new DashBlock(new Vector2(player.Position.X + offsetX, player.Position.Y + offsetY), dashBlockTileType, dashBlockWidth, dashBlockHeight, false, true, dashBlockCanDash, new EntityID("koseiHelper_spawnedDashBlock", entityID)));
+                        entityID += 1;
+                        break;
+                    case EntityType.Feather:
+                        Scene.Add(new FlyFeather(new Vector2(player.Position.X + offsetX, player.Position.Y + offsetY), featherShielded, featherSingleUse));
+                        break;
+                    case EntityType.Iceball:
+                        Scene.Add(new FireBall(new Vector2[] { new Vector2(player.Position.X + offsetX, player.Position.Y + offsetY) }, 1, 1, 0, iceballSpeed, iceballAlwaysIce));
+                        break;
+                    case EntityType.MoveBlock:
+                        Scene.Add(new MoveBlock(new Vector2(player.Position.X + offsetX, player.Position.Y + offsetY), moveBlockWidth, moveBlockHeight, moveBlockDirection, moveBlockCanSteer, moveBlockFast));
+                        break;
+                    case EntityType.Seeker:
+                        Scene.Add(new Seeker(new Vector2(player.Position.X + offsetX, player.Position.Y + offsetY), new Vector2[] { new Vector2(player.Position.X + offsetX, player.Position.Y + offsetY) }));
+                        break;
+                    case EntityType.SwapBlock:
+                        Scene.Add(new SwapBlock(new Vector2(player.Position.X + offsetX, player.Position.Y + offsetY), swapBlockWidth, swapBlockHeight, new Vector2(player.Position.X + swapBlockNodeX, player.Position.Y + swapBlockNodeY), swapBlockTheme));
+                        break;
+                    case EntityType.ZipMover:
+                        Scene.Add(new ZipMover(new Vector2(player.Position.X + offsetX, player.Position.Y + offsetY), zipMoverWidth, zipMoverHeight, new Vector2(player.Position.X + zipMoverNodeX, player.Position.Y + zipMoverNodeY), zipMoverTheme));
+                        break;
+                    default:
+                        break;
+                }
+                spawnCooldown = spawnTime;
                 Audio.Play("event:/KoseiHelper/spawn", player.Position);
             }
         }
-    }
-
-    private Dictionary<string, object> ParseEntityData(string data)
-    {
-        var parsedAttributes = new Dictionary<string, object>();
-        if (string.IsNullOrEmpty(data))
-            return parsedAttributes;
-
-        string[] attributes = data.Split(',');
-
-        foreach (var attribute in attributes)
-        {
-            var keyValue = attribute.Split('=');
-            if (keyValue.Length == 2)
-            {
-                string key = keyValue[0].Trim();
-                string value = keyValue[1].Trim();
-                object parsedValue = ParseValue(value);
-                parsedAttributes[key] = parsedValue;
-            }
-        }
-
-        return parsedAttributes;
-    }
-
-    private object ParseValue(string value)
-    {
-        if (bool.TryParse(value, out bool boolValue))
-            return boolValue;
-
-        if (int.TryParse(value, out int intValue))
-            return intValue;
-
-        if (float.TryParse(value, out float floatValue))
-            return floatValue;
-
-        return value;
     }
 }

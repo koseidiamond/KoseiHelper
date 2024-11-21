@@ -19,6 +19,12 @@ Goomba.placements = {
 	},
 }
 
+Goomba.fieldInformation = {
+	timeToSpawnMinis = {
+		minimumValue = 0.001
+	}
+}
+
 function Goomba.texture(room, entity)
     local wide = entity.isWide
 	local winged = entity.isWinged

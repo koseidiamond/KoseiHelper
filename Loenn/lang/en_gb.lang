@@ -77,7 +77,7 @@ entities.KoseiHelper/CustomPauseController.attributes.description.dieOnUnpause=I
 
 # Spawn Controller
 entities.KoseiHelper/SpawnController.placements.name.SpawnController=Spawn Controller
-entities.KoseiHelper/SpawnController.placements.description.SpawnController=This controller spawns something.
+entities.KoseiHelper/SpawnController.placements.description.SpawnController=This controller spawns something on a button press.\nSome entities may have custom attributes!
 entities.KoseiHelper/SpawnController.attributes.description.offsetX=Horizontal offset relative to the player position where the entity will spawn.
 entities.KoseiHelper/SpawnController.attributes.description.offsetY=Vertical offset relative to the player position where the entity will spawn.
 entities.KoseiHelper/SpawnController.attributes.description.entityData=The data of the entity that you want to spawn.\nSee https://github.com/koseidiamond/KoseiHelper for an example.
