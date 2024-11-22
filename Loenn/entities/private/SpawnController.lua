@@ -18,13 +18,12 @@ SpawnController.placements = {
 		relativeToPlayerFacing = true,
 		nodeRelativeToPlayerFacing = true,
 		timeToLive = 0,
-		appearSound = "event:/none",
-		disappearSound = "event:/KoseiHelper/spawn",
+		appearSound = "event:/KoseiHelper/spawn",
+		disappearSound = "event:/game/general/assist_dash_aim",
 		flag = "",
 		spawnCondition = "OnCustomButtonPress",
 		persistent = false,
 		--Spawn conditions
-		--TODO notes: fix the blockTileType selection
 		spawnFlag = "koseiHelper_spawn",
 		spawnSpeed = 300,
 		spawnInterval = 1,
@@ -36,6 +35,7 @@ SpawnController.placements = {
 		blockHeight = 16,
 		blockTileType = "3",
 		boosterRed = false,
+		dummyFix = true,
 		cloudFragile = true,
 		featherShielded = false,
 		featherSingleUse = true,
@@ -53,7 +53,7 @@ SpawnController.placements = {
 	}
 }
 
-SpawnController.fieldInformation = {
+SpawnController.fieldInformation = function (entity) return {
 	entityToSpawn = {
 		options = {
 		"Puffer",
@@ -95,8 +95,15 @@ SpawnController.fieldInformation = {
 		minimumValue = 0
 	},
 	spawnLimit = { fieldType = "integer"},
+	offsetX = { fieldType = "integer"},
+	offsetY = { fieldType = "integer"},
+	nodeX = { fieldType = "integer"},
+	nodeY = { fieldType = "integer"},
 	blockWidth = { fieldType = "integer"},
 	blockHeight = { fieldType = "integer"},
+	blockTileType = {
+		options = fakeTilesHelper.getTilesOptions(entity.fg and "tilesFg")
+	},
 	moveBlockDirection = {
 		options = {
 		"Left",
@@ -120,7 +127,8 @@ SpawnController.fieldInformation = {
 		},
 		editable = false
 	}
-}
+} end
+
 
 function SpawnController.ignoredFields(entity)
 	local ignored = {
@@ -133,6 +141,7 @@ function SpawnController.ignoredFields(entity)
 	"blockTileType",
 	"nodeRelativeToPlayerFacing",
 	"boosterRed",
+	"dummyFix",
 	"cloudFragile",
 	"featherShielded",
 	"featherSingleUse",
@@ -163,6 +172,9 @@ function SpawnController.ignoredFields(entity)
 	end
 	if entity.spawnCondition == "OnSpeedX" then
 		doNotIgnore("spawnSpeed")
+	end
+	if entity.spawnCondition == "BadelineBoost" then
+		doNotIgnore("dummyFix")
 	end
 	if entity.spawnCondition == "OnInterval" then
 		doNotIgnore("spawnInterval")

@@ -4,7 +4,8 @@ using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using System;
 using static Celeste.Session;
-//TODO make the entity unable to spawn if there's a solid overlapping the position (?) (the problem is the tiles of multiple sizes)
+using System.Linq;
+//TODO IMPROVEMENT: make the entity unable to spawn if there's a solid overlapping the position (?) (the problem is the tiles of multiple sizes)
 namespace Celeste.Mod.KoseiHelper.Entities;
 
 public enum EntityType
@@ -75,6 +76,8 @@ public class SpawnController : Entity
 
     public bool boosterRed;
 
+    public bool dummyFix;
+
     public bool featherShielded;
     public bool featherSingleUse;
 
@@ -113,8 +116,8 @@ public class SpawnController : Entity
         relativeToPlayerFacing = data.Bool("relativeToPlayerFacing", true);
         nodeRelativeToPlayerFacing = data.Bool("nodeRelativeToPlayerFacing", true);
         timeToLive = data.Float("timeToLive", 0f);
-        appearSound = data.Attr("appearSound", "event:/none");
-        disappearSound = data.Attr("disappearSound", "event:/KoseiHelper/spawn");
+        appearSound = data.Attr("appearSound", "event:/KoseiHelper/spawn");
+        disappearSound = data.Attr("disappearSound", "event:/game/general/assist_dash_aim");
         flag = data.Attr("flag", "");
         flagValue = data.Bool("flagValue", true);
         spawnCondition = data.Enum("spawnCondition", SpawnCondition.OnCustomButtonPress);
@@ -135,6 +138,8 @@ public class SpawnController : Entity
         blockTileType = data.Char("blockTileType", '3');
 
         boosterRed = data.Bool("boosterRed", false);
+
+        dummyFix = data.Bool("dummyFix", true);
 
         cloudFragile = data.Bool("cloudFragile", true);
 
@@ -235,11 +240,11 @@ public class SpawnController : Entity
                     case EntityType.Cloud:
                         spawnedEntity = new Cloud(spawnPosition, true);
                         break;
-                    case EntityType.BadelineBoost: //TODO remove dummy
+                    case EntityType.BadelineBoost:
                         spawnedEntity = new BadelineBoost(new Vector2[] { spawnPosition, new Vector2(player.Position.X + offsetX, level.Bounds.Top - 200) }, false, false, false, false, false);
                         break;
-                    case EntityType.Booster: //TODO not compatible with dash mode
-                        spawnedEntity = new Booster(spawnPosition, boosterRed);
+                    case EntityType.Booster: //TODO FIX: not compatible with dash mode
+                        spawnedEntity = new BoosterNoOutline(spawnPosition, boosterRed);
                         break;
                     case EntityType.Bumper:
                         spawnedEntity = new Bumper(spawnPosition, null);
@@ -265,7 +270,7 @@ public class SpawnController : Entity
                     case EntityType.Heart:
                         spawnedEntity = new FakeHeart(spawnPosition);
                         break;
-                    case EntityType.DashBlock: //TODO fix tiletype selection in their plugin
+                    case EntityType.DashBlock:
                         spawnedEntity = new NoFreezeDashBlock(spawnPosition, blockTileType, blockWidth, blockHeight, false, true, dashBlockCanDash, new EntityID("koseiHelper_spawnedDashBlock", entityID));
                         entityID += 1;
                         break;
@@ -275,13 +280,13 @@ public class SpawnController : Entity
                     case EntityType.Iceball:
                         spawnedEntity = new FireBall(new Vector2[] { spawnPosition, nodePosition }, 1, 1, 0, iceballSpeed, iceballAlwaysIce);
                         break;
-                    case EntityType.MoveBlock: // TODO THEY ARE JANK
+                    case EntityType.MoveBlock: // TODO IMPROVEMENT: They are jank
                         spawnedEntity = new MoveBlock(spawnPosition, blockWidth, blockHeight, moveBlockDirection, moveBlockCanSteer, moveBlockFast);
                         break;
                     case EntityType.Seeker:
                         spawnedEntity = new Seeker(spawnPosition, new Vector2[] { spawnPosition });
                         break;
-                    case EntityType.SwapBlock:
+                    case EntityType.SwapBlock: //TODO IMPROVEMENT: make them to spawn without that ugly ass background
                         spawnedEntity = new SwapBlock(spawnPosition, blockWidth, blockHeight, nodePosition, swapBlockTheme);
                         break;
                     case EntityType.ZipMover:
@@ -293,7 +298,7 @@ public class SpawnController : Entity
                     default:
                         break;
                 }
-                if (spawnedEntity != null)
+                if (spawnedEntity != null && player != null)
                 { // If the entity has been spawned successfully:
                     Scene.Add(spawnedEntity);
                     spawnedEntitiesWithTTL.Add(new EntityWithTTL(spawnedEntity, entityTTL));
@@ -308,7 +313,7 @@ public class SpawnController : Entity
         {
             wrapper.TimeToLive -= Engine.RawDeltaTime;
 
-            if (wrapper.Entity is MoveBlock moveBlock) //Fix: They crash the game when they're too out of bounds, so...
+            if (wrapper.Entity is MoveBlock moveBlock) //Fix: They would crash the game when if they were too out of bounds, so...
             {
                 if (wrapper.Entity.Bottom > (float)level.Bounds.Bottom + 16 || // ... We remove move blocks regardless of TTS if they are oob!
                     wrapper.Entity.Left < (float)level.Bounds.Left - 16 ||
@@ -346,6 +351,11 @@ public class SpawnController : Entity
                 }
                 Scene.Remove(wrapper.Entity);
                 toRemove.Add(wrapper);
+                if (dummyFix)
+                {
+                    foreach (var badelineDummy in level.Entities.OfType<BadelineDummy>())
+                        Scene.Remove(badelineDummy);
+                }
             }
         }
         // Remove the entities from the list after they have been removed from the scene
@@ -354,8 +364,11 @@ public class SpawnController : Entity
             spawnedEntitiesWithTTL.Remove(wrapper);
         }
         //Reset conditions on different spawn modes so they don't check once per frame:
-        if (Math.Abs(player.Speed.X) < spawnSpeed && hasSpawnedFromSpeed) // Resets speed check if speed falls below threshold
-            hasSpawnedFromSpeed = false;
+        if (player != null)
+        {
+            if (Math.Abs(player.Speed.X) < spawnSpeed && hasSpawnedFromSpeed) // Resets speed check if speed falls below threshold
+                hasSpawnedFromSpeed = false;
+        }
         previousHasSpawnedFromFlag = currentHasSpawnedFromFlag; // used on Flag Spawn Condition mode
         previousCassetteIndex = currentCassetteIndex; // used on Cassette Beat Condition mode
         canSpawnFromCassette = false;
