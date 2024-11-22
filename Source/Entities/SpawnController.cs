@@ -27,19 +27,35 @@ public enum EntityType
     ZipMover
 }
 
+public enum SpawnCondition  //TODO IMPLEMENT NEW SPAWN CONDITIONS
+{
+    OnFlagEnabled = 1,
+    OnDash = 2,
+    OnJump = 3,
+    OnCustomButtonPress = 4,
+    OnSpeedX = 5,
+    OnInterval = 6
+}
+
 [CustomEntity("KoseiHelper/SpawnController")]
 public class SpawnController : Entity
 {
-
-    private Level level;
-    private Player player;
-    public int offsetY;
-    public int offsetX;
-    public bool removeDash;
-    public bool removeStamina;
+    //general customizable variables
+    public int offsetX, offsetY;
+    public bool removeDash, removeStamina;
     public EntityType entityToSpawn;
     public float spawnCooldown, spawnTime;
-    public bool relativeToPlayerFacing;
+    public bool relativeToPlayerFacing, nodeRelativeToPlayerFacing;
+    public SpawnCondition spawnCondition;
+    public string spawnFlag;
+    public float spawnSpeed, spawnInterval;
+    public int spawnLimit;
+    public bool persistency;
+    private bool hasSpawnedFromSpeed = false;
+
+    //other important variables
+    private Level level;
+    private Player player;
     private int entityID = 7388544; // Very high value so it doesn't conflict with other ids (hopefully)
     private List<EntityWithTTL> spawnedEntitiesWithTTL = new List<EntityWithTTL>();
     private List<Solid> spawnedSolids = new List<Solid>(); // So lava/ice solids can be removed
@@ -78,7 +94,7 @@ public class SpawnController : Entity
     public int swapBlockWidth, swapBlockHeight;
     public SwapBlock.Themes swapBlockTheme;
 
-    public int zipMoverWidth, zipMoverHeight;
+    public int zipMoverWidth, zipMoverHeight; // TODO unify widths/heights
     public ZipMover.Themes zipMoverTheme;
 
     public string flag;
@@ -98,17 +114,25 @@ public class SpawnController : Entity
         removeDash = data.Bool("removeDash", false);
         removeStamina = data.Bool("removeStamina", false);
         relativeToPlayerFacing = data.Bool("relativeToPlayerFacing", true);
-        timeToLive = data.Float("timeToLive", -1f);
+        nodeRelativeToPlayerFacing = data.Bool("nodeRelativeToPlayerFacing", true);
+        timeToLive = data.Float("timeToLive", 0f);
         appearSound = data.Attr("appearSound", "event:/none");
         disappearSound = data.Attr("disappearSound", "event:/KoseiHelper/spawn");
         flag = data.Attr("flag", "");
         flagValue = data.Bool("flagValue", true);
+        spawnCondition = data.Enum("spawnCondition", SpawnCondition.OnCustomButtonPress);
+        spawnFlag = data.Attr("spawnFlag", "koseiHelper_spawn");
+        spawnSpeed = data.Float("spawnSpeed", 300f);
+        spawnLimit = data.Int("spawnLimit", 3);
+        persistency = data.Bool("persistent", false);
+        if (persistency)
+            base.Tag = Tags.Persistent;
 
         //Entity specific attributes
 
 
-        nodeX = data.Int("zipMoverNodeX", 16);
-        nodeY = data.Int("zipMoverNodeY", 16);
+        nodeX = data.Int("nodeX", 0);
+        nodeY = data.Int("nodeY", 0);
 
         boosterRed = data.Bool("boosterRed", false);
 
@@ -168,29 +192,46 @@ public class SpawnController : Entity
     public override void Update()
     {
         base.Update();
-        Logger.Debug(nameof(KoseiHelperModule), $"Current core mode is: {coreMode}");
+        player = Scene.Tracker.GetEntity<Player>();
+        if (Scene.OnInterval(1f))
+        {
+            Logger.Debug(nameof(KoseiHelperModule), $"spawnLimit: {spawnLimit}");
+            Logger.Debug(nameof(KoseiHelperModule), $"spawnCondition: {spawnCondition}");
+            Logger.Debug(nameof(KoseiHelperModule), $"spawnFlag: {spawnFlag}");
+            Logger.Debug(nameof(KoseiHelperModule), $"player.Speed.X: {player.Speed.X}");
+            Logger.Debug(nameof(KoseiHelperModule), $"spawnSpeed: {spawnSpeed}");
+            Logger.Debug(nameof(KoseiHelperModule), $"player.StartedDashing: {player.StartedDashing}");
+            Logger.Debug(nameof(KoseiHelperModule), $"the button has been pressed: {spawnCondition == SpawnCondition.OnCustomButtonPress && KoseiHelperModule.Settings.SpawnButton}");
+        }
         if (spawnCooldown > 0)
             spawnCooldown -= Engine.RawDeltaTime;
         else
             spawnCooldown = 0f;
+        // If the flag is true, or if no flag is required, check if the spawn conditions are met
         if ((flagValue && level.Session.GetFlag(flag)) || string.IsNullOrEmpty(flag) || (!flagValue && !level.Session.GetFlag(flag)))
-        { // If the flag is true, or if no flag is required, spawn the entity
-            if (KoseiHelperModule.Settings.SpawnButton.Pressed && spawnCooldown == 0 && Scene.Tracker.GetEntity<Player>() != null)
+        { //If the spawn conditions are met, spawn the entity: //TODO test these modes
+            if (((spawnCondition == SpawnCondition.OnFlagEnabled && level.Session.GetFlag(spawnFlag)) ||
+                (spawnCondition == SpawnCondition.OnSpeedX && Math.Abs(player.Speed.X) >= spawnSpeed && !hasSpawnedFromSpeed) ||
+                (spawnCondition == SpawnCondition.OnDash && player.StartedDashing)) ||
+                (spawnCondition == SpawnCondition.OnCustomButtonPress && KoseiHelperModule.Settings.SpawnButton.Pressed && spawnCooldown == 0) &&
+                spawnLimit != 0 && player != null) // Spawn Limit should be >0 if it's limited or <0 if there's no limit
             {
-                player = Scene.Tracker.GetEntity<Player>();
+                Logger.Debug(nameof(KoseiHelperModule), $"An entity is going to spawn: {entityToSpawn}");
                 if (removeDash && Scene.Tracker.GetEntity<Player>().Dashes > 0)
                     player.Dashes -= 1;
                 if (removeStamina)
                     player.Stamina = 0;
+                if (spawnLimit > 0)
+                    spawnLimit -= 1;
+                //Calculate spawn position
                 var spawnPosition = new Vector2(player.Position.X + offsetX, player.Position.Y + offsetY);
-                bool useNegativeOffset = relativeToPlayerFacing && player.Facing == Facings.Left;
-                if (useNegativeOffset)
+                if (relativeToPlayerFacing && player.Facing == Facings.Left)
                     spawnPosition = new Vector2(player.Position.X - offsetX, player.Position.Y + offsetY);
-                else
-                    spawnPosition = new Vector2(player.Position.X + offsetX, player.Position.Y + offsetY);
 
-                int adjustedNodeX = player.Facing == Facings.Left ? (int)(player.Position.X - nodeX) : (int)(player.Position.X + nodeX);
-                int adjustedNodeY = (int)(player.Position.Y + nodeY);
+                //Calculate node position
+                var nodePosition = new Vector2(player.Position.X + nodeX, player.Position.Y + nodeY);
+                if (relativeToPlayerFacing && player.Facing == Facings.Left)
+                    nodePosition = new Vector2(player.Position.X - nodeX, player.Position.Y + nodeY);
 
                 float entityTTL = timeToLive;
                 switch (entityToSpawn)
@@ -202,7 +243,7 @@ public class SpawnController : Entity
                         spawnedEntity = new Cloud(spawnPosition, true);
                         break;
                     case EntityType.BadelineBoost:
-                        spawnedEntity = new BadelineBoost(new Vector2[] { new Vector2(player.Position.X + offsetX, player.Position.Y + offsetY), new Vector2(player.Position.X + offsetX, level.Bounds.Top - 200) }, false, false, false, false, false);
+                        spawnedEntity = new BadelineBoost(new Vector2[] { spawnPosition, new Vector2(player.Position.X + offsetX, level.Bounds.Top - 200) }, false, false, false, false, false);
                         break;
                     case EntityType.Booster:
                         spawnedEntity = new Booster(spawnPosition, boosterRed);
@@ -238,8 +279,8 @@ public class SpawnController : Entity
                     case EntityType.Feather:
                         spawnedEntity = new FlyFeather(spawnPosition, featherShielded, featherSingleUse);
                         break;
-                    case EntityType.Iceball: //TODO implement nodeX/nodeY
-                        spawnedEntity = new FireBall(new Vector2[] { spawnPosition }, 1, 1, 0, iceballSpeed, iceballAlwaysIce);
+                    case EntityType.Iceball:
+                        spawnedEntity = new FireBall(new Vector2[] { spawnPosition, nodePosition }, 1, 1, 0, iceballSpeed, iceballAlwaysIce);
                         break;
                     case EntityType.MoveBlock: // TODO THEY ARE JANK
                         spawnedEntity = new MoveBlock(spawnPosition, moveBlockWidth, moveBlockHeight, moveBlockDirection, moveBlockCanSteer, moveBlockFast);
@@ -248,10 +289,10 @@ public class SpawnController : Entity
                         spawnedEntity = new Seeker(spawnPosition, new Vector2[] { spawnPosition });
                         break;
                     case EntityType.SwapBlock:
-                        spawnedEntity = new SwapBlock(spawnPosition, swapBlockWidth, swapBlockHeight, new Vector2(adjustedNodeX, adjustedNodeY), swapBlockTheme);
+                        spawnedEntity = new SwapBlock(spawnPosition, swapBlockWidth, swapBlockHeight, nodePosition, swapBlockTheme);
                         break;
                     case EntityType.ZipMover:
-                        spawnedEntity = new ZipMover(spawnPosition, zipMoverWidth, zipMoverHeight, new Vector2(adjustedNodeX, adjustedNodeY), zipMoverTheme);
+                        spawnedEntity = new ZipMover(spawnPosition, zipMoverWidth, zipMoverHeight, nodePosition, zipMoverTheme);
                         break;
                     case EntityType.FallingBlock:
                         spawnedEntity = new FallingBlock(spawnPosition, fallingBlockTile, fallingBlockWidth, fallingBlockHeight, fallingBlockBadeline, false, fallingBlockClimbFall);
@@ -263,9 +304,10 @@ public class SpawnController : Entity
                 {
                     Scene.Add(spawnedEntity);
                     spawnedEntitiesWithTTL.Add(new EntityWithTTL(spawnedEntity, entityTTL));
+                    spawnCooldown = spawnTime;
+                    hasSpawnedFromSpeed = true;
+                    Audio.Play(appearSound, player.Position);
                 }
-                spawnCooldown = spawnTime;
-                Audio.Play(appearSound, player.Position);
             }
         }
         List<EntityWithTTL> toRemove = new List<EntityWithTTL>();
@@ -318,6 +360,9 @@ public class SpawnController : Entity
         {
             spawnedEntitiesWithTTL.Remove(wrapper);
         }
+        //Reset conditions on different spawn modes so they don't check once per frame:
+        if (Math.Abs(player.Speed.X) < spawnSpeed && hasSpawnedFromSpeed) // Resets speed check if speed falls below threshold
+            hasSpawnedFromSpeed = false;
     }
     private void OnChangeMode(Session.CoreModes mode)
     {

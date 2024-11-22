@@ -15,12 +15,20 @@ SpawnController.placements = {
 		spawnCooldown = 1,
 		removeDash = false,
 		removeStamina = false,
-		flag = "",
 		flagValue = true,
 		relativeToPlayerFacing = true,
-		timeToLive = -1,
+		timeToLive = 0,
 		appearSound = "event:/none",
 		disappearSound = "event:/KoseiHelper/spawn",
+		flag = "",
+		spawnCondition = "OnCustomButtonPress",
+		persistent = false,
+		--Spawn conditions
+		--TODO notes: test     OnFlagEnabled, OnDash ,OnJump, OnCustomButtonPress, OnSpeedX, OnInterval
+		spawnFlag = "koseiHelper_spawn",
+		spawnSpeed = 300,
+		spawnInterval = 1,
+		spawnLimit = -1,
 		-- Entity-specific attributes
 		nodeX = 0,
 		nodeY = 0,
@@ -78,6 +86,21 @@ SpawnController.fieldInformation = {
 	timeToLive = {
 		minimumValue = 0
 	},
+	spawnCondition = {
+		options = {
+		"OnFlagEnabled",
+		"OnDash",
+		"OnJump",
+		"OnCustomButtonPress",
+		"OnSpeedX",
+		"OnInterval"
+		},
+		editable = false
+	},
+	spawnInterval = {
+		minimumValue = 0
+	},
+	spawnLimit = { fieldType = "integer"},
 	iceBlockWidth = { fieldType = "integer"},
 	iceBlockHeight = { fieldType = "integer"},
 	dashBlockWidth = { fieldType = "integer"},
@@ -126,16 +149,19 @@ function SpawnController.ignoredFields(entity)
 	"iceballSpeed",
 	"iceballAlwaysIce",
 	"moveBlockDirection",
-	"moveBlockWidth",
+	"moveBlockWidth", -- TODO replace widths with a single one
 	"moveBlockHeight",
 	"moveBlockCanSteer",
 	"moveBlockFast",
 	"swapBlockWidth",
 	"swapBlockHeight",
-	"swapBlockTheme",
+	"swapBlockTheme", 
 	"zipMoverWidth",
 	"zipMoverHeight",
-	"zipMoverTheme"
+	"zipMoverTheme",
+	"spawnFlag",
+	"spawnSpeed",
+	"spawnInterval"
 	}
     local function doNotIgnore(value)
         for i = #ignored, 1, -1 do
@@ -145,6 +171,15 @@ function SpawnController.ignoredFields(entity)
             end
         end
     end
+	if entity.spawnCondition == "OnFlagEnabled" then
+		doNotIgnore("spawnFlag")
+	end
+	if entity.spawnCondition == "OnSpeedX" then
+		doNotIgnore("spawnSpeed")
+	end
+	if entity.spawnCondition == "OnInterval" then
+		doNotIgnore("spawnInterval")
+	end
 	if entity.entityToSpawn == "Booster" then
 		doNotIgnore("boosterRed")
 	end
@@ -186,7 +221,7 @@ function SpawnController.ignoredFields(entity)
 		doNotIgnore("zipMoverHeight")
 		doNotIgnore("zipMoverTheme")
 	end
-	if entity.entityToSpawn == "ZipMover" or entity.entityToSpawn == "SwapBlock" then
+	if entity.entityToSpawn == "ZipMover" or entity.entityToSpawn == "SwapBlock" or entity.entityToSpawn == "Iceball" then
 		doNotIgnore("nodeX")
 		doNotIgnore("nodeY")
 	end
