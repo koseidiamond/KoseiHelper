@@ -4,7 +4,6 @@ local SpawnController = {}
 
 SpawnController.name = "KoseiHelper/SpawnController"
 SpawnController.depth = -9500
-SpawnController.texture = "objects/KoseiHelper/Controllers/SpawnController"
 SpawnController.placements = {
 	{
 		name = "SpawnController",
@@ -32,28 +31,22 @@ SpawnController.placements = {
 		-- Entity-specific attributes
 		nodeX = 0,
 		nodeY = 0,
+		blockWidth = 16,
+		blockHeight = 16,
+		blockTileType = "3",
 		boosterRed = false,
 		cloudFragile = true,
 		featherShielded = false,
 		featherSingleUse = true,
-		dashBlockTileType = "3",
-		dashBlockWidth = 16,
-		dashBlockHeight = 16,
 		dashBlockCanDash = true,
 		iceballSpeed = 1,
 		iceballAlwaysIce = false,
-		iceBlockWidth = 16,
-		iceBlockHeight = 16,
 		moveBlockDirection = "Down",
-		moveBlockWidth = 16,
-		moveBlockHeight = 16,
 		moveBlockCanSteer = false,
 		moveBlockFast = true,
-		swapBlockWidth = 16,
-		swapBlockHeight = 16,
+		fallingBlockBadeline = false,
+		fallingBlockClimbFall = false,
 		swapBlockTheme = "Normal",
-		zipMoverWidth = 16,
-		zipMoverHeight = 16,
 		zipMoverTheme = "Normal"
 		}
 	}
@@ -101,10 +94,8 @@ SpawnController.fieldInformation = {
 		minimumValue = 0
 	},
 	spawnLimit = { fieldType = "integer"},
-	iceBlockWidth = { fieldType = "integer"},
-	iceBlockHeight = { fieldType = "integer"},
-	dashBlockWidth = { fieldType = "integer"},
-	dashBlockHeight = { fieldType = "integer"},
+	blockWidth = { fieldType = "integer"},
+	blockHeight = { fieldType = "integer"},
 	moveBlockDirection = {
 		options = {
 		"Left",
@@ -136,32 +127,26 @@ function SpawnController.ignoredFields(entity)
 	"_id",
 	"nodeX",
 	"nodeY",
-	"iceBlockWidth",
-	"iceBlockHeight",
+	"blockWidth",
+	"blockHeight",
+	"blockTileType",
 	"boosterRed",
 	"cloudFragile",
 	"featherShielded",
 	"featherSingleUse",
-	"dashBlockTileType",
-	"dashBlockWidth",
-	"dashBlockHeight",
 	"dashBlockCanDash",
 	"iceballSpeed",
 	"iceballAlwaysIce",
 	"moveBlockDirection",
-	"moveBlockWidth", -- TODO replace widths with a single one
-	"moveBlockHeight",
 	"moveBlockCanSteer",
 	"moveBlockFast",
-	"swapBlockWidth",
-	"swapBlockHeight",
 	"swapBlockTheme", 
-	"zipMoverWidth",
-	"zipMoverHeight",
 	"zipMoverTheme",
 	"spawnFlag",
 	"spawnSpeed",
-	"spawnInterval"
+	"spawnInterval",
+	"fallingBlockBadeline",
+	"fallingBlockClimbFall"
 	}
     local function doNotIgnore(value)
         for i = #ignored, 1, -1 do
@@ -183,10 +168,6 @@ function SpawnController.ignoredFields(entity)
 	if entity.entityToSpawn == "Booster" then
 		doNotIgnore("boosterRed")
 	end
-	if entity.entityToSpawn == "IceBlock" then
-		doNotIgnore("iceBlockWidth")
-		doNotIgnore("iceBlockHeight")
-	end
 	if entity.entityToSpawn == "Cloud" then
 		doNotIgnore("cloudFragile")
 	end
@@ -195,9 +176,6 @@ function SpawnController.ignoredFields(entity)
 		doNotIgnore("featherSingleUse")
 	end
 	if entity.entityToSpawn == "DashBlock" then
-		doNotIgnore("dashBlockTileType")
-		doNotIgnore("dashBlockWidth")
-		doNotIgnore("dashBlockHeight")
 		doNotIgnore("dashBlockCanDash")
 	end
 	if entity.entityToSpawn == "Iceball" then
@@ -206,27 +184,72 @@ function SpawnController.ignoredFields(entity)
 	end
 	if entity.entityToSpawn == "MoveBlock" then
 		doNotIgnore("moveBlockDirection")
-		doNotIgnore("moveBlockWidth")
-		doNotIgnore("moveBlockHeight")
 		doNotIgnore("moveBlockCanSteer")
 		doNotIgnore("moveBlockFast")
 	end
 	if entity.entityToSpawn == "SwapBlock" then
-		doNotIgnore("swapBlockWidth")
-		doNotIgnore("swapBlockHeight")
 		doNotIgnore("swapBlockTheme")
 	end
 	if entity.entityToSpawn == "ZipMover" then
-		doNotIgnore("zipMoverWidth")
-		doNotIgnore("zipMoverHeight")
 		doNotIgnore("zipMoverTheme")
 	end
+	if entity.entityToSpawn == "FallingBlock" then
+		doNotIgnore("fallingBlockBadeline")
+		doNotIgnore("fallingBlockClimbFall")
+	end
+	-- Noded entities
 	if entity.entityToSpawn == "ZipMover" or entity.entityToSpawn == "SwapBlock" or entity.entityToSpawn == "Iceball" then
 		doNotIgnore("nodeX")
 		doNotIgnore("nodeY")
 	end
-
+	-- Entities with tileset
+	if entity.entityToSpawn == "DashBlock" or entity.entityToSpawn == "FallingBlock" then
+		doNotIgnore("blockTileType")
+	end
+	--Entities with size
+	if entity.entityToSpawn == "DashBlock" or entity.entityToSpawn == "FallingBlock" or entity.entityToSpawn == "IceBlock"
+	or entity.entityToSpawn == "MoveBlock"or entity.entityToSpawn == "SwapBlock" or entity.entityToSpawn == "ZipMover" then
+		doNotIgnore("blockWidth")
+		doNotIgnore("blockHeight")
+	end
 	return ignored
+end
+
+function SpawnController.texture(room, entity)
+    local entityToSpawn = entity.entityToSpawn
+    if entityToSpawn == "Puffer" then
+        return "objects/KoseiHelper/Controllers/SpawnController/Puffer"
+    elseif entityToSpawn == "Cloud" then
+        return "objects/KoseiHelper/Controllers/SpawnController/Cloud"
+    elseif entityToSpawn == "BadelineBoost" then
+        return "objects/KoseiHelper/Controllers/SpawnController/BadelineBoost"
+    elseif entityToSpawn == "Booster" then
+        return "objects/KoseiHelper/Controllers/SpawnController/Booster"
+	elseif entityToSpawn == "Bumper" then
+        return "objects/KoseiHelper/Controllers/SpawnController/Bumper"
+	elseif entityToSpawn == "IceBlock" then
+        return "objects/KoseiHelper/Controllers/SpawnController/IceBlock"
+	elseif entityToSpawn == "Heart" then
+        return "objects/KoseiHelper/Controllers/SpawnController/Heart"
+	elseif entityToSpawn == "DashBlock" then
+        return "objects/KoseiHelper/Controllers/SpawnController/DashBlock"
+	elseif entityToSpawn == "FallingBlock" then
+        return "objects/KoseiHelper/Controllers/SpawnController/FallingBlock"
+	elseif entityToSpawn == "Feather" then
+        return "objects/KoseiHelper/Controllers/SpawnController/Feather"
+	elseif entityToSpawn == "Iceball" then
+        return "objects/KoseiHelper/Controllers/SpawnController/Iceball"
+	elseif entityToSpawn == "MoveBlock" then
+        return "objects/KoseiHelper/Controllers/SpawnController/MoveBlock"
+	elseif entityToSpawn == "Seeker" then
+        return "objects/KoseiHelper/Controllers/SpawnController/Seeker"
+	elseif entityToSpawn == "SwapBlock" then
+        return "objects/KoseiHelper/Controllers/SpawnController/SwapBlock"
+	elseif entityToSpawn == "ZipMover" then
+        return "objects/KoseiHelper/Controllers/SpawnController/ZipMover"
+	else
+		return "objects/KoseiHelper/Controllers/SpawnController/Broken"
+    end
 end
 
 return SpawnController

@@ -66,6 +66,9 @@ public class SpawnController : Entity
     //entity specific data
 
     public int nodeX, nodeY;
+    public int blockWidth, blockHeight = 16;
+    public char blockTileType;
+
     public bool cloudFragile;
 
     public bool boosterRed;
@@ -76,25 +79,14 @@ public class SpawnController : Entity
     public float iceballSpeed;
     public bool iceballAlwaysIce;
 
-    public int iceBlockWidth, iceBlockHeight = 16;
-    private CoreModes coreMode;
-
-    public char dashBlockTileType;
-    public int dashBlockWidth, dashBlockHeight = 16;
     public bool dashBlockCanDash;
 
-    public char fallingBlockTile;
-    public int fallingBlockWidth, fallingBlockHeight;
     public bool fallingBlockBadeline, fallingBlockClimbFall;
 
-    public int moveBlockWidth, moveBlockHeight;
     public bool moveBlockCanSteer, moveBlockFast;
     public MoveBlock.Directions moveBlockDirection;
 
-    public int swapBlockWidth, swapBlockHeight;
     public SwapBlock.Themes swapBlockTheme;
-
-    public int zipMoverWidth, zipMoverHeight; // TODO unify widths/heights
     public ZipMover.Themes zipMoverTheme;
 
     public string flag;
@@ -103,6 +95,8 @@ public class SpawnController : Entity
     public float timeToLive;
     public string appearSound;
     public string disappearSound;
+
+    private CoreModes coreMode;
 
     public SpawnController(EntityData data, Vector2 offset) : base(data.Position + offset)
     {
@@ -133,24 +127,19 @@ public class SpawnController : Entity
 
         nodeX = data.Int("nodeX", 0);
         nodeY = data.Int("nodeY", 0);
+        blockWidth = data.Int("blockWidth", 16);
+        blockHeight = data.Int("blockHeight", 16);
+        blockTileType = data.Char("blockTileType", '3');
 
         boosterRed = data.Bool("boosterRed", false);
-
-        iceBlockWidth = data.Int("iceBlockWidth", 16);
-        iceBlockHeight = data.Int("iceBlockHeight", 16);
 
         cloudFragile = data.Bool("cloudFragile", true);
 
         featherShielded = data.Bool("featherShielded", false);
         featherSingleUse = data.Bool("featherSingleUse", true);
 
-        dashBlockTileType = data.Char("dashBlockTileType", '3');
-        dashBlockWidth = data.Int("dashBlockWidth", 16);
-        dashBlockHeight = data.Int("dashBlockHeight", 16);
         dashBlockCanDash = data.Bool("dashBlockCanDash", true);
 
-        moveBlockWidth = data.Int("moveBlockWidth", 16);
-        moveBlockHeight = data.Int("moveBlockHeight", 16);
         moveBlockCanSteer = data.Bool("moveBlockCanSteer", false);
         moveBlockFast = data.Bool("moveBlockFast", true);
         moveBlockDirection = data.Enum("moveBlockDirection", MoveBlock.Directions.Down);
@@ -160,18 +149,11 @@ public class SpawnController : Entity
 
         moveBlockDirection = data.Enum("moveBlockDirection", MoveBlock.Directions.Down);
 
-        swapBlockWidth = data.Int("swapBlockWidth", 16);
-        swapBlockHeight = data.Int("swapBlockHeight", 16);
         swapBlockTheme = data.Enum("swapBlockTheme", SwapBlock.Themes.Normal);
 
-        fallingBlockTile = data.Char("fallingBlockTile", '3');
-        fallingBlockWidth = data.Int("fallingBlockWidth", 16);
-        fallingBlockHeight = data.Int("fallingBlockHeight", 16);
         fallingBlockBadeline = data.Bool("fallingBlockBadeline", false);
         fallingBlockClimbFall = data.Bool("fallingBlockClimbFall", false);
 
-        zipMoverWidth = data.Int("zipMoverWidth", 16);
-        zipMoverHeight = data.Int("zipMoverHeight", 16);
         zipMoverTheme = data.Enum("zipMoverTheme", ZipMover.Themes.Normal);
         Add(new CoreModeListener(OnChangeMode));
     }
@@ -242,10 +224,10 @@ public class SpawnController : Entity
                     case EntityType.Cloud:
                         spawnedEntity = new Cloud(spawnPosition, true);
                         break;
-                    case EntityType.BadelineBoost:
+                    case EntityType.BadelineBoost: //TODO remove dummy
                         spawnedEntity = new BadelineBoost(new Vector2[] { spawnPosition, new Vector2(player.Position.X + offsetX, level.Bounds.Top - 200) }, false, false, false, false, false);
                         break;
-                    case EntityType.Booster:
+                    case EntityType.Booster: //TODO not compatible with dash mode
                         spawnedEntity = new Booster(spawnPosition, boosterRed);
                         break;
                     case EntityType.Bumper:
@@ -253,9 +235,9 @@ public class SpawnController : Entity
                         break;
                     case EntityType.IceBlock: //It also works for lava actually
                         if (coreMode == CoreModes.Hot)
-                            spawnedEntity = new FireBarrier(spawnPosition, iceBlockWidth, iceBlockHeight);
+                            spawnedEntity = new FireBarrier(spawnPosition, blockWidth, blockHeight);
                         else if (coreMode == CoreModes.Cold)
-                            spawnedEntity = new IceBlock(spawnPosition, iceBlockWidth, iceBlockHeight);
+                            spawnedEntity = new IceBlock(spawnPosition, blockWidth, blockHeight);
                         if (spawnedEntity is IceBlock iceBlock)
                         {
                             var solid = iceBlock.solid;
@@ -273,7 +255,7 @@ public class SpawnController : Entity
                         spawnedEntity = new FakeHeart(spawnPosition);
                         break;
                     case EntityType.DashBlock: //TODO fix tiletype selection in their plugin
-                        spawnedEntity = new NoFreezeDashBlock(spawnPosition, dashBlockTileType, dashBlockWidth, dashBlockHeight, false, true, dashBlockCanDash, new EntityID("koseiHelper_spawnedDashBlock", entityID));
+                        spawnedEntity = new NoFreezeDashBlock(spawnPosition, blockTileType, blockWidth, blockHeight, false, true, dashBlockCanDash, new EntityID("koseiHelper_spawnedDashBlock", entityID));
                         entityID += 1;
                         break;
                     case EntityType.Feather:
@@ -283,19 +265,19 @@ public class SpawnController : Entity
                         spawnedEntity = new FireBall(new Vector2[] { spawnPosition, nodePosition }, 1, 1, 0, iceballSpeed, iceballAlwaysIce);
                         break;
                     case EntityType.MoveBlock: // TODO THEY ARE JANK
-                        spawnedEntity = new MoveBlock(spawnPosition, moveBlockWidth, moveBlockHeight, moveBlockDirection, moveBlockCanSteer, moveBlockFast);
+                        spawnedEntity = new MoveBlock(spawnPosition, blockWidth, blockHeight, moveBlockDirection, moveBlockCanSteer, moveBlockFast);
                         break;
                     case EntityType.Seeker:
                         spawnedEntity = new Seeker(spawnPosition, new Vector2[] { spawnPosition });
                         break;
-                    case EntityType.SwapBlock:
-                        spawnedEntity = new SwapBlock(spawnPosition, swapBlockWidth, swapBlockHeight, nodePosition, swapBlockTheme);
+                    case EntityType.SwapBlock: //TODO crash b
+                        spawnedEntity = new SwapBlock(spawnPosition, blockWidth, blockHeight, nodePosition, swapBlockTheme);
                         break;
                     case EntityType.ZipMover:
-                        spawnedEntity = new ZipMover(spawnPosition, zipMoverWidth, zipMoverHeight, nodePosition, zipMoverTheme);
+                        spawnedEntity = new ZipMover(spawnPosition, blockWidth, blockHeight, nodePosition, zipMoverTheme);
                         break;
                     case EntityType.FallingBlock:
-                        spawnedEntity = new FallingBlock(spawnPosition, fallingBlockTile, fallingBlockWidth, fallingBlockHeight, fallingBlockBadeline, false, fallingBlockClimbFall);
+                        spawnedEntity = new FallingBlock(spawnPosition, blockTileType, blockWidth, blockHeight, fallingBlockBadeline, false, fallingBlockClimbFall);
                         break;
                     default:
                         break;
@@ -330,7 +312,7 @@ public class SpawnController : Entity
             if (wrapper.TimeToLive <= 0) // The instance of the entity will (literally) make poof
             {
                 Audio.Play(disappearSound, wrapper.Entity.Position);
-                level.ParticlesFG.Emit(poofParticle, 5, wrapper.Entity.Position, Vector2.One * 4f, 0 - (float)Math.PI / 2f);
+                level.ParticlesFG.Emit(poofParticle, 5, wrapper.Entity.Center, Vector2.One * 4f, 0 - (float)Math.PI / 2f);
                 if (wrapper.Entity is BadelineBoost && player.StateMachine.State == 11) //FIX: being stuck in StDummy if the player touches Badeline as she's poofing
                     player.StateMachine.State = 0;
                 if (wrapper.Entity is IceBlock iceBlock) // FIX: Remove solids from iceBlocks

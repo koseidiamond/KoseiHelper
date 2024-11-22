@@ -100,28 +100,22 @@ entities.KoseiHelper/SpawnController.attributes.description.spawnInterval=The en
 entities.KoseiHelper/SpawnController.attributes.description.spawnLimit=The maximum amount of entities that can be spawned per screen.\nLeave a negative value for no limit.
 entities.KoseiHelper/SpawnController.attributes.description.persistent=If the controller should persist across rooms.
 #Spawn Controller - specific entity attributes
+entities.KoseiHelper/SpawnController.attributes.description.blockWidth=Width of the block.
+entities.KoseiHelper/SpawnController.attributes.description.blockHeight=Height of the block.
+entities.KoseiHelper/SpawnController.attributes.description.blockTileType=The tileset that the block should use.
 entities.KoseiHelper/SpawnController.attributes.description.boosterRed=If the spawned boosters should be red or green.
 entities.KoseiHelper/SpawnController.attributes.description.cloudFragile=If the cloud spawned should be fragile (pink) or more permanent (blue).
+entities.KoseiHelper/SpawnController.attributes.description.fallingBlockBadeline=If the block should behave as Badeline Blocks.
+entities.KoseiHelper/SpawnController.attributes.description.fallingBlockClimbFall=After a delay, the block will physically fall down until it comes into contact with another block.
 entities.KoseiHelper/SpawnController.attributes.description.featherShielded=If the feather should be inside a shield/bubble.
 entities.KoseiHelper/SpawnController.attributes.description.featherSingleUse=If the feather should be instantly consumed after used.
-entities.KoseiHelper/SpawnController.attributes.description.dashBlockTileType=The tileset that the dash block should use.
-entities.KoseiHelper/SpawnController.attributes.description.dashBlockWidth=The width of the spawned dash blocks.
-entities.KoseiHelper/SpawnController.attributes.description.dashBlockHeight=The height of the spawned dash blocks.
 entities.KoseiHelper/SpawnController.attributes.description.dashBlockCanDash=If the dash block should be destroyed with a dash or not.\n(They can still be destroyed through other means, e.g. red boosters)
 entities.KoseiHelper/SpawnController.attributes.description.iceballSpeed=The speed of the fireball/iceball.
 entities.KoseiHelper/SpawnController.attributes.description.iceballAlwaysIce=If the entity spawned should be always an iceball regardless of Core Mode.
-entities.KoseiHelper/SpawnController.attributes.description.iceBlockWidth=Width of the ice block/lava barrier.
-entities.KoseiHelper/SpawnController.attributes.description.iceBlockHeight=Height of the ice block/lava barrier.
 entities.KoseiHelper/SpawnController.attributes.description.moveBlockDirection=The direction the move block should be moving towards.
-entities.KoseiHelper/SpawnController.attributes.description.moveBlockWidth=The width of the move block.
-entities.KoseiHelper/SpawnController.attributes.description.moveBlockHeight=The height of the move block.
 entities.KoseiHelper/SpawnController.attributes.description.moveBlockCanSteer=If the move block can steer.
 entities.KoseiHelper/SpawnController.attributes.description.moveBlockFast=If the move block should be slightly faster than normal.
-entities.KoseiHelper/SpawnController.attributes.description.swapBlockWidth=The width of the swap block.
-entities.KoseiHelper/SpawnController.attributes.description.swapBlockHeight=The height of the swap block.
 entities.KoseiHelper/SpawnController.attributes.description.swapBlockTheme=The theme (sprite) of the swap block.
-entities.KoseiHelper/SpawnController.attributes.description.zipMoverWidth=The width of the zip mover.
-entities.KoseiHelper/SpawnController.attributes.description.zipMoverHeight=The height of the zip mover.
 entities.KoseiHelper/SpawnController.attributes.description.zipMoverTheme=The theme (sprite) of the zip mover.
 
 
