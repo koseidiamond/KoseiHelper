@@ -51,7 +51,10 @@ public class SpawnController : Entity
     public float spawnSpeed, spawnInterval;
     public int spawnLimit;
     public bool persistency;
+
     private bool hasSpawnedFromSpeed = false;
+    private bool hasSpawnedFromFlag = false;
+    private bool previousHasSpawnedFromFlag, currentHasSpawnedFromFlag;
 
     //other important variables
     private Level level;
@@ -191,12 +194,17 @@ public class SpawnController : Entity
             spawnCooldown = 0f;
         // If the flag is true, or if no flag is required, check if the spawn conditions are met
         if ((flagValue && level.Session.GetFlag(flag)) || string.IsNullOrEmpty(flag) || (!flagValue && !level.Session.GetFlag(flag)))
-        { //If the spawn conditions are met, spawn the entity: //TODO test these modes
-            if (((spawnCondition == SpawnCondition.OnFlagEnabled && level.Session.GetFlag(spawnFlag)) ||
-                (spawnCondition == SpawnCondition.OnSpeedX && Math.Abs(player.Speed.X) >= spawnSpeed && !hasSpawnedFromSpeed) ||
-                (spawnCondition == SpawnCondition.OnDash && player.StartedDashing)) ||
-                (spawnCondition == SpawnCondition.OnCustomButtonPress && KoseiHelperModule.Settings.SpawnButton.Pressed && spawnCooldown == 0) &&
-                spawnLimit != 0 && player != null) // Spawn Limit should be >0 if it's limited or <0 if there's no limit
+        {
+            currentHasSpawnedFromFlag = level.Session.GetFlag(spawnFlag);
+            bool conditionMet = spawnCondition switch
+            {   //If the spawn conditions are met, spawn the entity:
+                SpawnCondition.OnFlagEnabled => currentHasSpawnedFromFlag && !previousHasSpawnedFromFlag, //TODO fix this condition
+                SpawnCondition.OnSpeedX => Math.Abs(player.Speed.X) >= spawnSpeed && !hasSpawnedFromSpeed,
+                SpawnCondition.OnDash => player.StartedDashing,
+                SpawnCondition.OnCustomButtonPress => KoseiHelperModule.Settings.SpawnButton.Pressed && spawnCooldown == 0,
+                _ => false
+            };
+            if (conditionMet && spawnLimit != 0 && player != null)
             {
                 Logger.Debug(nameof(KoseiHelperModule), $"An entity is going to spawn: {entityToSpawn}");
                 if (removeDash && Scene.Tracker.GetEntity<Player>().Dashes > 0)
@@ -270,7 +278,7 @@ public class SpawnController : Entity
                     case EntityType.Seeker:
                         spawnedEntity = new Seeker(spawnPosition, new Vector2[] { spawnPosition });
                         break;
-                    case EntityType.SwapBlock: //TODO crash b
+                    case EntityType.SwapBlock: //TODO crash if nodePosition = spawnPosition
                         spawnedEntity = new SwapBlock(spawnPosition, blockWidth, blockHeight, nodePosition, swapBlockTheme);
                         break;
                     case EntityType.ZipMover:
@@ -283,11 +291,12 @@ public class SpawnController : Entity
                         break;
                 }
                 if (spawnedEntity != null)
-                {
+                { // If the entity has been spawned successfully:
                     Scene.Add(spawnedEntity);
                     spawnedEntitiesWithTTL.Add(new EntityWithTTL(spawnedEntity, entityTTL));
                     spawnCooldown = spawnTime;
                     hasSpawnedFromSpeed = true;
+                    previousHasSpawnedFromFlag = currentHasSpawnedFromFlag;
                     Audio.Play(appearSound, player.Position);
                 }
             }

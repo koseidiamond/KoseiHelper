@@ -23,7 +23,7 @@ SpawnController.placements = {
 		spawnCondition = "OnCustomButtonPress",
 		persistent = false,
 		--Spawn conditions
-		--TODO notes: test     OnFlagEnabled, OnDash ,OnJump, OnCustomButtonPress, OnSpeedX, OnInterval
+		--TODO notes: fix the blockTileType selection
 		spawnFlag = "koseiHelper_spawn",
 		spawnSpeed = 300,
 		spawnInterval = 1,
