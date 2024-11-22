@@ -118,6 +118,7 @@ entities.KoseiHelper/SpawnController.attributes.description.moveBlockCanSteer=If
 entities.KoseiHelper/SpawnController.attributes.description.moveBlockFast=If the move block should be slightly faster than normal.
 entities.KoseiHelper/SpawnController.attributes.description.swapBlockTheme=The theme (sprite) of the swap block.
 entities.KoseiHelper/SpawnController.attributes.description.zipMoverTheme=The theme (sprite) of the zip mover.
+entities.KoseiHelper/SpawnController.attributes.description.refillTwoDashes=If the refill should give two dashes instead of one.
 
 
 #TRIGGERS

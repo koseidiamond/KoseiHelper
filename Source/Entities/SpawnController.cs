@@ -24,7 +24,11 @@ public enum EntityType
     MoveBlock,
     Seeker,
     SwapBlock,
-    ZipMover
+    ZipMover,
+    CrumblePlatform,
+    DreamBlock,
+    BounceBlock,
+    Refill
 }
 
 public enum SpawnCondition
@@ -97,6 +101,8 @@ public class SpawnController : Entity
     public string flag;
     public bool flagValue;
 
+    public bool refillTwoDashes;
+
     public float timeToLive;
     public string appearSound;
     public string disappearSound;
@@ -145,6 +151,8 @@ public class SpawnController : Entity
 
         featherShielded = data.Bool("featherShielded", false);
         featherSingleUse = data.Bool("featherSingleUse", true);
+
+        refillTwoDashes = data.Bool("refillTwoDashes", false);
 
         dashBlockCanDash = data.Bool("dashBlockCanDash", true);
 
@@ -244,7 +252,7 @@ public class SpawnController : Entity
                         spawnedEntity = new BadelineBoost(new Vector2[] { spawnPosition, new Vector2(player.Position.X + offsetX, level.Bounds.Top - 200) }, false, false, false, false, false);
                         break;
                     case EntityType.Booster: //TODO FIX: not compatible with dash mode
-                        spawnedEntity = new BoosterNoOutline(spawnPosition, boosterRed);
+                        spawnedEntity = new BoosterNoOutline(spawnPosition, boosterRed); // I had to make a new class so their outline doesn't stay after they poof
                         break;
                     case EntityType.Bumper:
                         spawnedEntity = new Bumper(spawnPosition, null);
@@ -294,6 +302,18 @@ public class SpawnController : Entity
                         break;
                     case EntityType.FallingBlock:
                         spawnedEntity = new FallingBlock(spawnPosition, blockTileType, blockWidth, blockHeight, fallingBlockBadeline, false, fallingBlockClimbFall);
+                        break;
+                    case EntityType.CrumblePlatform:
+                        spawnedEntity = new CrumblePlatform(spawnPosition, blockWidth);
+                        break;
+                    case EntityType.DreamBlock:
+                        spawnedEntity = new DreamBlock(spawnPosition, blockWidth, blockHeight, null, false, true);
+                        break;
+                    case EntityType.BounceBlock:
+                        spawnedEntity = new BounceBlock(spawnPosition, blockWidth, blockHeight);
+                        break;
+                    case EntityType.Refill:
+                        spawnedEntity = new Refill(spawnPosition, refillTwoDashes, true);
                         break;
                     default:
                         break;

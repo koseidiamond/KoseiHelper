@@ -48,7 +48,8 @@ SpawnController.placements = {
 		fallingBlockBadeline = false,
 		fallingBlockClimbFall = false,
 		swapBlockTheme = "Normal",
-		zipMoverTheme = "Normal"
+		zipMoverTheme = "Normal",
+		refillTwoDashes = false
 		}
 	}
 }
@@ -70,7 +71,11 @@ SpawnController.fieldInformation = function (entity) return {
 		"MoveBlock",
 		"Seeker",
 		"SwapBlock",
-		"ZipMover"
+		"ZipMover",
+		"CrumblePlatform",
+		"DreamBlock",
+		"BounceBlock",
+		"Refill"
 		},
 		editable = false
 	},
@@ -157,7 +162,8 @@ function SpawnController.ignoredFields(entity)
 	"spawnSpeed",
 	"spawnInterval",
 	"fallingBlockBadeline",
-	"fallingBlockClimbFall"
+	"fallingBlockClimbFall",
+	"refillTwoDashes"
 	}
     local function doNotIgnore(value)
         for i = #ignored, 1, -1 do
@@ -211,6 +217,12 @@ function SpawnController.ignoredFields(entity)
 		doNotIgnore("fallingBlockBadeline")
 		doNotIgnore("fallingBlockClimbFall")
 	end
+	if entity.entityToSpawn == "CrumblePlatform" then
+		doNotIgnore("blockWidth")
+	end
+	if entity.entityToSpawn == "Refill" then
+		doNotIgnore("refillTwoDashes")
+	end
 	-- Noded entities
 	if entity.entityToSpawn == "ZipMover" or entity.entityToSpawn == "SwapBlock" or entity.entityToSpawn == "Iceball" then
 		doNotIgnore("nodeX")
@@ -222,8 +234,8 @@ function SpawnController.ignoredFields(entity)
 		doNotIgnore("blockTileType")
 	end
 	--Entities with size
-	if entity.entityToSpawn == "DashBlock" or entity.entityToSpawn == "FallingBlock" or entity.entityToSpawn == "IceBlock"
-	or entity.entityToSpawn == "MoveBlock"or entity.entityToSpawn == "SwapBlock" or entity.entityToSpawn == "ZipMover" then
+	if entity.entityToSpawn == "DashBlock" or entity.entityToSpawn == "FallingBlock" or entity.entityToSpawn == "IceBlock" or entity.entityToSpawn == "MoveBlock"
+	or entity.entityToSpawn == "SwapBlock" or entity.entityToSpawn == "ZipMover" or entity.entityToSpawn == "DreamBlock" then
 		doNotIgnore("blockWidth")
 		doNotIgnore("blockHeight")
 	end
@@ -262,6 +274,14 @@ function SpawnController.texture(room, entity)
         return "objects/KoseiHelper/Controllers/SpawnController/SwapBlock"
 	elseif entityToSpawn == "ZipMover" then
         return "objects/KoseiHelper/Controllers/SpawnController/ZipMover"
+	elseif entityToSpawn == "CrumblePlatform" then
+		return "objects/KoseiHelper/Controllers/SpawnController/CrumblePlatform"
+	elseif entityToSpawn == "DreamBlock" then
+		return "objects/KoseiHelper/Controllers/SpawnController/DreamBlock"
+	elseif entityToSpawn == "BounceBlock" then
+		return "objects/KoseiHelper/Controllers/SpawnController/BounceBlockBlock"
+	elseif entityToSpawn == "Refill" then
+		return "objects/KoseiHelper/Controllers/SpawnController/Refill"
 	else
 		return "objects/KoseiHelper/Controllers/SpawnController/Broken"
     end
