@@ -4,9 +4,8 @@ using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using System;
 using static Celeste.Session;
-
+//TODO make the entity unable to spawn if there's a solid overlapping the position (?) (the problem is the tiles of multiple sizes)
 namespace Celeste.Mod.KoseiHelper.Entities;
-
 
 public enum EntityType
 {
@@ -27,11 +26,11 @@ public enum EntityType
     ZipMover
 }
 
-public enum SpawnCondition  //TODO IMPLEMENT NEW SPAWN CONDITIONS
+public enum SpawnCondition
 {
     OnFlagEnabled = 1,
     OnDash = 2,
-    OnJump = 3,
+    OnCassetteBeat = 3,
     OnCustomButtonPress = 4,
     OnSpeedX = 5,
     OnInterval = 6
@@ -55,10 +54,10 @@ public class SpawnController : Entity
     private bool hasSpawnedFromSpeed = false;
     private bool hasSpawnedFromFlag = false;
     private bool previousHasSpawnedFromFlag, currentHasSpawnedFromFlag;
+    private int currentCassetteIndex, previousCassetteIndex;
+    private bool canSpawnFromCassette;
 
     //other important variables
-    private Level level;
-    private Player player;
     private int entityID = 7388544; // Very high value so it doesn't conflict with other ids (hopefully)
     private List<EntityWithTTL> spawnedEntitiesWithTTL = new List<EntityWithTTL>();
     private List<Solid> spawnedSolids = new List<Solid>(); // So lava/ice solids can be removed
@@ -100,6 +99,7 @@ public class SpawnController : Entity
     public string disappearSound;
 
     private CoreModes coreMode;
+    private CassetteBlockManager cassetteBlockManager;
 
     public SpawnController(EntityData data, Vector2 offset) : base(data.Position + offset)
     {
@@ -150,8 +150,6 @@ public class SpawnController : Entity
         iceballSpeed = data.Float("iceballSpeed", 1f);
         iceballAlwaysIce = data.Bool("iceballAlwaysIce", false);
 
-        moveBlockDirection = data.Enum("moveBlockDirection", MoveBlock.Directions.Down);
-
         swapBlockTheme = data.Enum("swapBlockTheme", SwapBlock.Themes.Normal);
 
         fallingBlockBadeline = data.Bool("fallingBlockBadeline", false);
@@ -165,42 +163,47 @@ public class SpawnController : Entity
     {
         base.Awake(scene);
 
+        cassetteBlockManager = scene.Tracker.GetEntity<CassetteBlockManager>();
     }
 
     public override void Added(Scene scene)
     {
         base.Added(scene);
-        level = SceneAs<Level>();
+        Level level = SceneAs<Level>();
 
     }
 
     public override void Update()
     {
         base.Update();
-        player = Scene.Tracker.GetEntity<Player>();
-        if (Scene.OnInterval(1f))
-        {
-            Logger.Debug(nameof(KoseiHelperModule), $"spawnLimit: {spawnLimit}");
-            Logger.Debug(nameof(KoseiHelperModule), $"spawnCondition: {spawnCondition}");
-            Logger.Debug(nameof(KoseiHelperModule), $"spawnFlag: {spawnFlag}");
-            Logger.Debug(nameof(KoseiHelperModule), $"player.Speed.X: {player.Speed.X}");
-            Logger.Debug(nameof(KoseiHelperModule), $"spawnSpeed: {spawnSpeed}");
-            Logger.Debug(nameof(KoseiHelperModule), $"player.StartedDashing: {player.StartedDashing}");
-            Logger.Debug(nameof(KoseiHelperModule), $"the button has been pressed: {spawnCondition == SpawnCondition.OnCustomButtonPress && KoseiHelperModule.Settings.SpawnButton}");
-        }
+        Player player = Scene.Tracker.GetEntity<Player>();
+        Level level = SceneAs<Level>();
         if (spawnCooldown > 0)
             spawnCooldown -= Engine.RawDeltaTime;
         else
             spawnCooldown = 0f;
+
         // If the flag is true, or if no flag is required, check if the spawn conditions are met
+        // (Not to be confused with spawnFlag, this one is just a common requirement, the other is for the Flag Mode)
         if ((flagValue && level.Session.GetFlag(flag)) || string.IsNullOrEmpty(flag) || (!flagValue && !level.Session.GetFlag(flag)))
         {
+            if (cassetteBlockManager != null)
+            {
+                if (currentCassetteIndex != cassetteBlockManager.currentIndex)
+                {
+                    previousCassetteIndex = currentCassetteIndex;
+                    currentCassetteIndex = cassetteBlockManager.currentIndex;
+                    canSpawnFromCassette = true;
+                }
+            }
             currentHasSpawnedFromFlag = level.Session.GetFlag(spawnFlag);
             bool conditionMet = spawnCondition switch
             {   //If the spawn conditions are met, spawn the entity:
-                SpawnCondition.OnFlagEnabled => currentHasSpawnedFromFlag && !previousHasSpawnedFromFlag, //TODO fix this condition
+                SpawnCondition.OnFlagEnabled => currentHasSpawnedFromFlag && !previousHasSpawnedFromFlag,
                 SpawnCondition.OnSpeedX => Math.Abs(player.Speed.X) >= spawnSpeed && !hasSpawnedFromSpeed,
                 SpawnCondition.OnDash => player.StartedDashing,
+                SpawnCondition.OnCassetteBeat => canSpawnFromCassette,
+                SpawnCondition.OnInterval => spawnCooldown == 0,
                 SpawnCondition.OnCustomButtonPress => KoseiHelperModule.Settings.SpawnButton.Pressed && spawnCooldown == 0,
                 _ => false
             };
@@ -220,7 +223,7 @@ public class SpawnController : Entity
 
                 //Calculate node position
                 var nodePosition = new Vector2(player.Position.X + nodeX, player.Position.Y + nodeY);
-                if (relativeToPlayerFacing && player.Facing == Facings.Left)
+                if (nodeRelativeToPlayerFacing && player.Facing == Facings.Left)
                     nodePosition = new Vector2(player.Position.X - nodeX, player.Position.Y + nodeY);
 
                 float entityTTL = timeToLive;
@@ -278,7 +281,7 @@ public class SpawnController : Entity
                     case EntityType.Seeker:
                         spawnedEntity = new Seeker(spawnPosition, new Vector2[] { spawnPosition });
                         break;
-                    case EntityType.SwapBlock: //TODO crash if nodePosition = spawnPosition
+                    case EntityType.SwapBlock:
                         spawnedEntity = new SwapBlock(spawnPosition, blockWidth, blockHeight, nodePosition, swapBlockTheme);
                         break;
                     case EntityType.ZipMover:
@@ -296,7 +299,6 @@ public class SpawnController : Entity
                     spawnedEntitiesWithTTL.Add(new EntityWithTTL(spawnedEntity, entityTTL));
                     spawnCooldown = spawnTime;
                     hasSpawnedFromSpeed = true;
-                    previousHasSpawnedFromFlag = currentHasSpawnedFromFlag;
                     Audio.Play(appearSound, player.Position);
                 }
             }
@@ -354,6 +356,9 @@ public class SpawnController : Entity
         //Reset conditions on different spawn modes so they don't check once per frame:
         if (Math.Abs(player.Speed.X) < spawnSpeed && hasSpawnedFromSpeed) // Resets speed check if speed falls below threshold
             hasSpawnedFromSpeed = false;
+        previousHasSpawnedFromFlag = currentHasSpawnedFromFlag; // used on Flag Spawn Condition mode
+        previousCassetteIndex = currentCassetteIndex; // used on Cassette Beat Condition mode
+        canSpawnFromCassette = false;
     }
     private void OnChangeMode(Session.CoreModes mode)
     {

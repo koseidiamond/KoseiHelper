@@ -16,6 +16,7 @@ SpawnController.placements = {
 		removeStamina = false,
 		flagValue = true,
 		relativeToPlayerFacing = true,
+		nodeRelativeToPlayerFacing = true,
 		timeToLive = 0,
 		appearSound = "event:/none",
 		disappearSound = "event:/KoseiHelper/spawn",
@@ -83,7 +84,7 @@ SpawnController.fieldInformation = {
 		options = {
 		"OnFlagEnabled",
 		"OnDash",
-		"OnJump",
+		"OnCassetteBeat",
 		"OnCustomButtonPress",
 		"OnSpeedX",
 		"OnInterval"
@@ -130,6 +131,7 @@ function SpawnController.ignoredFields(entity)
 	"blockWidth",
 	"blockHeight",
 	"blockTileType",
+	"nodeRelativeToPlayerFacing",
 	"boosterRed",
 	"cloudFragile",
 	"featherShielded",
@@ -201,6 +203,7 @@ function SpawnController.ignoredFields(entity)
 	if entity.entityToSpawn == "ZipMover" or entity.entityToSpawn == "SwapBlock" or entity.entityToSpawn == "Iceball" then
 		doNotIgnore("nodeX")
 		doNotIgnore("nodeY")
+		doNotIgnore("nodeRelativeToPlayerFacing")
 	end
 	-- Entities with tileset
 	if entity.entityToSpawn == "DashBlock" or entity.entityToSpawn == "FallingBlock" then
