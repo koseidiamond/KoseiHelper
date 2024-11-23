@@ -119,7 +119,11 @@ entities.KoseiHelper/SpawnController.attributes.description.moveBlockFast=If the
 entities.KoseiHelper/SpawnController.attributes.description.swapBlockTheme=The theme (sprite) of the swap block.
 entities.KoseiHelper/SpawnController.attributes.description.zipMoverTheme=The theme (sprite) of the zip mover.
 entities.KoseiHelper/SpawnController.attributes.description.refillTwoDashes=If the refill should give two dashes instead of one.
-
+entities.KoseiHelper/SpawnController.attributes.description.jumpthruTexture=The path of the texture to the jumpthru, relative to objects/jumpthru/.
+entities.KoseiHelper/SpawnController.attributes.description.soundIndex=The sound the jumpthru makes when you step on it.\Leave as -1 for the default one.
+entities.KoseiHelper/SpawnController.attributes.description.blockSinks=If the block sinks when the player steps on it.
+entities.KoseiHelper/SpawnController.attributes.description.crushBlockAxe=Determines which sides of the Kevin block are hittable.
+entities.KoseiHelper/SpawnController.attributes.description.crushBlockChillout=If the block should have the large face and get tired after being hit.
 
 #TRIGGERS
 triggers.KoseiHelper/ForceThrowTrigger.placements.name.ForceThrowTrigger=Force Throw Trigger

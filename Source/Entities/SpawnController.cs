@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System;
 using static Celeste.Session;
 using System.Linq;
-//TODO IMPROVEMENT: make the entity unable to spawn if there's a solid overlapping the position (?) (the problem is the tiles of multiple sizes)
+
 namespace Celeste.Mod.KoseiHelper.Entities;
 
 public enum EntityType
@@ -28,7 +28,13 @@ public enum EntityType
     CrumblePlatform,
     DreamBlock,
     BounceBlock,
-    Refill
+    Refill,
+    GlassBlock,
+    JumpthruPlatform,
+    FloatySpaceBlock,
+    StarJumpBlock,
+    CrushBlock,
+    SeekerBarrier // This one is an easter egg because it looks weird but uh I'm leaving it be
 }
 
 public enum SpawnCondition
@@ -52,9 +58,12 @@ public class SpawnController : Entity
     public bool relativeToPlayerFacing, nodeRelativeToPlayerFacing;
     public SpawnCondition spawnCondition;
     public string spawnFlag;
-    public float spawnSpeed, spawnInterval;
+    public float spawnSpeed;
     public int spawnLimit;
     public bool persistency;
+    public float timeToLive;
+    public string appearSound;
+    public string disappearSound;
 
     private bool hasSpawnedFromSpeed = false;
     private bool hasSpawnedFromFlag = false;
@@ -103,9 +112,13 @@ public class SpawnController : Entity
 
     public bool refillTwoDashes;
 
-    public float timeToLive;
-    public string appearSound;
-    public string disappearSound;
+    public string jumpthruTexture;
+    public int soundIndex;
+
+    public bool blockSinks;
+
+    public CrushBlock.Axes crushBlockAxe;
+    public bool crushBlockChillout;
 
     private CoreModes coreMode;
     private CassetteBlockManager cassetteBlockManager;
@@ -169,7 +182,16 @@ public class SpawnController : Entity
         fallingBlockClimbFall = data.Bool("fallingBlockClimbFall", false);
 
         zipMoverTheme = data.Enum("zipMoverTheme", ZipMover.Themes.Normal);
-        Add(new CoreModeListener(OnChangeMode));
+
+        jumpthruTexture = data.Attr("jumpthruTexture", "wood");
+        soundIndex = data.Int("soundIndex", -1);
+        blockSinks = data.Bool("blockSinks", false);
+        crushBlockAxe = data.Enum("crushBlockAxe", CrushBlock.Axes.Both);
+        crushBlockChillout = data.Bool("crushBlockChillout", false);
+
+
+
+    Add(new CoreModeListener(OnChangeMode));
     }
 
     public override void Awake(Scene scene)
@@ -251,7 +273,7 @@ public class SpawnController : Entity
                     case EntityType.BadelineBoost:
                         spawnedEntity = new BadelineBoost(new Vector2[] { spawnPosition, new Vector2(player.Position.X + offsetX, level.Bounds.Top - 200) }, false, false, false, false, false);
                         break;
-                    case EntityType.Booster: //TODO FIX: not compatible with dash mode
+                    case EntityType.Booster:
                         spawnedEntity = new BoosterNoOutline(spawnPosition, boosterRed); // I had to make a new class so their outline doesn't stay after they poof
                         break;
                     case EntityType.Bumper:
@@ -288,13 +310,13 @@ public class SpawnController : Entity
                     case EntityType.Iceball:
                         spawnedEntity = new FireBall(new Vector2[] { spawnPosition, nodePosition }, 1, 1, 0, iceballSpeed, iceballAlwaysIce);
                         break;
-                    case EntityType.MoveBlock: // TODO IMPROVEMENT: They are jank
+                    case EntityType.MoveBlock:
                         spawnedEntity = new MoveBlock(spawnPosition, blockWidth, blockHeight, moveBlockDirection, moveBlockCanSteer, moveBlockFast);
                         break;
                     case EntityType.Seeker:
                         spawnedEntity = new Seeker(spawnPosition, new Vector2[] { spawnPosition });
                         break;
-                    case EntityType.SwapBlock: //TODO IMPROVEMENT: make them to spawn without that ugly ass background
+                    case EntityType.SwapBlock:
                         spawnedEntity = new SwapBlock(spawnPosition, blockWidth, blockHeight, nodePosition, swapBlockTheme);
                         break;
                     case EntityType.ZipMover:
@@ -314,6 +336,24 @@ public class SpawnController : Entity
                         break;
                     case EntityType.Refill:
                         spawnedEntity = new Refill(spawnPosition, refillTwoDashes, true);
+                        break;
+                    case EntityType.GlassBlock:
+                        spawnedEntity = new GlassBlock(spawnPosition, blockWidth, blockHeight, blockSinks);
+                        break;
+                    case EntityType.JumpthruPlatform:
+                        spawnedEntity = new JumpthruPlatform(spawnPosition, blockWidth, jumpthruTexture, soundIndex);
+                        break;
+                    case EntityType.FloatySpaceBlock:
+                        spawnedEntity = new FloatySpaceBlock(spawnPosition, blockWidth, blockHeight, blockTileType, true);
+                        break;
+                    case EntityType.StarJumpBlock:
+                        spawnedEntity = new StarJumpBlock(spawnPosition, blockWidth, blockHeight, blockSinks);
+                        break;
+                    case EntityType.CrushBlock:
+                        spawnedEntity = new CrushBlock(spawnPosition, blockWidth, blockHeight, crushBlockAxe, crushBlockChillout);
+                        break;
+                    case EntityType.SeekerBarrier:
+                        spawnedEntity = new SeekerBarrier(spawnPosition, blockWidth, blockHeight);
                         break;
                     default:
                         break;

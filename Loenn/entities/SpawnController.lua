@@ -1,4 +1,7 @@
 local fakeTilesHelper = require("helpers.fake_tiles")
+local enums = require("consts.celeste_enums")
+
+local textures = {"wood", "dream", "temple", "templeB", "cliffside", "reflection", "core", "moon"}
 
 local SpawnController = {}
 
@@ -26,7 +29,6 @@ SpawnController.placements = {
 		--Spawn conditions
 		spawnFlag = "koseiHelper_spawn",
 		spawnSpeed = 300,
-		spawnInterval = 1,
 		spawnLimit = -1,
 		-- Entity-specific attributes
 		nodeX = 0,
@@ -34,6 +36,7 @@ SpawnController.placements = {
 		blockWidth = 16,
 		blockHeight = 16,
 		blockTileType = "3",
+		
 		boosterRed = false,
 		dummyFix = true,
 		cloudFragile = true,
@@ -49,7 +52,12 @@ SpawnController.placements = {
 		fallingBlockClimbFall = false,
 		swapBlockTheme = "Normal",
 		zipMoverTheme = "Normal",
-		refillTwoDashes = false
+		refillTwoDashes = false,
+		jumpthruTexture = "wood",
+		soundIndex = -1,
+		blockSinks = false,
+		crushBlockAxe = "Both",
+		crushBlockChillout = false
 		}
 	}
 }
@@ -75,7 +83,12 @@ SpawnController.fieldInformation = function (entity) return {
 		"CrumblePlatform",
 		"DreamBlock",
 		"BounceBlock",
-		"Refill"
+		"Refill",
+		"GlassBlock",
+		"StarJumpBlock",
+		"JumpthruPlatform",
+		"FloatySpaceBlock",
+		"CrushBlock"
 		},
 		editable = false
 	},
@@ -95,9 +108,6 @@ SpawnController.fieldInformation = function (entity) return {
 		"OnInterval"
 		},
 		editable = false
-	},
-	spawnInterval = {
-		minimumValue = 0
 	},
 	spawnLimit = { fieldType = "integer"},
 	offsetX = { fieldType = "integer"},
@@ -131,7 +141,22 @@ SpawnController.fieldInformation = function (entity) return {
 		"Moon"
 		},
 		editable = false
-	}
+	},
+	crushBlockAxe = {
+		options = {
+		"Both",
+		"Horizontal",
+		"Vertical"
+		},
+		editable = false
+	},
+	soundIndex = {
+        options = enums.tileset_sound_ids,
+        fieldType = "integer"
+    },
+	jumpthruTexture = {
+        options = textures
+    }
 } end
 
 
@@ -160,10 +185,14 @@ function SpawnController.ignoredFields(entity)
 	"zipMoverTheme",
 	"spawnFlag",
 	"spawnSpeed",
-	"spawnInterval",
 	"fallingBlockBadeline",
 	"fallingBlockClimbFall",
-	"refillTwoDashes"
+	"refillTwoDashes",
+	"jumpthruTexture",
+	"soundIndex",
+	"blockSinks",
+	"crushBlockAxe",
+	"crushBlockChillout"
 	}
     local function doNotIgnore(value)
         for i = #ignored, 1, -1 do
@@ -181,9 +210,6 @@ function SpawnController.ignoredFields(entity)
 	end
 	if entity.spawnCondition == "BadelineBoost" then
 		doNotIgnore("dummyFix")
-	end
-	if entity.spawnCondition == "OnInterval" then
-		doNotIgnore("spawnInterval")
 	end
 	if entity.entityToSpawn == "Booster" then
 		doNotIgnore("boosterRed")
@@ -223,6 +249,18 @@ function SpawnController.ignoredFields(entity)
 	if entity.entityToSpawn == "Refill" then
 		doNotIgnore("refillTwoDashes")
 	end
+	if entity.entityToSpawn == "JumpthruPlatform" then
+		doNotIgnore("jumpthruTexture")
+		doNotIgnore("blockWidth")
+		doNotIgnore("soundIndex")
+	end
+	if entity.entityToSpawn == "GlassBlock" or entity.entityToSpawn == "StarJumpBlock" then
+		doNotIgnore("blockSinks")
+	end
+	if entity.entityToSpawn == "CrushBlock" then
+		doNotIgnore("crushBlockAxe")
+		doNotIgnore("crushBlockChillout")
+	end
 	-- Noded entities
 	if entity.entityToSpawn == "ZipMover" or entity.entityToSpawn == "SwapBlock" or entity.entityToSpawn == "Iceball" then
 		doNotIgnore("nodeX")
@@ -230,17 +268,45 @@ function SpawnController.ignoredFields(entity)
 		doNotIgnore("nodeRelativeToPlayerFacing")
 	end
 	-- Entities with tileset
-	if entity.entityToSpawn == "DashBlock" or entity.entityToSpawn == "FallingBlock" then
+	if entity.entityToSpawn == "DashBlock" or entity.entityToSpawn == "FallingBlock" or entity.entityToSpawn == "FloatySpaceBlock" then
 		doNotIgnore("blockTileType")
 	end
 	--Entities with size
-	if entity.entityToSpawn == "DashBlock" or entity.entityToSpawn == "FallingBlock" or entity.entityToSpawn == "IceBlock" or entity.entityToSpawn == "MoveBlock"
-	or entity.entityToSpawn == "SwapBlock" or entity.entityToSpawn == "ZipMover" or entity.entityToSpawn == "DreamBlock" then
+	if entity.entityToSpawn == "DashBlock" or entity.entityToSpawn == "FallingBlock" or entity.entityToSpawn == "IceBlock" or entity.entityToSpawn == "MoveBlock" or entity.entityToSpawn == "StarJumpBlock"
+	or entity.entityToSpawn == "CrushBlock"	or entity.entityToSpawn == "SwapBlock" or entity.entityToSpawn == "ZipMover" or entity.entityToSpawn == "DreamBlock" or entity.entityToSpawn == "GlassBlock"
+	or entity.entityToSpawn == "FloatySpaceBlock" then
 		doNotIgnore("blockWidth")
 		doNotIgnore("blockHeight")
 	end
 	return ignored
 end
+
+SpawnController.fieldOrder =  {
+	"x",
+	"y",
+	"entityToSpawn",
+	"spawnCondition",
+	"offsetX",
+	"offsetY",
+	"nodeX",
+	"nodeY",
+	"appearSound",
+	"disappearSound",
+	"timeToLive",
+	"spawnCooldown",
+	"spawnLimit",
+	"spawnSpeed",
+	"spawnFlag",
+	"blockWidth",
+	"blockHeight",
+	"blockTileType",
+	"flag",
+	"flagValue",
+	"removeDash",
+	"removeStamina",
+	"relativeToPlayerFacing",
+	"nodeRelativeToPlayerFacing"
+}
 
 function SpawnController.texture(room, entity)
     local entityToSpawn = entity.entityToSpawn
@@ -282,6 +348,16 @@ function SpawnController.texture(room, entity)
 		return "objects/KoseiHelper/Controllers/SpawnController/BounceBlockBlock"
 	elseif entityToSpawn == "Refill" then
 		return "objects/KoseiHelper/Controllers/SpawnController/Refill"
+	elseif entityToSpawn == "GlassBlock" then
+		return "objects/KoseiHelper/Controllers/SpawnController/GlassBlock"
+	elseif entityToSpawn == "JumpthruPlatform" then
+		return "objects/KoseiHelper/Controllers/SpawnController/JumpthruPlatform"
+	elseif entityToSpawn == "FloatySpaceBlock" then
+		return "objects/KoseiHelper/Controllers/SpawnController/FloatySpaceBlock"
+	elseif entityToSpawn == "StarJumpBlock" then
+		return "objects/KoseiHelper/Controllers/SpawnController/StarJumpBlock"
+	elseif entityToSpawn == "CrushBlock" then
+		return "objects/KoseiHelper/Controllers/SpawnController/CrushBlock"
 	else
 		return "objects/KoseiHelper/Controllers/SpawnController/Broken"
     end
