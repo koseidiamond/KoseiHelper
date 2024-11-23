@@ -65,6 +65,7 @@ public class SpawnController : Entity
     public string appearSound;
     public string disappearSound;
 
+    private bool isBlock = false;
     private bool hasSpawnedFromSpeed = false;
     private bool hasSpawnedFromFlag = false;
     private bool previousHasSpawnedFromFlag, currentHasSpawnedFromFlag;
@@ -217,7 +218,24 @@ public class SpawnController : Entity
             spawnCooldown -= Engine.RawDeltaTime;
         else
             spawnCooldown = 0f;
-
+        //This HashSet contains not only blocks, but all entities with width. Used to fix spawn positions on relative mode.
+        HashSet<EntityType> blockEntities = new HashSet<EntityType>
+        {
+        EntityType.MoveBlock,
+        EntityType.GlassBlock,
+        EntityType.CrushBlock,
+        EntityType.FallingBlock,
+        EntityType.DashBlock,
+        EntityType.JumpthruPlatform,
+        EntityType.BounceBlock,
+        EntityType.FloatySpaceBlock,
+        EntityType.StarJumpBlock,
+        EntityType.SeekerBarrier,
+        EntityType.CrumblePlatform,
+        EntityType.SwapBlock,
+        EntityType.ZipMover
+        };
+        bool isBlock = blockEntities.Contains(entityToSpawn);
         // If the flag is true, or if no flag is required, check if the spawn conditions are met
         // (Not to be confused with spawnFlag, this one is just a common requirement, the other is for the Flag Mode)
         if ((flagValue && level.Session.GetFlag(flag)) || string.IsNullOrEmpty(flag) || (!flagValue && !level.Session.GetFlag(flag)))
@@ -255,11 +273,15 @@ public class SpawnController : Entity
                 var spawnPosition = new Vector2(player.Position.X + offsetX, player.Position.Y + offsetY);
                 if (relativeToPlayerFacing && player.Facing == Facings.Left)
                     spawnPosition = new Vector2(player.Position.X - offsetX, player.Position.Y + offsetY);
+                if (relativeToPlayerFacing && player.Facing == Facings.Right && isBlock)
+                    spawnPosition = new Vector2(player.Position.X + offsetX - blockWidth, player.Position.Y + offsetY);
 
                 //Calculate node position
                 var nodePosition = new Vector2(player.Position.X + nodeX, player.Position.Y + nodeY);
                 if (nodeRelativeToPlayerFacing && player.Facing == Facings.Left)
                     nodePosition = new Vector2(player.Position.X - nodeX, player.Position.Y + nodeY);
+                if (relativeToPlayerFacing && player.Facing == Facings.Right && isBlock)
+                    nodePosition = new Vector2(player.Position.X + nodeX - blockWidth, player.Position.Y + nodeY);
 
                 float entityTTL = timeToLive;
                 switch (entityToSpawn)

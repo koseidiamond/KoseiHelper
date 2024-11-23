@@ -7,8 +7,22 @@ ForceThrowTrigger.placements = {
 	{
 		name = "Force Throw Trigger",
 		data = {
+		onlyOnce = false,
+		triggerMode = "OnEnter"
 		}
 	}
 }
+
+ForceThrowTrigger.fieldInformation = function (entity) return {
+	triggerMode = {
+		options = {
+		"OnEnter",
+		"OnLeave",
+		"OnStay"
+		},
+		editable = false
+	}
+}
+end
 
 return ForceThrowTrigger

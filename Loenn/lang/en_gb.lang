@@ -12,7 +12,7 @@ entities.KoseiHelper/Goomba.attributes.description.spawnMinis=If the goomba can 
 entities.KoseiHelper/Goomba.attributes.description.flyAway=If the winged goombas should fly away like strawberries when the player dashes.
 entities.KoseiHelper/Goomba.attributes.description.timeToSpawnMinis=Time that needs to pass after a minigoomba is spawned.
 
-# MaryBlock
+# Mary Block
 entities.KoseiHelper/MaryBlock.placements.name.maryblock=Mary Block
 entities.KoseiHelper/MaryBlock.placements.description.Mary Block=These blocks bounce the player from both sides, like a spring but with less strength.
 entities.KoseiHelper/MaryBlock.attributes.description.potted=Potted Mary launches the player like puffers/bumpers.
@@ -126,5 +126,12 @@ entities.KoseiHelper/SpawnController.attributes.description.crushBlockAxe=Determ
 entities.KoseiHelper/SpawnController.attributes.description.crushBlockChillout=If the block should have the large face and get tired after being hit.
 
 #TRIGGERS
+
+#Force Throw Trigger
 triggers.KoseiHelper/ForceThrowTrigger.placements.name.ForceThrowTrigger=Force Throw Trigger
 triggers.KoseiHelper/ForceThrowTrigger.placements.description.Force Throw Trigger=The player is forced to throw the holdable when touching the trigger.
+
+#Force Hiccup Trigger
+triggers.KoseiHelper/ForceHiccupTrigger.placements.name.ForceHiccupTrigger=Force Hiccup Trigger
+triggers.KoseiHelper/ForceHiccupTrigger.placements.description.Force Hiccup Trigger=The player will have a hiccup.
+triggers.KoseiHelper/ForceHiccupTrigger.attributes.description.triggerMode=If the trigger should activate when the player enters/leaves the trigger,\non a certain interval while the player is inside,\nwhen the beat/cycle of the cassette progresses,\nor whenever the flag specified becomes true.\nClose and open again with OnStay/OnFlag for an extra setting.
