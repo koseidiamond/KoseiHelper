@@ -46,11 +46,13 @@ public class KoseiHelperModule : EverestModule {
     public override void Load() {
         typeof(ExtendedVariantImports).ModInterop();
         TopDownViewController.Load();
-        //PufferBall.Load();
+        PufferBall.Load();
+        CustomTempleCrackedBlock.Load();
     }
 
     public override void Unload() {
         TopDownViewController.Unload();
-        //PufferBall.Load();
+        PufferBall.Unload();
+        CustomTempleCrackedBlock.Unload();
     }
 }

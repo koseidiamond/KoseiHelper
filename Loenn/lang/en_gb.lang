@@ -62,6 +62,17 @@ entities.KoseiHelper/IRLController.placements.description.IRLController=This con
 entities.KoseiHelper/IRLController.attributes.description.persistent=If the controller should persist after exiting the room.
 entities.KoseiHelper/IRLController.attributes.description.changesDarknessLevel=If the darkness level should adapt to the irl time.
 
+# Custom Temple Cracked Block
+entities.KoseiHelper/CustomTempleCrackedBlock.placements.name.CustomTempleCrackedBlock= Custom Temple Cracked Block
+entities.KoseiHelper/CustomTempleCrackedBlock.placements.description.Custom Temple Cracked Block=An improved version of the red temple cracked blocks, supporting custom visuals, audio and health.
+entities.KoseiHelper/CustomTempleCrackedBlock.attributes.description.persistent=If the block should reappear or be broken permanently.
+entities.KoseiHelper/CustomTempleCrackedBlock.attributes.description.debris=The character that represents the debris, in the folder Gameplay/debris/.
+entities.KoseiHelper/CustomTempleCrackedBlock.attributes.description.texture=The path to your custom texture.
+entities.KoseiHelper/CustomTempleCrackedBlock.attributes.description.tint=The tint that will be applied to the block.\nLeave as FFFFFF (white) for no tint.
+entities.KoseiHelper/CustomTempleCrackedBlock.attributes.description.breakSound=The sound that will play when the block is broken.
+entities.KoseiHelper/CustomTempleCrackedBlock.attributes.description.prebreakSound=The sound that will play if the health is reduced but the block is not broken yet.
+entities.KoseiHelper/CustomTempleCrackedBlock.attributes.description.health=The number of hits until the block is broken.
+
 #Top Down View Controller
 entities.KoseiHelper/TopDownViewController.placements.name.TopDownViewController=Top Down View Controller
 entities.KoseiHelper/TopDownViewController.placements.description.Top Down View Controller=This controller allows the player to move similarly to top-down view RPGs.

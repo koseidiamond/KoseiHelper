@@ -7,7 +7,7 @@ CustomTempleCrackedBlock.name = "KoseiHelper/CustomTempleCrackedBlock"
 CustomTempleCrackedBlock.depth = 0
 CustomTempleCrackedBlock.warnBelowSize = {24, 24}
 CustomTempleCrackedBlock.placements = {
-    name = "CustomTempleCrackedBlock",
+    name = "Custom Temple Cracked Block",
     data = {
         width = 24,
         height = 24,
@@ -16,6 +16,7 @@ CustomTempleCrackedBlock.placements = {
         debris = "1",
         tint = "d42c19",
         breakSound = "event:/game/05_mirror_temple/crackedwall_vanish",
+		prebreakSound = "event:/KoseiHelper/crackedwall_prebreak",
         health = 1
     }
 }
@@ -46,7 +47,7 @@ local ninePatchOptions = {
 
 function CustomTempleCrackedBlock.sprite(room, entity)
     local color = {0.831, 0.173, 0.098}
-	local blockTexture = entity.texture
+	local blockTexture = entity.texture.."00"
     local x, y = entity.x or 0, entity.y or 0
     local width, height = entity.width or 24, entity.height or 24
     local ninePatch = drawableNinePatch.fromTexture(blockTexture, ninePatchOptions, x, y, width, height)

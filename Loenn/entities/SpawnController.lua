@@ -58,7 +58,9 @@ SpawnController.placements = {
 		soundIndex = -1,
 		blockSinks = false,
 		crushBlockAxe = "Both",
-		crushBlockChillout = false
+		crushBlockChillout = false,
+		decalTexture = "10-farewell/creature_f00",
+		decalDepth = 9000
 		}
 	}
 }
@@ -89,7 +91,8 @@ SpawnController.fieldInformation = function (entity) return {
 		"StarJumpBlock",
 		"JumpthruPlatform",
 		"FloatySpaceBlock",
-		"CrushBlock"
+		"CrushBlock",
+		"Decal"
 		},
 		editable = false
 	},
@@ -121,7 +124,10 @@ SpawnController.fieldInformation = function (entity) return {
 		options = fakeTilesHelper.getTilesOptions(entity.fg and "tilesFg"),
 		editable = false
 	},
-	everyXDashes = { fieldType = "integer"},
+	everyXDashes = {
+		fieldType = "integer",
+		minimumValue = 1
+	},
 	moveBlockDirection = {
 		options = {
 		"Left",
@@ -196,7 +202,9 @@ function SpawnController.ignoredFields(entity)
 	"blockSinks",
 	"crushBlockAxe",
 	"crushBlockChillout",
-	"everyXDashes"
+	"everyXDashes",
+	"decalTexture",
+	"decalDepth"
 	}
     local function doNotIgnore(value)
         for i = #ignored, 1, -1 do
@@ -269,6 +277,10 @@ function SpawnController.ignoredFields(entity)
 	if entity.entityToSpawn == "CrushBlock" then
 		doNotIgnore("crushBlockAxe")
 		doNotIgnore("crushBlockChillout")
+	end
+	if entity.entityToSpawn == "Decal" then
+		doNotIgnore("decalTexture")
+		doNotIgnore("decalDepth")
 	end
 	-- Noded entities
 	if entity.entityToSpawn == "ZipMover" or entity.entityToSpawn == "SwapBlock" or entity.entityToSpawn == "Iceball" then
@@ -367,6 +379,8 @@ function SpawnController.texture(room, entity)
 		return "objects/KoseiHelper/Controllers/SpawnController/StarJumpBlock"
 	elseif entityToSpawn == "CrushBlock" then
 		return "objects/KoseiHelper/Controllers/SpawnController/CrushBlock"
+	elseif entityToSpawn == "Decal" then
+		return "objects/KoseiHelper/Controllers/SpawnController/Decal"
 	else
 		return "objects/KoseiHelper/Controllers/SpawnController/Broken"
     end

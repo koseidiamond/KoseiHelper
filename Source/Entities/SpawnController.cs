@@ -34,7 +34,8 @@ public enum EntityType
     FloatySpaceBlock,
     StarJumpBlock,
     CrushBlock,
-    SeekerBarrier // This one is an easter egg because it looks weird but uh I'm leaving it be
+    SeekerBarrier, // This one is an easter egg because it looks weird but uh I'm leaving it be
+    Decal
 }
 
 public enum SpawnCondition
@@ -122,6 +123,9 @@ public class SpawnController : Entity
     public CrushBlock.Axes crushBlockAxe;
     public bool crushBlockChillout;
 
+    public string decalTexture;
+    public int decalDepth;
+
     private CoreModes coreMode;
     private CassetteBlockManager cassetteBlockManager;
 
@@ -193,6 +197,8 @@ public class SpawnController : Entity
         crushBlockAxe = data.Enum("crushBlockAxe", CrushBlock.Axes.Both);
         crushBlockChillout = data.Bool("crushBlockChillout", false);
 
+        decalTexture = data.Attr("decalTexture", "10-farewell/creature_f00");
+        decalDepth = data.Int("decalDepth", 9000);
 
 
     Add(new CoreModeListener(OnChangeMode));
@@ -378,6 +384,9 @@ public class SpawnController : Entity
                     case EntityType.SeekerBarrier:
                         spawnedEntity = new SeekerBarrier(spawnPosition, blockWidth, blockHeight);
                         break;
+                    case EntityType.Decal:
+                        spawnedEntity = new Decal(decalTexture, spawnPosition, new Vector2(1, 1), decalDepth);
+                        break;
                     default:
                         break;
                 }
@@ -411,7 +420,8 @@ public class SpawnController : Entity
             if (wrapper.TimeToLive <= 0) // The instance of the entity will (literally) make poof
             {
                 Audio.Play(disappearSound, wrapper.Entity.Position);
-                level.ParticlesFG.Emit(poofParticle, 5, wrapper.Entity.Center, Vector2.One * 4f, 0 - (float)Math.PI / 2f);
+                if (timeToLive >0)
+                    level.ParticlesFG.Emit(poofParticle, 5, wrapper.Entity.Center, Vector2.One * 4f, 0 - (float)Math.PI / 2f);
                 if (wrapper.Entity is BadelineBoost && player.StateMachine.State == 11) //FIX: being stuck in StDummy if the player touches Badeline as she's poofing
                     player.StateMachine.State = 0;
                 if (wrapper.Entity is IceBlock iceBlock) // FIX: Remove solids from iceBlocks

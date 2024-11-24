@@ -60,6 +60,36 @@ public class PufferBall : Puffer
         On.Celeste.Puffer.GotoGone -= modPufferGotoGone;
     }
 
+    private static void onPufferConstructor(ILContext il) // IL hook made by Maddie480!
+    {
+        ILCursor cursor = new ILCursor(il);
+
+        while (cursor.TryGotoNext(MoveType.After, instr => instr.MatchCallvirt<SineWave>("Randomize")))
+        {
+            cursor.Emit(OpCodes.Ldarg_0);
+            cursor.Emit(OpCodes.Ldarg_0);
+            cursor.Emit(OpCodes.Ldfld, typeof(Puffer).GetField("idleSine", BindingFlags.NonPublic | BindingFlags.Instance));
+            cursor.EmitDelegate<Action<Puffer, SineWave>>((self, idleSine) => {
+                if (self is PufferBall)
+                {
+                    idleSine.Reset();
+                }
+            });
+        }
+    }
+
+    private static void modPufferGotoGone(On.Celeste.Puffer.orig_GotoGone orig, Puffer self)
+    {
+        if (self is PufferBall pufferball)
+        {
+            self.startPosition = spawnPosition;
+            self.returnCurve = new SimpleCurve(spawnPosition, spawnPosition, spawnPosition);
+
+        }
+        else
+            orig(self);
+    }
+
     public override void Awake(Scene scene)
     {
         base.Awake(scene);
@@ -158,35 +188,6 @@ public class PufferBall : Puffer
         else
             Collidable = Visible = false;
 
-    }
-
-    private static void onPufferConstructor(ILContext il) // IL hook made by Maddie480!
-    {
-        ILCursor cursor = new ILCursor(il);
-
-        while (cursor.TryGotoNext(MoveType.After, instr => instr.MatchCallvirt<SineWave>("Randomize")))
-        {
-            cursor.Emit(OpCodes.Ldarg_0);
-            cursor.Emit(OpCodes.Ldarg_0);
-            cursor.Emit(OpCodes.Ldfld, typeof(Puffer).GetField("idleSine", BindingFlags.NonPublic | BindingFlags.Instance));
-            cursor.EmitDelegate<Action<Puffer, SineWave>>((self, idleSine) => {
-                if (self is PufferBall)
-                {
-                    idleSine.Reset();
-                }
-            });
-        }
-    }
-
-    private static void modPufferGotoGone(On.Celeste.Puffer.orig_GotoGone orig, Puffer self)
-    {
-        if (self is PufferBall pufferball)
-        {
-            self.startPosition = spawnPosition;
-            self.returnCurve = new SimpleCurve(spawnPosition, spawnPosition, spawnPosition);
-
-        }
-        orig(self);
     }
 
     private IEnumerator waitABit() // Waits a bit to spawn for the first time, to prevent softlocks when transitioning

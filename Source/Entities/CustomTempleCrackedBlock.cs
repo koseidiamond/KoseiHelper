@@ -5,6 +5,7 @@ using Celeste.Mod.Entities;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using MonoMod;
 
 namespace Celeste.Mod.KoseiHelper.Entities;
 
@@ -16,26 +17,18 @@ public class CustomTempleCrackedBlock : TempleCrackedBlock
     public int health;
     public static  bool persistent;
     public Color tint;
-    public string breakSound, texture;
+    public string breakSound, prebreakSound, texture;
     public char debris;
     public MTexture[,,] tiles;
     public float frame;
     public int frames;
-    public static void Load()
-    {
-        On.Celeste.TempleCrackedBlock.Break += onBreak;
-    }
-
-    public static void Unload()
-    {
-        On.Celeste.TempleCrackedBlock.Break -= onBreak;
-    }
 
     public CustomTempleCrackedBlock(EntityData data, Vector2 offset, EntityID id) : base(id, data.Position + offset, data.Width, data.Height, persistent)
     {
         persistent = data.Bool("persistent", false);
         tint = data.HexColor("tint", Color.White);
-        breakSound = data.Attr("breakSound", "event:/game/05_mirror_temple/crackedwall_vanish");
+        breakSound = data.Attr("breakSound", "event:/none");
+        prebreakSound = data.Attr("prebreakSound", "event:/none");
         health = data.Int("health", 1); //Number of times it needs to be hit until it breaks
         texture = data.Attr("texture","objects/KoseiHelper/CustomTempleCrackedBlock/breakBlock");
         debris = data.Char("debris", '1');
@@ -59,6 +52,44 @@ public class CustomTempleCrackedBlock : TempleCrackedBlock
         }
     }
 
+    public static void Load()
+    {
+        On.Celeste.TempleCrackedBlock.Break += modBreak;
+    }
+
+    public static void Unload()
+    {
+        On.Celeste.TempleCrackedBlock.Break -= modBreak;
+    }
+
+    private static void modBreak(On.Celeste.TempleCrackedBlock.orig_Break orig, TempleCrackedBlock self, Vector2 from) // Thanks for everything Snip
+    {
+        if (self is CustomTempleCrackedBlock customTempleCrackedBlock) // == checks if its exactly the same instance; is checks if its of that type
+        {
+            if (persistent)
+                self.SceneAs<Level>().Session.DoNotLoad.Add(self.eid);
+            customTempleCrackedBlock.health--;
+            if (customTempleCrackedBlock.health >0)
+                Audio.Play(customTempleCrackedBlock.breakSound, self.Center);
+            if (customTempleCrackedBlock.health == 0)
+            {
+                Logger.Debug(nameof(KoseiHelperModule), $"A Custom Temple Cracked Block was broken.");
+                Audio.Play(customTempleCrackedBlock.breakSound, self.Center);
+                self.broken = true;
+                self.Collidable = false;
+                for (int i = 0; (float)i < self.Width / 8f; i++)
+                {
+                    for (int j = 0; (float)j < self.Height / 8f; j++)
+                    {
+                        self.Scene.Add(Engine.Pooler.Create<Debris>().Init(self.Position + new Vector2(i * 8 + 4, j * 8 + 4), customTempleCrackedBlock.debris, playSound: true).BlastFrom(from));
+                    }
+                }
+            }
+        }
+        else
+            orig(self, from);
+    }
+
     public override void Added(Scene scene)
     {
         base.Added(scene);
@@ -76,6 +107,20 @@ public class CustomTempleCrackedBlock : TempleCrackedBlock
         }
     }
 
+    public override void Update()
+    {
+        base.Update();
+        Logger.Debug(nameof(KoseiHelperModule), $"health: {health}");
+        if (broken)
+        {
+            frame += Engine.DeltaTime * 15f;
+            if (frame >= (float)frames)
+            {
+                RemoveSelf();
+            }
+        }
+    }
+
     public override void Render()
     {
         int num = (int)frame;
@@ -88,34 +133,6 @@ public class CustomTempleCrackedBlock : TempleCrackedBlock
             for (int j = 0; (float)j < base.Height / 8f; j++)
             {
                 tiles[i, j, num].Draw(Position + new Vector2(i, j) * 8f, Vector2.Zero,tint);
-            }
-        }
-    }
-
-    private static void onBreak(On.Celeste.TempleCrackedBlock.orig_Break orig, TempleCrackedBlock self, Vector2 from)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void Break(Vector2 from) //TODO it's not working
-    {
-        if (persistent)
-        {
-            SceneAs<Level>().Session.DoNotLoad.Add(eid);
-        }
-        health -= 1;
-        if (health == 0)
-        {
-            Logger.Debug(nameof(KoseiHelperModule), $"A Custom Temple Cracked Block was broken.");
-            Audio.Play(breakSound, base.Center);
-            broken = true;
-            Collidable = false;
-            for (int i = 0; (float)i < base.Width / 8f; i++)
-            {
-                for (int j = 0; (float)j < base.Height / 8f; j++)
-                {
-                    base.Scene.Add(Engine.Pooler.Create<Debris>().Init(Position + new Vector2(i * 8 + 4, j * 8 + 4), debris, playSound: true).BlastFrom(from));
-                }
             }
         }
     }
