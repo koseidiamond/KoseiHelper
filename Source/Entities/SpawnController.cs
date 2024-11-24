@@ -64,6 +64,7 @@ public class SpawnController : Entity
     public float timeToLive;
     public string appearSound;
     public string disappearSound;
+    public int dashCount, everyXDashes;
 
     private bool isBlock = false;
     private bool hasSpawnedFromSpeed = false;
@@ -145,6 +146,8 @@ public class SpawnController : Entity
         spawnSpeed = data.Float("spawnSpeed", 300f);
         spawnLimit = data.Int("spawnLimit", 3);
         persistency = data.Bool("persistent", false);
+        everyXDashes = data.Int("everyXDashes", 1);
+        dashCount = 0;
         if (persistency)
             base.Tag = Tags.Persistent;
 
@@ -198,7 +201,6 @@ public class SpawnController : Entity
     public override void Awake(Scene scene)
     {
         base.Awake(scene);
-
         cassetteBlockManager = scene.Tracker.GetEntity<CassetteBlockManager>();
     }
 
@@ -206,7 +208,6 @@ public class SpawnController : Entity
     {
         base.Added(scene);
         Level level = SceneAs<Level>();
-
     }
 
     public override void Update()
@@ -238,7 +239,7 @@ public class SpawnController : Entity
         bool isBlock = blockEntities.Contains(entityToSpawn);
         // If the flag is true, or if no flag is required, check if the spawn conditions are met
         // (Not to be confused with spawnFlag, this one is just a common requirement, the other is for the Flag Mode)
-        if (((flagValue && level.Session.GetFlag(flag)) || string.IsNullOrEmpty(flag) || (!flagValue && !level.Session.GetFlag(flag))) && player != null)
+        if (((flagValue && level.Session.GetFlag(flag)) || string.IsNullOrEmpty(flag) || (!flagValue && !level.Session.GetFlag(flag))) && player != null && !player.JustRespawned)
         {
             if (cassetteBlockManager != null)
             {
@@ -254,7 +255,7 @@ public class SpawnController : Entity
             {   //If the spawn conditions are met, spawn the entity:
                 SpawnCondition.OnFlagEnabled => currentHasSpawnedFromFlag && !previousHasSpawnedFromFlag,
                 SpawnCondition.OnSpeedX => Math.Abs(player.Speed.X) >= spawnSpeed && !hasSpawnedFromSpeed,
-                SpawnCondition.OnDash => player.StartedDashing,
+                SpawnCondition.OnDash => player.StartedDashing && dashCount % everyXDashes == 0,
                 SpawnCondition.OnCassetteBeat => canSpawnFromCassette,
                 SpawnCondition.OnInterval => spawnCooldown == 0,
                 SpawnCondition.OnCustomButtonPress => KoseiHelperModule.Settings.SpawnButton.Pressed && spawnCooldown == 0,
@@ -324,7 +325,7 @@ public class SpawnController : Entity
                         break;
                     case EntityType.DashBlock:
                         spawnedEntity = new NoFreezeDashBlock(spawnPosition, blockTileType, blockWidth, blockHeight, false, true, dashBlockCanDash, new EntityID("koseiHelper_spawnedDashBlock", entityID));
-                        entityID += 1;
+                        entityID++;
                         break;
                     case EntityType.Feather:
                         spawnedEntity = new FlyFeather(spawnPosition, featherShielded, featherSingleUse);
@@ -395,7 +396,7 @@ public class SpawnController : Entity
         {
             wrapper.TimeToLive -= Engine.RawDeltaTime;
 
-            if (wrapper.Entity is MoveBlock moveBlock) //Fix: They would crash the game when if they were too out of bounds, so...
+            if (wrapper.Entity is MoveBlock moveBlock) //Fix: They would crash the game if they were too out of bounds, so...
             {
                 if (wrapper.Entity.Bottom > (float)level.Bounds.Bottom + 16 || // ... We remove move blocks regardless of TTS if they are oob!
                     wrapper.Entity.Left < (float)level.Bounds.Left - 16 ||
@@ -454,6 +455,15 @@ public class SpawnController : Entity
         previousHasSpawnedFromFlag = currentHasSpawnedFromFlag; // used on Flag Spawn Condition mode
         previousCassetteIndex = currentCassetteIndex; // used on Cassette Beat Condition mode
         canSpawnFromCassette = false;
+        if (player != null)
+        {
+            if (player.StartedDashing)
+            {
+                dashCount++;
+                if (dashCount >= everyXDashes)
+                    dashCount = 0;
+            }
+        }
     }
     private void OnChangeMode(Session.CoreModes mode)
     {

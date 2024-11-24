@@ -30,6 +30,7 @@ SpawnController.placements = {
 		spawnFlag = "koseiHelper_spawn",
 		spawnSpeed = 300,
 		spawnLimit = -1,
+		everyXDashes = 1,
 		-- Entity-specific attributes
 		nodeX = 0,
 		nodeY = 0,
@@ -117,8 +118,10 @@ SpawnController.fieldInformation = function (entity) return {
 	blockWidth = { fieldType = "integer"},
 	blockHeight = { fieldType = "integer"},
 	blockTileType = {
-		options = fakeTilesHelper.getTilesOptions(entity.fg and "tilesFg")
+		options = fakeTilesHelper.getTilesOptions(entity.fg and "tilesFg"),
+		editable = false
 	},
+	everyXDashes = { fieldType = "integer"},
 	moveBlockDirection = {
 		options = {
 		"Left",
@@ -192,7 +195,8 @@ function SpawnController.ignoredFields(entity)
 	"soundIndex",
 	"blockSinks",
 	"crushBlockAxe",
-	"crushBlockChillout"
+	"crushBlockChillout",
+	"everyXDashes"
 	}
     local function doNotIgnore(value)
         for i = #ignored, 1, -1 do
@@ -202,12 +206,17 @@ function SpawnController.ignoredFields(entity)
             end
         end
     end
+	-- Spawn mode attributes
 	if entity.spawnCondition == "OnFlagEnabled" then
 		doNotIgnore("spawnFlag")
 	end
 	if entity.spawnCondition == "OnSpeedX" then
 		doNotIgnore("spawnSpeed")
 	end
+	if entity.spawnCondition == "OnDash" then
+		doNotIgnore("everyXDashes")
+	end
+	-- Entity attributes
 	if entity.spawnCondition == "BadelineBoost" then
 		doNotIgnore("dummyFix")
 	end

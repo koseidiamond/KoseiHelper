@@ -96,7 +96,7 @@ entities.KoseiHelper/SpawnController.attributes.description.nodeY=Vertical offse
 entities.KoseiHelper/SpawnController.attributes.description.spawnCondition=The condition that needs to be met in order to spawn an entity. Save and reopen to configure the new spawn condition.\nOn flag enabled: the entity will spawn each time the flag is set to true.\nOn dash: the entity will spawn every time the player dashes.\nOnCassetteBeat: the entity will spawn every time the the beat of the cassette progresses (recommended to have a cooldown of 0 for this mode).\nOn custom button press: the entity will spawn every time the custom keybind is pressed (Mod Options>Kosei Helper to configure).\nOnSpeedX: the entity will spawn once a certain SpeedX threshold is achieved.\nOn interval: the entity will spawn on a fixed interval, every x seconds (determined by the Spawn Cooldown).
 entities.KoseiHelper/SpawnController.attributes.description.spawnFlag=The flag that will spawn an entity once it's set to true.
 entities.KoseiHelper/SpawnController.attributes.description.spawnSpeed=The minimum horizontal speed that needs to be reached to spawn an entity.
-entities.KoseiHelper/SpawnController.attributes.description.spawnInterval=The entity will spawn every x seconds.
+entities.KoseiHelper/SpawnController.attributes.description.everyXDashes=The entity will spawn only every certain number of dashes.\nLeave 1 for spawning whenever the player dashes.
 entities.KoseiHelper/SpawnController.attributes.description.spawnLimit=The maximum amount of entities that can be spawned per screen.\nLeave a negative value for no limit.
 entities.KoseiHelper/SpawnController.attributes.description.persistent=If the controller should persist across rooms.
 #Spawn Controller - specific entity attributes
@@ -135,10 +135,3 @@ triggers.KoseiHelper/ForceThrowTrigger.placements.description.Force Throw Trigge
 triggers.KoseiHelper/ForceHiccupTrigger.placements.name.ForceHiccupTrigger=Force Hiccup Trigger
 triggers.KoseiHelper/ForceHiccupTrigger.placements.description.Force Hiccup Trigger=The player will have a hiccup.
 triggers.KoseiHelper/ForceHiccupTrigger.attributes.description.triggerMode=If the trigger should activate when the player enters/leaves the trigger,\non a certain interval while the player is inside,\nwhen the beat/cycle of the cassette progresses,\nor whenever the flag specified becomes true.\nClose and open again with OnStay/OnFlag for an extra setting.
-
-# Flags From File Trigger
-triggers.KoseiHelper/FlagsFromFileTrigger.placements.name.FlagsFromFileTrigger=Flags From File Trigger
-triggers.KoseiHelper/FlagsFromFileTrigger.placements.description.Flags From File Trigger=When the player enters the trigger, a list of flags will be read (or written) from the .txt file specified.
-triggers.KoseiHelper/FlagsFromFileTrigger.attributes.description.filePath=The path to your .txt, relative to your mod folder, and without the file extension.
-triggers.KoseiHelper/FlagsFromFileTrigger.attributes.description.writeToFile=If this is true, the trigger will instead add the flags specified to the file.
-triggers.KoseiHelper/FlagsFromFileTrigger.attributes.description.flagsToWrite=List of flags that will be added to the file if using Write mode.\nThe flags should be separated by commas.\nYou can ignore this option if you're only reading the flags.
