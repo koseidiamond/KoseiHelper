@@ -238,7 +238,7 @@ public class SpawnController : Entity
         bool isBlock = blockEntities.Contains(entityToSpawn);
         // If the flag is true, or if no flag is required, check if the spawn conditions are met
         // (Not to be confused with spawnFlag, this one is just a common requirement, the other is for the Flag Mode)
-        if ((flagValue && level.Session.GetFlag(flag)) || string.IsNullOrEmpty(flag) || (!flagValue && !level.Session.GetFlag(flag)))
+        if (((flagValue && level.Session.GetFlag(flag)) || string.IsNullOrEmpty(flag) || (!flagValue && !level.Session.GetFlag(flag))) && player != null)
         {
             if (cassetteBlockManager != null)
             {

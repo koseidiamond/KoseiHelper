@@ -75,7 +75,7 @@ public class ForceHiccupTrigger : Trigger
     {
         base.Update();
         Player player = Scene.Tracker.GetEntity<Player>();
-        if (cassetteManager != null && triggerMode == TriggerMode.OnCassetteBeat)
+        if (cassetteManager != null && triggerMode == TriggerMode.OnCassetteBeat && player != null)
         {
             if (currentCassetteIndex != cassetteManager.currentIndex)
             {
