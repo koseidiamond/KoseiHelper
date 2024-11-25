@@ -10,6 +10,8 @@ using System.Collections;
 namespace Celeste.Mod.KoseiHelper.Entities;
 
 [CustomEntity("KoseiHelper/PufferBall")]
+
+#pragma warning disable CL0001
 public class PufferBall : Puffer
 {
     private const float ResetTime = 0.8f;

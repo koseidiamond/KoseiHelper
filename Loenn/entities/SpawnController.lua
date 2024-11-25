@@ -91,7 +91,7 @@ SpawnController.fieldInformation = function (entity) return {
 		"StarJumpBlock",
 		"JumpthruPlatform",
 		"FloatySpaceBlock",
-		"CrushBlock",
+		"Kevin",
 		"Decal"
 		},
 		editable = false
@@ -274,7 +274,7 @@ function SpawnController.ignoredFields(entity)
 	if entity.entityToSpawn == "GlassBlock" or entity.entityToSpawn == "StarJumpBlock" then
 		doNotIgnore("blockSinks")
 	end
-	if entity.entityToSpawn == "CrushBlock" then
+	if entity.entityToSpawn == "Kevin" then
 		doNotIgnore("crushBlockAxe")
 		doNotIgnore("crushBlockChillout")
 	end
@@ -294,7 +294,7 @@ function SpawnController.ignoredFields(entity)
 	end
 	--Entities with size
 	if entity.entityToSpawn == "DashBlock" or entity.entityToSpawn == "FallingBlock" or entity.entityToSpawn == "IceBlock" or entity.entityToSpawn == "MoveBlock" or entity.entityToSpawn == "StarJumpBlock"
-	or entity.entityToSpawn == "CrushBlock"	or entity.entityToSpawn == "SwapBlock" or entity.entityToSpawn == "ZipMover" or entity.entityToSpawn == "DreamBlock" or entity.entityToSpawn == "GlassBlock"
+	or entity.entityToSpawn == "Kevin"	or entity.entityToSpawn == "SwapBlock" or entity.entityToSpawn == "ZipMover" or entity.entityToSpawn == "DreamBlock" or entity.entityToSpawn == "GlassBlock"
 	or entity.entityToSpawn == "FloatySpaceBlock" then
 		doNotIgnore("blockWidth")
 		doNotIgnore("blockHeight")
@@ -366,7 +366,7 @@ function SpawnController.texture(room, entity)
 	elseif entityToSpawn == "DreamBlock" then
 		return "objects/KoseiHelper/Controllers/SpawnController/DreamBlock"
 	elseif entityToSpawn == "BounceBlock" then
-		return "objects/KoseiHelper/Controllers/SpawnController/BounceBlockBlock"
+		return "objects/KoseiHelper/Controllers/SpawnController/BounceBlock"
 	elseif entityToSpawn == "Refill" then
 		return "objects/KoseiHelper/Controllers/SpawnController/Refill"
 	elseif entityToSpawn == "GlassBlock" then
@@ -377,7 +377,7 @@ function SpawnController.texture(room, entity)
 		return "objects/KoseiHelper/Controllers/SpawnController/FloatySpaceBlock"
 	elseif entityToSpawn == "StarJumpBlock" then
 		return "objects/KoseiHelper/Controllers/SpawnController/StarJumpBlock"
-	elseif entityToSpawn == "CrushBlock" then
+	elseif entityToSpawn == "Kevin" then
 		return "objects/KoseiHelper/Controllers/SpawnController/CrushBlock"
 	elseif entityToSpawn == "Decal" then
 		return "objects/KoseiHelper/Controllers/SpawnController/Decal"

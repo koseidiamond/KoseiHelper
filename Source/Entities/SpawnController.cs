@@ -23,7 +23,7 @@ public enum EntityType
     Iceball,
     MoveBlock,
     Seeker,
-    SwapBlock,
+    SwapBlockNoBg,
     ZipMover,
     CrumblePlatform,
     DreamBlock,
@@ -35,7 +35,10 @@ public enum EntityType
     StarJumpBlock,
     CrushBlock,
     SeekerBarrier, // This one is an easter egg because it looks weird but uh I'm leaving it be
-    Decal
+    Decal,
+    //The following entities are just alternate names so the name from the plugin is renamed:
+    SwapBlock,
+    Kevin
 }
 
 public enum SpawnCondition
@@ -66,10 +69,10 @@ public class SpawnController : Entity
     public string appearSound;
     public string disappearSound;
     public int dashCount, everyXDashes;
-
+#pragma warning disable CS0414
     private bool isBlock = false;
+#pragma warning restore CS0414
     private bool hasSpawnedFromSpeed = false;
-    private bool hasSpawnedFromFlag = false;
     private bool previousHasSpawnedFromFlag, currentHasSpawnedFromFlag;
     private int currentCassetteIndex, previousCassetteIndex;
     private bool canSpawnFromCassette;
@@ -107,7 +110,7 @@ public class SpawnController : Entity
     public bool moveBlockCanSteer, moveBlockFast;
     public MoveBlock.Directions moveBlockDirection;
 
-    public SwapBlock.Themes swapBlockTheme;
+    public SwapBlockNoBg.Themes swapBlockNoBgTheme;
     public ZipMover.Themes zipMoverTheme;
 
     public string flag;
@@ -135,6 +138,10 @@ public class SpawnController : Entity
         offsetX = data.Int("offsetX", 0);
         offsetY = data.Int("offsetY", 8);
         entityToSpawn = data.Enum("entityToSpawn", EntityType.Puffer);
+        if (entityToSpawn == EntityType.SwapBlock)
+            entityToSpawn = EntityType.SwapBlockNoBg;
+        if (entityToSpawn == EntityType.Kevin)
+            entityToSpawn = EntityType.CrushBlock;
         spawnCooldown = spawnTime = data.Float("spawnCooldown", 0f);
         removeDash = data.Bool("removeDash", false);
         removeStamina = data.Bool("removeStamina", false);
@@ -184,7 +191,7 @@ public class SpawnController : Entity
         iceballSpeed = data.Float("iceballSpeed", 1f);
         iceballAlwaysIce = data.Bool("iceballAlwaysIce", false);
 
-        swapBlockTheme = data.Enum("swapBlockTheme", SwapBlock.Themes.Normal);
+        swapBlockNoBgTheme = data.Enum("swapBlockTheme", SwapBlockNoBg.Themes.Normal);
 
         fallingBlockBadeline = data.Bool("fallingBlockBadeline", false);
         fallingBlockClimbFall = data.Bool("fallingBlockClimbFall", false);
@@ -239,7 +246,7 @@ public class SpawnController : Entity
         EntityType.StarJumpBlock,
         EntityType.SeekerBarrier,
         EntityType.CrumblePlatform,
-        EntityType.SwapBlock,
+        EntityType.SwapBlockNoBg,
         EntityType.ZipMover
         };
         bool isBlock = blockEntities.Contains(entityToSpawn);
@@ -345,8 +352,8 @@ public class SpawnController : Entity
                     case EntityType.Seeker:
                         spawnedEntity = new Seeker(spawnPosition, new Vector2[] { spawnPosition });
                         break;
-                    case EntityType.SwapBlock:
-                        spawnedEntity = new SwapBlock(spawnPosition, blockWidth, blockHeight, nodePosition, swapBlockTheme);
+                    case EntityType.SwapBlockNoBg:
+                        spawnedEntity = new SwapBlockNoBg(spawnPosition, blockWidth, blockHeight, nodePosition, swapBlockNoBgTheme);
                         break;
                     case EntityType.ZipMover:
                         spawnedEntity = new ZipMover(spawnPosition, blockWidth, blockHeight, nodePosition, zipMoverTheme);

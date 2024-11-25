@@ -13,16 +13,14 @@ namespace Celeste.Mod.KoseiHelper.Entities;
 [TrackedAs(typeof(TempleCrackedBlock))]
 public class CustomTempleCrackedBlock : TempleCrackedBlock
 {
-    private EntityID eid;
     public int health;
-    public static  bool persistent;
+    public static new bool persistent;
     public Color tint;
     public string breakSound, prebreakSound, texture;
     public char debris;
-    public MTexture[,,] tiles;
-    public float frame;
-    public int frames;
-
+    public new MTexture[,,] tiles;
+    public new float frame;
+    public new int frames;
     public CustomTempleCrackedBlock(EntityData data, Vector2 offset, EntityID id) : base(id, data.Position + offset, data.Width, data.Height, persistent)
     {
         persistent = data.Bool("persistent", false);
@@ -110,7 +108,6 @@ public class CustomTempleCrackedBlock : TempleCrackedBlock
     public override void Update()
     {
         base.Update();
-        Logger.Debug(nameof(KoseiHelperModule), $"health: {health}");
         if (broken)
         {
             frame += Engine.DeltaTime * 15f;

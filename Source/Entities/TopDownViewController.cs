@@ -11,6 +11,8 @@ namespace Celeste.Mod.KoseiHelper.Entities;
 
 [CustomEntity("KoseiHelper/TopDownViewController")]
 [Tracked]
+
+#pragma warning disable CL0001
 public class TopDownViewController : Entity
 {
     private Level level;
@@ -78,7 +80,6 @@ public class TopDownViewController : Entity
     {
         return false;
     }
-
     private static void Player_CallDashEvents(ILContext il) // From CommunalHelper (coloursofnoise)
     {
         ILCursor cursor = new(il);
