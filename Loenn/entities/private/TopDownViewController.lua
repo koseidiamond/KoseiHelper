@@ -11,4 +11,4 @@ TopDownViewController.placements = {
 	}
 }
 
-return TopDownViewController
+--return TopDownViewController

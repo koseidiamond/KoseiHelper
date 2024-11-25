@@ -60,4 +60,4 @@ local function getSearchPredicate(entity)
     end
 end
 
-return CustomWhiteBlock
+--return CustomWhiteBlock

@@ -75,7 +75,8 @@ public class SpawnController : Entity
     private bool hasSpawnedFromSpeed = false;
     private bool previousHasSpawnedFromFlag, currentHasSpawnedFromFlag;
     private int currentCassetteIndex, previousCassetteIndex;
-    private bool canSpawnFromCassette;
+    private bool canSpawnFromCassette = false;
+    private SpawnController spawnController;
 
     //other important variables
     private int entityID = 7388544; // Very high value so it doesn't conflict with other ids (hopefully)
@@ -134,6 +135,7 @@ public class SpawnController : Entity
 
     public SpawnController(EntityData data, Vector2 offset) : base(data.Position + offset)
     {
+        Add(new PostUpdateHook(() => {}));
         // General attributes
         offsetX = data.Int("offsetX", 0);
         offsetY = data.Int("offsetY", 8);
@@ -256,12 +258,18 @@ public class SpawnController : Entity
         {
             if (cassetteBlockManager != null)
             {
-                if (currentCassetteIndex != cassetteBlockManager.currentIndex)
+                if (Scene.OnInterval(1f)) Logger.Debug(nameof(KoseiHelperModule), $"Player bounds: {player.Bottom} bottom, {player.Top} top, {player.Left} left, {player.Right} right." +
+                    $"\nLevel bounds: {level.Bounds.Bottom} bottom, {level.Bounds.Top} top, {level.Bounds.Left} left, {level.Bounds.Right} right.");
+                if (currentCassetteIndex != cassetteBlockManager.currentIndex && // Make sure the player is not too close to the bounds of the level to prevent transition jank
+                player.Bottom < (float)level.Bounds.Bottom && player.Top > (float)level.Bounds.Top + 4  &&
+                player.Left > (float)level.Bounds.Left + 8 && player.Right < (float)level.Bounds.Right - 8)
                 {
                     previousCassetteIndex = currentCassetteIndex;
                     currentCassetteIndex = cassetteBlockManager.currentIndex;
                     canSpawnFromCassette = true;
                 }
+                else
+                    canSpawnFromCassette = false;
             }
             currentHasSpawnedFromFlag = level.Session.GetFlag(spawnFlag);
             bool conditionMet = spawnCondition switch
@@ -392,7 +400,10 @@ public class SpawnController : Entity
                         spawnedEntity = new SeekerBarrier(spawnPosition, blockWidth, blockHeight);
                         break;
                     case EntityType.Decal:
-                        spawnedEntity = new Decal(decalTexture, spawnPosition, new Vector2(1, 1), decalDepth);
+                        if (player.Facing == Facings.Left)
+                            spawnedEntity = new Decal(decalTexture, spawnPosition, new Vector2(-1, 1), decalDepth);
+                        else
+                            spawnedEntity = new Decal(decalTexture, spawnPosition, new Vector2(1, 1), decalDepth);
                         break;
                     default:
                         break;

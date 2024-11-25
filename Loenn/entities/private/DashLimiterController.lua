@@ -40,4 +40,4 @@ function DashLimiterController.sprite(room, entity)
     return sprites
 end
 
-return DashLimiterController
+--return DashLimiterController
