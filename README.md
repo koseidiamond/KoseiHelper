@@ -8,6 +8,8 @@ All entities are customizable through Sprites.xml. Feel free to change the anima
 This entity follows the player horizontally, killing on contact, and can optionally be bounced on. It has several customizable options, including spawning mini versions each x seconds, flying away like strawberries, or be winged. They can also interact with springs.
 ### Mary Block
 Single-use flowers that launch you with more or less strength depending on the mode.
+### Custom Temple Cracked Blocks
+The red blocks in chapter 5 that can be broken by seekers, but allowing custom visuals (debris, texture and tint), sounds, and health (requiring x number of hits to be destroyed).
 ### Tile Refill
 Can enable or disable the Collidable and Visible properties of foreground tiles.
 ### Bound Refill
@@ -19,9 +21,22 @@ Allows customization of the Pause Menu, disabling Retry, Save&Quit, disable paus
 ### Balls
 **Puffer balls** and **Spring balls** are a combination of Snowballs and Puffers/Springs. They are customizable, supporting all 4 directions, sine variations, flags, offsets, and multiple of them per screen.
 Additionally, spring balls have some visual options and can track Theo instead.
-
 *Note: Unlike controller entities, the position of these entities determines where they will first appear on the chosen axis.*
+### Entity Spawners
+The **Entity Spawner Controllers** allow you to spawn different types of entities on a certain position when a condition is met. They are highly customizable.
+- You can specify the position where the entity will spawn. This position can be relative to the player (always left/right) or adjust to the facing (in front of/behind). Noded entities (like swap blocks) also support these settings for the node.
+- The following **entities** can be spawned: Puffers, Clouds, Badeline orbs, Fake hearts, Dream blocks, Boosters, Bumpers, Ice/Lava barriers, Dash blocks, Core blocks, Falling blocks, Feathers, Ice/Fireballs, Moving blocks, Refills, Seekers, Swap blocks, Zip movers, Crumble platforms, Glass blocks, Starjump blocks, Jump throughs, Floaty blocks, Kevins and Decals.
+- You can specify a **flag** that needs a specific value (true/false) before the Spawner has effect.
+- You can specify a max number of entities that can spawn per room (**Limit**), the time that needs to pass until a new one can appear (**Cooldown**) and if they should disappear after a certain time (TTL or **Time To Live**).
+- Appear/disappear **sounds** are customizable. Set them to `event:/none` if you don't want a sound.
+- The following **spawn conditions/modes** are supported: **OnFlagEnabled** (when a spawn flag toggles its value), **OnDash** (whenever the player dashes, or every certain amount of dashes), **OnCassetteBeat** (when the beat of the cassette changes), **OnCustomButtonPress** (this button can be configured in Mod Settings), **OnSpeedX** (whenever the player reaches a certain speed threshold) and OnInterval (every x seconds).
+- Entities with **sizes** can be adjusted as needed (blocks, jumpthrus and crumble platforms).
+- Optionally, spawning an entity can **spend** one **dash or** all of your **stamina**.
+- Each entity has its own **settings**, similar to vanilla. Since they were adjusted manually, a few of them may have slight differences (Badeline orbs are single use and will always fly upwards. Dash blocks don't give the usual 3 freeze frames. Boosters and swap blocks don't render their usual outlines/bg respectively).
+- You can combine multiple spawners with different settings each in the same room.
 
 # Triggers
 ### Force Throw Trigger
 It forces the player to immediately throw the holdable, even before the grabbing animation finishes.
+### Force Hiccup Trigger
+It forces the player to have a **hiccup** (like a minijump) when they enter/exit the trigger, stay inside (on a certain interval) or when the cassette beat changes.
