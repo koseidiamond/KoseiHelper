@@ -8,7 +8,6 @@ namespace Celeste.Mod.KoseiHelper.Entities;
 [CustomEntity("KoseiHelper/CustomPauseController")]
 public class CustomPauseController : Entity
 {
-    private Level level;
     public bool canPause = true;
     public bool canRetry = true;
     public bool canSaveAndQuit = true;
@@ -29,13 +28,14 @@ public class CustomPauseController : Entity
     public override void Awake(Scene scene)
     {
         base.Awake(scene);
+        Level level = SceneAs<Level>();
         level.unpauseTimer = 0;
     }
 
     public override void Added(Scene scene)
     {
         base.Added(scene);
-        level = SceneAs<Level>();
+        Level level = SceneAs<Level>();
         level.PauseLock = !canPause;
         level.CanRetry = canRetry;
         level.SaveQuitDisabled = !canSaveAndQuit;
@@ -48,6 +48,7 @@ public class CustomPauseController : Entity
     public override void Update()
     {
         base.Update();
+        Level level = SceneAs<Level>();
         if (Scene.Tracker.GetEntity<Player>() is not { } player) // Checks that there is a player
             return;
         if (level.unpauseTimer < 0 && dieOnUnpause)

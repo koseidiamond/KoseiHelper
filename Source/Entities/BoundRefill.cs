@@ -13,7 +13,6 @@ public class BoundRefill : Entity
     public static ParticleType P_Regen = Refill.P_RegenTwo;
     public static ParticleType P_Glow = Refill.P_GlowTwo;
     private readonly BloomPoint bloom;
-    private Level level;
     private readonly VertexLight light;
     private readonly SineWave sine;
     public Sprite sprite;
@@ -47,12 +46,12 @@ public class BoundRefill : Entity
     public override void Added(Scene scene)
     {
         base.Added(scene);
-        level = SceneAs<Level>();
     }
 
     public override void Update()
     {
         base.Update();
+        Level level = SceneAs<Level>();
         if (base.Scene.OnInterval(0.1f))
         {
             level.ParticlesFG.Emit(P_Glow, 1, Position, Vector2.One * 5f);
@@ -100,6 +99,7 @@ public class BoundRefill : Entity
     private IEnumerator RefillRoutine(Player player)
     {
         Celeste.Freeze(0.05f);
+        Level level = SceneAs<Level>();
         yield return null;
         level.Shake();
         sprite.Visible = false;

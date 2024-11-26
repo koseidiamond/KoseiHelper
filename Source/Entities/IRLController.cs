@@ -9,8 +9,6 @@ namespace Celeste.Mod.KoseiHelper.Entities;
 [CustomEntity("KoseiHelper/IRLController")]
 public class IRLController : Entity
 {
-
-    private Level level;
     private int currentHour;
     private bool changesDarknessLevel;
     public IRLController (EntityData data, Vector2 offset) : base(data.Position + offset)
@@ -23,6 +21,7 @@ public class IRLController : Entity
     public override void Awake(Scene scene)
     {
         base.Awake(scene);
+        Level level = SceneAs<Level>();
         if (changesDarknessLevel)
         {
             float lightLevel = GetLightLevelForHour(currentHour);
@@ -33,6 +32,7 @@ public class IRLController : Entity
     public override void Added(Scene scene)
     {
         base.Added(scene);
+        Level level = SceneAs<Level>();
         level = SceneAs<Level>();
         int currentMonth = DateTime.Now.Month;
         currentHour = DateTime.Now.Hour;
@@ -53,6 +53,8 @@ public class IRLController : Entity
 
     public override void Update()
     {
+        base.Update();
+        Level level = SceneAs<Level>();
         if (Scene.OnInterval(1f)) // We don't need to get the current hour every frame
             currentHour = DateTime.Now.Hour;
 

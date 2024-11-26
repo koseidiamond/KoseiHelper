@@ -11,9 +11,7 @@ namespace Celeste.Mod.KoseiHelper.Entities;
 [Tracked]
 public class Goomba : Actor
 {
-
     private Sprite sprite;
-    private Level level;
     private Collider bounceCollider;
     private int walkDirection;
     private Collision onCollideH = null;
@@ -102,7 +100,7 @@ public class Goomba : Actor
     public override void Added(Scene scene)
     {
         base.Added(scene);
-        level = SceneAs<Level>();
+        Level level = SceneAs<Level>();
         Add(rotateWiggler = Wiggler.Create(0.5f, 4f, (float v) =>
         {
             sprite.Rotation = v * 30f * (MathF.PI / 180f);
@@ -111,6 +109,7 @@ public class Goomba : Actor
 
     public override void Update()
     {
+        Level level = SceneAs<Level>();
         if (Scene.OnInterval(timeToSpawnMinis) && canSpawnMinis && minisSpawned <10)
         {
             this.Scene.Add(new Goomba(new Vector2(this.Position.X, this.Position.Y + 6), originalSpeedX + originalSpeedX/4, false, false, false, true));
@@ -216,6 +215,7 @@ public class Goomba : Actor
 
     private void OnPlayerBounce(Player player)
     {
+        Level level = SceneAs<Level>();
         Celeste.Freeze(0.05f);
         player.Bounce(base.Top - 2f);
         this.RemoveSelf();

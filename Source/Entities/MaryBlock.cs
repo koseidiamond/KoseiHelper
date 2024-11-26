@@ -9,8 +9,6 @@ namespace Celeste.Mod.KoseiHelper.Entities;
 [Tracked]
 public class MaryBlock : Entity
 {
-
-    private Level level;
     private Sprite sprite;
     private Wiggler rotateWiggler;
     public bool potted;
@@ -44,6 +42,7 @@ public class MaryBlock : Entity
     public override void Added(Scene scene)
     {
         base.Added(scene);
+        Level level = SceneAs<Level>();
         level = SceneAs<Level>();
         Add(rotateWiggler = Wiggler.Create(0.5f, 3f, (float v) =>
         {
@@ -59,6 +58,7 @@ public class MaryBlock : Entity
 
     private void OnPlayer(Player player)
     {
+        Level level = SceneAs<Level>();
         if (player.Scene != null)
         {
             Audio.Play("event:/KoseiHelper/mary", Position);

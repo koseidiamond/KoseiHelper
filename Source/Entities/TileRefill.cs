@@ -13,7 +13,6 @@ public class ForceThrowTrigger : Entity
     public static ParticleType P_Regen = Refill.P_RegenTwo;
     public static ParticleType P_Glow = Refill.P_GlowTwo;
     private readonly BloomPoint bloom;
-    private Level level;
     private readonly VertexLight light;
     private readonly SineWave sine;
     public Sprite sprite;
@@ -46,6 +45,7 @@ public class ForceThrowTrigger : Entity
     public override void Awake(Scene scene)
     {
         base.Awake(scene);
+        Level level = SceneAs<Level>();
         foreach (SolidTiles solid in level.Entities.FindAll<SolidTiles>())
         {
             solid.Collidable = true;
@@ -56,12 +56,12 @@ public class ForceThrowTrigger : Entity
 public override void Added(Scene scene)
     {
         base.Added(scene);
-        level = SceneAs<Level>();
     }
 
     public override void Update()
     {
         base.Update();
+        Level level = SceneAs<Level>();
         if (respawnTimer > 0f)
         {
             respawnTimer -= Engine.DeltaTime;
@@ -99,6 +99,7 @@ public override void Added(Scene scene)
     private void OnPlayer(Player player)
     {
         Collidable = false;
+        Level level = SceneAs<Level>();
         Audio.Play("event:/new_content/game/10_farewell/pinkdiamond_touch", Position);
         Input.Rumble(RumbleStrength.Medium, RumbleLength.Medium);
         sprite.Visible = false;
@@ -115,6 +116,7 @@ public override void Added(Scene scene)
 
     private IEnumerator RefillRoutine(Player player)
     {
+        Level level = SceneAs<Level>();
         Celeste.Freeze(0.05f);
         yield return null;
         level.Shake();
@@ -133,6 +135,7 @@ public override void Added(Scene scene)
 
     private void Respawn()
     {
+        Level level = SceneAs<Level>();
         if (!Collidable)
         {
             Collidable = true;

@@ -74,8 +74,8 @@ entities.KoseiHelper/CustomTempleCrackedBlock.attributes.description.prebreakSou
 entities.KoseiHelper/CustomTempleCrackedBlock.attributes.description.health=The number of hits until the block is broken.
 
 #Top Down View Controller
-entities.KoseiHelper/TopDownViewController.placements.name.TopDownViewController=Top Down View Controller
-entities.KoseiHelper/TopDownViewController.placements.description.Top Down View Controller=This controller allows the player to move similarly to top-down view RPGs.
+#entities.KoseiHelper/TopDownViewController.placements.name.TopDownViewController=Top Down View Controller
+#entities.KoseiHelper/TopDownViewController.placements.description.Top Down View Controller=This controller allows the player to move similarly to top-down view RPGs.
 
 # Custom Pause Controller
 entities.KoseiHelper/CustomPauseController.placements.name.CustomPauseController= Custom Pause Controller

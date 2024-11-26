@@ -18,6 +18,7 @@ public class TopDownViewController : Entity
     private Level level;
     public TopDownViewController(EntityData data, Vector2 offset) : base(data.Position + offset)
     {
+        base.Tag = Tags.Global;
         // TODO Attributes: sound when walking, 4/8 directions
     }
 
@@ -50,8 +51,7 @@ public class TopDownViewController : Entity
         Scene.Add(water);
         level.Displacement.Enabled = false;
 
-        // TODO Make an option to load the controller globally, add proper sprites, underwater interactions, prevent tech,
-        // Reset player st to always swim on update (unless dashing or unless dummy but in that case it shouldnt have gravity)
+        // TODO add proper sprites, prevent tech
     }
 
     public override void Update()

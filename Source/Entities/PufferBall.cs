@@ -16,7 +16,6 @@ public class PufferBall : Puffer
 {
     private const float ResetTime = 0.8f;
     private float resetTimer;
-    private Level level;
     private SineWave sine;
     private float atY;
     private float atX;
@@ -101,7 +100,7 @@ public class PufferBall : Puffer
     public override void Added(Scene scene)
     {
         base.Added(scene);
-        level = SceneAs<Level>();
+        Level level = SceneAs<Level>();
         Collidable = Visible = false;
         if (string.IsNullOrEmpty(flag) || level.Session.GetFlag(flag) && !string.IsNullOrEmpty(flag))
         {
@@ -112,6 +111,7 @@ public class PufferBall : Puffer
 
     private void ResetPosition()
     {
+        Level level = SceneAs<Level>();
         Player player = level.Tracker.GetEntity<Player>();
         if (player != null)
         { // Makes sure that the player is not close to the bounds of the screen. TODO: fix transitions
@@ -153,6 +153,7 @@ public class PufferBall : Puffer
     public override void Update()
     {
         base.Update();
+        Level level = SceneAs<Level>();
         if (string.IsNullOrEmpty(flag) || level.Session.GetFlag(flag) && !string.IsNullOrEmpty(flag))
         {
             if (!vertical)

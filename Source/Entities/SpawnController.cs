@@ -76,7 +76,6 @@ public class SpawnController : Entity
     private bool previousHasSpawnedFromFlag, currentHasSpawnedFromFlag;
     private int currentCassetteIndex, previousCassetteIndex;
     private bool canSpawnFromCassette = false;
-    private SpawnController spawnController;
 
     //other important variables
     private int entityID = 7388544; // Very high value so it doesn't conflict with other ids (hopefully)

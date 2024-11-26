@@ -12,7 +12,6 @@ public class SpringBall : Spring
     private new Sprite sprite;
     private Sprite arrow;
     private float resetTimer;
-    private Level level;
     private SineWave sine;
     private float atY;
     private float atX;
@@ -63,6 +62,7 @@ public class SpringBall : Spring
     public override void Added(Scene scene)
     {
         base.Added(scene);
+        Level level = SceneAs<Level>();
         level = SceneAs<Level>();
         Collidable = Visible = false;
         if (string.IsNullOrEmpty(flag) || level.Session.GetFlag(flag) && !string.IsNullOrEmpty(flag))
@@ -71,6 +71,7 @@ public class SpringBall : Spring
 
     private void ResetPosition()
     {
+        Level level = SceneAs<Level>();
         Player player = level.Tracker.GetEntity<Player>();
         TheoCrystal theo = level.Tracker.GetEntity<TheoCrystal>();
         if (player != null && !trackTheo)
@@ -144,6 +145,7 @@ public class SpringBall : Spring
     public override void Update()
     {
         base.Update();
+        Level level = SceneAs<Level>();
         if (string.IsNullOrEmpty(flag) || level.Session.GetFlag(flag) && !string.IsNullOrEmpty(flag))
         {
             if (vertical)
