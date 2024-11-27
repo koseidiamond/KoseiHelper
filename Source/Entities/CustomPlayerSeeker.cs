@@ -8,9 +8,6 @@ using Celeste.Mod.Entities;
 using On.Celeste;
 using System.Collections.Generic;
 using static Celeste.Session;
-using static MonoMod.InlineRT.MonoModRule;
-using System.Reflection.Metadata;
-using IL.Celeste;
 
 namespace Celeste.Mod.KoseiHelper.Entities;
 
@@ -20,6 +17,7 @@ public class CustomPlayerSeeker : Actor
     private Facings facing;
     private Sprite sprite;
     private Vector2 speed;
+    public float speedMultiplier = 1;
     private bool enabled;
     private float dashTimer;
     private Vector2 dashDirection;
@@ -27,8 +25,11 @@ public class CustomPlayerSeeker : Actor
     private float trailTimerB;
     private Shaker shaker;
 
+    private Vector2 cameraTarget;
+
     public string nextRoom, colorgrade, seekerDash;
     public bool vanillaEffects = false;
+    public bool isFriendly = false;
 
     public bool canDash = true;
     private bool hasDied, isDying = false;
@@ -41,10 +42,12 @@ public class CustomPlayerSeeker : Actor
     private Vector2 windDirection;
     private bool justRespawned;
     public bool canSwitchCharacters, isMadeline;
+    private Collider bounceCollider;
 
     public static ParticleType boosterParticle = Booster.P_Burst;
     public static ParticleType boosterRedParticle = Booster.P_BurstRed;
     public static ParticleType featherParticle = FlyFeather.P_Collect;
+    public static ParticleType seekerParticle = Seeker.P_Stomp;
 
 
     HashSet<Type> hazardTypes = new HashSet<Type>
@@ -84,6 +87,8 @@ public class CustomPlayerSeeker : Actor
         vanillaEffects = data.Bool("vanillaEffects", false);
         seekerDash = data.Attr("seekerDashSound", "event:/game/05_mirror_temple/seeker_dash");
         canSwitchCharacters = data.Bool("canSwitchCharacters", false);
+        speedMultiplier = data.Float("speedMultiplier", 1f);
+        isFriendly = data.Bool("isFriendly", false);
         Add(sprite = GFX.SpriteBank.Create(data.Attr("sprite","seeker"))); //IMPORTANT: the sprite needs the tags hatch, flipMouth, flipEyes, idle, spotted, attacking and statue to work
         if (vanillaEffects)
             sprite.Play("statue");
@@ -97,6 +102,9 @@ public class CustomPlayerSeeker : Actor
             }
         };
         base.Collider = new Hitbox(10f, 10f, -5f, -5f);
+        if (isFriendly)
+            bounceCollider = new Hitbox(10f, 6f, -5f, -4f);
+        Add(new PlayerCollider(OnPlayerBounce, bounceCollider));
         Add(new MirrorReflection());
         Add(new PlayerCollider(OnPlayer));
         Add(new VertexLight(Color.White, 1f, 32, 64));
@@ -110,7 +118,9 @@ public class CustomPlayerSeeker : Actor
     {
         base.Awake(scene);
         Level level = scene as Level;
-        level.Session.ColorGrade = colorgrade;
+        if (!string.IsNullOrEmpty(colorgrade))
+            level.Session.ColorGrade = colorgrade;
+        level.Session.SetFlag("kosei_PlayerSeeker", true);
         if (vanillaEffects)
             level.ScreenPadding = 32f;
     }
@@ -128,7 +138,16 @@ public class CustomPlayerSeeker : Actor
         yield return null;
         if (vanillaEffects)
             Glitch.Value = 0.05f;
-        level.Tracker.GetEntity<Player>()?.StartTempleMirrorVoidSleep();
+        Player player = level.Tracker.GetEntity<Player>();
+        player.Sprite.Play("asleep");
+        if (player.Position.X <= Position.X)
+            player.Facing = Facings.Right;
+        else
+            player.Facing = Facings.Left;
+        player.StateMachine.State = 11;
+        player.StateMachine.Locked = true;
+        player.DummyAutoAnimate = false;
+        player.DummyGravity = true;
         if (vanillaEffects)
             yield return 1f;
         Vector2 from = level.Camera.Position;
@@ -178,13 +197,25 @@ public class CustomPlayerSeeker : Actor
     }
     private void OnPlayer(Player player)
     {
-        if (!player.Dead)
+        if (!player.Dead && !isFriendly)
         {
             Leader.StoreStrawberries(player.Leader);
             PlayerDeadBody playerDeadBody = player.Die((player.Position - Position).SafeNormalize(), evenIfInvincible: true, registerDeathInStats: false);
             playerDeadBody.DeathAction = End;
             playerDeadBody.ActionDelay = 0.3f;
-            Engine.TimeRate = 0.25f;
+        }
+    }
+
+    private void OnPlayerBounce(Player player)
+    {
+        Level level = SceneAs<Level>();
+        if (isMadeline)
+        {
+            player.Bounce(base.Top - 2f);
+            float angle = player.Speed.Angle();
+            level.ParticlesFG.Emit(seekerParticle, 5, Position, Vector2.One * 4f, angle - (float)Math.PI / 2f);
+            Audio.Play("event:/game/general/thing_booped", Position);
+            Audio.Play("event:/game/05_mirror_temple/seeker_booped", Position);
         }
     }
     private void End()
@@ -194,7 +225,6 @@ public class CustomPlayerSeeker : Actor
         {
             Glitch.Value = 0f;
             Distort.Anxiety = 0f;
-            Engine.TimeRate = 1f;
             level.Session.ColorGrade = null;
             level.UnloadLevel();
             level.CanRetry = true;
@@ -223,198 +253,247 @@ public class CustomPlayerSeeker : Actor
 
             }
         };
-        sprite.Scale.X = Calc.Approach(sprite.Scale.X, 1f, 2f * Engine.DeltaTime);
-        sprite.Scale.Y = Calc.Approach(sprite.Scale.Y, 1f, 2f * Engine.DeltaTime);
-        if (enabled && sprite.CurrentAnimationID != "hatch")
+        if (player != null)
         {
-            if (dashTimer > 0f)
+            if (player.Position.Y > level.Bounds.Bottom + 16)
+                PlayerSeekerDie();
+            cameraTarget = player.Position;
+            sprite.Scale.X = Calc.Approach(sprite.Scale.X, 1f, 2f * Engine.DeltaTime * 1.5f);
+            sprite.Scale.Y = Calc.Approach(sprite.Scale.Y, 1f, 2f * Engine.DeltaTime * 1.5f);
+            if (!isMadeline)
             {
-                speed = Calc.Approach(speed, Vector2.Zero, 800f * Engine.DeltaTime);
-                dashTimer -= Engine.DeltaTime;
-                if (dashTimer <= 0f)
-                    sprite.Play("spotted");
-                if (trailTimerA > 0f)
+                if (enabled && sprite.CurrentAnimationID != "hatch")
                 {
-                    trailTimerA -= Engine.DeltaTime;
-                    if (trailTimerA <= 0f)
-                        CreateTrail();
-                }
-                if (trailTimerB > 0f)
-                {
-                    trailTimerB -= Engine.DeltaTime;
-                    if (trailTimerB <= 0f)
-                        CreateTrail();
-                }
-                if (base.Scene.OnInterval(0.04f))
-                {
-                    Vector2 vector = speed.SafeNormalize();
-                    SceneAs<Level>().Particles.Emit(Seeker.P_Attack, 2, Position + vector * 4f, Vector2.One * 4f, vector.Angle());
-                }
-            }
-            else
-            {
-                Vector2 vector2 = Input.Aim.Value.SafeNormalize();
-                speed += vector2 * 600f * Engine.DeltaTime;
-                float num = speed.Length();
-                if (num > 120f)
-                {
-                    num = Calc.Approach(num, 120f, Engine.DeltaTime * 700f);
-                    speed = speed.SafeNormalize(num);
-                }
-                if (vector2.Y == 0f)
-                    speed.Y = Calc.Approach(speed.Y, 0f, 400f * Engine.DeltaTime);
-                if (vector2.X == 0f)
-                    speed.X = Calc.Approach(speed.X, 0f, 400f * Engine.DeltaTime);
-                if (vector2.Length() > 0f && sprite.CurrentAnimationID == "idle")
-                {
-                    if (vanillaEffects)
+                    if (dashTimer > 0f)
                     {
-                        level.Displacement.AddBurst(Position, 0.5f, 8f, 32f);
-                        sprite.Play("spotted");
-                            Audio.Play("event:/game/05_mirror_temple/seeker_playercontrolstart");
-                    }
-                }
-                int num2 = Math.Sign((int)facing);
-                int num3 = Math.Sign(speed.X);
-                if (num3 != 0 && num2 != num3 && Math.Sign(Input.Aim.Value.X) == Math.Sign(speed.X) && Math.Abs(speed.X) > 20f && sprite.CurrentAnimationID != "flipMouth" && sprite.CurrentAnimationID != "flipEyes")
-                    sprite.Play("flipMouth");
-                if (Input.Dash.Pressed && canDash)
-                    Dash(Input.Aim.Value.EightWayNormal());
-            }
-            if (!isDying || !hasDied)
-            {
-                MoveH(speed.X * Engine.DeltaTime, OnCollide);
-                MoveV(speed.Y * Engine.DeltaTime, OnCollide);
-            }
-            foreach (var hazardType in hazardTypes)
-            {
-                // Get all entities in the scene
-                foreach (Entity hazardEntity in base.Scene.Entities)
-                {
-                    // Check if the entity matches the current hazard type
-                    if (hazardEntity.GetType() == hazardType && CollideCheck(hazardEntity))
-                    {
-                        PlayerSeekerDie();
-                        break; // Exit the loop if a collision is detected
-                    }
-                }
-            }
-            foreach (Entity entity2 in base.Scene.Entities)
-            {
-                if (entity2 is Puffer puffer) // Eat the fishes
-                {
-                    if (CollideCheck(puffer) && puffer.state == Puffer.States.Idle)
-                    {
-                        puffer.Explode();
-                        puffer.RemoveSelf();
-                        break;
-                    }
-                }
-                if (entity2 is CoreModeToggle coreModeToggle) // Changes core mode
-                {
-                    if (CollideCheck(coreModeToggle))
-                    {
-                        if (level.Session.CoreMode == CoreModes.Cold)
+                        speed = Calc.Approach(speed, Vector2.Zero, 800f * Engine.DeltaTime);
+                        dashTimer -= Engine.DeltaTime;
+                        if (dashTimer <= 0f)
+                            sprite.Play("spotted");
+                        if (trailTimerA > 0f)
                         {
-                            level.Session.CoreMode = CoreModes.Hot;
-                            coreModeToggle.OnPlayer(player);
-                            break;
+                            trailTimerA -= Engine.DeltaTime;
+                            if (trailTimerA <= 0f)
+                                CreateTrail();
                         }
-                        if (level.Session.CoreMode == CoreModes.Hot)
+                        if (trailTimerB > 0f)
                         {
-                            level.Session.CoreMode = CoreModes.Cold;
-                            coreModeToggle.OnPlayer(player);
-                            break;
+                            trailTimerB -= Engine.DeltaTime;
+                            if (trailTimerB <= 0f)
+                                CreateTrail();
                         }
-                    }
-                }
-                if (entity2 is Water water) // Can't dash inside water
-                {
-                    if (CollideCheck(water))
-                    {
-                        canDash = false;
-                        break;
+                        if (base.Scene.OnInterval(0.04f))
+                        {
+                            Vector2 vector = speed.SafeNormalize();
+                            SceneAs<Level>().Particles.Emit(Seeker.P_Attack, 2, Position + vector * 4f, Vector2.One * 4f, vector.Angle());
+                        }
                     }
                     else
                     {
-                        canDash = true;
-                        break;
-                    }
-                }
-                if (entity2 is Bumper bumper)
-                {
-                    if (CollideCheck(bumper))
-                    {
-                        if (!fireMode)
+                        Vector2 vector2 = Input.Aim.Value.SafeNormalize();
+                        speed += vector2 * 600f * Engine.DeltaTime * speedMultiplier;
+                        float num = (speed).Length();
+                        if (num > 120f)
                         {
-                            bumper.OnPlayer(player);
-                            ExplodeLaunch(bumper.Position);
+                            num = Calc.Approach(num, 120f, Engine.DeltaTime * 700f);
+                            speed = speed.SafeNormalize(num);
                         }
-                        if (fireMode)
-                            PlayerSeekerDie();
-                        break;
+                        if (vector2.Y == 0f)
+                            speed.Y = Calc.Approach(speed.Y, 0f, 400f * Engine.DeltaTime);
+                        if (vector2.X == 0f)
+                            speed.X = Calc.Approach(speed.X, 0f, 400f * Engine.DeltaTime);
+                        if (vector2.Length() > 0f && sprite.CurrentAnimationID == "idle")
+                        {
+                            if (vanillaEffects)
+                            {
+                                level.Displacement.AddBurst(Position, 0.5f, 8f, 32f);
+                                sprite.Play("spotted");
+                                Audio.Play("event:/game/05_mirror_temple/seeker_playercontrolstart");
+                            }
+                        }
+                        int num2 = Math.Sign((int)facing);
+                        int num3 = Math.Sign(speed.X);
+                        if (num3 != 0 && num2 != num3 && Math.Sign(Input.Aim.Value.X) == Math.Sign(speed.X) && Math.Abs(speed.X) > 20f && sprite.CurrentAnimationID != "flipMouth" && sprite.CurrentAnimationID != "flipEyes")
+                            sprite.Play("flipMouth");
+                        if (Input.Dash.Pressed && canDash)
+                            Dash(Input.Aim.Value.EightWayNormal());
                     }
-                }
-                if (entity2 is Booster booster)
-                {
-                    if (CollideCheck(booster))
+                    if (!isDying || !hasDied)
                     {
-                        booster.OnPlayer(player);
-                        if (!booster.red)
-                            level.ParticlesFG.Emit(boosterParticle, 5, booster.Position, Vector2.One * 4f, speed.Angle() - (float)Math.PI / 2f);
-                        else
-                            level.ParticlesFG.Emit(boosterRedParticle, 5, booster.Position, Vector2.One * 4f, speed.Angle() - (float)Math.PI / 2f);
-                        booster.RemoveSelf();
-                        break;
+                        MoveH(speed.X * Engine.DeltaTime, OnCollide);
+                        MoveV(speed.Y * Engine.DeltaTime, OnCollide);
                     }
-                }
-                if (entity2 is FlyFeather feather)
-                {
-                    if (CollideCheck(feather))
+                    foreach (var hazardType in hazardTypes)
                     {
-                        level.ParticlesFG.Emit(featherParticle, 5, feather.Position, Vector2.One * 4f, speed.Angle() - (float)Math.PI / 2f);
-                        Audio.Play("event:/game/06_reflection/badeline_feather_slice", feather.Position);
-                        feather.RemoveSelf();
-                        break;
+                        // Get all entities in the scene
+                        foreach (Entity hazardEntity in base.Scene.Entities)
+                        {
+                            // Check if the entity matches the current hazard type
+                            if (hazardEntity.GetType() == hazardType && CollideCheck(hazardEntity))
+                            {
+                                PlayerSeekerDie();
+                                break; // Exit the loop if a collision is detected
+                            }
+                        }
+                    }
+                    foreach (Entity entity2 in base.Scene.Entities)
+                    {
+                        if (entity2 is Puffer puffer) // Eat the fishes
+                        {
+                            if (CollideCheck(puffer) && puffer.state == Puffer.States.Idle)
+                            {
+                                puffer.Explode();
+                                puffer.RemoveSelf();
+                                break;
+                            }
+                        }
+                        if (entity2 is CoreModeToggle coreModeToggle) // Changes core mode
+                        {
+                            if (CollideCheck(coreModeToggle))
+                            {
+                                if (level.Session.CoreMode == CoreModes.Cold)
+                                {
+                                    level.Session.CoreMode = CoreModes.Hot;
+                                    coreModeToggle.OnPlayer(player);
+                                    break;
+                                }
+                                if (level.Session.CoreMode == CoreModes.Hot)
+                                {
+                                    level.Session.CoreMode = CoreModes.Cold;
+                                    coreModeToggle.OnPlayer(player);
+                                    break;
+                                }
+                            }
+                        }
+                        if (entity2 is Water water) // Can't dash inside water
+                        {
+                            if (CollideCheck(water))
+                            {
+                                canDash = false;
+                                break;
+                            }
+                            else
+                            {
+                                canDash = true;
+                                break;
+                            }
+                        }
+                        if (entity2 is Seeker seeker)
+                        {
+                            if (CollideCheck(seeker))
+                            {
+                                seeker.GotBouncedOn(this);
+                                break;
+                            }
+                        }
+                        if (entity2 is FlagTrigger flagTrigger)
+                        {
+                            if (CollideCheck(flagTrigger))
+                            {
+                                flagTrigger.OnEnter(player);
+                                flagTrigger.OnLeave(player);
+                                break;
+                            }
+                        }
+                        if (entity2 is TouchSwitch touchSwitch)
+                        {
+                            if (CollideCheck(touchSwitch))
+                            {
+                                touchSwitch.TurnOn();
+                                break;
+                            }
+                        }
+                        if (entity2 is Bumper bumper)
+                        {
+                            if (CollideCheck(bumper))
+                            {
+                                if (!fireMode)
+                                {
+                                    bumper.OnPlayer(player);
+                                    ExplodeLaunch(bumper.Position);
+                                }
+                                if (fireMode)
+                                    PlayerSeekerDie();
+                                break;
+                            }
+                        }
+                        if (entity2 is Booster booster)
+                        {
+                            if (CollideCheck(booster))
+                            {
+                                if (!booster.red)
+                                {
+                                    level.ParticlesFG.Emit(boosterParticle, 5, booster.Position, Vector2.One * 4f, speed.Angle() - (float)Math.PI / 2f);
+                                    Audio.Play("event:/game/05_mirror_temple/redbooster_end");
+                                    level.Lighting.Alpha -= 0.03f;
+                                }
+                                else
+                                {
+                                    level.ParticlesFG.Emit(boosterRedParticle, 5, booster.Position, Vector2.One * 4f, speed.Angle() - (float)Math.PI / 2f);
+                                    Audio.Play("event:/game/04_cliffside/greenbooster_end");
+                                    level.Lighting.Alpha -= 0.03f;
+                                }
+                                booster.RemoveSelf();
+                                break;
+                            }
+                        }
+                        if (entity2 is FlyFeather feather)
+                        {
+                            if (CollideCheck(feather))
+                            {
+                                level.ParticlesFG.Emit(featherParticle, 5, feather.Position, Vector2.One * 4f, speed.Angle() - (float)Math.PI / 2f);
+                                Audio.Play("event:/game/06_reflection/badeline_feather_slice", feather.Position);
+                                feather.RemoveSelf();
+                                speedMultiplier += speedMultiplier * 0.1f;
+                                break;
+                            }
+                        }
+                    }
+                    Position = Position.Clamp(level.Bounds.X, level.Bounds.Y, level.Bounds.Right, level.Bounds.Bottom);
+                    Player entity = base.Scene.Tracker.GetEntity<Player>();
+                    if (entity != null)
+                    {
+                        float num4 = (Position - entity.Position).Length();
+                        if (num4 < 200f && entity.Sprite.CurrentAnimationID == "asleep" && !isFriendly)
+                        {
+                            entity.Sprite.Rate = 2f;
+                            entity.Sprite.Play("wakeUp");
+                        }
+                        else if (num4 < 100f && entity.Sprite.CurrentAnimationID != "wakeUp" && !isFriendly)
+                        {
+                            entity.Sprite.Rate = 1f;
+                            entity.Sprite.Play("runFast");
+                            entity.Facing = ((!(base.X > entity.X)) ? Facings.Right : Facings.Left);
+                        }
+                        if (num4 < 50f && dashTimer <= 0f)
+                        {
+                            if ((!isDying || !hasDied) && !isFriendly)
+                                Dash((entity.Center - base.Center).SafeNormalize());
+                        }
+                        Camera camera = level.Camera;
+                        Vector2 cameraTarget = CameraTarget;
+                        if (!isMadeline)
+                        {
+                            camera.Position += (cameraTarget - camera.Position) * (1f - (float)Math.Pow(0.009999999776482582, Engine.DeltaTime));
+                            player.Sprite.Play("asleep");
+                            player.StateMachine.State = 11;
+                            player.StateMachine.Locked = false;
+                            player.DummyAutoAnimate = false;
+                        }
+                        if (vanillaEffects)
+                        {
+                            Distort.Anxiety = Calc.ClampedMap(num4, 0f, 200f, 0.25f, 0f) + Calc.Random.NextFloat(0.05f);
+                            Distort.AnxietyOrigin = (new Vector2(entity.X, level.Camera.Top) - level.Camera.Position) / new Vector2(320f, 180f);
+                        }
                     }
                 }
-            }
-            Position = Position.Clamp(level.Bounds.X, level.Bounds.Y, level.Bounds.Right, level.Bounds.Bottom);
-            Player entity = base.Scene.Tracker.GetEntity<Player>();
-            if (entity != null)
-            {
-                float num4 = (Position - entity.Position).Length();
-                if (num4 < 200f && entity.Sprite.CurrentAnimationID == "asleep")
+                foreach (Entity entity3 in base.Scene.Tracker.GetEntities<SeekerBarrier>())
                 {
-                    entity.Sprite.Rate = 2f;
-                    entity.Sprite.Play("wakeUp");
+                    entity3.Collidable = false;
                 }
-                else if (num4 < 100f && entity.Sprite.CurrentAnimationID != "wakeUp")
-                {
-                    entity.Sprite.Rate = 1f;
-                    entity.Sprite.Play("runFast");
-                    entity.Facing = ((!(base.X > entity.X)) ? Facings.Right : Facings.Left);
-                }
-                if (num4 < 50f && dashTimer <= 0f)
-                {
-                    if ((!isDying || !hasDied) && vanillaEffects)
-                        Dash((entity.Center - base.Center).SafeNormalize());
-                }
-                Engine.TimeRate = Calc.ClampedMap(num4, 60f, 220f, 0.5f);
-                Camera camera = level.Camera;
-                Vector2 cameraTarget = CameraTarget;
-                camera.Position += (cameraTarget - camera.Position) * (1f - (float)Math.Pow(0.009999999776482582, Engine.DeltaTime));
-                Distort.Anxiety = Calc.ClampedMap(num4, 0f, 200f, 0.25f, 0f) + Calc.Random.NextFloat(0.05f);
-                Distort.AnxietyOrigin = (new Vector2(entity.X, level.Camera.Top) - level.Camera.Position) / new Vector2(320f, 180f);
             }
-            else
-            {
-                Engine.TimeRate = Calc.Approach(Engine.TimeRate, 1f, 1f * Engine.DeltaTime);
-            }
-        }
-        foreach (Entity entity3 in base.Scene.Tracker.GetEntities<SeekerBarrier>())
-        {
-            entity3.Collidable = false;
+            if (KoseiHelperModule.Settings.SwapCharacter.Pressed)
+                swapCharacters(cameraTarget, player);
         }
     }
     private void CreateTrail()
@@ -470,9 +549,10 @@ public class CustomPlayerSeeker : Actor
         if (data.Hit is SeekerBarrier)
         {
             (data.Hit as SeekerBarrier).OnReflectSeeker();
+            Logger.Debug(nameof(KoseiHelperModule), $"Seeker barrier hit. Barrier Right: {data.Hit.Right} Barrier Left: {data.Hit.Left}");
+            Logger.Debug(nameof(KoseiHelperModule), $"Seeker barrier hit. Seeker Right: {Right} Seeker Left: {Left}");
             Audio.Play("event:/game/05_mirror_temple/seeker_hit_lightwall", Position);
-            Logger.Debug(nameof(KoseiHelperModule), $"barrier: {data.Hit.Right} seeker: {this.Right}");
-            if (data.Hit.Right >= this.Right)
+            if (data.Hit.Left > Left + 10 || data.Hit.Right < Right - 10 || data.Hit.Top > Top + 10 || data.Hit.Bottom < Bottom - 10)
                 PlayerSeekerDie();
         }
         else
@@ -482,12 +562,14 @@ public class CustomPlayerSeeker : Actor
         if (data.Direction.X != 0f)
         {
             speed.X *= -0.8f;
-            sprite.Scale = new Vector2(sprite.Scale.X * 0.6f, sprite.Scale.Y * 1.4f);
+            if (sprite.Scale.X < 1.8 && sprite.Scale.Y < 1.8)
+                sprite.Scale = new Vector2(sprite.Scale.X * 0.6f, sprite.Scale.Y * 1.4f);
         }
         else if (data.Direction.Y != 0f)
         {
             speed.Y *= -0.8f;
-            sprite.Scale = new Vector2(sprite.Scale.X * 1.4f, sprite.Scale.Y * 0.6f);
+            if (sprite.Scale.X < 1.8 && sprite.Scale.Y < 1.8)
+                sprite.Scale = new Vector2(sprite.Scale.X * 1.4f, sprite.Scale.Y * 0.6f);
         }
 
         if (data.Hit is TempleCrackedBlock)
@@ -532,14 +614,10 @@ public class CustomPlayerSeeker : Actor
             dashTimer = 0.3f;
             dashDirection = dir;
             if (dashDirection == Vector2.Zero)
-            {
                 dashDirection.X = Math.Sign((int)facing);
-            }
             if (dashDirection.X != 0f)
-            {
                 facing = (Facings)Math.Sign(dashDirection.X);
-            }
-            speed = dashDirection * 400f;
+            speed = dashDirection * 400f * speedMultiplier; // Dash Speed
             sprite.Play("attacking");
             SceneAs<Level>().DirectionalShake(dashDirection);
             foreach (DashListener component in base.Scene.Tracker.GetComponents<DashListener>())
@@ -549,13 +627,12 @@ public class CustomPlayerSeeker : Actor
             }
             Input.Rumble(RumbleStrength.Strong, RumbleLength.Medium);
             Audio.Play(seekerDash, Position);
-            if (dashDirection.X == 0f)
-            {
+            if (dashDirection.X == 0f && sprite.Scale.X < 1.8 && sprite.Scale.Y < 1.8)
                 sprite.Scale = new Vector2(sprite.Scale.X * 0.6f, sprite.Scale.Y * 1.4f);
-            }
             else
             {
-                sprite.Scale = new Vector2(sprite.Scale.X * 1.4f, sprite.Scale.Y * 0.6f);
+                if (sprite.Scale.X < 1.8 && sprite.Scale.Y < 1.8)
+                    sprite.Scale = new Vector2(sprite.Scale.X * 1.4f, sprite.Scale.Y * 0.6f);
             }
         }
     }
@@ -618,7 +695,7 @@ public class CustomPlayerSeeker : Actor
             vector.X = Math.Sign(vector.X);
         }
 
-        speed = 280f * vector;
+        speed = 280f * vector * speedMultiplier;
         if (speed.Y <= 50f)
         {
             speed.Y = Math.Min(-150f, speed.Y);
@@ -655,53 +732,80 @@ public class CustomPlayerSeeker : Actor
         {
             return;
         }
-        if (move.X != 0f)
+        if (!hasDied && !isDying)
         {
-            windTimeout = 0.2f;
-            windDirection.X = Math.Sign(move.X);
-            if (!CollideCheck<Solid>(Position + Vector2.UnitX * -Math.Sign(move.X) * 3f))
+            if (move.X != 0f)
             {
-                if (move.X < 0f)
+                windTimeout = 0.2f;
+                windDirection.X = Math.Sign(move.X);
+                if (!CollideCheck<Solid>(Position + Vector2.UnitX * -Math.Sign(move.X) * 3f))
                 {
-                    move.X = Math.Max(move.X, (float)level.Bounds.Left - (base.ExactPosition.X + base.Collider.Left));
+                    if (move.X < 0f)
+                    {
+                        move.X = Math.Max(move.X, (float)level.Bounds.Left - (base.ExactPosition.X + base.Collider.Left));
+                    }
+                    else
+                    {
+                        move.X = Math.Min(move.X, (float)level.Bounds.Right - (base.ExactPosition.X + base.Collider.Right));
+                    }
+                    MoveH(move.X);
                 }
-                else
-                {
-                    move.X = Math.Min(move.X, (float)level.Bounds.Right - (base.ExactPosition.X + base.Collider.Right));
-                }
-                MoveH(move.X);
             }
-        }
-        if (move.Y == 0f)
-        {
-            return;
-        }
-        windTimeout = 0.2f;
-        windDirection.Y = Math.Sign(move.Y);
-        if (!(base.Bottom > (float)level.Bounds.Top) || (!(speed.Y < 0f)))
-        {
-            return;
-        }
+            if (move.Y == 0f)
+            {
+                return;
+            }
+            windTimeout = 0.2f;
+            windDirection.Y = Math.Sign(move.Y);
+            if (!(base.Bottom > (float)level.Bounds.Top) || (!(speed.Y < 0f)))
+            {
+                return;
+            }
             if (!(move.Y > 0f))
             {
                 return;
             }
             move.Y *= 0.4f;
-        if (move.Y < 0f)
-        {
-            windMovedUp = true;
+            if (move.Y < 0f)
+            {
+                windMovedUp = true;
+            }
+            MoveV(move.Y);
         }
-        MoveV(move.Y);
     }
 
-    public void swapCharacters()
+    public void swapCharacters(Vector2 cameraTarget, Player player)
     {
-        if (isMadeline)
+        if (canSwitchCharacters)
         {
-            isMadeline = false;
-        }
-        else
-        {
+            Logger.Debug(nameof(KoseiHelperModule), $"Characters swapped! Playing as Madeline: {!isMadeline}");
+            if (isMadeline) // Become Seeker
+            {
+                Audio.Play("event:/game/05_mirror_temple/seeker_revive", player.Position);
+                sprite.Play("spot");
+                SceneAs<Level>().Session.SetFlag("kosei_PlayerSeeker", true);
+                player.Sprite.Play("asleep");
+                player.StateMachine.State = 11;
+                player.StateMachine.Locked = true;
+                player.DummyAutoAnimate = false;
+                isMadeline = false;
+            }
+            else // Become Madeline
+            {
+                Audio.Play("event:/game/05_mirror_temple/seeker_revive", Position);
+                Tween tween = Tween.Create(Tween.TweenMode.Oneshot, Ease.SineInOut, 2f, start: true);
+                tween.OnUpdate = (Tween f) =>
+                {
+                    Vector2 cameraTarget = CameraTarget;
+                    SceneAs<Level>().Camera.Position = SceneAs<Level>().Camera.Position + (cameraTarget - SceneAs<Level>().Camera.Position) * f.Eased;
+                };
+                sprite.Play("takeHit");
+                SceneAs<Level>().Session.SetFlag("kosei_PlayerSeeker", false);
+                player.StateMachine.State = 0;
+                player.StateMachine.Locked = false;
+                player.DummyAutoAnimate = true;
+                isMadeline = true;
+            }
         }
     }
 }

@@ -73,6 +73,23 @@ entities.KoseiHelper/CustomTempleCrackedBlock.attributes.description.breakSound=
 entities.KoseiHelper/CustomTempleCrackedBlock.attributes.description.prebreakSound=The sound that will play if the health is reduced but the block is not broken yet.
 entities.KoseiHelper/CustomTempleCrackedBlock.attributes.description.health=The number of hits until the block is broken.
 
+# Custom Player Seeker
+entities.KoseiHelper/CustomPlayerSeeker.placements.name.CustomPlayerSeeker= Custom Player Seeker
+entities.KoseiHelper/CustomPlayerSeeker.placements.description.Custom Player Seeker= An improved version of the Player Seeker used in that one room of 5A.\nIt has unique interactions with several entities.
+entities.KoseiHelper/CustomPlayerSeeker.attributes.description.nextRoom= If the seeker kills Madeline, the player will be teleported to the room name specified.
+entities.KoseiHelper/CustomPlayerSeeker.attributes.description.colorgrade= The colorgrade that will be set once the room with a Player Seeker is entered.\nLeave this field empty if you don't want any changes.
+entities.KoseiHelper/CustomPlayerSeeker.attributes.description.sprite= The sprite that the Player Seeker will use.\nYou can copy the xml entry if you want to reskin it and give it the new tag here.
+entities.KoseiHelper/CustomPlayerSeeker.attributes.description.seekerDashSound= The sound that the Player Seeker should make when it dashes.
+entities.KoseiHelper/CustomPlayerSeeker.attributes.description.vanillaEffects= If the vanilla effects should appear.\n(Screen padding, break statue intro, anxiety).
+entities.KoseiHelper/CustomPlayerSeeker.attributes.description.isFriendly= If the seeker should be able to kill Madeline\n(and attempt to do it like crazy, if it gets too close).
+entities.KoseiHelper/CustomPlayerSeeker.attributes.description.speedMultiplier= The normal speed of the Player Seeker will be multiplied by this factor.\nIt's recommended to leave the default.
+entities.KoseiHelper/CustomPlayerSeeker.attributes.description.canSwitchCharacters=Enable this option to be able to switch between Madeline and Player Seeker.\nThe custom key can be configured in Mod Options>Kosei Helper.
+
+#Winged Key
+entities.KoseiHelper/WingedKey.placements.name.WingedKey= Winged Key
+entities.KoseiHelper/WingedKey.placements.description.Winged Key= A key that will fly away like winged strawberries if the player dashes.\nIt will follow as normal keys upon collection, and will lose its wings if the player dies. (Cosmetic effect)
+entities.KoseiHelper/WingedKey.attributes.description.flapSpeed=The speed used when the key flies away.
+
 #Top Down View Controller
 #entities.KoseiHelper/TopDownViewController.placements.name.TopDownViewController=Top Down View Controller
 #entities.KoseiHelper/TopDownViewController.placements.description.Top Down View Controller=This controller allows the player to move similarly to top-down view RPGs.

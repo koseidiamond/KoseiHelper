@@ -5,14 +5,16 @@ CustomPlayerSeeker.depth = -100
 
 CustomPlayerSeeker.placements = {
 	{
-		name = "CustomPlayerSeeker",
+		name = "Custom Player Seeker",
 		data = {
 			nextRoom = "c-00",
 			colorgrade = "templevoid",
-			needsToBreakStatue = true,
 			sprite = "seeker",
 			seekerDashSound = "event:/game/05_mirror_temple/seeker_dash",
-			vanillaEffects = false
+			vanillaEffects = false,
+			canSwitchCharacters = false,
+			speedMultiplier = 1,
+			isFriendly = false
 		}
 	}
 }

@@ -8,7 +8,9 @@ All entities are customizable through Sprites.xml. Feel free to change the anima
 This entity follows the player horizontally, killing on contact, and can optionally be bounced on. It has several customizable options, including spawning mini versions each x seconds, flying away like strawberries, or be winged. They can also interact with springs.
 ### Mary Block
 Single-use flowers that launch you with more or less strength depending on the mode.
-### Custom Temple Cracked Blocks
+### Winged Key
+They function as normal keys but they can fly away like winged strawberries at a customizable speed.
+### Custom Temple Cracked Block
 The red blocks in chapter 5 that can be broken by seekers, but allowing custom visuals (debris, texture and tint), sounds, and health (requiring x number of hits to be destroyed).
 ### Tile Refill
 Can enable or disable the Collidable and Visible properties of foreground tiles.
@@ -22,7 +24,7 @@ Allows customization of the Pause Menu, disabling Retry, Save&Quit, disable paus
 **Puffer balls** and **Spring balls** are a combination of Snowballs and Puffers/Springs. They are customizable, supporting all 4 directions, sine variations, flags, offsets, and multiple of them per screen.
 Additionally, spring balls have some visual options and can track Theo instead.
 *Note: Unlike controller entities, the position of these entities determines where they will first appear on the chosen axis.*
-### Entity Spawners
+### Entity Spawner
 The **Entity Spawner Controllers** allow you to spawn different types of entities on a certain position when a condition is met. They are highly customizable.
 - You can specify the position where the entity will spawn. This position can be relative to the player (always left/right) or adjust to the facing (in front of/behind). Noded entities (like swap blocks) also support these settings for the node.
 - The following **entities** can be spawned: Puffers, Clouds, Badeline orbs, Fake hearts, Dream blocks, Boosters, Bumpers, Ice/Lava barriers, Dash blocks, Core blocks, Falling blocks, Feathers, Ice/Fireballs, Moving blocks, Refills, Seekers, Swap blocks, Zip movers, Crumble platforms, Glass blocks, Starjump blocks, Jump throughs, Floaty blocks, Kevins and Decals.
@@ -34,6 +36,24 @@ The **Entity Spawner Controllers** allow you to spawn different types of entitie
 - Optionally, spawning an entity can **spend** one **dash or** all of your **stamina**.
 - Each entity has its own **settings**, similar to vanilla. Since they were adjusted manually, a few of them may have slight differences (Badeline orbs are single use and will always fly upwards. Dash blocks don't give the usual 3 freeze frames. Boosters and swap blocks don't render their usual outlines/bg respectively).
 - You can combine multiple spawners with different settings each in the same room.
+# Custom Player Seeker
+The Player Seeker, but more functional. Includes multiple customization options and a new game mode where you can swap between Madeline and the Seeker with a custom button press. It has multiple new interactions with vanilla entities, including:
+- **Touch Switches** (they are enabled).
+- Most **dangerous entities** kill the seeker on contact (spikes kill regardless of the direction).
+- **Seekers** can be attacked by the Player Seeker.
+- Being inside **water** disallows dashes.
+- **Flag triggers** can be enabled.
+- **Puffers**, **boosters** and **feathers** will disappear. On consumption, puffers explode, boosters light up the room a bit, and feathers give a slight speed bonus.
+- **Bumpers** behave as usual, but normal ones will push Madeline too!
+- **Core Mode** can be toggled with switches as normal.
+- Entities that react to player dashes, like **Swap blocks**, will react as normal.
+- **Dream blocks** are enabled/disabled when being dashed.
+- **Dash blocks** can be broken as normal. Same for **Temple Cracked Blocks** and **Bounce Blocks**.
+- **Kevins** can be enabled with a dash.
+- If the **Switch Characters** mode is enabled, the Player Seeker **can be bounced** when controlling Madeline.
+- If the Player Seeker gets stuck inside a **Seeker Barrier**, it will be **crushed**.
+
+
 
 # Triggers
 ### Force Throw Trigger
