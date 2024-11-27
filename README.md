@@ -52,6 +52,7 @@ The Player Seeker, but more functional. Includes multiple customization options 
 - **Kevins** can be enabled with a dash.
 - If the **Switch Characters** mode is enabled, the Player Seeker **can be bounced** when controlling Madeline.
 - If the Player Seeker gets stuck inside a **Seeker Barrier**, it will be **crushed**.
+- They are also vulnerable to Left/Right **Wind**.
 - The flag `kosei_PlayerSeeker` will be true while controlling the Player Seeker.
 
 
