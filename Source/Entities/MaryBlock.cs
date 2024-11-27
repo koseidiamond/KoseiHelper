@@ -43,7 +43,6 @@ public class MaryBlock : Entity
     {
         base.Added(scene);
         Level level = SceneAs<Level>();
-        level = SceneAs<Level>();
         Add(rotateWiggler = Wiggler.Create(0.5f, 3f, (float v) =>
         {
             sprite.Rotation = v * 15f * (MathF.PI / 180f);

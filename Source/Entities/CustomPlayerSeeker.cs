@@ -8,6 +8,9 @@ using Celeste.Mod.Entities;
 using On.Celeste;
 using System.Collections.Generic;
 using static Celeste.Session;
+using static MonoMod.InlineRT.MonoModRule;
+using System.Reflection.Metadata;
+using IL.Celeste;
 
 namespace Celeste.Mod.KoseiHelper.Entities;
 
@@ -27,8 +30,21 @@ public class CustomPlayerSeeker : Actor
     public string nextRoom, colorgrade, seekerDash;
     public bool vanillaEffects = false;
 
+    public bool canDash = true;
     private bool hasDied, isDying = false;
     private CoreModes coreMode;
+    private bool fireMode;
+    public float explodeLaunchBoostTimer, explodeLaunchBoostSpeed;
+
+    private float windTimeout;
+    private bool windMovedUp;
+    private Vector2 windDirection;
+    private bool justRespawned;
+    public bool canSwitchCharacters, isMadeline;
+
+    public static ParticleType boosterParticle = Booster.P_Burst;
+    public static ParticleType boosterRedParticle = Booster.P_BurstRed;
+    public static ParticleType featherParticle = FlyFeather.P_Collect;
 
 
     HashSet<Type> hazardTypes = new HashSet<Type>
@@ -67,11 +83,12 @@ public class CustomPlayerSeeker : Actor
         colorgrade = data.Attr("colorgrade", "templevoid");
         vanillaEffects = data.Bool("vanillaEffects", false);
         seekerDash = data.Attr("seekerDashSound", "event:/game/05_mirror_temple/seeker_dash");
+        canSwitchCharacters = data.Bool("canSwitchCharacters", false);
         Add(sprite = GFX.SpriteBank.Create(data.Attr("sprite","seeker"))); //IMPORTANT: the sprite needs the tags hatch, flipMouth, flipEyes, idle, spotted, attacking and statue to work
         if (vanillaEffects)
             sprite.Play("statue");
         else
-            sprite.Play("hatch");
+            sprite.Play("spotted");
         sprite.OnLastFrame = (string a) =>
         {
             if (a == "flipMouth" || a == "flipEyes")
@@ -86,6 +103,8 @@ public class CustomPlayerSeeker : Actor
         facing = Facings.Right;
         Add(shaker = new Shaker(on: false));
         Add(new Coroutine(IntroSequence()));
+        Add(new CoreModeListener(OnChangeMode));
+        Add(new WindMover(WindMove));
     }
     public override void Awake(Scene scene)
     {
@@ -94,6 +113,13 @@ public class CustomPlayerSeeker : Actor
         level.Session.ColorGrade = colorgrade;
         if (vanillaEffects)
             level.ScreenPadding = 32f;
+    }
+
+    public override void Added(Scene scene)
+    {
+        base.Added(scene);
+        fireMode = SceneAs<Level>().CoreMode == Session.CoreModes.Hot;
+        justRespawned = true;
     }
 
     private IEnumerator IntroSequence()
@@ -106,15 +132,16 @@ public class CustomPlayerSeeker : Actor
         if (vanillaEffects)
             yield return 1f;
         Vector2 from = level.Camera.Position;
-        Tween tween = Tween.Create(Tween.TweenMode.Oneshot, Ease.SineInOut, 2f, start: true);
-        tween.OnUpdate = (Tween f) =>
-        {
-            Vector2 cameraTarget = CameraTarget;
-            level.Camera.Position = from + (cameraTarget - from) * f.Eased;
-        };
-        Add(tween);
+
         if (vanillaEffects)
         {
+            Tween tween = Tween.Create(Tween.TweenMode.Oneshot, Ease.SineInOut, 2f, start: true);
+            tween.OnUpdate = (Tween f) =>
+            {
+                Vector2 cameraTarget = CameraTarget;
+                level.Camera.Position = from + (cameraTarget - from) * f.Eased;
+            };
+            Add(tween);
             yield return 1f;
             shaker.ShakeFor(0.5f, removeOnFinish: false);
             BreakOutParticles();
@@ -130,13 +157,15 @@ public class CustomPlayerSeeker : Actor
             sprite.Play("hatch");
             Input.Rumble(RumbleStrength.Strong, RumbleLength.FullSecond);
         }
+        else
+            level.Camera.Position = Position - new Vector2(180,90);
         enabled = true;
         if (vanillaEffects)
         {
             yield return 0.4f;
-        }
             BreakOutParticles();
             yield return 0.35f;
+        }
     }
     private void BreakOutParticles()
     {
@@ -171,7 +200,7 @@ public class CustomPlayerSeeker : Actor
             level.CanRetry = true;
             level.Session.Level = nextRoom;
             level.Session.RespawnPoint = level.GetSpawnPoint(new Vector2(level.Bounds.Left, level.Bounds.Top));
-            level.LoadLevel(Player.IntroTypes.WakeUp); // TODO unhardcode introtype
+            level.LoadLevel(Player.IntroTypes.WakeUp);
             Leader.RestoreStrawberries(level.Tracker.GetEntity<Player>().Leader);
         };
     }
@@ -182,6 +211,8 @@ public class CustomPlayerSeeker : Actor
         Level level = base.Scene as Level;
         Player player = Scene.Tracker.GetEntity<Player>();
         base.Update();
+        if (speed != Vector2.Zero)
+            justRespawned = false;
 
         SquishCallback = (CollisionData d) =>
         {
@@ -236,15 +267,18 @@ public class CustomPlayerSeeker : Actor
                     speed.X = Calc.Approach(speed.X, 0f, 400f * Engine.DeltaTime);
                 if (vector2.Length() > 0f && sprite.CurrentAnimationID == "idle")
                 {
-                    level.Displacement.AddBurst(Position, 0.5f, 8f, 32f);
-                    sprite.Play("spotted");
-                    Audio.Play("event:/game/05_mirror_temple/seeker_playercontrolstart");
+                    if (vanillaEffects)
+                    {
+                        level.Displacement.AddBurst(Position, 0.5f, 8f, 32f);
+                        sprite.Play("spotted");
+                            Audio.Play("event:/game/05_mirror_temple/seeker_playercontrolstart");
+                    }
                 }
                 int num2 = Math.Sign((int)facing);
                 int num3 = Math.Sign(speed.X);
                 if (num3 != 0 && num2 != num3 && Math.Sign(Input.Aim.Value.X) == Math.Sign(speed.X) && Math.Abs(speed.X) > 20f && sprite.CurrentAnimationID != "flipMouth" && sprite.CurrentAnimationID != "flipEyes")
                     sprite.Play("flipMouth");
-                if (Input.Dash.Pressed)
+                if (Input.Dash.Pressed && canDash)
                     Dash(Input.Aim.Value.EightWayNormal());
             }
             if (!isDying || !hasDied)
@@ -267,7 +301,7 @@ public class CustomPlayerSeeker : Actor
             }
             foreach (Entity entity2 in base.Scene.Entities)
             {
-                if (entity2 is Puffer puffer)
+                if (entity2 is Puffer puffer) // Eat the fishes
                 {
                     if (CollideCheck(puffer) && puffer.state == Puffer.States.Idle)
                     {
@@ -276,14 +310,74 @@ public class CustomPlayerSeeker : Actor
                         break;
                     }
                 }
-                    if (entity2 is CoreModeToggle coreModeToggle)
+                if (entity2 is CoreModeToggle coreModeToggle) // Changes core mode
+                {
+                    if (CollideCheck(coreModeToggle))
                     {
-                        if (CollideCheck(coreModeToggle))
+                        if (level.Session.CoreMode == CoreModes.Cold)
                         {
-                            //level.Session.CoreMode //TODO
+                            level.Session.CoreMode = CoreModes.Hot;
+                            coreModeToggle.OnPlayer(player);
+                            break;
+                        }
+                        if (level.Session.CoreMode == CoreModes.Hot)
+                        {
+                            level.Session.CoreMode = CoreModes.Cold;
+                            coreModeToggle.OnPlayer(player);
                             break;
                         }
                     }
+                }
+                if (entity2 is Water water) // Can't dash inside water
+                {
+                    if (CollideCheck(water))
+                    {
+                        canDash = false;
+                        break;
+                    }
+                    else
+                    {
+                        canDash = true;
+                        break;
+                    }
+                }
+                if (entity2 is Bumper bumper)
+                {
+                    if (CollideCheck(bumper))
+                    {
+                        if (!fireMode)
+                        {
+                            bumper.OnPlayer(player);
+                            ExplodeLaunch(bumper.Position);
+                        }
+                        if (fireMode)
+                            PlayerSeekerDie();
+                        break;
+                    }
+                }
+                if (entity2 is Booster booster)
+                {
+                    if (CollideCheck(booster))
+                    {
+                        booster.OnPlayer(player);
+                        if (!booster.red)
+                            level.ParticlesFG.Emit(boosterParticle, 5, booster.Position, Vector2.One * 4f, speed.Angle() - (float)Math.PI / 2f);
+                        else
+                            level.ParticlesFG.Emit(boosterRedParticle, 5, booster.Position, Vector2.One * 4f, speed.Angle() - (float)Math.PI / 2f);
+                        booster.RemoveSelf();
+                        break;
+                    }
+                }
+                if (entity2 is FlyFeather feather)
+                {
+                    if (CollideCheck(feather))
+                    {
+                        level.ParticlesFG.Emit(featherParticle, 5, feather.Position, Vector2.One * 4f, speed.Angle() - (float)Math.PI / 2f);
+                        Audio.Play("event:/game/06_reflection/badeline_feather_slice", feather.Position);
+                        feather.RemoveSelf();
+                        break;
+                    }
+                }
             }
             Position = Position.Clamp(level.Bounds.X, level.Bounds.Y, level.Bounds.Right, level.Bounds.Bottom);
             Player entity = base.Scene.Tracker.GetEntity<Player>();
@@ -303,7 +397,7 @@ public class CustomPlayerSeeker : Actor
                 }
                 if (num4 < 50f && dashTimer <= 0f)
                 {
-                    if (!isDying || !hasDied)
+                    if ((!isDying || !hasDied) && vanillaEffects)
                         Dash((entity.Center - base.Center).SafeNormalize());
                 }
                 Engine.TimeRate = Calc.ClampedMap(num4, 60f, 220f, 0.5f);
@@ -388,12 +482,12 @@ public class CustomPlayerSeeker : Actor
         if (data.Direction.X != 0f)
         {
             speed.X *= -0.8f;
-            sprite.Scale = new Vector2(0.6f, 1.4f);
+            sprite.Scale = new Vector2(sprite.Scale.X * 0.6f, sprite.Scale.Y * 1.4f);
         }
         else if (data.Direction.Y != 0f)
         {
             speed.Y *= -0.8f;
-            sprite.Scale = new Vector2(1.4f, 0.6f);
+            sprite.Scale = new Vector2(sprite.Scale.X * 1.4f, sprite.Scale.Y * 0.6f);
         }
 
         if (data.Hit is TempleCrackedBlock)
@@ -416,6 +510,13 @@ public class CustomPlayerSeeker : Actor
         if (data.Hit is BounceBlock)
         {
             (data.Hit as BounceBlock).Break();
+        }
+        if (data.Hit is DreamBlock)
+        {
+            if ((data.Hit as DreamBlock).playerHasDreamDash)
+                (data.Hit as DreamBlock).DeactivateNoRoutine();
+            else
+                (data.Hit as DreamBlock).ActivateNoRoutine();
         }
     }
     private void Dash(Vector2 dir)
@@ -450,11 +551,11 @@ public class CustomPlayerSeeker : Actor
             Audio.Play(seekerDash, Position);
             if (dashDirection.X == 0f)
             {
-                sprite.Scale = new Vector2(0.6f, 1.4f);
+                sprite.Scale = new Vector2(sprite.Scale.X * 0.6f, sprite.Scale.Y * 1.4f);
             }
             else
             {
-                sprite.Scale = new Vector2(1.4f, 0.6f);
+                sprite.Scale = new Vector2(sprite.Scale.X * 1.4f, sprite.Scale.Y * 0.6f);
             }
         }
     }
@@ -480,7 +581,7 @@ public class CustomPlayerSeeker : Actor
         speed = Vector2.Zero;
         sprite.Visible = false;
         Collider = null;
-        DeathEffect component = new DeathEffect(Color.DarkRed, base.Center - Position)
+        DeathEffect component = new DeathEffect(Seeker.TrailColor, base.Center - Position)
         {
             OnEnd = delegate
             {
@@ -492,5 +593,115 @@ public class CustomPlayerSeeker : Actor
         Player player = SceneAs<Level>().Tracker.GetEntity<Player>();
         if (player != null)
             player.Die(Vector2.Zero, true);
+    }
+
+    public Vector2 ExplodeLaunch(Vector2 from, bool snapUp = true, bool sidesOnly = false)
+    {
+        Input.Rumble(RumbleStrength.Strong, RumbleLength.Medium);
+        Celeste.Freeze(0.1f);
+        Vector2 vector = (base.Center - from).SafeNormalize(-Vector2.UnitY);
+        float num = Vector2.Dot(vector, Vector2.UnitY);
+        if (snapUp && num <= -0.7f)
+        {
+            vector.X = 0f;
+            vector.Y = -1f;
+        }
+        else if (num <= 0.65f && num >= -0.55f)
+        {
+            vector.Y = 0f;
+            vector.X = Math.Sign(vector.X);
+        }
+
+        if (sidesOnly && vector.X != 0f)
+        {
+            vector.Y = 0f;
+            vector.X = Math.Sign(vector.X);
+        }
+
+        speed = 280f * vector;
+        if (speed.Y <= 50f)
+        {
+            speed.Y = Math.Min(-150f, speed.Y);
+        }
+
+        if (speed.X != 0f)
+        {
+            if (Input.MoveX.Value == Math.Sign(speed.X))
+            {
+                explodeLaunchBoostTimer = 0f;
+                speed.X *= 1.2f;
+            }
+            else
+            {
+                explodeLaunchBoostTimer = 0.01f;
+                explodeLaunchBoostSpeed = speed.X * 1.2f;
+            }
+        }
+
+        SlashFx.Burst(base.Center, speed.Angle());
+        dashTimer = 0.2f;
+        return vector;
+    }
+
+    public void OnChangeMode(Session.CoreModes coreMode)
+    {
+        fireMode = coreMode == Session.CoreModes.Hot;
+    }
+
+    private void WindMove(Vector2 move)
+    {
+        Level level = SceneAs<Level>();
+        if (justRespawned)
+        {
+            return;
+        }
+        if (move.X != 0f)
+        {
+            windTimeout = 0.2f;
+            windDirection.X = Math.Sign(move.X);
+            if (!CollideCheck<Solid>(Position + Vector2.UnitX * -Math.Sign(move.X) * 3f))
+            {
+                if (move.X < 0f)
+                {
+                    move.X = Math.Max(move.X, (float)level.Bounds.Left - (base.ExactPosition.X + base.Collider.Left));
+                }
+                else
+                {
+                    move.X = Math.Min(move.X, (float)level.Bounds.Right - (base.ExactPosition.X + base.Collider.Right));
+                }
+                MoveH(move.X);
+            }
+        }
+        if (move.Y == 0f)
+        {
+            return;
+        }
+        windTimeout = 0.2f;
+        windDirection.Y = Math.Sign(move.Y);
+        if (!(base.Bottom > (float)level.Bounds.Top) || (!(speed.Y < 0f)))
+        {
+            return;
+        }
+            if (!(move.Y > 0f))
+            {
+                return;
+            }
+            move.Y *= 0.4f;
+        if (move.Y < 0f)
+        {
+            windMovedUp = true;
+        }
+        MoveV(move.Y);
+    }
+
+    public void swapCharacters()
+    {
+        if (isMadeline)
+        {
+            isMadeline = false;
+        }
+        else
+        {
+        }
     }
 }

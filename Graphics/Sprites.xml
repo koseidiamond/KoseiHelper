@@ -39,4 +39,10 @@
 		<Loop id="spin" path="ball" frames="00-11" />
 		<Loop id="arrow" path="ballArrow" frames="00" />
 	</koseiHelper_springBall>
+	
+  <koseiHelper_key path="collectables/key/" start="idle">
+    <Justify x="0.5" y="0.5" />
+    <Loop id="idle" path="KoseiHelper/wingedKey" delay="0.08" frames="00-08,00-08,00-07"/>
+    <Anim id="enter" path="enter" delay="0.1"/>
+  </koseiHelper_key>
 </Sprites>
