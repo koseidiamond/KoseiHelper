@@ -36,7 +36,7 @@ The **Entity Spawner Controllers** allow you to spawn different types of entitie
 - Optionally, spawning an entity can **spend** one **dash or** all of your **stamina**.
 - Each entity has its own **settings**, similar to vanilla. Since they were adjusted manually, a few of them may have slight differences (Badeline orbs are single use and will always fly upwards. Dash blocks don't give the usual 3 freeze frames. Boosters and swap blocks don't render their usual outlines/bg respectively).
 - You can combine multiple spawners with different settings each in the same room.
-# Custom Player Seeker
+### Custom Player Seeker
 The Player Seeker, but more functional. Includes multiple customization options and a new game mode where you can swap between Madeline and the Seeker with a custom button press. It has multiple new interactions with vanilla entities, including:
 - **Touch Switches** (they are enabled).
 - Most **dangerous entities** kill the seeker on contact (spikes kill regardless of the direction).
