@@ -24,6 +24,8 @@ Allows customization of the Pause Menu, disabling Retry, Save&Quit, disable paus
 **Puffer balls** and **Spring balls** are a combination of Snowballs and Puffers/Springs. They are customizable, supporting all 4 directions, sine variations, flags, offsets, and multiple of them per screen.
 Additionally, spring balls have some visual options and can track Theo instead.
 *Note: Unlike controller entities, the position of these entities determines where they will first appear on the chosen axis.*
+### Custom Oshiro Doors
+Oshiro/ghost doors that are slightly bouncy but have more options (mainly visual/sfx and the option to always refill a dash, being one use, or bounce slightly differently).
 ### Entity Spawner
 The **Entity Spawner Controllers** allow you to spawn different types of entities on a certain position when a condition is met. They are highly customizable.
 - You can specify the position where the entity will spawn. This position can be relative to the player (always left/right) or adjust to the facing (in front of/behind). Noded entities (like swap blocks) also support these settings for the node.
