@@ -92,7 +92,8 @@ SpawnController.fieldInformation = function (entity) return {
 		"JumpthruPlatform",
 		"FloatySpaceBlock",
 		"Kevin",
-		"Decal"
+		"Decal",
+		"Flag"
 		},
 		editable = false
 	},
@@ -381,6 +382,8 @@ function SpawnController.texture(room, entity)
 		return "objects/KoseiHelper/Controllers/SpawnController/CrushBlock"
 	elseif entityToSpawn == "Decal" then
 		return "objects/KoseiHelper/Controllers/SpawnController/Decal"
+	elseif entityToSpawn == "Flag" then
+		return "objects/KoseiHelper/Controllers/SpawnController/Flag"
 	else
 		return "objects/KoseiHelper/Controllers/SpawnController/Broken"
     end

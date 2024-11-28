@@ -36,6 +36,7 @@ public enum EntityType
     CrushBlock,
     SeekerBarrier, // This one is an easter egg because it looks weird but uh I'm leaving it be
     Decal,
+    Flag,
     //The following entities are just alternate names so the name from the plugin is renamed:
     SwapBlock,
     Kevin
@@ -76,6 +77,7 @@ public class SpawnController : Entity
     private bool previousHasSpawnedFromFlag, currentHasSpawnedFromFlag;
     private int currentCassetteIndex, previousCassetteIndex;
     private bool canSpawnFromCassette = false;
+    public int flagCount = 1;
 
     //other important variables
     private int entityID = 7388544; // Very high value so it doesn't conflict with other ids (hopefully)
@@ -403,6 +405,9 @@ public class SpawnController : Entity
                             spawnedEntity = new Decal(decalTexture, spawnPosition, new Vector2(-1, 1), decalDepth);
                         else
                             spawnedEntity = new Decal(decalTexture, spawnPosition, new Vector2(1, 1), decalDepth);
+                        break;
+                    case EntityType.Flag:
+                        level.Session.SetFlag("koseiFlag" + flagCount, true);
                         break;
                     default:
                         break;
