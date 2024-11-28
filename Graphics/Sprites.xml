@@ -45,4 +45,11 @@
     <Loop id="idle" path="KoseiHelper/wingedKey" delay="0.08" frames="00-08,00-08,00-07"/>
     <Anim id="enter" path="enter" delay="0.1"/>
   </koseiHelper_key>
+  
+    <koseiHelper_CustomOshiroDoor path="objects/KoseiHelper/door/" start="idle">
+    <Justify x=".5" y=".5" />
+
+    <Loop id="idle" path="ghost_door" delay="0.06" frames="00-19"/>
+    <Anim id="open" path="ghost_door" delay="0.06" frames="20-28"/>
+  </koseiHelper_CustomOshiroDoor>
 </Sprites>

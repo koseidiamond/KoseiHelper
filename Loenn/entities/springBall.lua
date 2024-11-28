@@ -93,7 +93,7 @@ function SpringBall.sprite(room, entity)
     if entity.trackTheo then
         local theoTexturePath = "objects/KoseiHelper/Balls/ballControllerTheo"
         local theoSprite = drawableSprite.fromTexture(theoTexturePath, entity)
-        theoSprite:setColor(r, g, b, 1)
+        --theoSprite:setColor(r, g, b, 1)
         table.insert(sprites, theoSprite)
     end
 

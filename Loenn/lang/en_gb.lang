@@ -90,6 +90,20 @@ entities.KoseiHelper/WingedKey.placements.name.WingedKey= Winged Key
 entities.KoseiHelper/WingedKey.placements.description.Winged Key= A key that will fly away like winged strawberries if the player dashes.\nIt will follow as normal keys upon collection, and will lose its wings if the player dies. (Cosmetic effect)
 entities.KoseiHelper/WingedKey.attributes.description.flapSpeed=The speed used when the key flies away.
 
+#Custom Oshiro Door
+entities.KoseiHelper/CustomOshiroDoor.placements.name.CustomOshiroDoor= Custom Oshiro Door
+entities.KoseiHelper/CustomOshiroDoor.placements.description.Custom Oshiro Door= The bouncy oshiro/ghost door but more customizable.
+entities.KoseiHelper/CustomOshiroDoor.attributes.description.bumpSound=The sound that the oshiro door makes when bumped.
+entities.KoseiHelper/CustomOshiroDoor.attributes.description.sprite=The sprite tag that the oshiro door should use.\nYou can copy the one from vanilla as a reference.
+entities.KoseiHelper/CustomOshiroDoor.attributes.description.color=The tint that will be applied on top of the sprite.
+entities.KoseiHelper/CustomOshiroDoor.attributes.description.singleUse=If the oshiro door should be destroyed after being bumped.
+entities.KoseiHelper/CustomOshiroDoor.attributes.description.wiggleDuration=The time it should keep wiggling after being bumped.
+entities.KoseiHelper/CustomOshiroDoor.attributes.description.wiggleFrequency=How much it wiggles when being bumped.
+entities.KoseiHelper/CustomOshiroDoor.attributes.description.wiggleScale=The size of the wiggling/shrinking movement when being bumped.
+entities.KoseiHelper/CustomOshiroDoor.attributes.description.flag=The flag that needs to be enabled to make the door disappear.\nNeeds a room reload (respawn, transition, etc).
+entities.KoseiHelper/CustomOshiroDoor.attributes.description.rebound=Disable this option for vanilla behavior.\nEnable to make the player able to control the direction they are bounced.
+entities.KoseiHelper/CustomOshiroDoor.attributes.description.refillDash=If the door should always refill the player dash when bumped.
+
 #Top Down View Controller
 #entities.KoseiHelper/TopDownViewController.placements.name.TopDownViewController=Top Down View Controller
 #entities.KoseiHelper/TopDownViewController.placements.description.Top Down View Controller=This controller allows the player to move similarly to top-down view RPGs.
