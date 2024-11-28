@@ -408,6 +408,7 @@ public class SpawnController : Entity
                         break;
                     case EntityType.Flag:
                         level.Session.SetFlag("koseiFlag" + flagCount, true);
+                        flagCount++;
                         break;
                     default:
                         break;
