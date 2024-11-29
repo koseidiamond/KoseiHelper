@@ -37,7 +37,8 @@ The **Entity Spawner Controllers** allow you to spawn different types of entitie
 - Entities with **sizes** can be adjusted as needed (blocks, jumpthrus and crumble platforms).
 - Optionally, spawning an entity can **spend** one **dash or** all of your **stamina**.
 - Each entity has its own **settings**, similar to vanilla. Since they were adjusted manually, a few of them may have slight differences (Badeline orbs are single use and will always fly upwards. Dash blocks don't give the usual 3 freeze frames. Boosters and swap blocks don't render their usual outlines/bg respectively).
-- You can combine multiple spawners with different settings each in the same room.
+- You can combine multiple spawners with different settings each in the same room, or use a Flag Spawner as the main controller to spawn a different entity each time!
+- For Custom Entities: Only the ones with EntityData are supported. You can specify key-value pairs but if you leave some empty, the default values will be used instead (for example, not specifying a `winged`, `false` attribute for a `Celeste.Strawberry` will fall to the default value, `false`). You can use ILSpy or Mapping Utils to see the code (more specifically the constructor) of an entity, but when in doubt, you can try to input the names that you see on the Lönn plugin.
 ### Custom Player Seeker
 The Player Seeker, but more functional. Includes multiple customization options and a new game mode where you can swap between Madeline and the Seeker with a custom button press. It has multiple new interactions with vanilla entities, including:
 - **Touch Switches** (they are enabled).
