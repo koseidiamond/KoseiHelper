@@ -6,6 +6,7 @@ using System;
 using static Celeste.Session;
 using System.Linq;
 using Celeste.Mod.Helpers;
+using System.Reflection;
 
 namespace Celeste.Mod.KoseiHelper.Entities;
 
@@ -517,27 +518,46 @@ public class SpawnController : Entity
 
     private Entity GetEntityFromPath(Vector2 spawn, Vector2 node, LevelData data)
     {
+        EntityData entityData = new()
+        {
+            Position = spawn,
+            Width = blockWidth,
+            Height = blockHeight,
+            Nodes = new Vector2[] { node },
+            Level = data,
+            Values = new()
+        };
+        for (int i = 0; i < dictionaryKeys.Count; i++)
+        {
+            entityData.Values[dictionaryKeys[i]] = dictionaryValues.ElementAtOrDefault(i);
+        }
+        EntityID newID = new EntityID(data.Name, entityID++);
+        Type entityType;
         try
         {
-            EntityData entityData = new()
-            {
-                Position = spawn,
-                Width = blockWidth,
-                Height = blockHeight,
-                Nodes = new Vector2[]{ node },
-                Level = data,
-                Values = new()
-            };
-            Type entityType = FakeAssembly.GetFakeEntryAssembly().GetType("Celeste." + entityPath);
-            for (int i = 0; i < dictionaryKeys.Count; i++)
-            {
-                entityData.Values[dictionaryKeys[i]] = dictionaryValues.ElementAtOrDefault(i);
-            }
-            return Activator.CreateInstance(entityType, new object[] { entityData, Vector2.Zero }) as Entity;
+            entityType = FakeAssembly.GetFakeEntryAssembly().GetType("Celeste." + entityPath);
         }
         catch (ArgumentNullException)
         {
             Logger.Log(LogLevel.Error, "KoseiHelper", "Failed to get entity: Requested type does not exist");
+            return null;
+        }
+        ConstructorInfo[] ctors = entityType.GetConstructors();
+        try
+        {
+            foreach (ConstructorInfo ctor in ctors)
+            {
+                ParameterInfo[] parameters = ctor.GetParameters();
+                if (parameters.Any((param) => param.ParameterType == typeof(EntityData)) &&
+                    parameters.Any((param) => param.ParameterType == typeof(Vector2)))
+                {
+                    if (parameters.Any((param) => param.ParameterType == typeof(EntityID)))
+                    {
+                        return Activator.CreateInstance(entityType, new object[] { entityData, Vector2.Zero, newID }) as Entity;
+                    }
+                    return Activator.CreateInstance(entityType, new object[] { entityData, Vector2.Zero }) as Entity;
+                }
+            }
         }
         catch (Exception arg)
         {
