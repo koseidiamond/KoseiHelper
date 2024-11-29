@@ -22,7 +22,8 @@ CustomOshiroDoor.placements = {
 			width = 32,
 			height = 32,
 			rebound = false,
-			refillDash = false
+			refillDash = false,
+			givesCoyote = false
 		}
 	}
 }

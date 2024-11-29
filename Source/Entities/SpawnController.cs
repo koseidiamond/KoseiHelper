@@ -35,7 +35,6 @@ public enum EntityType
     FloatySpaceBlock,
     StarJumpBlock,
     CrushBlock,
-    SeekerBarrier, // This one is an easter egg because it looks weird but uh I'm leaving it be
     Decal,
     Flag,
     //The following entities are just alternate names so the name from the plugin is renamed:
@@ -219,8 +218,8 @@ public class SpawnController : Entity
 
         //Custom Entities
         entityPath = data.Attr("entityPath");
-        dictionaryKeys = data.Attr("dictKeys").Replace(" ", string.Empty).Split([',']).ToList();
-        dictionaryValues = data.Attr("dictValues").Replace(" ", string.Empty).Split([',']).ToList();
+        dictionaryKeys = data.Attr("dictKeys").Replace(" ", string.Empty).Split(',').ToList();
+        dictionaryValues = data.Attr("dictValues").Replace(" ", string.Empty).Split(',').ToList();
 
         Add(new CoreModeListener(OnChangeMode));
     }
@@ -258,7 +257,6 @@ public class SpawnController : Entity
         EntityType.BounceBlock,
         EntityType.FloatySpaceBlock,
         EntityType.StarJumpBlock,
-        EntityType.SeekerBarrier,
         EntityType.CrumblePlatform,
         EntityType.SwapBlockNoBg,
         EntityType.ZipMover
@@ -296,7 +294,11 @@ public class SpawnController : Entity
             };
             if (conditionMet && spawnLimit != 0 && player != null)
             {
-                Logger.Debug(nameof(KoseiHelperModule), $"An entity is going to spawn: {entityToSpawn}");
+                if (entityToSpawn != EntityType.CustomEntity)
+                    Logger.Debug(nameof(KoseiHelperModule), $"An entity is going to spawn: {entityToSpawn}");
+                else
+                    Logger.Debug(nameof(KoseiHelperModule), $"An entity is going to spawn: {entityPath}.\n" +
+                        $"With the attributes: {string.Join(", ", dictionaryKeys.Zip(dictionaryValues, (key, value) => $"{key}={value}"))}");
                 if (removeDash && Scene.Tracker.GetEntity<Player>().Dashes > 0)
                     player.Dashes -= 1;
                 if (removeStamina)
@@ -407,9 +409,6 @@ public class SpawnController : Entity
                         break;
                     case EntityType.CrushBlock:
                         spawnedEntity = new CrushBlock(spawnPosition, blockWidth, blockHeight, crushBlockAxe, crushBlockChillout);
-                        break;
-                    case EntityType.SeekerBarrier:
-                        spawnedEntity = new SeekerBarrier(spawnPosition, blockWidth, blockHeight);
                         break;
                     case EntityType.Decal:
                         if (player.Facing == Facings.Left)
@@ -522,7 +521,7 @@ public class SpawnController : Entity
                 Position = spawn,
                 Width = blockWidth,
                 Height = blockHeight,
-                Nodes = [node],
+                Nodes = new Vector2[]{ node },
                 Level = data,
                 Values = new()
             };
@@ -531,7 +530,7 @@ public class SpawnController : Entity
             {
                 entityData.Values[dictionaryKeys[i]] = dictionaryValues.ElementAtOrDefault(i);
             }
-            return Activator.CreateInstance(entityType, [entityData, Vector2.Zero]) as Entity;
+            return Activator.CreateInstance(entityType, entityData, Vector2.Zero) as Entity;
         }
         catch (ArgumentNullException)
         {

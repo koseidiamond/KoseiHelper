@@ -17,6 +17,7 @@ public class CustomOshiroDoor : Solid
     public bool singleUse;
     public float wiggleDuration, wiggleFrequency, wiggleScale;
     public bool rebound, refillDash;
+    public bool givesCoyote;
 
     public CustomOshiroDoor(EntityData data, Vector2 offset)
         : base(data.Position + offset, data.Width, data.Height, safe: false)
@@ -30,6 +31,7 @@ public class CustomOshiroDoor : Solid
         wiggleFrequency = data.Float("wiggleFrequency", 1f) * 3;
         wiggleScale = data.Float("wiggleScale", 1f) / 5;
         flag = data.Attr("flag", "oshiro_resort_talked_1");
+        givesCoyote = data.Bool("givesCoyote", false);
         sprite.Position = new Vector2(base.Width, base.Height) / 2f;
         sprite.Color = tint;
         sprite.Play("idle");
@@ -76,6 +78,8 @@ public class CustomOshiroDoor : Solid
         {
             if (refillDash)
                 player.RefillDash();
+            if (givesCoyote)
+                player.jumpGraceTimer = 0.15f;
         }
         if (rebound)
             return DashCollisionResults.Rebound;
