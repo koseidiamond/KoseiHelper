@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System;
 using static Celeste.Session;
 using System.Linq;
+using Celeste.Mod.Helpers;
 
 namespace Celeste.Mod.KoseiHelper.Entities;
 
@@ -39,7 +40,8 @@ public enum EntityType
     Flag,
     //The following entities are just alternate names so the name from the plugin is renamed:
     SwapBlock,
-    Kevin
+    Kevin,
+    CustomEntity
 }
 
 public enum SpawnCondition
@@ -134,6 +136,11 @@ public class SpawnController : Entity
     private CoreModes coreMode;
     private CassetteBlockManager cassetteBlockManager;
 
+    //Custom Entity Fields
+    private string entityPath;
+    private List<string> dictionaryKeys;
+    private List<string> dictionaryValues;
+
     public SpawnController(EntityData data, Vector2 offset) : base(data.Position + offset)
     {
         Add(new PostUpdateHook(() => {}));
@@ -210,8 +217,12 @@ public class SpawnController : Entity
         decalTexture = data.Attr("decalTexture", "10-farewell/creature_f00");
         decalDepth = data.Int("decalDepth", 9000);
 
+        //Custom Entities
+        entityPath = data.Attr("entityPath");
+        dictionaryKeys = data.Attr("dictKeys").Replace(" ", string.Empty).Split([',']).ToList();
+        dictionaryValues = data.Attr("dictValues").Replace(" ", string.Empty).Split([',']).ToList();
 
-    Add(new CoreModeListener(OnChangeMode));
+        Add(new CoreModeListener(OnChangeMode));
     }
 
     public override void Awake(Scene scene)
@@ -410,6 +421,9 @@ public class SpawnController : Entity
                         level.Session.SetFlag("koseiFlag" + flagCount, true);
                         flagCount++;
                         break;
+                    case EntityType.CustomEntity:
+                        spawnedEntity = GetEntityFromPath(spawnPosition, nodePosition, level.Session.LevelData);
+                        break;
                     default:
                         break;
                 }
@@ -498,6 +512,38 @@ public class SpawnController : Entity
             }
         }
     }
+
+    private Entity GetEntityFromPath(Vector2 spawn, Vector2 node, LevelData data)
+    {
+        try
+        {
+            EntityData entityData = new()
+            {
+                Position = spawn,
+                Width = blockWidth,
+                Height = blockHeight,
+                Nodes = [node],
+                Level = data,
+                Values = new()
+            };
+            Type entityType = FakeAssembly.GetFakeEntryAssembly().GetType("Celeste." + entityPath);
+            for (int i = 0; i < dictionaryKeys.Count; i++)
+            {
+                entityData.Values[dictionaryKeys[i]] = dictionaryValues[i];
+            }
+            return Activator.CreateInstance(entityType, [entityData, Vector2.Zero]) as Entity;
+        }
+        catch (ArgumentNullException)
+        {
+            Logger.Log(LogLevel.Error, "KoseiHelper", "Failed to get entity: Requested type does not exist");
+        }
+        catch (Exception arg)
+        {
+            Logger.Log(LogLevel.Error, "KoseiHelper", $"Failed to get entity: {arg}");
+        }
+        return null;
+    }
+
     private void OnChangeMode(Session.CoreModes mode)
     {
         coreMode = mode;
