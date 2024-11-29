@@ -529,7 +529,7 @@ public class SpawnController : Entity
             Type entityType = FakeAssembly.GetFakeEntryAssembly().GetType("Celeste." + entityPath);
             for (int i = 0; i < dictionaryKeys.Count; i++)
             {
-                entityData.Values[dictionaryKeys[i]] = dictionaryValues[i];
+                entityData.Values[dictionaryKeys[i]] = dictionaryValues.ElementAtOrDefault(i);
             }
             return Activator.CreateInstance(entityType, [entityData, Vector2.Zero]) as Entity;
         }
