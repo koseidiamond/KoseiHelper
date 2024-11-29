@@ -21,9 +21,9 @@ CustomOshiroDoor.placements = {
 			flag = "oshiro_resort_talked_1",
 			width = 32,
 			height = 32,
-			rebound = false,
 			refillDash = false,
-			givesCoyote = false
+			givesCoyote = false,
+			collisionMode = "Vanilla"
 		}
 	}
 }
@@ -34,7 +34,16 @@ CustomOshiroDoor.fieldInformation = {
     wiggleDuration = { minimumValue = 0 },
 	wiggleFrequency = { minimumValue = 0 },
 	wiggleScale = { minimumValue = 0 },
-    color = { fieldType = "color" }
+    color = { fieldType = "color" },
+	collisionMode = {
+	options = {
+		"Vanilla",
+		"Rebound",
+		"SideBounce",
+		"PointBounce"
+		},
+	editable = false
+	}
 }
 
 function CustomOshiroDoor.ignoredFields(entity)

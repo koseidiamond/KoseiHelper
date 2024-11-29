@@ -101,7 +101,7 @@ entities.KoseiHelper/CustomOshiroDoor.attributes.description.wiggleDuration=The 
 entities.KoseiHelper/CustomOshiroDoor.attributes.description.wiggleFrequency=How much it wiggles when being bumped.
 entities.KoseiHelper/CustomOshiroDoor.attributes.description.wiggleScale=The size of the wiggling/shrinking movement when being bumped.
 entities.KoseiHelper/CustomOshiroDoor.attributes.description.flag=The flag that needs to be enabled to make the door disappear.\nNeeds a room reload (respawn, transition, etc).
-entities.KoseiHelper/CustomOshiroDoor.attributes.description.rebound=Disable this option for vanilla behavior.\nEnable to make the player able to control the direction they are bounced.
+entities.KoseiHelper/CustomOshiroDoor.attributes.description.collisionMode=How will the player bounce after bumping the block.\nVanilla: Small bounce in the opposite direction.\nRebound: Small bounce, can control the direction while bouncing.\nSideBounce: Cancels all horizontal speed if bumped on top/bottom, but bounces towards the other side. Allows "grabless cornerboost-like" tech.\nPointBounce: Like SideBounce, but pushes the player towards the opposite direction it was bumped. Allows redirecting speed.
 entities.KoseiHelper/CustomOshiroDoor.attributes.description.refillDash=If the door should always refill the player dash when bumped.
 entities.KoseiHelper/CustomOshiroDoor.attributes.description.givesCoyote=If bumping (dashing on) the door should give 5 coyote frames.
 

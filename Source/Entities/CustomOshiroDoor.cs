@@ -6,6 +6,14 @@ using ExtendedVariants.Variants;
 
 namespace Celeste.Mod.KoseiHelper.Entities;
 
+public enum CollisionMode
+{
+    Vanilla,
+    Rebound,
+    SideBounce,
+    PointBounce
+}
+
 [CustomEntity("KoseiHelper/CustomOshiroDoor")]
 public class CustomOshiroDoor : Solid
 {
@@ -16,8 +24,9 @@ public class CustomOshiroDoor : Solid
     public string bumpSound;
     public bool singleUse;
     public float wiggleDuration, wiggleFrequency, wiggleScale;
-    public bool rebound, refillDash;
+    public bool refillDash;
     public bool givesCoyote;
+    public CollisionMode collisionMode;
 
     public CustomOshiroDoor(EntityData data, Vector2 offset)
         : base(data.Position + offset, data.Width, data.Height, safe: false)
@@ -26,7 +35,7 @@ public class CustomOshiroDoor : Solid
         bumpSound = data.Attr("bumpSound", "event:/game/03_resort/forcefield_bump");
         tint = data.HexColor("color", Color.DarkSlateBlue);
         singleUse = data.Bool("singleUse", false);
-        rebound = data.Bool("rebound", false);
+        collisionMode = data.Enum("collisionMode", CollisionMode.Vanilla);
         wiggleDuration = data.Float("wiggleDuration", 1f) / (5/3);
         wiggleFrequency = data.Float("wiggleFrequency", 1f) * 3;
         wiggleScale = data.Float("wiggleScale", 1f) / 5;
@@ -80,10 +89,15 @@ public class CustomOshiroDoor : Solid
                 player.RefillDash();
             if (givesCoyote)
                 player.jumpGraceTimer = 0.15f;
+            if (collisionMode == CollisionMode.SideBounce)
+                player.SideBounce((int)direction.X, player.Position.X, player.Position.Y);
+            if (collisionMode == CollisionMode.PointBounce)
+                player.PointBounce(Center);
         }
-        if (rebound)
+        if (collisionMode == CollisionMode.Rebound)
             return DashCollisionResults.Rebound;
-        else
+        if (collisionMode == CollisionMode.Vanilla)
             return DashCollisionResults.Bounce;
+        return DashCollisionResults.Ignore;
     }
 }
