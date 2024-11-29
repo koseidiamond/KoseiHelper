@@ -166,6 +166,12 @@ entities.KoseiHelper/SpawnController.attributes.description.soundIndex=The sound
 entities.KoseiHelper/SpawnController.attributes.description.blockSinks=If the block sinks when the player steps on it.
 entities.KoseiHelper/SpawnController.attributes.description.crushBlockAxe=Determines which sides of the Kevin block are hittable.
 entities.KoseiHelper/SpawnController.attributes.description.crushBlockChillout=If the block should have the large face and get tired after being hit.
+#Spawn Controller - custom entity attributes
+entities.KoseiHelper/SpawnController.attributes.description.entityPath=The full path to the entity class to be spawned, relative to the "Celeste." namespace.\nSpawning will only work for entities that accept an EntityData and Vector2 parameterized constructor.
+entities.KoseiHelper/SpawnController.attributes.description.dictKeys=The names of the keys the Values dictionary of the EntityData used to spawn the entity will use.\nMust match the ones expected by the entity in its constructor for the Entity to find them.
+entities.KoseiHelper/SpawnController.attributes.description.dictValues=The values of the Values dictionary of the EntityData used to spawn the entity.\nEach value will be associated with the corresponding key as the values are organized, first key with first value and so forth.\nAny values that exceed the amount of keys will be ignored, and any keys with no corresponding value will have no value.
+entities.KoseiHelper/SpawnController.attributes.name.dictKeys=Dictionary Keys
+entities.KoseiHelper/SpawnController.attributes.name.dictValues=Dictionary Values
 
 #TRIGGERS
 
