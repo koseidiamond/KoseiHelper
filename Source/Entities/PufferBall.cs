@@ -104,7 +104,7 @@ public class PufferBall : Puffer
         Collidable = Visible = false;
         if (string.IsNullOrEmpty(flag) || level.Session.GetFlag(flag) && !string.IsNullOrEmpty(flag))
         {
-            waitABit();
+            Add(new Coroutine(waitABit()));
             state = States.Gone;
         }
     }

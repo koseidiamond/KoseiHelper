@@ -296,9 +296,12 @@ public class SpawnController : Entity
             {
                 if (entityToSpawn != EntityType.CustomEntity)
                     Logger.Debug(nameof(KoseiHelperModule), $"An entity is going to spawn: {entityToSpawn}");
-                else
-                    Logger.Debug(nameof(KoseiHelperModule), $"An entity is going to spawn: {entityPath}.\n" +
-                        $"With the attributes: {string.Join(", ", dictionaryKeys.Zip(dictionaryValues, (key, value) => $"{key}={value}"))}");
+                else //Logs the parameters used in Lönn + the original constructor
+                    Logger.Debug(nameof(KoseiHelperModule), $"An entity ({entityPath}) is going to spawn with attributes: " +
+                    $"{string.Join(", ", dictionaryKeys.Zip(dictionaryValues, (key, value) => $"{key}={value}"))}, using constructor with parameters: " +
+                    $"{string.Join(", ", FakeAssembly.GetFakeEntryAssembly().GetType("Celeste." + entityPath).GetConstructors().Select(constructor =>
+                    $"{constructor.Name}({string.Join(", ", constructor.GetParameters().Select(param => $"{param.ParameterType.Name} {param.Name}"))})"))}.");
+
                 if (removeDash && Scene.Tracker.GetEntity<Player>().Dashes > 0)
                     player.Dashes -= 1;
                 if (removeStamina)
@@ -530,7 +533,7 @@ public class SpawnController : Entity
             {
                 entityData.Values[dictionaryKeys[i]] = dictionaryValues.ElementAtOrDefault(i);
             }
-            return Activator.CreateInstance(entityType, entityData, Vector2.Zero) as Entity;
+            return Activator.CreateInstance(entityType, new object[] { entityData, Vector2.Zero }) as Entity;
         }
         catch (ArgumentNullException)
         {

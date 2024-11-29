@@ -33,7 +33,6 @@ public class IRLController : Entity
     {
         base.Added(scene);
         Level level = SceneAs<Level>();
-        level = SceneAs<Level>();
         int currentMonth = DateTime.Now.Month;
         currentHour = DateTime.Now.Hour;
         for (int month = 1; month <= 12; month++)
