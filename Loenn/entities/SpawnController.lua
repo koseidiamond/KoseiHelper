@@ -60,7 +60,12 @@ SpawnController.placements = {
 		crushBlockAxe = "Both",
 		crushBlockChillout = false,
 		decalTexture = "10-farewell/creature_f00",
-		decalDepth = 9000
+		decalDepth = 9000,
+
+		-- Custom Entity (or any entity that can be spawned with EntityData)
+		entityPath = "",
+		dictKeys = "",
+		dictValues = ""
 		}
 	}
 }
@@ -93,7 +98,8 @@ SpawnController.fieldInformation = function (entity) return {
 		"FloatySpaceBlock",
 		"Kevin",
 		"Decal",
-		"Flag"
+		"Flag",
+		"CustomEntity"
 		},
 		editable = false
 	},
@@ -166,7 +172,19 @@ SpawnController.fieldInformation = function (entity) return {
     },
 	jumpthruTexture = {
         options = textures
-    }
+    },
+	dictKeys = {
+		fieldType = "list",
+		elementOptions = {
+			fieldType = "string"
+		}
+	},
+	dictValues = {
+		fieldType = "list",
+		elementOptions = {
+			fieldType = "string"
+		}
+	}
 } end
 
 
@@ -205,7 +223,10 @@ function SpawnController.ignoredFields(entity)
 	"crushBlockChillout",
 	"everyXDashes",
 	"decalTexture",
-	"decalDepth"
+	"decalDepth",
+	"entityPath",
+	"dictKeys",
+	"dictValues"
 	}
     local function doNotIgnore(value)
         for i = #ignored, 1, -1 do
@@ -300,6 +321,17 @@ function SpawnController.ignoredFields(entity)
 		doNotIgnore("blockWidth")
 		doNotIgnore("blockHeight")
 	end
+	--Custom Entities
+	if entity.entityToSpawn == "CustomEntity" then
+		doNotIgnore("blockWidth")
+		doNotIgnore("blockHeight")
+		doNotIgnore("nodeX")
+		doNotIgnore("nodeY")
+		doNotIgnore("nodeRelativeToPlayerFacing")
+		doNotIgnore("entityPath")
+		doNotIgnore("dictKeys")
+		doNotIgnore("dictValues")
+	end
 	return ignored
 end
 
@@ -327,7 +359,10 @@ SpawnController.fieldOrder =  {
 	"removeDash",
 	"removeStamina",
 	"relativeToPlayerFacing",
-	"nodeRelativeToPlayerFacing"
+	"nodeRelativeToPlayerFacing",
+	"entityPath",
+	"dictKeys",
+	"dictValues"
 }
 
 function SpawnController.texture(room, entity)
