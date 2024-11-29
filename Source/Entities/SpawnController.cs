@@ -143,7 +143,7 @@ public class SpawnController : Entity
 
     public SpawnController(EntityData data, Vector2 offset) : base(data.Position + offset)
     {
-        Add(new PostUpdateHook(() => {}));
+        Add(new PostUpdateHook(() => { }));
         // General attributes
         offsetX = data.Int("offsetX", 0);
         offsetY = data.Int("offsetY", 8);
@@ -220,7 +220,7 @@ public class SpawnController : Entity
         //Custom Entities
         entityPath = data.Attr("entityPath");
         dictionaryKeys = data.Attr("dictKeys").Replace(" ", string.Empty).Split(',').ToList();
-        dictionaryValues = data.Attr("dictValues").Replace(" ", string.Empty).Split(',').ToList();
+        dictionaryValues = data.Attr("dictValues").Split(',').ToList();
 
         Add(new CoreModeListener(OnChangeMode));
     }
@@ -272,7 +272,7 @@ public class SpawnController : Entity
                 if (Scene.OnInterval(1f)) Logger.Debug(nameof(KoseiHelperModule), $"Player bounds: {player.Bottom} bottom, {player.Top} top, {player.Left} left, {player.Right} right." +
                     $"\nLevel bounds: {level.Bounds.Bottom} bottom, {level.Bounds.Top} top, {level.Bounds.Left} left, {level.Bounds.Right} right.");
                 if (currentCassetteIndex != cassetteBlockManager.currentIndex && // Make sure the player is not too close to the bounds of the level to prevent transition jank
-                player.Bottom < (float)level.Bounds.Bottom && player.Top > (float)level.Bounds.Top + 4  &&
+                player.Bottom < (float)level.Bounds.Bottom && player.Top > (float)level.Bounds.Top + 4 &&
                 player.Left > (float)level.Bounds.Left + 8 && player.Right < (float)level.Bounds.Right - 8)
                 {
                     previousCassetteIndex = currentCassetteIndex;
@@ -298,9 +298,9 @@ public class SpawnController : Entity
                 if (entityToSpawn != EntityType.CustomEntity)
                     Logger.Debug(nameof(KoseiHelperModule), $"An entity is going to spawn: {entityToSpawn}");
                 else //Logs the parameters used in Lönn + the original constructor
-                    Logger.Debug(nameof(KoseiHelperModule), $"An entity ({entityPath}) is going to spawn with attributes: " +
+                    Logger.Debug(nameof(KoseiHelperModule), $"An entity ({entityPath}) is going to spawn, with the attributes: " +
                     $"{string.Join(", ", dictionaryKeys.Zip(dictionaryValues, (key, value) => $"{key}={value}"))}, using constructor with parameters: " +
-                    $"{string.Join(", ", FakeAssembly.GetFakeEntryAssembly().GetType("Celeste." + entityPath).GetConstructors().Select(constructor =>
+                    $"{string.Join(", ", FakeAssembly.GetFakeEntryAssembly().GetType(entityPath).GetConstructors().Select(constructor =>
                     $"{constructor.Name}({string.Join(", ", constructor.GetParameters().Select(param => $"{param.ParameterType.Name} {param.Name}"))})"))}.");
 
                 if (removeDash && Scene.Tracker.GetEntity<Player>().Dashes > 0)
@@ -460,7 +460,7 @@ public class SpawnController : Entity
             if (wrapper.TimeToLive <= 0) // The instance of the entity will (literally) make poof
             {
                 Audio.Play(disappearSound, wrapper.Entity.Position);
-                if (timeToLive >0)
+                if (timeToLive > 0)
                     level.ParticlesFG.Emit(poofParticle, 5, wrapper.Entity.Center, Vector2.One * 4f, 0 - (float)Math.PI / 2f);
                 if (wrapper.Entity is BadelineBoost && player.StateMachine.State == 11) //FIX: being stuck in StDummy if the player touches Badeline as she's poofing
                     player.StateMachine.State = 0;
@@ -518,6 +518,7 @@ public class SpawnController : Entity
 
     private Entity GetEntityFromPath(Vector2 spawn, Vector2 node, LevelData data)
     {
+        Logger.Debug(nameof(KoseiHelperModule), $"Spawning entity at position: {spawn}");
         EntityData entityData = new()
         {
             Position = spawn,
@@ -535,33 +536,79 @@ public class SpawnController : Entity
         Type entityType;
         try
         {
-            entityType = FakeAssembly.GetFakeEntryAssembly().GetType("Celeste." + entityPath);
+            entityType = FakeAssembly.GetFakeEntryAssembly().GetType(entityPath); // This is where it gets the type, like Celeste.Strawberry
         }
         catch (ArgumentNullException)
         {
             Logger.Log(LogLevel.Error, "KoseiHelper", "Failed to get entity: Requested type does not exist");
             return null;
         }
+
         ConstructorInfo[] ctors = entityType.GetConstructors();
         try
         {
             foreach (ConstructorInfo ctor in ctors)
             {
                 ParameterInfo[] parameters = ctor.GetParameters();
-                if (parameters.Any((param) => param.ParameterType == typeof(EntityData)) &&
-                    parameters.Any((param) => param.ParameterType == typeof(Vector2)))
+                List<object> ctorParams = new List<object>();
+
+                foreach (var param in parameters)
                 {
-                    if (parameters.Any((param) => param.ParameterType == typeof(EntityID)))
+                    if (param.ParameterType == typeof(EntityData))
                     {
-                        return Activator.CreateInstance(entityType, new object[] { entityData, Vector2.Zero, newID }) as Entity;
+                        ctorParams.Add(entityData);
                     }
-                    return Activator.CreateInstance(entityType, new object[] { entityData, Vector2.Zero }) as Entity;
+                    else if (param.ParameterType == typeof(Vector2))
+                    { //Needs to check if the entity has just the position or position + offset
+                        if (param.Name.Contains("position", StringComparison.OrdinalIgnoreCase))
+                        {
+                            ctorParams.Add(spawn);
+                        }
+                        else
+                        {
+                            ctorParams.Add(Vector2.Zero);
+                        }
+                    }
+                    else if (param.ParameterType.IsEnum)
+                    {
+                        string enumValue = entityData.Values.FirstOrDefault(kv => kv.Key == param.Name).Value as string;
+                        if (enumValue != null)
+                        {
+                            var enumType = param.ParameterType;
+                            var enumParsed = Enum.Parse(enumType, enumValue);
+                            ctorParams.Add(enumParsed);
+                        }
+                        else
+                            ctorParams.Add(Enum.GetValues(param.ParameterType).GetValue(0));
+                    }
+                    else if (param.ParameterType == typeof(bool))
+                    {
+                        ctorParams.Add(entityData.Bool(param.Name, defaultValue: false));
+                    }
+                    else if (param.ParameterType == typeof(int))
+                    {
+                        ctorParams.Add(entityData.Int(param.Name, defaultValue: 0));
+                    }
+                    else if (param.ParameterType == typeof(float))
+                    {
+                        ctorParams.Add(entityData.Float(param.Name, defaultValue: 0f));
+                    }
+                    else if (param.ParameterType == typeof(EntityID))
+                    {
+                        ctorParams.Add(new EntityID(data.Name, entityID++));
+                    }
+                    else
+                    {
+                        Logger.Log(LogLevel.Warn, "KoseiHelper", $"Unhandled parameter type {param.ParameterType}");
+                        ctorParams.Add(null);
+                    }
                 }
+                return (Entity)ctor.Invoke(ctorParams.ToArray());
             }
         }
-        catch (Exception arg)
+        catch (Exception ex)
         {
-            Logger.Log(LogLevel.Error, "KoseiHelper", $"Failed to get entity: {arg}");
+            Logger.Log(LogLevel.Error, "KoseiHelper", $"Failed to instantiate entity: {ex.Message}");
         }
         return null;
     }
