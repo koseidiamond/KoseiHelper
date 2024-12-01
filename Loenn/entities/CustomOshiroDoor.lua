@@ -9,7 +9,7 @@ CustomOshiroDoor.depth = 0
 
 CustomOshiroDoor.placements = {
 	{
-		name = "Custom Oshiro Door",
+		name = "Custom Oshiro Door (Sprite)",
 		data = {
 			sprite = "koseiHelper_CustomOshiroDoor",
 			bumpSound = "event:/game/03_resort/forcefield_bump",
@@ -23,7 +23,8 @@ CustomOshiroDoor.placements = {
 			height = 32,
 			refillDash = false,
 			givesCoyote = false,
-			collisionMode = "Vanilla"
+			collisionMode = "Vanilla",
+			destroyAttached = false
 		}
 	}
 }

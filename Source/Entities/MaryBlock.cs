@@ -66,7 +66,7 @@ public class MaryBlock : Entity
             if (potted)
                 player.ExplodeLaunch(Position, false);
             float angle = player.Speed.Angle();
-            level.ParticlesFG.Emit(maryParticle, 5, Position, Vector2.One * 4f, angle - (float)Math.PI / 2f);
+            level.ParticlesFG.Emit(maryParticle, 5, Center + new Vector2(0, -2), Vector2.One * 4f, angle - (float)Math.PI / 2f);
             RemoveSelf();
         }
     }

@@ -596,9 +596,12 @@ public class CustomPlayerSeeker : Actor
         if (data.Hit is DreamBlock)
         {
             if ((data.Hit as DreamBlock).playerHasDreamDash)
+            {
                 (data.Hit as DreamBlock).DeactivateNoRoutine();
+                (data.Hit as DreamBlock).oneUse = true;
+            }
             else
-                (data.Hit as DreamBlock).ActivateNoRoutine();
+                (data.Hit as DreamBlock).OneUseDestroy();
         }
     }
     private void Dash(Vector2 dir)

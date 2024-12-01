@@ -6,7 +6,7 @@ using ExtendedVariants.Variants;
 
 namespace Celeste.Mod.KoseiHelper.Entities;
 
-public enum CollisionMode
+public enum OshiroCollisionMode
 {
     Vanilla,
     Rebound,
@@ -26,7 +26,8 @@ public class CustomOshiroDoor : Solid
     public float wiggleDuration, wiggleFrequency, wiggleScale;
     public bool refillDash;
     public bool givesCoyote;
-    public CollisionMode collisionMode;
+    public bool destroyAttached;
+    public OshiroCollisionMode collisionMode;
 
     public CustomOshiroDoor(EntityData data, Vector2 offset)
         : base(data.Position + offset, data.Width, data.Height, safe: false)
@@ -35,12 +36,13 @@ public class CustomOshiroDoor : Solid
         bumpSound = data.Attr("bumpSound", "event:/game/03_resort/forcefield_bump");
         tint = data.HexColor("color", Color.DarkSlateBlue);
         singleUse = data.Bool("singleUse", false);
-        collisionMode = data.Enum("collisionMode", CollisionMode.Vanilla);
+        collisionMode = data.Enum("collisionMode", OshiroCollisionMode.Vanilla);
         wiggleDuration = data.Float("wiggleDuration", 1f) / (5/3);
         wiggleFrequency = data.Float("wiggleFrequency", 1f) * 3;
         wiggleScale = data.Float("wiggleScale", 1f) / 5;
         flag = data.Attr("flag", "oshiro_resort_talked_1");
         givesCoyote = data.Bool("givesCoyote", false);
+        destroyAttached = data.Bool("destroyAttached", false);
         sprite.Position = new Vector2(base.Width, base.Height) / 2f;
         sprite.Color = tint;
         sprite.Play("idle");
@@ -69,12 +71,9 @@ public class CustomOshiroDoor : Solid
             Audio.Play("event:/game/03_resort/forcefield_vanish", Position);
             sprite.Play("open");
             Collidable = false;
+            if (destroyAttached)
+                DestroyStaticMovers();
         }
-    }
-
-    public void InstantOpen()
-    {
-        Collidable = (Visible = false);
     }
 
     private DashCollisionResults OnDashed(Player player, Vector2 direction)
@@ -87,16 +86,16 @@ public class CustomOshiroDoor : Solid
         {
             if (refillDash)
                 player.RefillDash();
+            if (collisionMode == OshiroCollisionMode.SideBounce)
+                player.SideBounce((int)direction.X, player.Position.X, player.Position.Y);
+            if (collisionMode == OshiroCollisionMode.PointBounce)
+                player.PointBounce(Center);
             if (givesCoyote)
                 player.jumpGraceTimer = 0.15f;
-            if (collisionMode == CollisionMode.SideBounce)
-                player.SideBounce((int)direction.X, player.Position.X, player.Position.Y);
-            if (collisionMode == CollisionMode.PointBounce)
-                player.PointBounce(Center);
         }
-        if (collisionMode == CollisionMode.Rebound)
+        if (collisionMode == OshiroCollisionMode.Rebound)
             return DashCollisionResults.Rebound;
-        if (collisionMode == CollisionMode.Vanilla)
+        if (collisionMode == OshiroCollisionMode.Vanilla)
             return DashCollisionResults.Bounce;
         return DashCollisionResults.Ignore;
     }

@@ -90,7 +90,7 @@ entities.KoseiHelper/WingedKey.placements.name.WingedKey= Winged Key
 entities.KoseiHelper/WingedKey.placements.description.Winged Key= A key that will fly away like winged strawberries if the player dashes.\nIt will follow as normal keys upon collection, and will lose its wings if the player dies. (Cosmetic effect)
 entities.KoseiHelper/WingedKey.attributes.description.flapSpeed=The speed used when the key flies away.
 
-#Custom Oshiro Door
+#Oshiro Doors
 entities.KoseiHelper/CustomOshiroDoor.placements.name.CustomOshiroDoor= Custom Oshiro Door
 entities.KoseiHelper/CustomOshiroDoor.placements.description.Custom Oshiro Door= The bouncy oshiro/ghost door but more customizable.
 entities.KoseiHelper/CustomOshiroDoor.attributes.description.bumpSound=The sound that the oshiro door makes when bumped.
@@ -104,6 +104,18 @@ entities.KoseiHelper/CustomOshiroDoor.attributes.description.flag=The flag that 
 entities.KoseiHelper/CustomOshiroDoor.attributes.description.collisionMode=How will the player bounce after bumping the block.\nVanilla: Small bounce in the opposite direction.\nRebound: Small bounce, can control the direction while bouncing.\nSideBounce: Cancels all horizontal speed if bumped on top/bottom, but bounces towards the other side. Allows "grabless cornerboost-like" tech.\nPointBounce: Like SideBounce, but pushes the player towards the opposite direction it was bumped. Allows redirecting speed.
 entities.KoseiHelper/CustomOshiroDoor.attributes.description.refillDash=If the door should always refill the player dash when bumped.
 entities.KoseiHelper/CustomOshiroDoor.attributes.description.givesCoyote=If bumping (dashing on) the door should give 5 coyote frames.
+entities.KoseiHelper/CustomOshiroDoor.attributes.description.destroyAttached=If entities attached (like spikes) should be destroyed when the door does.\nThe entities will still load if the block doesn't appear due to the enabled flag.
+entities.KoseiHelper/TilesetOshiroDoor.placements.name.TilesetOshiroDoor= Tileset Oshiro Door
+entities.KoseiHelper/TilesetOshiroDoor.placements.description.Tileset Oshiro Door= The bouncy oshiro/ghost block but using a tileset.
+entities.KoseiHelper/TilesetOshiroDoor.attributes.description.bumpSound=The sound that the oshiro block makes when bumped.
+entities.KoseiHelper/TilesetOshiroDoor.attributes.description.singleUse=If the oshiro block should be destroyed after being bumped.
+entities.KoseiHelper/TilesetOshiroDoor.attributes.description.flag=The flag that needs to be enabled to make the block disappear.\nNeeds a room reload (respawn, transition, etc).
+entities.KoseiHelper/TilesetOshiroDoor.attributes.description.collisionMode=How will the player bounce after bumping the block.\nVanilla: Small bounce in the opposite direction.\nRebound: Small bounce, can control the direction while bouncing.\nSideBounce: Cancels all horizontal speed if bumped on top/bottom, but bounces towards the other side. Allows "grabless cornerboost-like" tech.\nPointBounce: Like SideBounce, but pushes the player towards the opposite direction it was bumped. Allows redirecting speed.
+entities.KoseiHelper/TilesetOshiroDoor.attributes.description.refillDash=If the block should always refill the player dash when bumped.
+entities.KoseiHelper/TilesetOshiroDoor.attributes.description.givesCoyote=If bumping (dashing on) the block should give 5 coyote frames.
+entities.KoseiHelper/TilesetOshiroDoor.attributes.description.tileType=The tileset id that the oshiro block should use.
+entities.KoseiHelper/TilesetOshiroDoor.attributes.description.giveFreezeFrames=If the oshiro block should give 3 freeze frames like dash blocks do.
+entities.KoseiHelper/TilesetOshiroDoor.attributes.description.debris=If the oshiro block should spawn debris when destroyed.
 
 #Top Down View Controller
 #entities.KoseiHelper/TopDownViewController.placements.name.TopDownViewController=Top Down View Controller
