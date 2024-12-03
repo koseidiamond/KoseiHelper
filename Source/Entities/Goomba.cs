@@ -13,10 +13,11 @@ public class Goomba : Actor
 {
     private Sprite sprite;
     private Collider bounceCollider;
-    private int walkDirection;
+    private int walkDirection = 1;
     private Collision onCollideH = null;
     private Collision onCollideV = null;
     public float speedX = 50;
+    public bool dumb;
     public float originalSpeedX;
     public float speedY;
     public bool outline;
@@ -30,6 +31,7 @@ public class Goomba : Actor
     private bool flyingAway;
     public bool flyAway;
     public float timeToSpawnMinis;
+    public float gravityMult = 1f;
     private SineWave sine;
     public int minisSpawned = 0;
     public static ParticleType goombaParticle = Player.P_Split;
@@ -47,7 +49,9 @@ public class Goomba : Actor
         canBeBounced = data.Bool("canBeBounced", true);
         canSpawnMinis = data.Bool("spawnMinis", true);
         flyAway = data.Bool("flyAway", true);
+        dumb = data.Bool("dumb", false);
         timeToSpawnMinis = data.Float("timeToSpawnMinis", 1);
+        gravityMult = data.Float("gravityMultiplier", 1f);
         if (!isWide)
         {
             Collider = new Hitbox(13, 12, -7, -4);
@@ -156,10 +160,17 @@ public class Goomba : Actor
             speedY = Calc.Approach(speedY, 200f, num * Engine.DeltaTime);
         if (Scene.Tracker.GetEntity<Player>() != null)
         {
-            walkDirection = (int)(Scene.Tracker.GetEntity<Player>().Position.X - this.Position.X);
-            MoveH(speedX * Math.Sign(walkDirection) * Engine.DeltaTime, onCollideH);
+            if (!dumb)
+            {
+                walkDirection = (int)(Scene.Tracker.GetEntity<Player>().Position.X - this.Position.X);
+                MoveH(speedX * Math.Sign(walkDirection) * Engine.DeltaTime, onCollideH);
+            }
+            else
+            {
+                MoveH(speedX * Math.Sign(walkDirection) * Engine.DeltaTime, onCollideH);
+            }
             if (!isWinged)
-                MoveVExact((int)(speedY * Engine.DeltaTime), onCollideV);
+                MoveVExact((int)(speedY * Engine.DeltaTime * gravityMult), onCollideV);
         }
 
         foreach (Spring spring in SceneAs<Level>().Entities.FindAll<Spring>())
@@ -243,7 +254,13 @@ public class Goomba : Actor
         if (spring.Orientation == Spring.Orientations.WallLeft)
         {
             MoveTowardsY(spring.CenterY + 5f, 4f);
-            speedX = -220f;
+            if (!dumb)
+                speedX = -220f;
+            if (dumb)
+            {
+                speedX = 220f;
+                walkDirection = -walkDirection;
+            }
             speedY = -500f;
             noGravityTimer = 0.1f;
             return true;
@@ -251,7 +268,13 @@ public class Goomba : Actor
         if (spring.Orientation == Spring.Orientations.WallRight)
         {
             MoveTowardsY(spring.CenterY + 5f, 4f);
+            if (!dumb)
             speedX = -220f;
+            if (dumb)
+            {
+                speedX = 220f;
+                walkDirection = -walkDirection;
+            }
             speedY = -500f;
             noGravityTimer = 0.1f;
             return true;

@@ -11,6 +11,8 @@ entities.KoseiHelper/Goomba.attributes.description.canBeBounced=If the goomba ca
 entities.KoseiHelper/Goomba.attributes.description.spawnMinis=If the goomba can spawn minigoombas.\n(Limited to 10 max)
 entities.KoseiHelper/Goomba.attributes.description.flyAway=If the winged goombas should fly away like strawberries when the player dashes.
 entities.KoseiHelper/Goomba.attributes.description.timeToSpawnMinis=Time that needs to pass after a minigoomba is spawned.
+entities.KoseiHelper/Goomba.attributes.description.dumb=If the goomba should always move in the same direction, determined by the speed sign.
+entities.KoseiHelper/Goomba.attributes.description.gravityMultiplier=The vertical speed will be affected by this multiplier.
 
 # Mary Block
 entities.KoseiHelper/MaryBlock.placements.name.maryblock=Mary Block

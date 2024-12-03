@@ -14,7 +14,9 @@ Goomba.placements = {
 			canBeBounced = true,
 			spawnMinis = false,
 			timeToSpawnMinis = 1,
-			flyAway = true
+			flyAway = true,
+			dumb = false,
+			gravityMultiplier = 1
 		},
 	},
 }
@@ -22,6 +24,9 @@ Goomba.placements = {
 Goomba.fieldInformation = {
 	timeToSpawnMinis = {
 		minimumValue = 0.001
+	},
+	gravityMultiplier = {
+		minimumValue = 1.0
 	}
 }
 
