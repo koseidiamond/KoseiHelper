@@ -3,12 +3,24 @@ local Plant = {}
 Plant.name = "KoseiHelper/Plant"
 Plant.depth = -100
 
+function Plant.offset(room, entity)
+	local plantType = entity.plantType
+	if plantType == "Green" or plantType == "Red" then
+		return {0, 32}
+	else
+		return {0, 0}
+	end
+end
+
 Plant.placements = {
 	{
 		name = "Plant",
 		data = {
 			plantType = "Black",
-			movingSpeed = 1
+			movingSpeed = 1,
+			canShoot = false,
+			shootSpeed = 1.5,
+			distance = 88
 		}
 	}
 }
@@ -31,20 +43,34 @@ function Plant.selection(room, entity)
 	if plantType == "Black" or plantType == "Jumping" then
 		return utils.rectangle(entity.x - width / 2, entity.y - height / 2, width, height)
 	else
-		return utils.rectangle (entity.x - width / 2, entity.y - height, width, height + 16)
+		return utils.rectangle (entity.x - width / 2, entity.y - height - 32, width, height + 16)
 	end
+	
 end
 
 function Plant.texture(room, entity)
 	local plantType = entity.plantType
-	if plantType == "Jumping" then
-		return "objects/KoseiHelper/Plant/Jumping00"
-	elseif plantType == "Green" then
-		return "objects/KoseiHelper/Plant/GreenIdle00"
-	elseif plantType == "Red" then
-		return "objects/KoseiHelper/Plant/RedIdle00"
+	local canShoot = entity.canShoot
+	if not canShoot then
+		if plantType == "Jumping" then
+			return "objects/KoseiHelper/Plant/Jumping00"
+		elseif plantType == "Green" then
+			return "objects/KoseiHelper/Plant/GreenIdle00"
+		elseif plantType == "Red" then
+			return "objects/KoseiHelper/Plant/RedIdle00"
+		else
+			return "objects/KoseiHelper/Plant/Black00"
+		end
 	else
-		return "objects/KoseiHelper/Plant/Black00"
+		if plantType == "Jumping" then
+			return "objects/KoseiHelper/Plant/Jumping00"
+		elseif plantType == "Green" then
+			return "objects/KoseiHelper/Plant/GreenShootDown00"
+		elseif plantType == "Red" then
+			return "objects/KoseiHelper/Plant/RedShootDown00"
+		else
+			return "objects/KoseiHelper/Plant/Black00"
+		end
 	end
 end
 

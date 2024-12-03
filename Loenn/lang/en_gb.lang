@@ -14,6 +14,14 @@ entities.KoseiHelper/Goomba.attributes.description.timeToSpawnMinis=Time that ne
 entities.KoseiHelper/Goomba.attributes.description.dumb=If the goomba should always move in the same direction, determined by the speed sign.
 entities.KoseiHelper/Goomba.attributes.description.gravityMultiplier=The vertical speed will be affected by this multiplier.
 
+# Plants
+entities.KoseiHelper/Plant.placements.name.Plant=Plant
+entities.KoseiHelper/Plant.placements.description.Plant=Mario Bros plants, coming in different shapes.
+entities.KoseiHelper/Plant.attributes.description.plantType=Black plants are small and don't do anything.\nJumping plants are small and jump if you're above them.\nGreen plants move up and down.\nRed plants move up only when you get close.
+entities.KoseiHelper/Plant.attributes.description.canShoot=If the plant can shoot. This also determines their sprite variant.
+entities.KoseiHelper/Plant.attributes.description.shootSpeed=A bullet will be shot every x seconds.
+entities.KoseiHelper/Plant.attributes.description.distance=How close in pixels the player needs to be so the Red plants can go up.
+
 # Mary Block
 entities.KoseiHelper/MaryBlock.placements.name.maryblock=Mary Block
 entities.KoseiHelper/MaryBlock.placements.description.Mary Block=These blocks bounce the player from both sides, like a spring but with less strength.
