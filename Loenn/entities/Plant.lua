@@ -3,10 +3,32 @@ local Plant = {}
 Plant.name = "KoseiHelper/Plant"
 Plant.depth = -100
 
+Plant.placements = {
+	{
+		name = "Plant",
+		data = {
+			plantType = "Black",
+			movingSpeed = 1,
+			canShoot = false,
+			shootSpeed = 1.5,
+			distance = 64,
+			direction = "Up",
+			cycleOffset = false
+		}
+	}
+}
+
 function Plant.offset(room, entity)
 	local plantType = entity.plantType
+	local direction = entity.direction
 	if plantType == "Green" or plantType == "Red" then
-		return {0, 32}
+		if direction == "Right" then
+			return {0,0}
+		elseif direction == "Down" then
+			return {0, 32}
+		else
+			return {0, 32}
+		end
 	else
 		return {0, 0}
 	end
@@ -34,20 +56,6 @@ function Plant.scale(room, entity)
 	end
 end
 
-Plant.placements = {
-	{
-		name = "Plant",
-		data = {
-			plantType = "Black",
-			movingSpeed = 1,
-			canShoot = false,
-			shootSpeed = 1.5,
-			distance = 64,
-			direction = "Up"
-		}
-	}
-}
-
 Plant.fieldInformation = {
 	plantType = {
 		options = {
@@ -73,10 +81,19 @@ Plant.fieldInformation = {
 function Plant.selection(room, entity)
     local width, height = 16, 16
 	local plantType = entity.plantType
+	local direction = entity.direction
 	if plantType == "Black" or plantType == "Jumping" then
 		return utils.rectangle(entity.x - width / 2, entity.y - height / 2, width, height)
 	else
-		return utils.rectangle (entity.x - width / 2, entity.y - height - 32, width, height + 16)
+		if direction == "Down" then
+			return utils.rectangle (entity.x - width / 2, entity.y - height +32, width, height + 16)
+		elseif direction == "Left" then
+			return utils.rectangle (entity.x - width / 2 - 40, entity.y - height + 8, width + 16, height)
+		elseif direction == "Right" then
+			return utils.rectangle (entity.x - width / 2 - 8, entity.y - height + 8, width + 16, height)
+		else
+			return utils.rectangle (entity.x - width / 2, entity.y - height - 32, width, height + 16)
+		end
 	end
 	
 end

@@ -2,4 +2,5 @@
 {3edaffa9-2a67-4163-abaa-c1ecd21b5f9f} event:/KoseiHelper/mary
 {5378b6db-9e8a-4ac4-87de-5760cfc1f59e} event:/KoseiHelper/spawn
 {15ad16dd-88a5-422b-8a52-678fecbe9a28} event:/KoseiHelper/crackedwall_prebreak
+{182cf9dc-0163-4f46-836f-602378231718} event:/KoseiHelper/bullet
 {ba8e885e-d7ef-474b-9ea8-20ba14e4943e} bank:/KoseiHelper

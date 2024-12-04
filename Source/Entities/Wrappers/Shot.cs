@@ -46,7 +46,7 @@ public class Shot : Entity
     public Shot Init(Plant plant, Player target, float angleOffset = 0f)
     {
         this.plant = plant;
-        anchor = (Position = new Vector2(plant.Center.X, plant.Top +6));
+        anchor = (Position = new Vector2(plant.Center.X, plant.Top +8));
         this.target = target;
         this.angleOffset = angleOffset;
         dead = (hasBeenInCamera = false);
@@ -61,7 +61,7 @@ public class Shot : Entity
     public Shot Init(Plant plant, Vector2 target)
     {
         this.plant = plant;
-        anchor = (Position = new Vector2(plant.Center.X, plant.Top + 6));
+        anchor = (Position = new Vector2(plant.Center.X, plant.Top + 8));
         this.target = null;
         angleOffset = 0f;
         targetPt = target;
@@ -127,7 +127,7 @@ public class Shot : Entity
             /*if (Scene.OnInterval(0.04f))
             {
                 level.ParticlesFG.Emit(P_Trail, 1, Center, Vector2.One * 2f, particleDir);
-            }*/ //TODO For some reason this crashes
+            }*/ //TODO For some reason the particle spawning crashes
         }
     }
     public override void Render()

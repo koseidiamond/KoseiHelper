@@ -23,6 +23,7 @@ entities.KoseiHelper/Plant.attributes.description.shootSpeed=A bullet will be sh
 entities.KoseiHelper/Plant.attributes.description.distance=How close in pixels the player needs to be so the Red plants can go up.
 entities.KoseiHelper/Plant.attributes.description.direction=If the plant should be affected by a different type of gravity or coming from a different direction.
 entities.KoseiHelper/Plant.attributes.description.movingSpeed=A multiplier for the speed at which the plant will move.
+entities.KoseiHelper/Plant.attributes.description.cycleOffset=If the plant is green, this determines whether the plant should wait 2 seconds before moving for the first time.
 
 # Mary Block
 entities.KoseiHelper/MaryBlock.placements.name.maryblock=Mary Block
