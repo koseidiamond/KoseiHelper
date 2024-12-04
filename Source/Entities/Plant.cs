@@ -14,31 +14,41 @@ public enum PlantType
     Black
 }
 
+public enum PlantDirection
+{
+    Up,
+    Left,
+    Right,
+    Down
+}
+
 [CustomEntity("KoseiHelper/Plant")]
 [Tracked]
 public class Plant : Actor
 {
     public Sprite sprite;
     public PlantType plantType;
+    public PlantDirection plantDirection;
     public bool canShoot;
     public float shootSpeed = 0f;
-    public Vector2 Speed = Vector2.Zero;
+    public Vector2 Speed = new Vector2 (0, 40);
     public bool moving;
     private bool isMoving = false; // to check if the red ones should wait until moving again
     public float movingSpeed = 1f;
-    private bool isShooting = false;
+    private bool isShooting, isJumping = false;
     private bool isWaitingAtTop = false;
     private bool isGreenMovingUp = false;
     private bool isRedMovingUp = false;
-    public int distance = 88;
+    public int distance = 64;
 
     public Plant(EntityData data, Vector2 offset) : base(data.Position + offset)
     {
         plantType = data.Enum("plantType", PlantType.Jumping);
+        plantDirection = data.Enum("plantDirection", PlantDirection.Up);
         movingSpeed = data.Float("movingSpeed", 1f);
         canShoot = data.Bool("canShoot", false);
         shootSpeed = data.Float("shootSpeed", 1.5f);
-        distance = data.Int("distance", 88);
+        distance = data.Int("distance", 64);
         Depth = -100;
         Add(sprite = GFX.SpriteBank.Create("koseiHelper_Plant"));
 
@@ -68,6 +78,15 @@ public class Plant : Actor
             else
                 sprite.Play("RedShootDown");
         }
+        if (plantDirection == PlantDirection.Left)
+            sprite.Rotation = -(float)Math.PI / 2;
+        if (plantDirection == PlantDirection.Right)
+        {
+            sprite.Rotation = -(float)Math.PI * 1.5f;
+            sprite.FlipX = true;
+        }
+        if (plantDirection == PlantDirection.Down)
+            sprite.Rotation = -(float)Math.PI;
 
         Add(new PlayerCollider(OnPlayer));
     }
@@ -77,24 +96,85 @@ public class Plant : Actor
         base.Update();
         Level level = SceneAs<Level>();
         Player player = level.Tracker.GetEntity<Player>();
-
+        if (Top > level.Bounds.Bottom || Bottom < level.Bounds.Top || Left > level.Bounds.Right || Right < level.Bounds.Left)
+            RemoveSelf();
         if (plantType == PlantType.Jumping)
         {
-            MoveV(Speed.Y * Engine.DeltaTime * movingSpeed);
-            if (!OnGround())
-            {
-                Speed.Y += Engine.DeltaTime;
-                sprite.Play("Jumping");
-            }
-            if (OnGround())
-            {
-                sprite.Play("JumpingIdle");
-            }
+            if (plantDirection == PlantDirection.Up || plantDirection == PlantDirection.Down)
+                MoveV(Speed.Y * Engine.DeltaTime * movingSpeed);
+            if (plantDirection == PlantDirection.Left || plantDirection == PlantDirection.Right)
+                MoveH(Speed.X * Engine.DeltaTime * movingSpeed);
+            switch (plantDirection)
+                {
+                    case PlantDirection.Down:
+                        // slight falling acceleration until it reaches max fastfall speed
+                        Speed.Y += Engine.DeltaTime * -100;
+                        Speed.Y = Calc.Clamp(Speed.Y, -150, 150);
+                        if (CollidingWithGround(TopCenter + new Vector2(0, -2)))
+                            sprite.Play("Jumping");
+                        else
+                            sprite.Play("JumpingIdle");
+                        break;
+                    case PlantDirection.Left:
+                        Speed.X += Engine.DeltaTime * 100;
+                        Speed.X = Calc.Clamp(Speed.X, -150, 150);
+                        if (CollidingWithGround(CenterRight + new Vector2(2, 0)))
+                            sprite.Play("Jumping");
+                        else
+                            sprite.Play("JumpingIdle");
+                        break;
+                    case PlantDirection.Right:
+                        Speed.X += Engine.DeltaTime * -100;
+                        Speed.X = Calc.Clamp(Speed.X, -150, 150);
+                        if (CollidingWithGround(CenterLeft + new Vector2(-2, 0)))
+                            sprite.Play("Jumping");
+                        else
+                            sprite.Play("JumpingIdle");
+                        break;
+                    default:
+                        Speed.Y += Engine.DeltaTime * 100;
+                        Speed.Y = Calc.Clamp(Speed.Y, -150, 150);
+                        if (CollidingWithGround(BottomCenter + new Vector2(0, 2)))
+                            sprite.Play("Jumping");
+                        else
+                            sprite.Play("JumpingIdle");
+                        break;
+                }
             if (player != null)
             {
-                if (player.Right >= Left && player.Left <= Right && player.Bottom >= Top - 80 && OnGround() && !player.JustRespawned)
-                {
-                    Add(new Coroutine(Jump()));
+                if (!player.JustRespawned && !player.IsIntroState && !isJumping)
+                { switch (plantDirection)
+                    {
+                        case PlantDirection.Down:
+                            if (player.Right > Left && player.Left < Right && player.Top > Top - Math.Abs(distance) && player.Bottom > Top &&
+                                CollidingWithGround(TopCenter + new Vector2(0, -2)))
+                            {
+                                Logger.Debug(nameof(KoseiHelperModule), $"player.Bottom: {player.Bottom} > Top: {Top}");
+                                Add(new Coroutine(Jump()));
+                            }
+                            break;
+                        case PlantDirection.Left:
+                            if (player.Bottom > Top && player.Top < Bottom && player.Right > Left - Math.Abs(distance) && player.Left < Right &&
+                                CollidingWithGround(CenterRight + new Vector2(2, 0)))
+                            {
+                                Add(new Coroutine(Jump()));
+                            }
+                            break;
+                        case PlantDirection.Right:
+                            if (player.Bottom > Top && player.Top < Bottom && player.Left < Right + Math.Abs(distance) && player.Right > Left &&
+                                CollidingWithGround(CenterLeft + new Vector2(-2, 0)))
+                            {
+                                Add(new Coroutine(Jump()));
+                            }
+                            break;
+                        default:
+                            if (player.Right > Left && player.Left < Right && player.Bottom >= Top - Math.Abs(distance) && player.Top < Bottom &&
+                                CollidingWithGround(BottomCenter + new Vector2(0, 2)))
+                            {
+                                Add(new Coroutine(Jump()));
+                            }
+                            break;
+                    }
                 }
                 if (player.Center.X > Center.X)
                     sprite.FlipX = true;
@@ -152,7 +232,7 @@ public class Plant : Actor
             }
         }
 
-        if (player != null && canShoot && !player.JustRespawned)
+        if (player != null && canShoot && !player.JustRespawned && !player.IsIntroState)
         {
             if (plantType == PlantType.Green && isWaitingAtTop)
             {
@@ -175,11 +255,38 @@ public class Plant : Actor
 
     private IEnumerator Jump() // For the white ones
     {
-        Speed.Y = -80f;
-        yield return 0.5f;
-        Speed.Y = 80f;
-        yield return 0.75;
-        yield break;
+        isJumping = true;
+        switch (plantDirection)
+        {
+            case PlantDirection.Down:
+                Speed.Y = 80f;
+                yield return 0.5f;
+                Speed.Y = -80f;
+                yield return 0.5f;
+                isJumping = false;
+                yield break;
+            case PlantDirection.Left:
+                Speed.X = -80f;
+                yield return 0.5f;
+                Speed.X = 80f;
+                yield return 0.5f;
+                isJumping = false;
+                yield break;
+            case PlantDirection.Right:
+                Speed.X = 80f;
+                yield return 0.5f;
+                Speed.X = -80f;
+                yield return 0.5f;
+                isJumping = false;
+                yield break;
+            default:
+                Speed.Y = -80f;
+                yield return 0.5f;
+                Speed.Y = 80f;
+                yield return 0.5f;
+                isJumping = false;
+                yield break;
+        }
     }
 
     private IEnumerator MovingCycle()
@@ -301,5 +408,10 @@ public class Plant : Actor
         {
             return base.Center + sprite.Position + new Vector2(0f * sprite.Scale.X, -6f);
         }
+    }
+
+    private bool CollidingWithGround(Vector2 position)
+    {
+        return CollideCheckOutside<Solid>(position) || CollideCheckOutside<Platform>(position);
     }
 }
