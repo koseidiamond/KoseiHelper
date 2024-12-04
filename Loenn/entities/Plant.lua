@@ -13,12 +13,12 @@ function Plant.offset(room, entity)
 end
 
 function Plant.rotation(room, entity)
-	local plantDirection = entity.plantDirection
-	if plantDirection == "Left" then
+	local direction = entity.direction
+	if direction == "Left" then
 		return (math.pi * 1.5)
-	elseif plantDirection == "Right" then
+	elseif direction == "Right" then
 		return (math.pi / 2)
-	elseif plantDirection == "Down" then
+	elseif direction == "Down" then
 		return math.pi
 	else
 		return 0
@@ -26,8 +26,8 @@ function Plant.rotation(room, entity)
 end
 
 function Plant.scale(room, entity)
-	local plantDirection = entity.plantDirection
-	if plantDirection == "Right" then
+	local direction = entity.direction
+	if direction == "Right" then
 		return {-1, 1}
 	else
 		return {1, 1}
@@ -43,7 +43,7 @@ Plant.placements = {
 			canShoot = false,
 			shootSpeed = 1.5,
 			distance = 64,
-			plantDirection = "Up"
+			direction = "Up"
 		}
 	}
 }
@@ -58,7 +58,7 @@ Plant.fieldInformation = {
 		},
 		editable = false
 	},
-	plantDirection = {
+	direction = {
 		options = {
 			"Up",
 			"Left",
@@ -66,7 +66,8 @@ Plant.fieldInformation = {
 			"Down"
 		},
 		editable = false
-	}
+	},
+	distance = { fieldType = "integer"}
 }
 
 function Plant.selection(room, entity)

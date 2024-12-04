@@ -31,7 +31,7 @@ public class Plant : Actor
     public PlantDirection plantDirection;
     public bool canShoot;
     public float shootSpeed = 0f;
-    public Vector2 Speed = new Vector2 (0, 40);
+    public Vector2 Speed = Vector2.Zero;
     public bool moving;
     private bool isMoving = false; // to check if the red ones should wait until moving again
     public float movingSpeed = 1f;
@@ -44,7 +44,7 @@ public class Plant : Actor
     public Plant(EntityData data, Vector2 offset) : base(data.Position + offset)
     {
         plantType = data.Enum("plantType", PlantType.Jumping);
-        plantDirection = data.Enum("plantDirection", PlantDirection.Up);
+        plantDirection = data.Enum("direction", PlantDirection.Up);
         movingSpeed = data.Float("movingSpeed", 1f);
         canShoot = data.Bool("canShoot", false);
         shootSpeed = data.Float("shootSpeed", 1.5f);
@@ -61,10 +61,39 @@ public class Plant : Actor
         {
             Collider = new Hitbox(14, 14, -7, -6);
             sprite.Play("Black");
+            switch (plantDirection)
+            {
+                case PlantDirection.Up:
+                    Speed = new Vector2(0, 40);
+                    break;
+                case PlantDirection.Down:
+                    Speed = new Vector2(0, -40);
+                    break;
+                case PlantDirection.Left:
+                    Speed = new Vector2(40, 0);
+                    break;
+                case PlantDirection.Right:
+                    Speed = new Vector2(-40, 0);
+                    break;
+            }
         }
         if (plantType == PlantType.Green)
         {
-            Collider = new Hitbox(16, 30, -8, -14);
+            switch (plantDirection)
+            {
+                case PlantDirection.Left:
+                    Collider = new Hitbox(30, 16, -14, -8);
+                    break;
+                case PlantDirection.Right:
+                    Collider = new Hitbox(30, 16, -16, -8);
+                    break;
+                case PlantDirection.Down:
+                    Collider = new Hitbox(16, 30, -8, -16);
+                    break;
+                default:
+                    Collider = new Hitbox(16, 30, -8, -14);
+                    break;
+            }
             if (!canShoot)
                 sprite.Play("GreenIdle");
             else
@@ -134,7 +163,9 @@ public class Plant : Actor
                     default:
                         Speed.Y += Engine.DeltaTime * 100;
                         Speed.Y = Calc.Clamp(Speed.Y, -150, 150);
-                        if (CollidingWithGround(BottomCenter + new Vector2(0, 2)))
+
+                    Logger.Debug(nameof(KoseiHelperModule), $"S P E E D: {Speed. Y}");
+                    if (CollidingWithGround(BottomCenter + new Vector2(0, 2)))
                             sprite.Play("Jumping");
                         else
                             sprite.Play("JumpingIdle");
@@ -149,7 +180,6 @@ public class Plant : Actor
                             if (player.Right > Left && player.Left < Right && player.Top > Top - Math.Abs(distance) && player.Bottom > Top &&
                                 CollidingWithGround(TopCenter + new Vector2(0, -2)))
                             {
-                                Logger.Debug(nameof(KoseiHelperModule), $"player.Bottom: {player.Bottom} > Top: {Top}");
                                 Add(new Coroutine(Jump()));
                             }
                             break;
@@ -184,51 +214,89 @@ public class Plant : Actor
         }
 
         if (plantType == PlantType.Black)
-            sprite.Play("Black");
-
-        if (plantType == PlantType.Green)
         {
-            if (player != null)
+            if (plantDirection == PlantDirection.Up || plantDirection == PlantDirection.Down)
+                MoveV(Speed.Y * Engine.DeltaTime * movingSpeed);
+            if (plantDirection == PlantDirection.Left || plantDirection == PlantDirection.Right)
+                MoveH(Speed.X * Engine.DeltaTime * movingSpeed);
+            switch (plantDirection)
             {
-                if (!moving)
-                    Add(new Coroutine(MovingCycle()));
-
-                if (player.Center.X > Center.X)
-                    sprite.FlipX = true;
-                else
-                    sprite.FlipX = false;
-                if (canShoot && player.Bottom < Top)
-                    sprite.Play("GreenShootUp");
-                if (canShoot && player.Top > Top - 16)
-                    sprite.Play("GreenShootDown");
+                case PlantDirection.Down:
+                    Speed.Y += Engine.DeltaTime * -100;
+                    Speed.Y = Calc.Clamp(Speed.Y, -150, 150);
+                    break;
+                case PlantDirection.Left:
+                    Speed.X += Engine.DeltaTime * 100;
+                    Speed.X = Calc.Clamp(Speed.X, -150, 150);
+                    break;
+                case PlantDirection.Right:
+                    Speed.X += Engine.DeltaTime * -100;
+                    Speed.X = Calc.Clamp(Speed.X, -150, 150);
+                    break;
+                default:
+                    Speed.Y += Engine.DeltaTime * 100;
+                    Speed.Y = Calc.Clamp(Speed.Y, -150, 150);
+                    break;
+            }
+            sprite.Play("Black");
+        }
+        //TODO rotation
+        if (plantType == PlantType.Green && player != null)
+        {
+            if (!moving)
+                Add(new Coroutine(MovingCycle()));
+            switch (plantDirection)
+            {
+                case PlantDirection.Left:
+                    break;
+                case PlantDirection.Right:
+                    break;
+                case PlantDirection.Down:
+                    break;
+                default:
+                    if (player.Center.X > Center.X)
+                        sprite.FlipX = true;
+                    else
+                        sprite.FlipX = false;
+                    if (canShoot && player.Bottom < Top)
+                        sprite.Play("GreenShootUp");
+                    if (canShoot && player.Top > Top - 16)
+                        sprite.Play("GreenShootDown");
+                    break;
             }
         }
-
-        if (plantType == PlantType.Red)
+        //TODO rotation
+        if (plantType == PlantType.Red && player != null)
         {
-            if (player != null)
+            switch (plantDirection)
             {
-                if (Math.Abs(player.Center.X - Center.X) <= distance)
-                {
-                    if (!moving && Scene != null)
-                        Add(new Coroutine(MoveUp()));
-                }
-                else
-                {
-                    if (moving && Scene != null)
-                        Add(new Coroutine(MoveDown()));
-                }
+                case PlantDirection.Left:
+                    break;
+                case PlantDirection.Right:
+                    break;
+                case PlantDirection.Down:
+                    break;
+                default:
+                    if (Math.Abs(player.Center.X - Center.X) <= distance)
+                    {
+                        if (!moving && Scene != null)
+                            Add(new Coroutine(MoveUp()));
+                    }
+                    else
+                    {
+                        if (moving && Scene != null)
+                            Add(new Coroutine(MoveDown()));
+                    }
 
-                if (player.Center.X > Center.X)
-                    sprite.FlipX = true;
-                else
-                    sprite.FlipX = false;
-                if (canShoot && player.Bottom < Top)
-                {
-                    sprite.Play("RedShootUp");
-                }
-                if (canShoot && player.Top > Top - 16)
-                    sprite.Play("RedShootDown");
+                    if (player.Center.X > Center.X)
+                        sprite.FlipX = true;
+                    else
+                        sprite.FlipX = false;
+                    if (canShoot && player.Bottom < Top)
+                        sprite.Play("RedShootUp");
+                    if (canShoot && player.Top > Top - 16)
+                        sprite.Play("RedShootDown");
+                    break;
             }
         }
 
@@ -293,19 +361,39 @@ public class Plant : Actor
     {
         moving = true;
         isGreenMovingUp = true;
-        for (int i = 0; i < 32; i++)
+        if (plantDirection == PlantDirection.Up || plantDirection == PlantDirection.Down)
         {
-            Y -= 1;
-            yield return 0.01f * 1 / movingSpeed;
+            for (int i = 0; i < 32; i++)
+            {
+                Y -= 1;
+                yield return 0.01f * 1 / movingSpeed;
+            }
+            isGreenMovingUp = false;
+            isWaitingAtTop = true;
+            yield return 1f;
+            isWaitingAtTop = false;
+            for (int i = 0; i < 32; i++)
+            {
+                Y += 1;
+                yield return 0.01f * 1 / movingSpeed;
+            }
         }
-        isGreenMovingUp = false;
-        isWaitingAtTop = true;
-        yield return 1f;
-        isWaitingAtTop = false;
-        for (int i = 0; i < 32; i++)
+        else
         {
-            Y += 1;
-            yield return 0.01f * 1 / movingSpeed;
+            for (int i = 0; i < 32; i++)
+            {
+                X -= 1;
+                yield return 0.01f * 1 / movingSpeed;
+            }
+            isGreenMovingUp = false;
+            isWaitingAtTop = true;
+            yield return 1f;
+            isWaitingAtTop = false;
+            for (int i = 0; i < 32; i++)
+            {
+                X += 1;
+                yield return 0.01f * 1 / movingSpeed;
+            }
         }
 
         yield return 1f;
