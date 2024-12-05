@@ -166,7 +166,8 @@ public class Goomba : Actor
             speedY = Calc.Approach(speedY, 200f, num * Engine.DeltaTime);
         if (behavior == GoombaBehavior.Smart)
         {
-            if ((walkDirection > 0 && !CollidingWithGround(Position + new Vector2(8, 2)) || walkDirection < 0 && !CollidingWithGround(Position + new Vector2(-8, 2))))
+            if (CollidingWithGround(Position + new Vector2(0, 2)) && 
+                (walkDirection > 0 && !CollidingWithGround(Position + new Vector2(10, 2)) || walkDirection < 0 && !CollidingWithGround(Position + new Vector2(-10, 2))))
                 walkDirection = -walkDirection;
         }
         if (Scene.Tracker.GetEntity<Player>() != null)
