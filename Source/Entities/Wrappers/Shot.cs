@@ -41,7 +41,7 @@ public class Shot : Entity
         Add(sprite = GFX.SpriteBank.Create("koseiHelper_Bullet"));
         base.Collider = new Hitbox(4f, 4f, -2f, -2f);
         Add(new PlayerCollider(OnPlayer));
-        base.Depth = -1000000;
+        base.Depth = -99;
         Add(sine = new SineWave(1.4f, 0f));
     }
     public Shot Init(Plant plant, Player target, float angleOffset = 0f) // Fire seeds
@@ -60,7 +60,7 @@ public class Shot : Entity
         InitSpeed();
         return this;
     }
-    public Shot Init(Plant plant, Vector2 target, string bulletType) // Melon seeds
+    public Shot Init(Plant plant, Vector2 target, string bulletType, float rot) // Melon seeds
     {
         this.plant = plant;
         anchor = (Position = new Vector2(plant.Center.X, plant.Top + 8));
@@ -73,6 +73,7 @@ public class Shot : Entity
         sine.Reset();
         sineMult = 0f;
         sprite.Play(bulletType, restart: true);
+        sprite.Rotation = rot;
         fireType = false;
         InitSpeed();
         return this;
@@ -103,7 +104,7 @@ public class Shot : Entity
         Level level = SceneAs<Level>();
         Player player = level.Tracker.GetEntity<Player>();
         base.Update();
-        if (CollideCheck<DefrostableBlock>())
+        if (CollideCheck<Solid>() || !level.IsInBounds(this))
             RemoveSelf();
         if (appearTimer > 0f)
         {

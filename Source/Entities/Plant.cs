@@ -707,16 +707,16 @@ public class Plant : Actor
                 switch (plantDirection)
                 {
                     case PlantDirection.Left:
-                        SceneAs<Level>().Add(Engine.Pooler.Create<Shot>().Init(this, CenterLeft, bulletType));
+                        SceneAs<Level>().Add(Engine.Pooler.Create<Shot>().Init(this, CenterLeft, bulletType, -(float)Math.PI/2));
                         break;
                     case PlantDirection.Right:
-                        SceneAs<Level>().Add(Engine.Pooler.Create<Shot>().Init(this, CenterRight, bulletType));
+                        SceneAs<Level>().Add(Engine.Pooler.Create<Shot>().Init(this, CenterRight, bulletType, -(float)Math.PI * 1.5f));
                         break;
                     case PlantDirection.Down:
-                        SceneAs<Level>().Add(Engine.Pooler.Create<Shot>().Init(this, BottomCenter, bulletType));
+                        SceneAs<Level>().Add(Engine.Pooler.Create<Shot>().Init(this, BottomCenter, bulletType, -(float)Math.PI));
                         break;
                     default:
-                        SceneAs<Level>().Add(Engine.Pooler.Create<Shot>().Init(this, TopCenter, bulletType));
+                        SceneAs<Level>().Add(Engine.Pooler.Create<Shot>().Init(this, TopCenter, bulletType, 0f));
                         break;
                 }
                 Audio.Play("event:/KoseiHelper/bulletB", Center);
@@ -742,16 +742,33 @@ public class Plant : Actor
     {
         get
         {
-            switch (plantDirection)
+            if (plantType != PlantType.Melon)
             {
-                case PlantDirection.Down:
-                    return Center + sprite.Position + new Vector2(0f, 7f);
-                case PlantDirection.Left:
-                    return Center + sprite.Position + new Vector2(-7f, 0f);
-                case PlantDirection.Right:
-                    return Center + sprite.Position + new Vector2(7f, 0f);
-                default:
-                    return Center + sprite.Position + new Vector2(0f, -7f);
+                switch (plantDirection)
+                {
+                    case PlantDirection.Down:
+                        return Center + sprite.Position + new Vector2(0f, 7f);
+                    case PlantDirection.Left:
+                        return Center + sprite.Position + new Vector2(-7f, 0f);
+                    case PlantDirection.Right:
+                        return Center + sprite.Position + new Vector2(7f, 0f);
+                    default:
+                        return Center + sprite.Position + new Vector2(0f, -7f);
+                }
+            }
+            else
+            {
+                switch (plantDirection)
+                {
+                    case PlantDirection.Down:
+                        return Center + sprite.Position + new Vector2(0f, 10f);
+                    case PlantDirection.Left:
+                        return Center + sprite.Position + new Vector2(-10f, 0f);
+                    case PlantDirection.Right:
+                        return Center + sprite.Position + new Vector2(10f, 0f);
+                    default:
+                        return Center + sprite.Position + new Vector2(0f, -10f);
+                }
             }
         }
     }
