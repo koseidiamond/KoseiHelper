@@ -12,7 +12,8 @@ public enum PlantType
     Jumping,
     Red,
     Green,
-    Black
+    Black,
+    Melon
 }
 
 public enum PlantDirection
@@ -34,6 +35,7 @@ public class Plant : Actor
     public float shootSpeed = 0f;
     public Vector2 Speed = Vector2.Zero;
     public bool moving;
+    public string bulletType = "bulletRed";
     private bool isMoving = false; // to check if the red ones should wait until moving again
     public float movingSpeed = 1f;
     private bool isShooting, isJumping = false;
@@ -80,7 +82,7 @@ public class Plant : Actor
                     break;
             }
         }
-        if (plantType == PlantType.Green)
+        if (plantType == PlantType.Green || plantType == PlantType.Red || plantType == PlantType.Melon)
         {
             switch (plantDirection)
             {
@@ -96,33 +98,23 @@ public class Plant : Actor
                 default:
                     Collider = new Hitbox(16, 30, -8, -14);
                     break;
-            }
-            if (!canShoot)
-                sprite.Play("GreenIdle");
-            else
-                sprite.Play("GreenShootDown");
         }
-        if (plantType == PlantType.Red)
-        {
-            switch (plantDirection)
+            if (plantType == PlantType.Green)
             {
-                case PlantDirection.Left:
-                    Collider = new Hitbox(30, 16, -14, -8);
-                    break;
-                case PlantDirection.Right:
-                    Collider = new Hitbox(30, 16, -16, -8);
-                    break;
-                case PlantDirection.Down:
-                    Collider = new Hitbox(16, 30, -8, -16);
-                    break;
-                default:
-                    Collider = new Hitbox(16, 30, -8, -14);
-                    break;
+                if (!canShoot)
+                    sprite.Play("GreenIdle");
+                else
+                    sprite.Play("GreenShootDown");
             }
-            if (!canShoot)
-                sprite.Play("RedIdle");
-            else
-                sprite.Play("RedShootDown");
+            if (plantType == PlantType.Red)
+            {
+                if (!canShoot)
+                    sprite.Play("RedIdle");
+                else
+                    sprite.Play("RedShootDown");
+            }
+            if (plantType == PlantType.Melon)
+                sprite.Play("Melon");
         }
         if (plantDirection == PlantDirection.Left)
             sprite.Rotation = -(float)Math.PI / 2;
@@ -265,6 +257,13 @@ public class Plant : Actor
             }
             sprite.Play("Black");
         }
+
+        if (plantType == PlantType.Melon && player != null)
+        {
+            if (!isShooting)
+                Add(new Coroutine(ShootCycle()));
+        }
+
         if (plantType == PlantType.Green && player != null)
         {
             if (!moving)
@@ -313,7 +312,6 @@ public class Plant : Actor
                     break;
             }
         }
-        //TODO rotation
         if (plantType == PlantType.Red && player != null)
         {
             switch (plantDirection)
@@ -679,8 +677,21 @@ public class Plant : Actor
         Player player = SceneAs<Level>().Tracker.GetEntity<Player>();
         if (player != null)
         {
-            Shoot();
-            yield return shootSpeed;
+            if (plantType != PlantType.Melon)
+            {
+                Shoot();
+                yield return shootSpeed;
+            }
+            else
+            {
+                isShooting = true;
+                for (int i = 0; i < 5; i++)
+                {
+                    Shoot();
+                    yield return 0.2f;
+                }
+                yield return 1f;
+            }
         }
         isShooting = false;
     }
@@ -690,8 +701,31 @@ public class Plant : Actor
         Player player = SceneAs<Level>().Tracker.GetEntity<Player>();
         if (player != null)
         {
-            SceneAs<Level>().Add(Engine.Pooler.Create<Shot>().Init(this, player));
-            Audio.Play("event:/KoseiHelper/bullet", Center);
+            if (plantType == PlantType.Melon)
+            {
+                bulletType = "bulletSeed";
+                switch (plantDirection)
+                {
+                    case PlantDirection.Left:
+                        SceneAs<Level>().Add(Engine.Pooler.Create<Shot>().Init(this, CenterLeft, bulletType));
+                        break;
+                    case PlantDirection.Right:
+                        SceneAs<Level>().Add(Engine.Pooler.Create<Shot>().Init(this, CenterRight, bulletType));
+                        break;
+                    case PlantDirection.Down:
+                        SceneAs<Level>().Add(Engine.Pooler.Create<Shot>().Init(this, BottomCenter, bulletType));
+                        break;
+                    default:
+                        SceneAs<Level>().Add(Engine.Pooler.Create<Shot>().Init(this, TopCenter, bulletType));
+                        break;
+                }
+                Audio.Play("event:/KoseiHelper/bulletB", Center);
+            }
+            else
+            {
+                SceneAs<Level>().Add(Engine.Pooler.Create<Shot>().Init(this, player));
+                Audio.Play("event:/KoseiHelper/bullet", Center);
+            }
         }
     }
 
@@ -713,7 +747,17 @@ public class Plant : Actor
     {
         get
         {
-            return base.Center + sprite.Position + new Vector2(0f * sprite.Scale.X, -6f);
+            switch (plantDirection)
+            {
+                case PlantDirection.Down:
+                    return Center + sprite.Position + new Vector2(0f, 7f);
+                case PlantDirection.Left:
+                    return Center + sprite.Position + new Vector2(-7f, 0f);
+                case PlantDirection.Right:
+                    return Center + sprite.Position + new Vector2(7f, 0f);
+                default:
+                    return Center + sprite.Position + new Vector2(0f, -7f);
+            }
         }
     }
 

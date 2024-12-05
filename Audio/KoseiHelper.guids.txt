@@ -3,4 +3,5 @@
 {5378b6db-9e8a-4ac4-87de-5760cfc1f59e} event:/KoseiHelper/spawn
 {15ad16dd-88a5-422b-8a52-678fecbe9a28} event:/KoseiHelper/crackedwall_prebreak
 {182cf9dc-0163-4f46-836f-602378231718} event:/KoseiHelper/bullet
+{8ffb32e6-512f-41a9-a2c6-dbea0ac2765c} event:/KoseiHelper/bulletB
 {ba8e885e-d7ef-474b-9ea8-20ba14e4943e} bank:/KoseiHelper

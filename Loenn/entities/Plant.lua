@@ -62,7 +62,8 @@ Plant.fieldInformation = {
 			"Black",
 			"Jumping",
 			"Green",
-			"Red"
+			"Red",
+			"Melon"
 		},
 		editable = false
 	},
@@ -101,6 +102,9 @@ end
 function Plant.texture(room, entity)
 	local plantType = entity.plantType
 	local canShoot = entity.canShoot
+	if plantType == "Melon" then
+		return "objects/KoseiHelper/Plant/Melon00"
+	end
 	if not canShoot then
 		if plantType == "Jumping" then
 			return "objects/KoseiHelper/Plant/Jumping00"

@@ -64,10 +64,12 @@
 	<Loop id="GreenShootUp" path="GreenShootUp" delay="0.2" frames="00-01" />
 	<Loop id="RedShootDown" path="RedShootDown" delay="0.2" frames="00-01" />
 	<Loop id="RedShootUp" path="RedShootUp" delay="0.2" frames="00-01" />
+	<Loop id="Melon" path="Melon" delay="0.2" frames="00-01" />
   </koseiHelper_Plant>
   
   <koseiHelper_Bullet path="objects/KoseiHelper/Bullets/">
     <Justify x=".5" y=".5" />
     <Loop id="bulletRed" path="bulletRed" delay="0.06" frames="00-03"/>
+	<Loop id="bulletSeed" path="bulletSeed" delay="0.1" frames="00"/>
   </koseiHelper_Bullet>
 </Sprites>

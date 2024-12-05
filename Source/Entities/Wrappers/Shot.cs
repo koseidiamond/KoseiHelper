@@ -31,6 +31,7 @@ public class Shot : Entity
     private float cantKillTimer;
     private float appearTimer;
     private bool hasBeenInCamera;
+    private bool fireType = false;
     private SineWave sine;
     private float sineMult;
     private Sprite sprite;
@@ -43,7 +44,7 @@ public class Shot : Entity
         base.Depth = -1000000;
         Add(sine = new SineWave(1.4f, 0f));
     }
-    public Shot Init(Plant plant, Player target, float angleOffset = 0f)
+    public Shot Init(Plant plant, Player target, float angleOffset = 0f) // Fire seeds
     {
         this.plant = plant;
         anchor = (Position = new Vector2(plant.Center.X, plant.Top +8));
@@ -55,10 +56,11 @@ public class Shot : Entity
         sine.Reset();
         sineMult = 0f;
         sprite.Play("bulletRed", restart: true);
+        fireType = true;
         InitSpeed();
         return this;
     }
-    public Shot Init(Plant plant, Vector2 target)
+    public Shot Init(Plant plant, Vector2 target, string bulletType) // Melon seeds
     {
         this.plant = plant;
         anchor = (Position = new Vector2(plant.Center.X, plant.Top + 8));
@@ -70,7 +72,8 @@ public class Shot : Entity
         appearTimer = 0.1f;
         sine.Reset();
         sineMult = 0f;
-        sprite.Play("bulletRed", restart: true);
+        sprite.Play(bulletType, restart: true);
+        fireType = false;
         InitSpeed();
         return this;
     }
