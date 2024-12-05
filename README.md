@@ -6,6 +6,11 @@ All entities are customizable through Sprites.xml. Feel free to change the anima
 # Entities
 ### Goomba
 This entity follows the player horizontally, killing on contact, and can optionally be bounced on. It has several customizable options, including spawning mini versions each x seconds, flying away like strawberries, or be winged. They can also interact with springs.
+### Plant
+This entity can move in a cycle, move when the player gets near, or jump when the player is above, and works in all 4 directions. Optionally, it can also shoot. The bullets can melt Defrostable Blocks.
+The small plants (Black and Jumping) respond like normal Actors (which means they can be pushed by blocks or fall down).
+### Defrostable Block
+Ice blocks that melt when they come in contact with a bullet or if the Core Mode is hot.
 ### Mary Block
 Single-use flowers that launch you with more or less strength depending on the mode.
 ### Winged Key
