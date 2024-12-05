@@ -81,6 +81,28 @@ function Plant.scale(room, entity)
 	end
 end
 
+Plant.fieldOrder = {
+	"x",
+	"y",
+	"direction",
+	"plantType",
+	"movingSpeed",
+	"shootSpeed",
+	"distance",
+	"canShoot",
+	"cycleOffset"
+	}
+
+function Plant.ignoredFields(entity)
+	local ignored = {
+	"_name",
+	"_id",
+	"height",
+	"width"
+	}
+	return ignored
+end
+
 Plant.fieldInformation = {
 	plantType = {
 		options = {
