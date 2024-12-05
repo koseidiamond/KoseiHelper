@@ -72,4 +72,11 @@
     <Loop id="bulletRed" path="bulletRed" delay="0.06" frames="00-03"/>
 	<Loop id="bulletSeed" path="bulletSeed" delay="0.1" frames="00"/>
   </koseiHelper_Bullet>
+  
+  <koseiHelper_DefrostableBlock path="objects/KoseiHelper/DefrostableBlock/">
+	<Loop id="Big" path="Big" delay="0.1" frames="00"/>
+	<Loop id="Small" path="Small" delay="0.1" frames="00"/>
+	<Anim id="BigMelt" path="BigMelt" delay="0.05" frames="00-04"/>
+	<Anim id="SmallMelt" path="SmallMelt" delay="0.05" frames="00-04"/>
+  </koseiHelper_DefrostableBlock>
 </Sprites>

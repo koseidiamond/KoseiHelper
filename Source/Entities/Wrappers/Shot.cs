@@ -15,7 +15,7 @@ public class Shot : Entity
         Double,
         Triple
     }
-    public static ParticleType P_Trail;
+    public static ParticleType P_Trail = FinalBossShot.P_Trail;
     private const float MoveSpeed = 100f;
     private const float CantKillTime = 0.15f;
     private const float AppearTime = 0.1f;
@@ -103,6 +103,8 @@ public class Shot : Entity
         Level level = SceneAs<Level>();
         Player player = level.Tracker.GetEntity<Player>();
         base.Update();
+        if (CollideCheck<DefrostableBlock>())
+            RemoveSelf();
         if (appearTimer > 0f)
         {
             Position = (anchor = plant.ShotOrigin);
@@ -127,10 +129,10 @@ public class Shot : Entity
             {
                 Destroy();
             }
-            /*if (Scene.OnInterval(0.04f))
+            /*if (Scene.OnInterval(0.04f) && fireType)
             {
                 level.ParticlesFG.Emit(P_Trail, 1, Center, Vector2.One * 2f, particleDir);
-            }*/ //TODO For some reason the particle spawning crashes
+            }*/
         }
     }
     public override void Render()

@@ -3,7 +3,6 @@ using Monocle;
 using System;
 using Microsoft.Xna.Framework;
 using System.Collections;
-using static Celeste.GaussianBlur;
 
 namespace Celeste.Mod.KoseiHelper.Entities;
 
@@ -32,7 +31,7 @@ public class Plant : Actor
     public PlantType plantType;
     public PlantDirection plantDirection;
     public bool canShoot;
-    public float shootSpeed = 0f;
+    public float shootSpeed = 1f;
     public Vector2 Speed = Vector2.Zero;
     public bool moving;
     public string bulletType = "bulletRed";
@@ -51,7 +50,7 @@ public class Plant : Actor
         plantDirection = data.Enum("direction", PlantDirection.Up);
         movingSpeed = data.Float("movingSpeed", 1f);
         canShoot = data.Bool("canShoot", false);
-        shootSpeed = data.Float("shootSpeed", 1.5f);
+        shootSpeed = data.Float("shootSpeed", 1f);
         distance = data.Int("distance", 64);
         cycleOffset = data.Bool("cycleOffset", false);
         Depth = -100;
@@ -146,45 +145,46 @@ public class Plant : Actor
             if (plantDirection == PlantDirection.Left || plantDirection == PlantDirection.Right)
                 MoveH(Speed.X * Engine.DeltaTime * movingSpeed);
             switch (plantDirection)
-                {
-                    case PlantDirection.Down:
-                        // slight falling acceleration until it reaches max fastfall speed
-                        Speed.Y += Engine.DeltaTime * -160;
-                        Speed.Y = Calc.Clamp(Speed.Y, -180, 150);
-                        if (CollidingWithGround(TopCenter + new Vector2(0, -2)))
-                            sprite.Play("JumpingIdle");
-                        else
-                            sprite.Play("Jumping");
-                        break;
-                    case PlantDirection.Left:
-                        Speed.X += Engine.DeltaTime * 160;
-                        Speed.X = Calc.Clamp(Speed.X, -150, 180);
-                        if (CollidingWithGround(CenterRight + new Vector2(2, 0)))
-                            sprite.Play("JumpingIdle");
-                        else
-                            sprite.Play("Jumping");
-                        break;
-                    case PlantDirection.Right:
-                        Speed.X += Engine.DeltaTime * -160;
-                        Speed.X = Calc.Clamp(Speed.X, -180, 150);
-                        if (CollidingWithGround(CenterLeft + new Vector2(-2, 0)))
-                            sprite.Play("JumpingIdle");
-                        else
-                            sprite.Play("Jumping");
-                        break;
-                    default:
-                        Speed.Y += Engine.DeltaTime * 160;
-                        Speed.Y = Calc.Clamp(Speed.Y, -150, 180);
-                        if (CollidingWithGround(BottomCenter + new Vector2(0, 2)))
-                            sprite.Play("JumpingIdle");
-                        else
-                            sprite.Play("Jumping");
-                        break;
-                }
+            {
+                case PlantDirection.Down:
+                    // slight falling acceleration until it reaches max fastfall speed
+                    Speed.Y += Engine.DeltaTime * -160;
+                    Speed.Y = Calc.Clamp(Speed.Y, -180, 150);
+                    if (CollidingWithGround(TopCenter + new Vector2(0, -2)))
+                        sprite.Play("JumpingIdle");
+                    else
+                        sprite.Play("Jumping");
+                    break;
+                case PlantDirection.Left:
+                    Speed.X += Engine.DeltaTime * 160;
+                    Speed.X = Calc.Clamp(Speed.X, -150, 180);
+                    if (CollidingWithGround(CenterRight + new Vector2(2, 0)))
+                        sprite.Play("JumpingIdle");
+                    else
+                        sprite.Play("Jumping");
+                    break;
+                case PlantDirection.Right:
+                    Speed.X += Engine.DeltaTime * -160;
+                    Speed.X = Calc.Clamp(Speed.X, -180, 150);
+                    if (CollidingWithGround(CenterLeft + new Vector2(-2, 0)))
+                        sprite.Play("JumpingIdle");
+                    else
+                        sprite.Play("Jumping");
+                    break;
+                default:
+                    Speed.Y += Engine.DeltaTime * 160;
+                    Speed.Y = Calc.Clamp(Speed.Y, -150, 180);
+                    if (CollidingWithGround(BottomCenter + new Vector2(0, 2)))
+                        sprite.Play("JumpingIdle");
+                    else
+                        sprite.Play("Jumping");
+                    break;
+            }
             if (player != null)
             {
                 if (!player.JustRespawned && !player.IsIntroState && !isJumping)
-                { switch (plantDirection)
+                {
+                    switch (plantDirection)
                     {
                         case PlantDirection.Down:
                             if (player.Right > Left && player.Left < Right && player.Top > Top - Math.Abs(distance) && player.Bottom > Top &&
@@ -279,7 +279,7 @@ public class Plant : Actor
                         sprite.Play("GreenShootUp");
                     if (canShoot && player.CenterX > Left + 4)
                         sprite.Play("GreenShootDown");
-                        break;
+                    break;
                 case PlantDirection.Right:
                     if (player.Center.Y > Center.Y)
                         sprite.FlipX = true;
@@ -295,7 +295,7 @@ public class Plant : Actor
                         sprite.FlipX = false;
                     else
                         sprite.FlipX = true;
-                    if (canShoot && player.CenterY < Bottom -4)
+                    if (canShoot && player.CenterY < Bottom - 4)
                         sprite.Play("GreenShootDown");
                     if (canShoot && player.CenterY > Bottom - 4)
                         sprite.Play("GreenShootUp");
@@ -395,9 +395,9 @@ public class Plant : Actor
                         sprite.FlipX = true;
                     else
                         sprite.FlipX = false;
-                    if (canShoot && player.CenterY < Top +4)
+                    if (canShoot && player.CenterY < Top + 4)
                         sprite.Play("RedShootUp");
-                    if (canShoot && player.CenterY > Top +4)
+                    if (canShoot && player.CenterY > Top + 4)
                         sprite.Play("RedShootDown");
                     break;
             }
@@ -688,9 +688,9 @@ public class Plant : Actor
                 for (int i = 0; i < 5; i++)
                 {
                     Shoot();
-                    yield return 0.2f;
+                    yield return 0.2f * shootSpeed;
                 }
-                yield return 1f;
+                yield return 1f * shootSpeed;
             }
         }
         isShooting = false;
@@ -736,11 +736,6 @@ public class Plant : Actor
         {
             player.Die(Center);
         }
-    }
-
-    public override void Render()
-    {
-        base.Render();
     }
 
     public Vector2 ShotOrigin
