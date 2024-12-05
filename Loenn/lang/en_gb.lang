@@ -11,7 +11,7 @@ entities.KoseiHelper/Goomba.attributes.description.canBeBounced=If the goomba ca
 entities.KoseiHelper/Goomba.attributes.description.spawnMinis=If the goomba can spawn minigoombas.\n(Limited to 10 max)
 entities.KoseiHelper/Goomba.attributes.description.flyAway=If the winged goombas should fly away like strawberries when the player dashes.
 entities.KoseiHelper/Goomba.attributes.description.timeToSpawnMinis=Time that needs to pass after a minigoomba is spawned.
-entities.KoseiHelper/Goomba.attributes.description.dumb=If the goomba should always move in the same direction, determined by the speed sign.
+entities.KoseiHelper/Goomba.attributes.description.behavior=Chaser: The goomba walks towards the player.\nDumb: The goomba moves always in the same direction, determined by the speed sign.\nSmart: The goomba moves in the same direction, but changes its mind before falling if it detects a hole.
 entities.KoseiHelper/Goomba.attributes.description.gravityMultiplier=The vertical speed will be affected by this multiplier.
 
 # Plants
@@ -24,6 +24,13 @@ entities.KoseiHelper/Plant.attributes.description.distance=How close in pixels t
 entities.KoseiHelper/Plant.attributes.description.direction=If the plant should be affected by a different type of gravity or coming from a different direction.
 entities.KoseiHelper/Plant.attributes.description.movingSpeed=A multiplier for the speed at which the plant will move.
 entities.KoseiHelper/Plant.attributes.description.cycleOffset=If the plant is green, this determines whether the plant should wait 2 seconds before moving for the first time.
+
+#Defrostable Block
+entities.KoseiHelper/DefrostableBlock.placements.name.DefrostableBlock=DefrostableBlock
+entities.KoseiHelper/DefrostableBlock.placements.description.Defrostable Block=An ice block that melts when it comes in contact with a plant bullet or if Core Mode is hot.
+entities.KoseiHelper/DefrostableBlock.attributes.description.big=If the defrostable block should be 32x32 or 16x16.
+entities.KoseiHelper/DefrostableBlock.attributes.description.sprite=The sprite id that the block should use.\nYou can copy it from KoseiHelper/Graphics/Sprites.xml but make sure your xml path is unique.
+entities.KoseiHelper/DefrostableBlock.attributes.description.sound=The sound when it melts.
 
 # Mary Block
 entities.KoseiHelper/MaryBlock.placements.name.maryblock=Mary Block

@@ -15,7 +15,7 @@ Goomba.placements = {
 			spawnMinis = false,
 			timeToSpawnMinis = 1,
 			flyAway = true,
-			dumb = false,
+			behavior = "Chaser",
 			gravityMultiplier = 1
 		},
 	},
@@ -27,6 +27,14 @@ Goomba.fieldInformation = {
 	},
 	gravityMultiplier = {
 		minimumValue = 1.0
+	},
+	behavior = {
+		options = {
+			"Chaser",
+			"Dumb",
+			"Smart"
+		},
+		editable = false
 	}
 }
 

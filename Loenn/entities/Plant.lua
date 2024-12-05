@@ -37,7 +37,13 @@ function Plant.selection(room, entity)
 	if plantType == "Black" or plantType == "Jumping" then
 		return utils.rectangle(entity.x - width / 2, entity.y - height / 2, width, height)
 	else
-		if direction == "Down" and plantType ~= "Green" then
+		if direction == "Left" and plantType == "Melon" then
+			return utils.rectangle (entity.x - width / 2 - 8, entity.y - height + 8, width + 16, height)
+		elseif direction == "Up" and plantType == "Melon" then
+			return utils.rectangle (entity.x - width / 2, entity.y - height, width, height + 16)
+		elseif direction == "Down" and plantType == "Melon" then
+			return utils.rectangle (entity.x - width / 2, entity.y - height, width, height + 16)
+		elseif direction == "Down" and plantType ~= "Green" then
 			return utils.rectangle (entity.x - width / 2, entity.y - height +32, width, height + 16)
 		elseif direction == "Down" and plantType == "Green" then
 			return utils.rectangle (entity.x - width / 2, entity.y - height, width, height + 16)

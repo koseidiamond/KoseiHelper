@@ -6,6 +6,12 @@ using System.Collections;
 using System.Reflection.Metadata;
 
 namespace Celeste.Mod.KoseiHelper.Entities;
+public enum GoombaBehavior
+{
+    Chaser,
+    Dumb,
+    Smart
+}
 
 [CustomEntity("KoseiHelper/Goomba")]
 [Tracked]
@@ -17,7 +23,7 @@ public class Goomba : Actor
     private Collision onCollideH = null;
     private Collision onCollideV = null;
     public float speedX = 50;
-    public bool dumb;
+    public GoombaBehavior behavior;
     public float originalSpeedX;
     public float speedY;
     public bool outline;
@@ -49,7 +55,7 @@ public class Goomba : Actor
         canBeBounced = data.Bool("canBeBounced", true);
         canSpawnMinis = data.Bool("spawnMinis", true);
         flyAway = data.Bool("flyAway", true);
-        dumb = data.Bool("dumb", false);
+        behavior = data.Enum("behavior", GoombaBehavior.Chaser);
         timeToSpawnMinis = data.Float("timeToSpawnMinis", 1);
         gravityMult = data.Float("gravityMultiplier", 1f);
         if (!isWide)
@@ -114,9 +120,9 @@ public class Goomba : Actor
     public override void Update()
     {
         Level level = SceneAs<Level>();
-        if (Scene.OnInterval(timeToSpawnMinis) && canSpawnMinis && minisSpawned <10)
+        if (Scene.OnInterval(timeToSpawnMinis) && canSpawnMinis && minisSpawned < 10)
         {
-            this.Scene.Add(new Goomba(new Vector2(this.Position.X, this.Position.Y + 6), originalSpeedX + originalSpeedX/4, false, false, false, true));
+            this.Scene.Add(new Goomba(new Vector2(this.Position.X, this.Position.Y + 6), originalSpeedX + originalSpeedX / 4, false, false, false, true));
             minisSpawned += 1;
         }
         if (speedX != 0)
@@ -127,20 +133,20 @@ public class Goomba : Actor
                     sprite.Play("winged");
             else
                 if (!isWinged)
-                    sprite.Play("widewalk");
-                else
-                    sprite.Play("widewinged");
+                sprite.Play("widewalk");
+            else
+                sprite.Play("widewinged");
         else
             if (!isWide)
-                if (!isWinged)
-                    sprite.Play("idle");
-                else
-                    sprite.Play("wingedidle");
+            if (!isWinged)
+                sprite.Play("idle");
             else
-                if (!isWinged)    
-                    sprite.Play("wideidle");
-                else
-                    sprite.Play("widewingedidle");
+                sprite.Play("wingedidle");
+        else
+                if (!isWinged)
+            sprite.Play("wideidle");
+        else
+            sprite.Play("widewingedidle");
 
         speedY = Math.Min(speedY * 0.6f, 0f);
         if (speedX != 0f && speedY == 0f && !isWinged)
@@ -153,14 +159,19 @@ public class Goomba : Actor
         float num2 = 350f;
         if (speedY < 0f)
             num2 *= 0.5f;
-        speedX = Calc.Approach(speedX, originalSpeedX, Math.Abs(speedX) > Math.Abs (originalSpeedX) ? num2 * Engine.DeltaTime : num2 * Engine.DeltaTime * 2);
+        speedX = Calc.Approach(speedX, originalSpeedX, Math.Abs(speedX) > Math.Abs(originalSpeedX) ? num2 * Engine.DeltaTime : num2 * Engine.DeltaTime * 2);
         if (noGravityTimer > 0f)
             noGravityTimer -= Engine.DeltaTime;
         else
             speedY = Calc.Approach(speedY, 200f, num * Engine.DeltaTime);
+        if (behavior == GoombaBehavior.Smart)
+        {
+            if ((walkDirection > 0 && !CollidingWithGround(Position + new Vector2(8, 2)) || walkDirection < 0 && !CollidingWithGround(Position + new Vector2(-8, 2))))
+                walkDirection = -walkDirection;
+        }
         if (Scene.Tracker.GetEntity<Player>() != null)
         {
-            if (!dumb)
+            if (behavior == GoombaBehavior.Chaser)
             {
                 walkDirection = (int)(Scene.Tracker.GetEntity<Player>().Position.X - this.Position.X);
                 MoveH(speedX * Math.Sign(walkDirection) * Engine.DeltaTime, onCollideH);
@@ -254,9 +265,9 @@ public class Goomba : Actor
         if (spring.Orientation == Spring.Orientations.WallLeft)
         {
             MoveTowardsY(spring.CenterY + 5f, 4f);
-            if (!dumb)
+            if (behavior == GoombaBehavior.Chaser)
                 speedX = -220f;
-            if (dumb)
+            if (behavior != GoombaBehavior.Chaser)
             {
                 speedX = 220f;
                 walkDirection = -walkDirection;
@@ -268,9 +279,9 @@ public class Goomba : Actor
         if (spring.Orientation == Spring.Orientations.WallRight)
         {
             MoveTowardsY(spring.CenterY + 5f, 4f);
-            if (!dumb)
+            if (behavior == GoombaBehavior.Chaser)
             speedX = -220f;
-            if (dumb)
+            if (behavior != GoombaBehavior.Chaser)
             {
                 speedX = 220f;
                 walkDirection = -walkDirection;
@@ -305,5 +316,10 @@ public class Goomba : Actor
         tween = Tween.Create(Tween.TweenMode.Oneshot, null, 0.5f, start: true);
         tween.OnUpdate = (Tween t) => { flapSpeed = MathHelper.Lerp(0f, -200f, t.Eased); };
         Add(tween);
+    }
+
+    private bool CollidingWithGround(Vector2 position)
+    {
+        return CollideCheckOutside<Solid>(position) || CollideCheckOutside<Platform>(position);
     }
 }
