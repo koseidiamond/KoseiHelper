@@ -27,7 +27,7 @@ public class AutoscrollerController : Entity
     public AutoscrollerMode autoscrollerMode = AutoscrollerMode.SafePush;
     private Vector2 target;
     public CameraDirection cameraDirection = CameraDirection.Right;
-    private InvisibleBarrier upperBound, leftBound, rightBound;
+    private InvisibleBarrier lowerBound, upperBound, leftBound, rightBound;
     private bool addedBarrier;
     public AutoscrollerController(EntityData data, Vector2 offset) : base(data.Position + offset)
     {
@@ -43,19 +43,7 @@ public class AutoscrollerController : Entity
         Player player = level.Tracker.GetEntity<Player>();
         if (player != null)
         {
-            switch (cameraDirection)
-            {
-                case CameraDirection.Up:
-                    break;
-                case CameraDirection.Down:
-                    break;
-                case CameraDirection.Left:
-                    target = new Vector2(player.Position.X - 160, player.Position.Y - 90);
-                    break;
-                default:
-                    target = new Vector2(player.Position.X - 160, player.Position.Y - 90);
-                    break;
-            }
+            target = new Vector2(player.Position.X - 160, player.Position.Y - 90);
         }
     }
 
@@ -69,8 +57,60 @@ public class AutoscrollerController : Entity
             switch (cameraDirection)
             {
                 case CameraDirection.Up:
+                    if (player.CameraAnchor.Y > level.Bounds.Top)
+                        target -= new Vector2(0, speed / 60);
+                    player.CameraAnchor = target;
+                    player.CameraAnchorLerp = Vector2.One;
+                    switch (autoscrollerMode)
+                    {
+                        case AutoscrollerMode.ImmediateDeath:
+                            if (player.Position.Y > player.CameraAnchor.Y + 196)
+                                player.Die(player.BottomCenter);
+                            break;
+                        case AutoscrollerMode.SafePush:
+                            if (player.Position.Y > player.CameraAnchor.Y + 196)
+                                player.PointBounce(new Vector2(player.CenterX, player.Bottom));
+                            break;
+                        default:
+                            if (!addedBarrier)
+                            {
+                                Scene.Add(lowerBound = new InvisibleBarrier(new Vector2(player.CameraAnchor.X, player.CameraAnchor.Y + 200f), 320, 8));
+                                addedBarrier = true;
+                            }
+                            if (lowerBound != null)
+                                lowerBound.MoveTo(new Vector2(player.CameraAnchor.X, player.CameraAnchor.Y + 200f));
+                            break;
+                    }
                     break;
                 case CameraDirection.Down:
+                    if (player.CameraAnchor.Y < level.Bounds.Bottom)
+                        target += new Vector2(0, speed / 60);
+                    player.CameraAnchor = target;
+                    player.CameraAnchorLerp = Vector2.One;
+                    switch (autoscrollerMode)
+                    {
+                        case AutoscrollerMode.ImmediateDeath:
+                            if (player.Position.Y < player.CameraAnchor.Y -16)
+                                player.Die(player.TopCenter);
+                            break;
+                        case AutoscrollerMode.SafePush:
+                            if (player.Position.Y < player.CameraAnchor.Y - 16)
+                            {
+                                player.Position.Y = player.CameraAnchor.Y - 16;
+                                player.Duck();
+                                player.Ducking = true;
+                            }
+                            break;
+                        default:
+                            if (!addedBarrier)
+                            {
+                                Scene.Add(upperBound = new InvisibleBarrier(new Vector2(player.CameraAnchor.X, player.CameraAnchor.Y - 20f), 320, 8));
+                                addedBarrier = true;
+                            }
+                            if (upperBound != null)
+                                upperBound.MoveTo(new Vector2(player.CameraAnchor.X, player.CameraAnchor.Y - 20f));
+                            break;
+                    }
                     break;
                 case CameraDirection.Left:
                     if (player.CameraAnchor.X > level.Bounds.Left)
@@ -94,14 +134,11 @@ public class AutoscrollerController : Entity
                                 addedBarrier = true;
                             }
                             if (rightBound != null)
-                            {
-                                float xPos = player.CameraAnchor.X + 340f;
                                 rightBound.MoveTo(new Vector2(player.CameraAnchor.X + 332f, player.CameraAnchor.Y - 8f));
-                            }
                             break;
                     }
                     break;
-                default:
+                default: //Right
                     if (player.CameraAnchor.X < level.Bounds.Right)
                         target += new Vector2(1 * speed/60, 0);
                     player.CameraAnchor = target;
@@ -123,15 +160,12 @@ public class AutoscrollerController : Entity
                                 addedBarrier = true;
                             }
                             if (leftBound != null)
-                            {
-                                float xPos = player.CameraAnchor.X - 20f;
                                 leftBound.MoveTo(new Vector2(player.CameraAnchor.X -20f, player.CameraAnchor.Y -8f));
-                            }
                                 break;
                     }
                     break;
             }
-            if (player.Top > player.CameraAnchor.Y + 184)
+            if (player.Top > player.CameraAnchor.Y + 184 && !(cameraDirection == CameraDirection.Up && autoscrollerMode != AutoscrollerMode.ImmediateDeath))
                 player.Die(player.BottomCenter);
         }
     }
