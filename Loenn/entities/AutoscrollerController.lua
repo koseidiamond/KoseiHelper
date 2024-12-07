@@ -2,7 +2,6 @@ local AutoscrollerController = {}
 
 AutoscrollerController.name = "KoseiHelper/AutoscrollerController"
 AutoscrollerController.depth = -9500
-AutoscrollerController.texture = "objects/KoseiHelper/Controllers/AutoscrollerController"
 AutoscrollerController.placements = {
 	{
 		name = "Autoscroller Controller",
@@ -20,7 +19,7 @@ AutoscrollerController.fieldInformation = {
 		editable = false
 	},
 	pushMode = {
-		options = {"PushNCrush", "ImmediateDeath"},
+		options = {"PushNCrush", "ImmediateDeath", "SafePush"},
 		editable = false
 	},
 	speed = {
@@ -28,5 +27,18 @@ AutoscrollerController.fieldInformation = {
 		minimumValue = 1
 	}
 }
+
+function AutoscrollerController.texture(room, entity)
+    local cameraDirection = entity.cameraDirection
+    if cameraDirection == "Up" then
+        return "objects/KoseiHelper/Controllers/AutoscrollerControllerUp"
+    elseif cameraDirection == "Down" then
+        return "objects/KoseiHelper/Controllers/AutoscrollerControllerDown"
+	elseif cameraDirection == "Left" then
+        return "objects/KoseiHelper/Controllers/AutoscrollerControllerLeft"
+	else
+		return "objects/KoseiHelper/Controllers/AutoscrollerControllerRight"
+    end
+end
 
 return AutoscrollerController
