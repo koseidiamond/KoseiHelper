@@ -64,12 +64,15 @@ public class AutoscrollerController : Entity
                     switch (autoscrollerMode)
                     {
                         case AutoscrollerMode.ImmediateDeath:
-                            if (player.Position.Y > player.CameraAnchor.Y + 196)
+                            if (player.Position.Y > player.CameraAnchor.Y + 204)
                                 player.Die(player.BottomCenter);
                             break;
                         case AutoscrollerMode.SafePush:
                             if (player.Position.Y > player.CameraAnchor.Y + 196)
+                            {
                                 player.PointBounce(new Vector2(player.CenterX, player.Bottom));
+                                Audio.Play("event:/game/general/assist_screenbottom");
+                            }
                             break;
                         default:
                             if (!addedBarrier)
@@ -90,16 +93,12 @@ public class AutoscrollerController : Entity
                     switch (autoscrollerMode)
                     {
                         case AutoscrollerMode.ImmediateDeath:
-                            if (player.Position.Y < player.CameraAnchor.Y -16)
+                            if (player.Position.Y < player.CameraAnchor.Y - 16)
                                 player.Die(player.TopCenter);
                             break;
                         case AutoscrollerMode.SafePush:
                             if (player.Position.Y < player.CameraAnchor.Y - 16)
-                            {
                                 player.Position.Y = player.CameraAnchor.Y - 16;
-                                player.Duck();
-                                player.Ducking = true;
-                            }
                             break;
                         default:
                             if (!addedBarrier)
@@ -165,7 +164,7 @@ public class AutoscrollerController : Entity
                     }
                     break;
             }
-            if (player.Top > player.CameraAnchor.Y + 184 && !(cameraDirection == CameraDirection.Up && autoscrollerMode != AutoscrollerMode.ImmediateDeath))
+            if (player.Top > player.CameraAnchor.Y + 184 && cameraDirection != CameraDirection.Up)
                 player.Die(player.BottomCenter);
         }
     }
