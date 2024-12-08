@@ -30,6 +30,7 @@ Allows customization of the Pause Menu, disabling Retry, Save&Quit, disable paus
 ### Autoscroller Controller
 This controller moves the camera in the specified direction as soon as the player starts moving. The player can be killed or pushed (safely or not) if they get behind the camera.
 If the speed is changed, the parts of the screen where the player is forced to stay can have an offset due to the camera movement, so it's recommended to adjust the offsets or the Camera Catchup Speed.
+Multiple autoscrollers on the same room, inverted gravity or zoom out are not supported.
 ### Balls
 **Puffer balls** and **Spring balls** are a combination of Snowballs and Puffers/Springs. They are customizable, supporting all 4 directions, sine variations, flags, offsets, and multiple of them per screen.
 Additionally, spring balls have some visual options and can track Theo instead.
