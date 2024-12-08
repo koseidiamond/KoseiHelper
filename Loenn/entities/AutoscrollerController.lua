@@ -8,7 +8,10 @@ AutoscrollerController.placements = {
 		data = {
 		speed = 60,
 		cameraDirection = "Right",
-		pushMode = "PushNCrush"
+		pushMode = "PushNCrush",
+		behindOffset = 0,
+		aheadOffset = 0,
+		flag = ""
 		}
 	}
 }
@@ -24,8 +27,11 @@ AutoscrollerController.fieldInformation = {
 	},
 	speed = {
 		fieldType = "integer",
-		minimumValue = 1
-	}
+		minimumValue = 1,
+		allowEmpty = false
+	},
+	behindOffset = { fieldType = "integer" },
+	aheadOffset = { fieldType = "integer" }
 }
 
 function AutoscrollerController.texture(room, entity)
@@ -40,5 +46,16 @@ function AutoscrollerController.texture(room, entity)
 		return "objects/KoseiHelper/Controllers/AutoscrollerControllerRight"
     end
 end
+
+AutoscrollerController.fieldOrder = {
+	"x",
+	"y",
+	"cameraDirection",
+	"pushMode",
+	"speed",
+	"flag",
+	"behindOffset",
+	"aheadOffset"
+}
 
 return AutoscrollerController

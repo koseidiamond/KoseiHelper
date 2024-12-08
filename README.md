@@ -15,6 +15,8 @@ Ice blocks that melt when they come in contact with a bullet or if the Core Mode
 Single-use flowers that launch you with more or less strength depending on the mode.
 ### Winged Key
 They function as normal keys but they can fly away like winged strawberries at a customizable speed.
+### Oshiro Doors
+Oshiro/ghost doors that are slightly bouncy but have more options (mainly visual/sfx and the option to always refill a dash, being one use, or bounce slightly differently). They come in two flavors: sprite or tileset.
 ### Custom Temple Cracked Block
 The red blocks in chapter 5 that can be broken by seekers, but allowing custom visuals (debris, texture and tint), sounds, and health (requiring x number of hits to be destroyed).
 ### Tile Refill
@@ -25,12 +27,13 @@ Outbound refills allow the player to escape the current screen. Inbound refills 
 Sets flags depending on the time of the day, day and month. For example, if it's 17:00, November 18th, the flags `kosei_irlHour17`, `kosei_irlDay18` and `kosei_irlMonth11` will be set. It also sets the flags `kosei_irlMorning`, `kosei_irlAfternoon` and `kosei_irlNight`. It also has an option to adapt the darkness of the room to the current hour.
 ### Custom Pause Controller
 Allows customization of the Pause Menu, disabling Retry, Save&Quit, disable pausing, killing player after pausing, or preventing the timer from running on rooms with the controller.
+### Autoscroller Controller
+This controller moves the camera in the specified direction as soon as the player starts moving. The player can be killed or pushed (safely or not) if they get behind the camera.
+If the speed is changed, the parts of the screen where the player is forced to stay can have an offset due to the camera movement, so it's recommended to adjust the offsets or the Camera Catchup Speed.
 ### Balls
 **Puffer balls** and **Spring balls** are a combination of Snowballs and Puffers/Springs. They are customizable, supporting all 4 directions, sine variations, flags, offsets, and multiple of them per screen.
 Additionally, spring balls have some visual options and can track Theo instead.
 *Note: Unlike controller entities, the position of these entities determines where they will first appear on the chosen axis.*
-### Oshiro Doors
-Oshiro/ghost doors that are slightly bouncy but have more options (mainly visual/sfx and the option to always refill a dash, being one use, or bounce slightly differently). They come in two flavors: sprite or tileset.
 ### Entity Spawner
 The **Entity Spawner Controllers** allow you to spawn different types of entities on a certain position when a condition is met. They are highly customizable.
 - You can specify the position where the entity will spawn. This position can be relative to the player (always left/right) or adjust to the facing (in front of/behind). Noded entities (like swap blocks) also support these settings for the node.

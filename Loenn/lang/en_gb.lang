@@ -138,10 +138,13 @@ entities.KoseiHelper/PufferBall.attributes.description.flag=The flag that needs 
 
 #Autoscroller Controller
 entities.KoseiHelper/AutoscrollerController.placements.name.AutoscrollerController=Autoscroller Controller
-entities.KoseiHelper/AutoscrollerController.placements.description.Autoscroller Controller=The camera will autoscroll in the direction chosen until reaching the end of the room, as soon as the player starts moving.\nIt's recommended to leave a camera offset of 0 for the axis that is going to be scrolled.
-entities.KoseiHelper/AutoscrollerController.attributes.description.speed=The speed that the camera will scroll at, in pixels per second. You might want to increase the Camera Catchup Speed (or set it to instant) if you change the speed too much.
-entities.KoseiHelper/AutoscrollerController.attributes.description.pushMode=PushNCrush: The player will be pushed, but will be crushed and die if there is a solid. Other Actors (like holdables) will be pushed too.\nImmediateDeath: The player will die if they are behind the screen.\nIn all modes, the player will die if they are below the bottom of the screen.
+entities.KoseiHelper/AutoscrollerController.placements.description.Autoscroller Controller=The camera will autoscroll in the direction chosen until reaching the end of the room, as soon as the player starts moving.\nIt's recommended to leave a camera offset of 0 for the axis that is going to be scrolled.\nMultiple controllers on the same screen are not supported.
+entities.KoseiHelper/AutoscrollerController.attributes.description.speed=The speed that the camera will scroll at, in pixels per second. \nYou might want to increase the Camera Catchup Speed or adjust the offsets if you change the speed.
+entities.KoseiHelper/AutoscrollerController.attributes.description.pushMode=SafePush: The player will be pushed (or bounce if the camera is moving upwards) without dying, possibly getting stuck inside solids.\nPushNCrush: The player will be pushed, but will be crushed and die if there is a solid. Other Actors (like holdables) will be pushed too.\nImmediateDeath: The player will die if they are behind the screen.
 entities.KoseiHelper/AutoscrollerController.attributes.description.cameraDirection=The direction that the camera will move towards.
+entities.KoseiHelper/AutoscrollerController.attributes.description.behindOffset=Indicates the limits where the player will be pushed/killed if they are behind the camera, in pixels.
+entities.KoseiHelper/AutoscrollerController.attributes.description.aheadOffset=Indicates the limits where the player will be stopped if they are faster than the camera, in pixels.
+entities.KoseiHelper/AutoscrollerController.attributes.description.flag=The camera will only autoscroll while the flag is true. Leave empty for no flag required.
 
 # IRL Controller
 entities.KoseiHelper/IRLController.placements.name.IRLController=IRL Controller
@@ -230,3 +233,11 @@ triggers.KoseiHelper/ForceThrowTrigger.placements.description.Force Throw Trigge
 triggers.KoseiHelper/ForceHiccupTrigger.placements.name.ForceHiccupTrigger=Force Hiccup Trigger
 triggers.KoseiHelper/ForceHiccupTrigger.placements.description.Force Hiccup Trigger=The player will have a hiccup.
 triggers.KoseiHelper/ForceHiccupTrigger.attributes.description.triggerMode=If the trigger should activate when the player enters/leaves the trigger,\non a certain interval while the player is inside,\nwhen the beat/cycle of the cassette progresses,\nor whenever the flag specified becomes true.\nClose and open again with OnStay/OnFlag for an extra setting.
+
+#OOB Trigger
+triggers.KoseiHelper/OOBTrigger.placements.name.OOBTrigger=OOB Trigger
+triggers.KoseiHelper/OOBTrigger.placements.description.BoundTrigger=The trigger version of Bound Refills.\nAllows to enter the physical space of other rooms without transitioning to them.
+triggers.KoseiHelper/OOBTrigger.attributes.description.onlyOnce=If the trigger should disappear upon being activated.
+triggers.KoseiHelper/OOBTrigger.attributes.description.onExit=If the trigger should be enabled when the player enters or exits the trigger.
+triggers.KoseiHelper/OOBTrigger.attributes.description.inBound=If the player should be inbounded (forced to be in the same room where the trigger is placed),\nor outbounded (be unable to transition/escape the room).
+triggers.KoseiHelper/OOBTrigger.attributes.name.inBound=InBound
