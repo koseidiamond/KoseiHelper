@@ -65,6 +65,14 @@
     <PropertyGroup>
         <PathMap>$(MSBuildProjectDirectory)=KoseiHelper/</PathMap>
     </PropertyGroup>
+    
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+      <LangVersion>preview</LangVersion>
+    </PropertyGroup>
+    
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+      <LangVersion>preview</LangVersion>
+    </PropertyGroup>
 
     <!-- Inline task used to create a .zip for the mod -->
     <UsingTask TaskName="PackageMod" TaskFactory="RoslynCodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">

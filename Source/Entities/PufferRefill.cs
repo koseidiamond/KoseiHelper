@@ -3,137 +3,246 @@ using Monocle;
 using System;
 using Microsoft.Xna.Framework;
 using System.Collections;
+using System.ComponentModel;
 
 namespace Celeste.Mod.KoseiHelper.Entities;
 
 [CustomEntity("KoseiHelper/PufferRefill")]
+[Tracked]
 public class PufferRefill : Entity
 {
-    public static ParticleType P_Shatter = Refill.P_ShatterTwo;
-    public static ParticleType P_Regen = Refill.P_RegenTwo;
-    public static ParticleType P_Glow = Refill.P_GlowTwo;
-    private readonly BloomPoint bloom;
-    private readonly VertexLight light;
-    private readonly SineWave sine;
-    public Sprite sprite;
-    private readonly bool outBound;
-    public bool outline;
-    public float respawnTimer;
-    public bool hasPufferDash;
-    public bool oneUse;
-
-    public PufferRefill(EntityData data, Vector2 offset) : base(data.Position + offset)
+    private static Coroutine PufferEndDelayCoroutine;
+    public static ParticleType P_Shatter;
+    public static ParticleType P_Regen;
+    public static ParticleType P_Glow;
+    public static ParticleType P_ShatterTwo;
+    public static ParticleType P_RegenTwo;
+    public static ParticleType P_GlowTwo;
+    private Sprite sprite;
+    private Sprite flash;
+    private Image outline;
+    private Wiggler wiggler;
+    private BloomPoint bloom;
+    private VertexLight light;
+    private Level level;
+    private SineWave sine;
+    private bool twoDashes;
+    private bool oneUse;
+    private ParticleType p_shatter;
+    private ParticleType p_regen;
+    private ParticleType p_glow;
+    private float respawnTimer;
+    public PufferRefill(Vector2 position, bool oneUse) : base(position)
     {
         base.Collider = new Hitbox(16f, 16f, -8f, -8f);
-        oneUse = data.Bool("oneUse", false);
-        Add(new PlayerCollider(OnPlayer));
-        Add(sprite = GFX.SpriteBank.Create("koseiHelper_boundRefill"));
-        sprite.Play("InBound");
-        Add(new MirrorReflection());
-        Add(bloom = new BloomPoint(0.5f, 16f));
-        Add(light = new VertexLight(Color.White, 0.5f, 16, 48));
-        Add(sine = new SineWave(0.6f, 0f));
-        sine.Randomize();
-        UpdateY();
+        base.Add(new PlayerCollider(new Action<Player>(this.OnPlayer), null, null));
+        this.oneUse = oneUse;
+        string str;
+        str = "objects/KoseiHelper/Refills/PufferRefill/";
+        this.p_shatter = Refill.P_Shatter;
+        this.p_regen = Refill.P_Regen;
+        this.p_glow = Refill.P_Glow;
+        base.Add(this.outline = new Image(GFX.Game[str + "outline"]));
+        this.outline.CenterOrigin();
+        this.outline.Visible = false;
+        base.Add(this.sprite = new Sprite(GFX.Game, str + "idle"));
+        this.sprite.AddLoop("idle", "", 0.1f);
+        this.sprite.Play("idle", false, false);
+        this.sprite.CenterOrigin();
+        base.Add(this.flash = new Sprite(GFX.Game, str + "flash"));
+        this.flash.Add("flash", "", 0.05f);
+        this.flash.OnFinish = delegate (string anim)
+        {
+            this.flash.Visible = false;
+        };
+        this.flash.CenterOrigin();
+        base.Add(this.wiggler = Wiggler.Create(1f, 4f, delegate (float v)
+        {
+            this.sprite.Scale = (this.flash.Scale = Vector2.One * (1f + v * 0.2f));
+        }, false, false));
+        base.Add(new MirrorReflection());
+        base.Add(this.bloom = new BloomPoint(0.8f, 16f));
+        base.Add(this.light = new VertexLight(Color.White, 1f, 16, 48));
+        base.Add(this.sine = new SineWave(0.6f, 0f));
+        this.sine.Randomize();
+        this.UpdateY();
         base.Depth = -100;
     }
-
+    public PufferRefill(EntityData data, Vector2 offset) : this(data.Position + offset, data.Bool("oneUse", false))
+    {
+    }
+    public override void Added(Scene scene)
+    {
+        base.Added(scene);
+        this.level = base.SceneAs<Level>();
+    }
     public override void Update()
     {
         base.Update();
-        Level level = SceneAs<Level>();
-        Player player = level.Tracker.GetEntity<Player>();
-        if (respawnTimer > 0f)
+        bool flag = this.respawnTimer > 0f;
+        if (flag)
         {
-            respawnTimer -= Engine.DeltaTime;
-            if (respawnTimer <= 0f)
-                Respawn();
-        }
-        if (base.Scene.OnInterval(0.1f))
-        {
-            level.ParticlesFG.Emit(P_Glow, 1, Position, Vector2.One * 5f);
-        }
-        UpdateY();
-        light.Alpha = Calc.Approach(light.Alpha, sprite.Visible ? 1f : 0f, 4f * Engine.DeltaTime);
-        bloom.Alpha = light.Alpha * 0.8f;
-        if (player != null)
-        {
-
-            Logger.Debug(nameof(KoseiHelperModule), $"StartedDashing {player.StartedDashing} DashDir {player.DashDir} explodePos {player.Center - 8 * player.DashDir}");
-            if (player.StartedDashing && hasPufferDash)
+            this.respawnTimer -= Engine.DeltaTime;
+            bool flag2 = this.respawnTimer <= 0f;
+            if (flag2)
             {
-                Add(new Coroutine(PufferDash(player)));
+                this.Respawn();
             }
         }
+        else
+        {
+            bool flag3 = base.Scene.OnInterval(0.1f);
+            if (flag3)
+            {
+                this.level.ParticlesFG.Emit(BadelineBoost.P_Ambience, 1, this.Position, Vector2.One * 5f);
+            }
+        }
+        this.UpdateY();
+        this.light.Alpha = Calc.Approach(this.light.Alpha, this.sprite.Visible ? 1f : 0f, 4f * Engine.DeltaTime);
+        this.bloom.Alpha = this.light.Alpha * 0.8f;
+        bool flag4 = base.Scene.OnInterval(2f) && this.sprite.Visible;
+        if (flag4)
+        {
+            this.flash.Play("flash", true, false);
+            this.flash.Visible = true;
+        }
     }
-
+    private void Respawn()
+    {
+        bool flag = !this.Collidable;
+        if (flag)
+        {
+            this.Collidable = true;
+            this.sprite.Visible = true;
+            this.outline.Visible = false;
+            base.Depth = -100;
+            this.wiggler.Start();
+            Audio.Play(this.twoDashes ? "event:/new_content/game/10_farewell/pinkdiamond_return" : "event:/game/general/diamond_return", this.Position);
+            this.level.ParticlesFG.Emit(BadelineBoost.P_Move, 16, this.Position, Vector2.One * 2f);
+        }
+    }
     private void UpdateY()
     {
-        Sprite obj = sprite;
-        float num = (bloom.Y = sine.Value * 2f);
-        float y = (obj.Y = num);
-        obj.Y = y;
+        this.flash.Y = (this.sprite.Y = (this.bloom.Y = this.sine.Value * 2f));
     }
-
     public override void Render()
     {
-        if (sprite.Visible)
+        bool visible = this.sprite.Visible;
+        if (visible)
         {
-            sprite.DrawOutline();
-
+            this.sprite.DrawOutline(1);
         }
         base.Render();
     }
-
     private void OnPlayer(Player player)
     {
-        Collidable = false;
-        Audio.Play("event:/new_content/game/10_farewell/pinkdiamond_touch", Position);
-        Input.Rumble(RumbleStrength.Medium, RumbleLength.Medium);
-        sprite.Play("NoBound");
-        Add(new Coroutine(RefillRoutine(player)));
-        player.RefillDash();
-        respawnTimer = 2.5f;
-        hasPufferDash = true;
-        if (oneUse)
-            ;//RemoveSelf();
+        if (KoseiHelperModule.Session.HasPufferDash == false)
+        {
+            Audio.Play(this.twoDashes ? "event:/new_content/game/10_farewell/pinkdiamond_touch" : "event:/game/general/diamond_touch", this.Position);
+            Input.Rumble(RumbleStrength.Medium, RumbleLength.Medium);
+            this.Collidable = false;
+            base.Add(new Coroutine(this.RefillRoutine(player), true));
+            player.UseRefill(false);
+            KoseiHelperModule.Session.HasPufferDash = true;
+            this.respawnTimer = 2.5f;
+        }
     }
-
     private IEnumerator RefillRoutine(Player player)
     {
         Celeste.Freeze(0.05f);
-        Level level = SceneAs<Level>();
         yield return null;
-        level.Shake();
-        sprite.Visible = false;
-        outline = true;
-        base.Depth = 8999;
+        this.level.Shake(0.3f);
+        this.sprite.Visible = (this.flash.Visible = false);
+        bool flag = !this.oneUse;
+        if (flag)
+        {
+            this.outline.Visible = true;
+        }
+        this.Depth = 8999;
         yield return 0.05f;
         float angle = player.Speed.Angle();
-        level.ParticlesFG.Emit(P_Shatter, 5, Position, Vector2.One * 4f, angle - (float)Math.PI / 2f);
-        level.ParticlesFG.Emit(P_Shatter, 5, Position, Vector2.One * 4f, angle + (float)Math.PI / 2f);
-        SlashFx.Burst(Position, angle);
+        this.level.ParticlesFG.Emit(Refill.P_ShatterTwo, 5, this.Position, Vector2.One * 4f, angle - 1.5707964f);
+        this.level.ParticlesFG.Emit(Refill.P_ShatterTwo, 5, this.Position, Vector2.One * 4f, angle + 1.5707964f);
+        SlashFx.Burst(this.Position, angle);
+        bool flag2 = this.oneUse;
+        if (flag2)
+        {
+            this.RemoveSelf();
+        }
+        yield break;
+    }
+    public static void Load()
+    {
+        On.Celeste.Player.Die += PufferDash;
+        On.Celeste.Player.DashEnd += PufferDashEnd;
+        On.Celeste.Player.DashBegin += PufferDashBegin;
+        On.Celeste.PlayerHair.GetHairColor += PufferDashHairColor;
+    }
+    public static void Unload()
+    {
+        On.Celeste.Player.Die -= PufferDash;
+        On.Celeste.Player.DashEnd -= PufferDashEnd;
+        On.Celeste.Player.DashBegin -= PufferDashBegin;
+        On.Celeste.PlayerHair.GetHairColor -= PufferDashHairColor;
     }
 
-    private void Respawn()
+    public static Color PufferDashHairColor(On.Celeste.PlayerHair.orig_GetHairColor orig, PlayerHair self, int index)
     {
-        Level level = SceneAs<Level>();
-        if (!Collidable)
+        if (KoseiHelperModule.Session.HasPufferDash)
         {
-            Collidable = true;
-            sprite.Visible = true;
-            outline = false;
-            base.Depth = -100;
-            Audio.Play("event:/new_content/game/10_farewell/pinkdiamond_return", Position);
-            level.ParticlesFG.Emit(P_Regen, 16, Position, Vector2.One * 2f);
+            return Color.FromNonPremultiplied(199, 137, 66, 255);
+        }
+        else
+        {
+            return orig(self, index);
+        }
+
+    }
+
+    private static PlayerDeadBody PufferDash(On.Celeste.Player.orig_Die orig, Player self, Vector2 direction, bool evenIfInvincible = false, bool registerDeathInStats = true)
+    {
+        if (!KoseiHelperModule.Session.PufferDashActive || evenIfInvincible)
+        {
+            KoseiHelperModule.Session.HasPufferDash = false;
+            KoseiHelperModule.Session.PufferDashActive = false;
+        }
+        return orig(self, direction, evenIfInvincible, registerDeathInStats);
+    }
+    private static void PufferDashBegin(On.Celeste.Player.orig_DashBegin orig, Player self)
+    {
+        if (KoseiHelperModule.Session.HasPufferDash)
+        {
+            Logger.Debug(nameof(KoseiHelperModule), $"About to pufferdash");
+            self.Add(new Coroutine(PufferExplode(self)));
+            KoseiHelperModule.Session.PufferDashActive = true;
+            PufferEndDelayCoroutine?.Cancel();
+            PufferEndDelayCoroutine?.RemoveSelf();
+        }
+        KoseiHelperModule.Session.HasPufferDash = false;
+        orig(self);
+    }
+    private static void PufferDashEnd(On.Celeste.Player.orig_DashEnd orig, Player self)
+    {
+        orig(self);
+        if (self.StateMachine.State != 2 && KoseiHelperModule.Session.PufferDashActive)
+        {
+            PufferEndDelayCoroutine = new Coroutine(PufferEndDelay());
+            self.Add(PufferEndDelayCoroutine);
         }
     }
-
-    public IEnumerator PufferDash(Player player)
+    private static IEnumerator PufferEndDelay()
     {
-        Level level = SceneAs<Level>();
-        hasPufferDash = false;
+        yield return 0.03f;
+        KoseiHelperModule.Session.PufferDashActive = false;
+    }
+
+    private static IEnumerator PufferExplode(Player player)
+    {
+        Logger.Debug(nameof(KoseiHelperModule), $"PufferDashed with DashDir {player.DashDir} so  the explodePos is {player.Center - 8 * player.DashDir}");
+        Level level = player.SceneAs<Level>();
+        player.ExplodeLaunch(player.Center - 2 * player.DashDir, false);
         Audio.Play("event:/new_content/game/10_farewell/puffer_splode");
+        yield return 0.01f;
         level.Shake();
         level.Displacement.AddBurst(player.Center - 8 * player.DashDir, 0.4f, 12f, 36f, 0.5f);
         level.Displacement.AddBurst(player.Center - 8 * player.DashDir, 0.4f, 24f, 48f, 0.5f);
@@ -144,11 +253,5 @@ public class PufferRefill : Entity
             level.Particles.Emit(Seeker.P_Regen, position, num);
         }
         yield return null;
-        player.ExplodeLaunch(player.Center - 2 * player.DashDir, false);
-    }
-
-    private class PufferStateComponent() : Component(false, false)
-    {
-        public PufferRefill puffered;
     }
 }
