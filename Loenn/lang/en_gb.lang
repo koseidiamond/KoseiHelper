@@ -79,8 +79,9 @@ entities.KoseiHelper/TilesetOshiroDoor.attributes.description.debris=If the oshi
 
 #Bound Refill
 entities.KoseiHelper/BoundRefill.placements.name.boundRefill=Bound Refill
-entities.KoseiHelper/BoundRefill.placements.description.Bound Refill=OutBound refills allow the player to never transition and be outside of the current room (and force the camera to follow the player).\nInBound refills allow the player to immediately transition to the room they are in ("bounded" again).\nWarning: being too far from a room will make you unable to grab or jump from walls!
+entities.KoseiHelper/BoundRefill.placements.description.Bound Refill=OutBound refills allow the player to never transition and be outside of the current room (and force the camera to follow the player).\nInBound refills allow the player to immediately transition to the room they are in ("bounded" again).
 entities.KoseiHelper/BoundRefill.attributes.description.outBound=If this is true, this will be an OutBound refill. These are generally placed inside a room.\nIf it's false, it will be an InBound refill. These are generally placed out of bounds, overlapping with a different room.
+entities.KoseiHelper/BoundRefill.attributes.description.climbFix=In vanilla, the player can't climb if they are to the left/right of the current screen.\nNot recommended to disable.\n(The refill with the highest ID determines if the player can climb outside the current room or not).
 
 #Tile Refill
 entities.KoseiHelper/TileRefill.placements.name.tileRefill=Tile Refill
@@ -237,7 +238,8 @@ triggers.KoseiHelper/ForceHiccupTrigger.attributes.description.triggerMode=If th
 #OOB Trigger
 triggers.KoseiHelper/OOBTrigger.placements.name.OOBTrigger=OOB Trigger
 triggers.KoseiHelper/OOBTrigger.placements.description.BoundTrigger=The trigger version of Bound Refills.\nAllows to enter the physical space of other rooms without transitioning to them.
+triggers.KoseiHelper/OOBTrigger.attributes.name.inBound=InBound
 triggers.KoseiHelper/OOBTrigger.attributes.description.onlyOnce=If the trigger should disappear upon being activated.
 triggers.KoseiHelper/OOBTrigger.attributes.description.onExit=If the trigger should be enabled when the player enters or exits the trigger.
 triggers.KoseiHelper/OOBTrigger.attributes.description.inBound=If the player should be inbounded (forced to be in the same room where the trigger is placed),\nor outbounded (be unable to transition/escape the room).
-triggers.KoseiHelper/OOBTrigger.attributes.name.inBound=InBound
+triggers.KoseiHelper/OOBTrigger.attributes.description.climbFix=In vanilla, the player can't climb if they are to the left/right of the current screen.\nNot recommended to disable.\n(The trigger with the highest ID determines if the player can climb outside the current room or not).

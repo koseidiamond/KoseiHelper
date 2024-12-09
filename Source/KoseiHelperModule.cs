@@ -1,6 +1,7 @@
 ﻿using MonoMod.ModInterop;
 using System;
 using Celeste.Mod.KoseiHelper.Entities;
+using Celeste.Mod.KoseiHelper.Triggers;
 
 namespace Celeste.Mod.KoseiHelper;
 
@@ -48,6 +49,8 @@ public class KoseiHelperModule : EverestModule {
         PufferBall.Load();
         CustomTempleCrackedBlock.Load();
         PufferRefill.Load();
+        BoundRefill.Load();
+        OOBTrigger.Load();
     }
 
     public override void Unload() {
@@ -55,5 +58,7 @@ public class KoseiHelperModule : EverestModule {
         PufferBall.Unload();
         CustomTempleCrackedBlock.Unload();
         PufferRefill.Unload();
+        BoundRefill.Unload();
+        OOBTrigger.Unload();
     }
 }

@@ -9,7 +9,8 @@ OOBTrigger.placements = {
 		data = {
 		onlyOnce = false,
 		onExit = false,
-		inBound = false
+		inBound = false,
+		climbFix = true
 		}
 	}
 }

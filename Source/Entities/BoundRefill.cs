@@ -19,6 +19,7 @@ public class BoundRefill : Entity
     private readonly bool outBound;
     public bool outline;
     public float respawnTimer;
+    private static bool climbFix;
 
     public BoundRefill (EntityData data, Vector2 offset) : base(data.Position + offset)
     {
@@ -27,7 +28,7 @@ public class BoundRefill : Entity
 
         //Read the custom properties from data
         outBound = data.Bool("outBound",true);
-
+        climbFix = data.Bool("climbFix", false);
         Add(sprite = GFX.SpriteBank.Create("koseiHelper_boundRefill"));
         if (outBound)
             sprite.Play("OutBound");
@@ -111,5 +112,27 @@ public class BoundRefill : Entity
         level.ParticlesFG.Emit(P_Shatter, 5, Position, Vector2.One * 4f, angle + (float)Math.PI / 2f);
         SlashFx.Burst(Position, angle);
         RemoveSelf();
+    }
+
+    public static void Load()
+    {
+        On.Celeste.Player.ClimbBoundsCheck += ClimbCheck;
+    }
+
+    public static void Unload()
+    {
+        On.Celeste.Player.ClimbBoundsCheck -= ClimbCheck;
+    }
+
+    private static bool ClimbCheck(On.Celeste.Player.orig_ClimbBoundsCheck orig, Player self, int dir)
+    {
+        if (climbFix)
+            return true;
+        else
+        {
+            if (self.Left + (float)(dir * 2) >= (float)self.level.Bounds.Left)
+                return self.Right + (float)(dir * 2) < (float)self.level.Bounds.Right;
+        }
+        return false;
     }
 }

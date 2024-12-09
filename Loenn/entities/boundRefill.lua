@@ -7,7 +7,8 @@ BoundRefill.placements = {
 	{
 		name = "Bound Refill",
 		data = {
-			outBound = true
+			outBound = true,
+			climbFix = true
 		}
 	}
 }
