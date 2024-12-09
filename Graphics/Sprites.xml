@@ -85,4 +85,20 @@
 	<Loop id="Normal" path="Normal" delay="0.1" frames="00"/>
 	<Loop id="Attack" path="Attack" delay="0.1" frames="00"/>
   </koseiHelper_Sun>
+  
+  <koseiHelper_player path="characters/player/KoseiHelper/">
+    <Origin x="16" y="32" />
+    <Anim id="sleepy_zeroDashes" path="sleepy_zeroDashes" frames="0" />
+	<Anim id="sleepy_twoDashes" path="sleepy_twoDashes" frames="0" />
+	<Anim id="sleepy_threeDashes" path="sleepy_threeDashes" frames="0" />
+	<Anim id="sleepy_fourDashes" path="sleepy_fourDashes" frames="0" />
+	<Anim id="sleepy_fiveDashes" path="sleepy_fiveDashes" frames="0" />
+    <Metadata>
+      <Frames path="sleepy_zeroDashes" hair=""/>
+	  <Frames path="sleepy_twoDashes" hair=""/>
+	  <Frames path="sleepy_threeDashes" hair=""/>
+	  <Frames path="sleepy_fourDashes" hair=""/>
+	  <Frames path="sleepy_fiveDashes" hair=""/>
+    </Metadata>
+  </koseiHelper_player>
 </Sprites>

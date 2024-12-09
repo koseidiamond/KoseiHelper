@@ -32,13 +32,49 @@ public class PufferRefill : Entity
     private ParticleType p_regen;
     private ParticleType p_glow;
     private float respawnTimer;
+    private string str;
     public PufferRefill(Vector2 position, bool oneUse) : base(position)
     {
         base.Collider = new Hitbox(16f, 16f, -8f, -8f);
         base.Add(new PlayerCollider(new Action<Player>(this.OnPlayer), null, null));
         this.oneUse = oneUse;
-        string str;
         str = "objects/KoseiHelper/Refills/PufferRefill/";
+        this.p_shatter = Refill.P_Shatter;
+        this.p_regen = Refill.P_Regen;
+        this.p_glow = Refill.P_Glow;
+        base.Add(this.outline = new Image(GFX.Game[str + "outline"]));
+        this.outline.CenterOrigin();
+        this.outline.Visible = false;
+        base.Add(this.sprite = new Sprite(GFX.Game, str + "idle"));
+        this.sprite.AddLoop("idle", "", 0.1f);
+        this.sprite.Play("idle", false, false);
+        this.sprite.Visible = false;
+        this.sprite.CenterOrigin();
+        base.Add(this.flash = new Sprite(GFX.Game, str + "flash"));
+        this.flash.Add("flash", "", 0.05f);
+        this.flash.OnFinish = delegate (string anim)
+        {
+            this.flash.Visible = false;
+        };
+        this.flash.CenterOrigin();
+        base.Add(this.wiggler = Wiggler.Create(1f, 4f, delegate (float v)
+        {
+            this.sprite.Scale = (this.flash.Scale = Vector2.One * (1f + v * 0.2f));
+        }, false, false));
+        base.Add(new MirrorReflection());
+        base.Add(this.bloom = new BloomPoint(0.8f, 16f));
+        base.Add(this.light = new VertexLight(Color.White, 1f, 16, 48));
+        base.Add(this.sine = new SineWave(0.6f, 0f));
+        this.sine.Randomize();
+        this.UpdateY();
+        base.Depth = -100;
+    }
+    public PufferRefill(EntityData data, Vector2 offset) : this(data.Position + offset, data.Bool("oneUse", false))
+    {
+        base.Collider = new Hitbox(16f, 16f, -8f, -8f);
+        base.Add(new PlayerCollider(new Action<Player>(this.OnPlayer), null, null));
+        this.oneUse = data.Bool("oneUse", false);
+        str = data.Attr("sprite", "objects/KoseiHelper/Refills/PufferRefill/");
         this.p_shatter = Refill.P_Shatter;
         this.p_regen = Refill.P_Regen;
         this.p_glow = Refill.P_Glow;
@@ -67,9 +103,6 @@ public class PufferRefill : Entity
         this.sine.Randomize();
         this.UpdateY();
         base.Depth = -100;
-    }
-    public PufferRefill(EntityData data, Vector2 offset) : this(data.Position + offset, data.Bool("oneUse", false))
-    {
     }
     public override void Added(Scene scene)
     {

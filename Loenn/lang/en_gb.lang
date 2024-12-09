@@ -133,6 +133,12 @@ entities.KoseiHelper/PufferBall.attributes.description.horizontalFix=Set to fals
 entities.KoseiHelper/PufferBall.attributes.description.offset=The offset that the puffers will spawn at, in pixels.\n(Vertical offset if moving horizontally, or horizontal offset if moving vertically)
 entities.KoseiHelper/PufferBall.attributes.description.flag=The flag that needs to be active for the puffers to start spawning.\nLeave empty for no flag required.
 
+#Puffer Refill
+entities.KoseiHelper/PufferRefill.placements.name.PufferRefill=Puffer Refill
+entities.KoseiHelper/PufferRefill.placements.description.PufferRefill=The player will be launched in the same direction they dash towards.
+entities.KoseiHelper/PufferRefill.attributes.description.sprite=The path to your custom sprite.\nIt needs flash and idle animations, an an outline image.
+entities.KoseiHelper/PufferRefill.attributes.description.oneUse=If the refill should be consumed upon use or respawn after a while.
+
 
 #CONTROLLERS
 
@@ -153,9 +159,19 @@ entities.KoseiHelper/IRLController.placements.description.IRLController=This con
 entities.KoseiHelper/IRLController.attributes.description.persistent=If the controller should persist after exiting the room.
 entities.KoseiHelper/IRLController.attributes.description.changesDarknessLevel=If the darkness level should adapt to the irl time.
 
-#Top Down View Controller
+# Top Down View Controller
 #entities.KoseiHelper/TopDownViewController.placements.name.TopDownViewController=Top Down View Controller
 #entities.KoseiHelper/TopDownViewController.placements.description.Top Down View Controller=This controller allows the player to move similarly to top-down view RPGs.
+
+# Sleepy Controller
+entities.KoseiHelper/SleepyController.placements.name.SleepyController=Sleepy Controller
+entities.KoseiHelper/SleepyController.placements.description.SleepyController=Similarly to the Hiccup variant, this makes the player to sleep on random intervals.\nNot compatible with skinmods.
+entities.KoseiHelper/SleepyController.attributes.description.minTime=The minimum time to wait until taking a nap.\nSet Min Time and Max Time to the same value for a consistent gameplay.
+entities.KoseiHelper/SleepyController.attributes.description.maxTime=The maximum time to wait until taking a nap.\nSet Min Time and Max Time to the same value for a consistent gameplay.
+entities.KoseiHelper/SleepyController.attributes.description.napTime=The time that the player will sleep on each nap.\nIt should be lower than the min/max values.
+entities.KoseiHelper/SleepyController.attributes.description.adjustHairColor=If the player should have the appropiate hair color while taking a nap.\nOtherwise it will default to the vanilla sprite (red hair).
+entities.KoseiHelper/SleepyController.attributes.description.cassetteSleep=The player will sleep at the rythm of the cassettes.\nThe min/max times will not be used if this is checked.
+
 
 # Custom Pause Controller
 entities.KoseiHelper/CustomPauseController.placements.name.CustomPauseController= Custom Pause Controller

@@ -25,7 +25,6 @@ public class OOBTrigger : Trigger
             if (!inBound)
             {
                 player.EnforceLevelBounds = false;
-                //player.ForceCameraUpdate = true;
             }
             else
                 player.EnforceLevelBounds = true;
@@ -42,7 +41,6 @@ public class OOBTrigger : Trigger
             if (!inBound)
             {
                 player.EnforceLevelBounds = false;
-                //player.ForceCameraUpdate = true;
             }
             else
                 player.EnforceLevelBounds = true;
