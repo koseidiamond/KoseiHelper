@@ -21,6 +21,19 @@ entities.KoseiHelper/MaryBlock.placements.description.Mary Block=These blocks bo
 entities.KoseiHelper/MaryBlock.attributes.description.potted=Potted Mary launches the player like puffers/bumpers.
 entities.KoseiHelper/MaryBlock.attributes.description.outline=If the sprite should be rendered with an outline.
 
+# Falling Platform
+entities.KoseiHelper/FallingPlatform.placements.name.FallingPlatform=Falling Platform
+entities.KoseiHelper/FallingPlatform.placements.name.FallingDonut=Falling Donut
+entities.KoseiHelper/FallingPlatform.placements.description.FallingPlatform=Jumpthrough that falls after standing on it for some time.
+entities.KoseiHelper/FallingPlatform.placements.description.FallingDonut=Connected 16x16 platforms that fall after standing on them for some time.
+entities.KoseiHelper/FallingPlatform.attributes.description.fallDelay=How much time the player can stand on top before it starts to fall.
+entities.KoseiHelper/FallingPlatform.attributes.description.texture=The texture of the falling platform/donut, relative to Gameplay/objects/jumpthru/.
+entities.KoseiHelper/FallingPlatform.attributes.description.surfaceIndex=The sound it should make while stepping on it.
+entities.KoseiHelper/FallingPlatform.attributes.description.fallSpeed=The speed while falling.
+entities.KoseiHelper/FallingPlatform.attributes.description.blockImage=Determines whether the entity should render as a normal jumpthru or as 16x16 blocks.
+entities.KoseiHelper/FallingPlatform.attributes.description.fallingSound=The sound the falling platform/donut should play when it starts to fall.
+
+
 # Plants
 entities.KoseiHelper/Plant.placements.name.Plant=Plant
 entities.KoseiHelper/Plant.placements.description.Plant=Mario Bros plants, coming in different shapes.

@@ -33,11 +33,34 @@ FallingPlatform.placements = {
 			width = 8,
             texture = "wood",
             surfaceIndex = -1,
-			fallDelay = 0.04,
-			fallSpeed = 150
+			fallDelay = 0.2,
+			fallSpeed = 150,
+			blockImage = false,
+			fallingSound = "event:/none"
+		}
+	},
+	{
+		name = "FallingDonut",
+		data = {
+			width = 16,
+            texture = "KoseiHelper/DonutBlock",
+            surfaceIndex = -1,
+			fallDelay = 0.2,
+			fallSpeed = 150,
+			blockImage = true,
+			fallingSound = "event:/none"
 		}
 	}
 }
+
+function FallingPlatform.ignoredFields(entity)
+	local ignored = {
+		"_name",
+		"_id",
+		"blockImage"
+		}
+	return ignored
+end
 
 function FallingPlatform.sprite(room, entity)
     local textureRaw = getTexture(entity)
@@ -45,37 +68,50 @@ function FallingPlatform.sprite(room, entity)
 
     local x, y = entity.x or 0, entity.y or 0
     local width = entity.width or 8
+    local blockImage = entity.blockImage or false
+
+    -- For blockImage true, use 16x16 blocks instead of 8x8 tiles
+    local spriteWidth = blockImage and 16 or 8
+    local spriteHeight = blockImage and 16 or 8
 
     local startX, startY = math.floor(x / 8) + 1, math.floor(y / 8) + 1
-    local stopX = startX + math.floor(width / 8) - 1
+    local stopX = startX + math.floor(width / spriteWidth) - 1
     local len = stopX - startX
 
     local sprites = {}
 
     for i = 0, len do
-        local quadX = 8
-        local quadY = 8
-
-        if i == 0 then
+        local quadX, quadY
+        if blockImage then
             quadX = 0
-            quadY = room.tilesFg.matrix:get(startX - 1, startY, "0") ~= "0" and 0 or 8
-
-        elseif i == len then
-            quadY = room.tilesFg.matrix:get(stopX + 1, startY, "0") ~= "0" and 0 or 8
-            quadX = 16
+            quadY = 0
+        else
+            if i == 0 then
+                quadX = 0
+                quadY = room.tilesFg.matrix:get(startX - 1, startY, "0") ~= "0" and 0 or 8
+            elseif i == len then
+                quadY = room.tilesFg.matrix:get(stopX + 1, startY, "0") ~= "0" and 0 or 8
+                quadX = 16
+            else
+                quadX = 8
+                quadY = 8
+            end
         end
-
         local sprite = drawableSpriteStruct.fromTexture(texture, entity)
-
         sprite:setJustification(0, 0)
-        sprite:addPosition(i * 8, 0)
-        sprite:useRelativeQuad(quadX, quadY, 8, 8)
+        sprite:addPosition(i * spriteWidth, 0)
+        if blockImage then
+            sprite:useRelativeQuad(0, 0, spriteWidth, spriteHeight)
+        else
+            sprite:useRelativeQuad(quadX, quadY, 8, 8)
+        end
 
         table.insert(sprites, sprite)
     end
 
     return sprites
 end
+
 
 function FallingPlatform.selection(room, entity)
     return utils.rectangle(entity.x, entity.y, entity.width, 8)
