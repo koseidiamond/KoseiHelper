@@ -9,8 +9,8 @@ MaryBlock.placements = {
 		data = {
 			potted = false,
 			outline = false
-		},
-	},
+		}
+	}
 }
 
 function MaryBlock.selection(room, entity)
