@@ -86,6 +86,13 @@
 	<Loop id="Attack" path="Attack" delay="0.1" frames="00"/>
   </koseiHelper_Sun>
   
+    <koseiHelper_Brick path="objects/KoseiHelper/Brick/">
+	<Justify x=".5" y=".5" />
+	<Loop id="Normal" path="Normal" delay="0.1" frames="00-03, 00*8, 00-03, 00-03, 0*8, 00-03, 00*12"/>
+	<Loop id="Ice" path="Ice" delay="0.1" frames="00-03, 00*8, 00-03, 00-03, 0*8, 00-03, 00*12"/>
+	<Loop id="Fortress" path="Fortress" delay="0.1" frames="00-03, 00*8, 00-03, 00-03, 0*8, 00-03, 00*12"/>
+  </koseiHelper_Brick>
+  
   <koseiHelper_player path="characters/player/KoseiHelper/">
     <Origin x="16" y="32" />
     <Anim id="sleepy_zeroDashes" path="sleepy_zeroDashes" frames="0" />

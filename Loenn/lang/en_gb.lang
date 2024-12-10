@@ -107,6 +107,11 @@ entities.KoseiHelper/WingedKey.placements.name.WingedKey= Winged Key
 entities.KoseiHelper/WingedKey.placements.description.Winged Key= A key that will fly away like winged strawberries if the player dashes.\nIt will follow as normal keys upon collection, and will lose its wings if the player dies. (Cosmetic effect)
 entities.KoseiHelper/WingedKey.attributes.description.flapSpeed=The speed used when the key flies away.
 
+#Brick
+entities.KoseiHelper/Brick.placements.name.Brick=Brick
+entities.KoseiHelper/Brick.placements.description.Brick=16x16 blocks that can be broken only from below while no crouched. 3 variants available.
+entities.KoseiHelper/Brick.attributes.description.type=Normal: Can be broken from below. No need to dash, but Madeline can't be "small" (crouched/feather).\nIce: Like normal blocks, but they can also be broken with a Plant bullet / Hot Core Mode.\nFortress: Can be broken only with a summit launch (Badeline orb), red booster, or setting the flag KoseiHelper_BreakFortressBrick.
+
 #Spring Ball
 entities.KoseiHelper/SpringBall.placements.name.SpringBall= Spring Ball
 entities.KoseiHelper/SpringBall.placements.description.Spring Ball=Spring balls (snowball+spring) will appear on the screen.\n(The position determines where they spawn for the first time,\ne.g. during a transition)

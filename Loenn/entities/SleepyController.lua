@@ -22,6 +22,8 @@ SleepyController.fieldInformation = {
 }
 
 SleepyController.fieldOrder = {
+	"x",
+	"y",
 	"minTime",
 	"maxTime",
 	"napTime",
