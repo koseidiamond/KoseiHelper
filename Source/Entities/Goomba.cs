@@ -54,7 +54,7 @@ public class Goomba : Actor
         isWinged = data.Bool("isWinged", false);
         canBeBounced = data.Bool("canBeBounced", true);
         canSpawnMinis = data.Bool("spawnMinis", true);
-        flyAway = data.Bool("flyAway", true);
+        flyAway = data.Bool("flyAway", false);
         behavior = data.Enum("behavior", GoombaBehavior.Chaser);
         timeToSpawnMinis = data.Float("timeToSpawnMinis", 1);
         gravityMult = data.Float("gravityMultiplier", 1f);

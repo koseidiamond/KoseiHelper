@@ -79,13 +79,7 @@
 	<Anim id="BigMelt" path="BigMelt" delay="0.05" frames="00-04"/>
 	<Anim id="SmallMelt" path="SmallMelt" delay="0.05" frames="00-04"/>
   </koseiHelper_DefrostableBlock>
-  
-  <koseiHelper_Sun path="objects/KoseiHelper/Sun/">
-	<Justify x=".5" y=".5" />
-	<Loop id="Normal" path="Normal" delay="0.1" frames="00"/>
-	<Loop id="Attack" path="Attack" delay="0.1" frames="00"/>
-  </koseiHelper_Sun>
-  
+
     <koseiHelper_Brick path="objects/KoseiHelper/Brick/">
 	<Justify x=".5" y=".5" />
 	<Loop id="Normal" path="Normal" delay="0.1" frames="00-03, 00*8, 00-03, 00-03, 0*8, 00-03, 00*12"/>

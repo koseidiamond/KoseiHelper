@@ -14,7 +14,7 @@ Goomba.placements = {
 			canBeBounced = true,
 			spawnMinis = false,
 			timeToSpawnMinis = 1,
-			flyAway = true,
+			flyAway = false,
 			behavior = "Chaser",
 			gravityMultiplier = 1
 		},
