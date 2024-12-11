@@ -57,6 +57,13 @@ public class AutoscrollerController : Entity
         base.Update();
         Level level = SceneAs<Level>();
         Player player = level.Tracker.GetEntity<Player>();
+        if (player != null)
+        {
+            player.Add(new TransitionListener()
+            {
+                OnOutBegin = () => player.CameraAnchorLerp = Vector2.Zero
+            });
+        }
         if (!string.IsNullOrEmpty(flag) && !level.Session.GetFlag(flag) && player != null) // Resets stuff if flag becomes false
         {
             if (upperBound != null)

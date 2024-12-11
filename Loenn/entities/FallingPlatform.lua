@@ -29,10 +29,10 @@ FallingPlatform.placements = {
 	{
 		name = "FallingPlatform",
 		data = {
-			width = 8,
+			width = 16,
             texture = "wood",
             surfaceIndex = -1,
-			fallDelay = 0.2,
+			fallDelay = 0.04,
 			fallSpeed = 150,
 			blockImage = false,
 			fallHorizontally = false,
@@ -45,12 +45,12 @@ FallingPlatform.placements = {
 		data = {
 			width = 16,
             texture = "KoseiHelper/DonutBlock",
-            surfaceIndex = -1,
+            surfaceIndex = 27,
 			fallDelay = 0.2,
 			fallSpeed = 150,
 			blockImage = true,
 			fallHorizontally = false,
-			fallingSound = "event:/none",
+			fallingSound = "event:/KoseiHelper/fallingPlatform",
 			activatedByActors = false
 		}
 	}

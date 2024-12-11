@@ -6,4 +6,5 @@
 {8ffb32e6-512f-41a9-a2c6-dbea0ac2765c} event:/KoseiHelper/bulletB
 {295daa22-30f0-4153-bbe2-04e9e3ee8e04} event:/KoseiHelper/brickBreak
 {9219af63-8873-48da-ac55-d41d50b25f0c} event:/KoseiHelper/brickBump
+{04c6f318-6fa0-4583-87be-70528b48a079} event:/KoseiHelper/fallingPlatform
 {ba8e885e-d7ef-474b-9ea8-20ba14e4943e} bank:/KoseiHelper
