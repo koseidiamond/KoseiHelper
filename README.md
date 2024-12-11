@@ -10,17 +10,17 @@ Celeste mod with several random mechanics.
 * [Triggers](#triggers)
 
 # Entities
-All entities are customizable through Sprites.xml. Feel free to change the animations as you need. You can copy the sprite tags and paste them into your own Sprites.xml. Make sure your path is unique.
+All entities that don't provide direct sprite/texture fields are customizable through Sprites.xml. Feel free to change the animations as you need. You can copy the sprite tags and paste them into your own Sprites.xml. Make sure your path is unique.
 
 ## Miscellaneous
 
 ### Goomba
-This entity follows the player horizontally, killing on contact, and can optionally be bounced on. It has several customizable options, including spawning mini versions each x seconds, flying away like strawberries, or be winged. They can also interact with springs.
+This entity can follow the player horizontally or move in a fixed direction. Kills on contact, and can optionally be bounced on. It has several customizable options, including spawning mini versions each x seconds, flying away like strawberries, or be winged. They can also interact with springs.
 ### Plant
 This entity can move in a cycle, move when the player gets near, or jump when the player is above, and works in all 4 directions. Optionally, it can also shoot. The bullets can melt Defrostable Blocks.
 The small plants (Black and Jumping) respond like normal Actors (which means they can be pushed by blocks or fall down).
 ### Mary Block
-Single-use flowers that launch you with more or less strength depending on the mode.
+Single-use flowers that launch the player with more or less strength depending on the mode. Compatible with Theo.
 ### Winged Key
 They function as normal keys but they can fly away like winged strawberries at a customizable speed.
 ### Falling Platform/Donut
@@ -34,12 +34,12 @@ Additionally, spring balls have some visual options and can track Theo instead.
 
 ### Bricks
 Blocks of fixed size that can be broken from below (while not crouched or in a feather).
-They have an ice variant (with the Defrostable Block functionality combined) and a fortress variant (only breakable with red boosters/badeline launches.
+They have an ice variant (with the Defrostable Block functionality combined) and a fortress variant (only breakable with red boosters/badeline launches or setting the flag `KoseiHelper_BreakFortressBrick`).
 Goombas on top will be killed if the block is hit (regardless of whether it is destroyed) and Theos on top will be bumped.
 ### Defrostable Block
 Ice blocks that melt when they come in contact with a bullet or if the Core Mode is hot.
 ### Oshiro Doors
-Oshiro/ghost doors that are slightly bouncy but have more options (mainly visual/sfx and the option to always refill a dash, being one use, or bounce slightly differently). They come in two flavors: sprite or tileset.
+Oshiro/ghost doors that are slightly bouncy but have more options (mainly visual/sfx and the option to always refill a dash, being one use, or bounce slightly differently). They come in two flavors: sprite or tileset (resizable).
 ### Custom Temple Cracked Block
 The red blocks in chapter 5 that can be broken by seekers, but allowing custom visuals (debris, texture and tint), sounds, and health (requiring x number of hits to be destroyed).
 
