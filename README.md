@@ -88,7 +88,7 @@ The Player Seeker, but more functional. Includes multiple customization options 
 - **Bumpers** behave as usual, but normal ones will push Madeline too!
 - **Core Mode** can be toggled with switches as normal.
 - Entities that react to player dashes, like **Swap blocks**, will react as normal.
-- **Dream blocks** are enabled/disabled when being dashed.
+- **Dream blocks** break when dashed twice.
 - **Dash blocks** can be broken as normal. Same for **Temple Cracked Blocks** and **Bounce Blocks**.
 - **Kevins** can be enabled with a dash.
 - If the **Switch Characters** mode is enabled, the Player Seeker **can be bounced** when controlling Madeline.
