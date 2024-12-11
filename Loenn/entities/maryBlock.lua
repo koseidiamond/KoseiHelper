@@ -8,7 +8,8 @@ MaryBlock.placements = {
 		name = "Mary Block",
 		data = {
 			potted = false,
-			outline = false
+			outline = false,
+			affectTheo = false
 		}
 	}
 }

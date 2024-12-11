@@ -245,7 +245,6 @@ public class PufferRefill : Entity
     {
         if (KoseiHelperModule.Session.HasPufferDash)
         {
-            Logger.Debug(nameof(KoseiHelperModule), $"About to pufferdash");
             self.Add(new Coroutine(PufferExplode(self)));
             KoseiHelperModule.Session.PufferDashActive = true;
             PufferEndDelayCoroutine?.Cancel();
@@ -271,7 +270,6 @@ public class PufferRefill : Entity
 
     private static IEnumerator PufferExplode(Player player)
     {
-        Logger.Debug(nameof(KoseiHelperModule), $"PufferDashed with DashDir {player.DashDir} so  the explodePos is {player.Center - 8 * player.DashDir}");
         Level level = player.SceneAs<Level>();
         player.ExplodeLaunch(player.Center - 2 * player.DashDir, false);
         Audio.Play("event:/new_content/game/10_farewell/puffer_splode");

@@ -31,9 +31,9 @@ public class TheoPetController : Entity
         if (player != null)
         {
             theo = SceneAs<Level>().Tracker.GetNearestEntity<TheoCrystal>(player.Center);
-            if (theo != null)
+            if (theo != null && !player.JustRespawned && !player.IsIntroState)
             {
-                if (player.Position.Y > theo.Position.Y - 150)
+                if (player.Position.Y > theo.Position.Y - 150 && player.Position.Y < theo.Position.Y + 300)
                 {
                     if (theo.OnGround() && Math.Abs(theo.CenterX - player.CenterX) > 14f)
                     {
