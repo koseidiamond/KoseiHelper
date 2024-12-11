@@ -1,9 +1,16 @@
 # KoseiHelper
 Celeste mod with several random mechanics.
-### Customization
-All entities are customizable through Sprites.xml. Feel free to change the animations as you need. You can copy the sprite tags and paste them into your own Sprites.xml. Make sure your path is unique.
+
+# Table of contents
+* [Entities](#entities)
+  * [Miscellaneous](#miscellaneous)
+  * [Blocks](#blocks)
+  * [Refills](#refills)
+  * [Controllers](#controllers)
+* [Triggers](#triggers)
 
 # Entities
+All entities are customizable through Sprites.xml. Feel free to change the animations as you need. You can copy the sprite tags and paste them into your own Sprites.xml. Make sure your path is unique.
 
 ## Miscellaneous
 
