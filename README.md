@@ -62,7 +62,7 @@ Allows customization of the Pause Menu, disabling Retry, Save&Quit, disable paus
 This controller moves the camera in the specified direction as soon as the player starts moving. The player can be killed or pushed (safely or not) if they get behind the camera.
 If the speed is changed, the parts of the screen where the player is forced to stay can have an offset due to the camera movement, so it's recommended to adjust the offsets or the Camera Catchup Speed.
 Multiple autoscrollers on the same room, inverted gravity or zoom out are not supported.
-#Sleepy Controller
+### Sleepy Controller
 A silly controller that makes the player to take short naps every certain intervals of time (random or fixed). While sleeping, the player will keep travelling in the same direction/speed they were moving before the nap.
 ### Entity Spawners
 The **Entity Spawner Controllers** allow you to spawn different types of entities on a certain position when a condition is met. They are highly customizable.
