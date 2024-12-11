@@ -11,19 +11,23 @@ namespace Celeste.Mod.KoseiHelper.Entities;
 public class FallingPlatform : JumpthruPlatform
 {
     private bool hasFallen;
-    private float fallDelay;
+    private float fallDelay, originalFallTime;
     private bool triggered;
     public float customFallSpeed;
     public bool blockImage;
     public string sound;
+    public bool fallHorizontally;
+    public bool activatedByActors;
 
     public FallingPlatform(EntityData data, Vector2 offset) : base(data, offset)
     {
         overrideTexture = data.Attr("texture", "default");
-        fallDelay = data.Float("fallDelay", 0.2f);
+        fallDelay = originalFallTime = data.Float("fallDelay", 0.2f);
         customFallSpeed = data.Float("fallSpeed", 150f);
         blockImage = data.Bool("blockImage", false);
         sound = data.Attr("fallingSound", "event:/none");
+        fallHorizontally = data.Bool("fallHorizontally", false);
+        activatedByActors = data.Bool("activatedByActors", false);
     }
 
     public override void Awake(Scene scene)
@@ -61,19 +65,26 @@ public class FallingPlatform : JumpthruPlatform
     public override void Update()
     {
         base.Update();
-        if (HasRider() && !hasFallen)
+        if (!hasFallen)
         {
-            // If the player is on the platform, start the fall process after a delay
-            if (fallDelay > 0f)
+            if (HasRider() && activatedByActors || HasPlayerRider() && !activatedByActors)
             {
-                fallDelay -= Engine.DeltaTime; // Countdown to start falling
-            }
-            else
-            {
-                if (!triggered)
+                // If the someone is on the platform, start the fall process after a delay
+                if (fallDelay > 0f)
                 {
-                    StartFalling(); // Start falling if the player has stood for too long
+                    fallDelay -= Engine.DeltaTime; // Countdown to start falling
                 }
+                else
+                {
+                    if (!triggered)
+                    {
+                        StartFalling(); // Start falling if someone has stood for too long
+                    }
+                }
+            }
+            if (!HasRider() && activatedByActors || !HasPlayerRider() && !activatedByActors)
+            {
+                fallDelay = originalFallTime;
             }
         }
     }
@@ -85,17 +96,32 @@ public class FallingPlatform : JumpthruPlatform
     }
     private IEnumerator FallSequence()
     {
-        float fallSpeed = customFallSpeed;
         Level level = SceneAs<Level>();
-
         // Continue falling until hitting a solid
         while (true)
         {
-            MoveV(fallSpeed * Engine.DeltaTime);
-            if (CollideCheck<Solid>(Position + Vector2.UnitY))
+            if (!fallHorizontally) // Vertical movement
             {
-                // We hit something solid (ground or another platform), stop falling
-                break;
+                MoveV(customFallSpeed * Engine.DeltaTime);
+                if (CollideCheck<Solid>(TopCenter + Vector2.UnitY))
+                {
+                    // We hit something solid (ground or another platform), stop falling
+                    break;
+                }
+            }
+            else // Horizontal movement
+            {
+                MoveH(customFallSpeed * Engine.DeltaTime);
+                if (customFallSpeed > 0 && CollideCheck<Solid>(CenterLeft + Vector2.UnitX) ||
+                    customFallSpeed < 0 && CollideCheck<Solid>(CenterLeft + Vector2.UnitX))
+                {
+                    MoveV(customFallSpeed * Engine.DeltaTime);
+                    if (CollideCheck<Solid>(TopCenter + Vector2.UnitY))
+                    {
+                        // We hit something solid (ground or another platform), stop falling
+                        break; //TODO make them fall
+                    }
+                }
             }
 
             yield return null;

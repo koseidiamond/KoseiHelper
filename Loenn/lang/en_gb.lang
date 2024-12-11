@@ -24,15 +24,16 @@ entities.KoseiHelper/MaryBlock.attributes.description.outline=If the sprite shou
 # Falling Platform
 entities.KoseiHelper/FallingPlatform.placements.name.FallingPlatform=Falling Platform
 entities.KoseiHelper/FallingPlatform.placements.name.FallingDonut=Falling Donut
-entities.KoseiHelper/FallingPlatform.placements.description.FallingPlatform=Jumpthrough that falls after standing on it for some time.
-entities.KoseiHelper/FallingPlatform.placements.description.FallingDonut=Connected 16x16 platforms that fall after standing on them for some time.
+entities.KoseiHelper/FallingPlatform.placements.description.FallingPlatform=Jumpthrough that falls after standing on it for some time.\nThe differences with Falling Platforms are just visual.
+entities.KoseiHelper/FallingPlatform.placements.description.FallingDonut=Connected 16x16 platforms that fall after standing on them for some time.\nThe differences with Falling Platforms are just visual.
 entities.KoseiHelper/FallingPlatform.attributes.description.fallDelay=How much time the player can stand on top before it starts to fall.
 entities.KoseiHelper/FallingPlatform.attributes.description.texture=The texture of the falling platform/donut, relative to Gameplay/objects/jumpthru/.
 entities.KoseiHelper/FallingPlatform.attributes.description.surfaceIndex=The sound it should make while stepping on it.
-entities.KoseiHelper/FallingPlatform.attributes.description.fallSpeed=The speed while falling.
+entities.KoseiHelper/FallingPlatform.attributes.description.fallSpeed=The speed while falling.\nSupports negative speed (upwards).
 entities.KoseiHelper/FallingPlatform.attributes.description.blockImage=Determines whether the entity should render as a normal jumpthru or as 16x16 blocks.
 entities.KoseiHelper/FallingPlatform.attributes.description.fallingSound=The sound the falling platform/donut should play when it starts to fall.
-
+entities.KoseiHelper/FallingPlatform.attributes.description.fallHorizontally=If the platform/donut should "fall" horizontally instead of vertically.
+entities.KoseiHelper/FallingPlatform.attributes.description.activatedByActors=If other actors (like Theo, Jellies, or even Debris) should make the platform/donut to fall, or only the player.
 
 # Plants
 entities.KoseiHelper/Plant.placements.name.Plant=Plant
@@ -176,6 +177,12 @@ entities.KoseiHelper/IRLController.placements.name.IRLController=IRL Controller
 entities.KoseiHelper/IRLController.placements.description.IRLController=This controller sets flags for the time of the day and month:\nFor example, if it's 17:00 and November the flags kosei_irlHour17 and kosei_irlMonth11 will be set.\nIt also sets the flags kosei_irlMorning, kosei_irlAfternoon and kosei_irlNight.
 entities.KoseiHelper/IRLController.attributes.description.persistent=If the controller should persist after exiting the room.
 entities.KoseiHelper/IRLController.attributes.description.changesDarknessLevel=If the darkness level should adapt to the irl time.
+
+# Theo Pet Controller
+entities.KoseiHelper/TheoPetController.placements.name.TheoPetController=Theo Pet Controller
+entities.KoseiHelper/TheoPetController.placements.description.TheoPetController=Theo Crystals will try to follow the player.
+entities.KoseiHelper/TheoPetController.attributes.description.speed=A multiplier that affects the horizontal speed when Theo tries to follow the player.
+entities.KoseiHelper/TheoPetController.attributes.description.jumpStrength=How much Theo can jump when he is on the ground.\nThe minimum height (if set to 0) is 11 pixels.
 
 # Top Down View Controller
 #entities.KoseiHelper/TopDownViewController.placements.name.TopDownViewController=Top Down View Controller

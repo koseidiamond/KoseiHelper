@@ -3,7 +3,7 @@ local drawing = require("utils.drawing")
 local utils = require("utils")
 local enums = require("consts.celeste_enums")
 
-local textures = {"wood", "dream", "temple", "templeB", "cliffside", "reflection", "core", "moon"}
+local textures = {"wood", "dream", "temple", "templeB", "cliffside", "reflection", "core", "moon", "KoseiHelper/DonutBlock"}
 
 local function getTexture(entity)
     return entity.texture and entity.texture ~= "default" and entity.texture or "wood"
@@ -23,8 +23,7 @@ FallingPlatform.fieldInformation = {
         options = enums.tileset_sound_ids,
         fieldType = "integer"
     },
-	fallDelay = { minimumValue = 0 },
-	fallSpeed = { minimumValue = 0 }
+	fallDelay = { minimumValue = 0 }
 }
 FallingPlatform.placements = {
 	{
@@ -36,7 +35,9 @@ FallingPlatform.placements = {
 			fallDelay = 0.2,
 			fallSpeed = 150,
 			blockImage = false,
-			fallingSound = "event:/none"
+			fallHorizontally = false,
+			fallingSound = "event:/none",
+			activatedByActors = false
 		}
 	},
 	{
@@ -48,7 +49,9 @@ FallingPlatform.placements = {
 			fallDelay = 0.2,
 			fallSpeed = 150,
 			blockImage = true,
-			fallingSound = "event:/none"
+			fallHorizontally = false,
+			fallingSound = "event:/none",
+			activatedByActors = false
 		}
 	}
 }
