@@ -33,6 +33,16 @@ public class SleepyController : Entity
         cassetteManager = scene.Tracker.GetEntity<CassetteBlockManager>();
     }
 
+    public override void Added(Scene scene)
+    {
+        base.Added(scene);
+        Level level = SceneAs<Level>();
+        foreach (Entity entity in level)
+        {
+            entity.Depth = -entity.Depth;
+        }
+    }
+
     public override void Update()
     {
         base.Update();
@@ -102,12 +112,12 @@ public class SleepyController : Entity
             }
         }
         yield return napTime;
+        player.StateMachine.State = 0;
         if (adjustHairColor)
         {
             player.Visible = true;
             sleepSprite.Visible = false;
         }
-        player.StateMachine.State = 0;
         player.ForceCameraUpdate = false;
         yield return null;
     }
