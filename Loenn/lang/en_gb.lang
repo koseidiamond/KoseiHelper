@@ -285,3 +285,8 @@ triggers.KoseiHelper/OOBTrigger.attributes.description.onlyOnce=If the trigger s
 triggers.KoseiHelper/OOBTrigger.attributes.description.onExit=If the trigger should be enabled when the player enters or exits the trigger.
 triggers.KoseiHelper/OOBTrigger.attributes.description.inBound=If the player should be inbounded (forced to be in the same room where the trigger is placed),\nor outbounded (be unable to transition/escape the room).
 triggers.KoseiHelper/OOBTrigger.attributes.description.climbFix=In vanilla, the player can't climb if they are to the left/right of the current screen.\nNot recommended to disable.\n(The trigger with the highest ID determines if the player can climb outside the current room or not).
+
+#Kill If Not Grounded Trigger
+triggers.KoseiHelper/KillIfNotGroundedTrigger.placements.name.KillIfNotGroundedTrigger=Kill If Not Grounded Trigger
+triggers.KoseiHelper/KillIfNotGroundedTrigger.placements.description.KillIfNotGroundedTrigger=Kills the player if they are not on ground (or, optionally, not climbing either) while inside.
+triggers.KoseiHelper/KillIfNotGroundedTrigger.attributes.description.spareIfClimbing=Enable this option if you don't want to kill the player while they are climbing inside the trigger.

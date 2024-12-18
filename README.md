@@ -104,3 +104,5 @@ It forces the player to immediately throw the holdable, even before the grabbing
 It forces the player to have a **hiccup** (like a minijump) when they enter/exit the trigger, stay inside (on a certain interval) or when the cassette beat changes.
 ### OOB Trigger
 The trigger variant of Bounded Refills. Allows the player to explore the physical space of others without transitioning, or be bounded (transition) to a certain screen.
+### Kill If Not Grounded Trigger
+If the player enters the trigger and they are not on the ground (or optionally, climbing), they will die.
