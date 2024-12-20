@@ -9,7 +9,7 @@ namespace Celeste.Mod.KoseiHelper.Entities;
 [CustomEntity("KoseiHelper/IRLController")]
 public class IRLController : Entity
 {
-    private int currentHour;
+    private int currentHour, currentMinute;
     private bool changesDarknessLevel;
     public IRLController (EntityData data, Vector2 offset) : base(data.Position + offset)
     {
@@ -35,6 +35,7 @@ public class IRLController : Entity
         Level level = SceneAs<Level>();
         int currentMonth = DateTime.Now.Month;
         currentHour = DateTime.Now.Hour;
+        currentMinute = DateTime.Now.Minute;
         for (int month = 1; month <= 12; month++)
         {
             string kosei_irlMonth = $"kosei_irlMonth{month}";
@@ -54,8 +55,11 @@ public class IRLController : Entity
     {
         base.Update();
         Level level = SceneAs<Level>();
-        if (Scene.OnInterval(1f)) // We don't need to get the current hour every frame
+        if (Scene.OnInterval(1f))
+        {// We don't need to get the current hour/minute every frame
             currentHour = DateTime.Now.Hour;
+            currentMinute = DateTime.Now.Minute;
+        }
 
         if (changesDarknessLevel)
         {
@@ -69,6 +73,14 @@ public class IRLController : Entity
                 level.Session.SetFlag(kosei_irlHour, true);
             else
                 level.Session.SetFlag(kosei_irlHour, false);
+        }
+        for (int minute = 0; minute < 60; minute++)
+        {
+            string kosei_irlMinute = $"kosei_irlMinute{minute:D2}";
+            if (minute == currentMinute)
+                level.Session.SetFlag(kosei_irlMinute, true);
+            else
+                level.Session.SetFlag(kosei_irlMinute, false);
         }
 
         if (currentHour >= 6 && currentHour < 12) // Morning
