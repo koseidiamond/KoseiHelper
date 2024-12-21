@@ -7,4 +7,5 @@
 {295daa22-30f0-4153-bbe2-04e9e3ee8e04} event:/KoseiHelper/brickBreak
 {9219af63-8873-48da-ac55-d41d50b25f0c} event:/KoseiHelper/brickBump
 {04c6f318-6fa0-4583-87be-70528b48a079} event:/KoseiHelper/fallingPlatform
+{600cf596-96ec-43e9-9afb-4d4e1b8cf021} event:/KoseiHelper/laugh_oneho
 {ba8e885e-d7ef-474b-9ea8-20ba14e4943e} bank:/KoseiHelper

@@ -189,6 +189,14 @@ entities.KoseiHelper/TheoPetController.attributes.description.jumpStrength=How m
 #entities.KoseiHelper/TopDownViewController.placements.name.TopDownViewController=Top Down View Controller
 #entities.KoseiHelper/TopDownViewController.placements.description.Top Down View Controller=This controller allows the player to move similarly to top-down view RPGs.
 
+# Custom Hahaha
+entities.KoseiHelper/CustomHahaha.placements.name.CustomHahaha=Custom Hahaha
+entities.KoseiHelper/CustomHahaha.placements.description.CustomHahaha=Granny's laugh but the sprite and sound can be customized.
+entities.KoseiHelper/CustomHahaha.attributes.description.ifset=The flag that needs to be set for the hahaha to appear.
+entities.KoseiHelper/CustomHahaha.attributes.description.triggerLaughSfx=If the sound should play.
+entities.KoseiHelper/CustomHahaha.attributes.description.sprite=The path to your custom animation, which should be called ha.
+entities.KoseiHelper/CustomHahaha.attributes.description.sound=The sound that should play when laughing.\nThe vanilla sound is "event:/char/granny/laugh_oneha".
+
 # Sleepy Controller
 entities.KoseiHelper/SleepyController.placements.name.SleepyController=Sleepy Controller
 entities.KoseiHelper/SleepyController.placements.description.SleepyController=Similarly to the Hiccup variant, this makes the player to sleep on random intervals.\nNot compatible with skinmods.
