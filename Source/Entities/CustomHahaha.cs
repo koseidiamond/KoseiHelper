@@ -31,7 +31,6 @@ namespace Celeste.Mod.KoseiHelper.Entities
         private int counter;
         private List<Ha> has = new List<Ha>();
         private bool autoTriggerLaughSfx = true;
-        private Vector2 autoTriggerLaughOrigin;
         private string spritePath, audioPath;
         public float timeForHahaha, timeForHa, timeToSfx;
         public bool synchronizedSfx;
@@ -65,7 +64,6 @@ namespace Celeste.Mod.KoseiHelper.Entities
             if (data.Bool("synchronizedSfx", false))
             {
                 autoTriggerLaughSfx = true;
-                autoTriggerLaughOrigin = offset;
             }
         }
 
@@ -118,10 +116,10 @@ namespace Celeste.Mod.KoseiHelper.Entities
                 }
             }
 
-            if (!Enabled && !string.IsNullOrEmpty(flag) && (base.Scene as Level).Session.GetFlag(flag))
-            {
+            if (!string.IsNullOrEmpty(flag) && (base.Scene as Level).Session.GetFlag(flag))
                 Enabled = true;
-            }
+            if (string.IsNullOrEmpty(flag) || !(base.Scene as Level).Session.GetFlag(flag))
+                Enabled = false;
 
             base.Update();
         }

@@ -21,6 +21,10 @@ CustomHahaha.placements = {
     }
 }
 
+CustomHahaha.fieldInformation = {
+	depth = { fieldType = "integer" }
+}
+
 local texture = "characters/oldlady/ha00"
 local spriteOffsets = {
     {-11, -1},

@@ -49,6 +49,7 @@ public class KoseiHelperModule : EverestModule {
         PufferBall.Load();
         CustomTempleCrackedBlock.Load();
         PufferRefill.Load();
+        FlagRefill.Load();
         BoundRefill.Load();
         OOBTrigger.Load();
     }
@@ -58,6 +59,7 @@ public class KoseiHelperModule : EverestModule {
         PufferBall.Unload();
         CustomTempleCrackedBlock.Unload();
         PufferRefill.Unload();
+        FlagRefill.Unload();
         BoundRefill.Unload();
         OOBTrigger.Unload();
     }

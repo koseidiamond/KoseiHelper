@@ -15,7 +15,7 @@ PufferRefill.placements = {
 
 
 function PufferRefill.texture(room, entity)
-    return "objects/KoseiHelper/Refills/PufferRefill/idle00"
+    return entity.sprite .. "idle00"
 end
 
 return PufferRefill
