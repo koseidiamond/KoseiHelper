@@ -19,6 +19,11 @@ This entity can follow the player horizontally or move in a fixed direction. Kil
 ### Plant
 This entity can move in a cycle, move when the player gets near, or jump when the player is above, and works in all 4 directions. Optionally, it can also shoot. The bullets can melt Defrostable Blocks.
 The small plants (Black and Jumping) respond like normal Actors (which means they can be pushed by blocks or fall down).
+### Trigger Spinner
+"Spinners" that appear only after the player touches them and leaves the hitbox.
+They have the vanilla colors and can be attached to solids.
+### Custom Hahaha
+A group of sprites that wave towards a direction while playing a sound when a flag is true.
 ### Mary Block
 Single-use flowers that launch the player with more or less strength depending on the mode. Compatible with Theo.
 ### Winged Key
@@ -42,6 +47,9 @@ Ice blocks that melt when they come in contact with a bullet or if the Core Mode
 Oshiro/ghost doors that are slightly bouncy but have more options (mainly visual/sfx and the option to always refill a dash, being one use, or bounce slightly differently). They come in two flavors: sprite or tileset (resizable).
 ### Custom Temple Cracked Block
 The red blocks in chapter 5 that can be broken by seekers, but allowing custom visuals (debris, texture and tint), sounds, and health (requiring x number of hits to be destroyed).
+### Shatter Block
+Ported from Strawberry Jam (Fractured Iridescence). These blocks can be destroyed if the player has enough speed.
+
 
 ## Refills
 
@@ -51,6 +59,8 @@ Can enable or disable the Collidable and Visible properties of foreground tiles.
 Outbound refills allow the player to escape the current screen. Inbound refills bound the player to the screen they are overlapping.
 ### Puffer Refill
 A refill that grants a puffer explosion after the player dashes.
+### Flag Refill
+A refill that sets a flag to true until the player dashes again or dies.
 
 # Controllers
 

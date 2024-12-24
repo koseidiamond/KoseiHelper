@@ -11,8 +11,8 @@ local TriggerSpinnerColors = {
     "blue",
     "red",
     "purple",
-    "core",
-    "rainbow"
+    "rainbow",
+	"custom"
 }
 local colorOptions = {}
 
@@ -22,7 +22,6 @@ end
 
 -- Doesn't have textures directly, handled by code
 local customTriggerSpinnerColors = {
-    core = "red",
     rainbow = "white"
 }
 
@@ -40,7 +39,9 @@ TriggerSpinner.placements = {
         name = "TriggerSpinner",
         data = {
             color = "blue",
-            attachToSolid = false
+            attachToSolid = false,
+			customPathTriggered = "",
+			customPathIndicator = "objects/KoseiHelper/TriggerSpinner/"
         }
     }
 }
@@ -53,7 +54,6 @@ local function getTriggerSpinnerTexture(entity, color, foreground)
 end
 
 local function getTriggerSpinnerSprite(entity, foreground)
-    -- Prevent color from TriggerSpinner to tint the drawable sprite
     local color = string.lower(entity.color or defaultTriggerSpinnerColor)
     local position = {
         x = entity.x,
@@ -66,9 +66,6 @@ local function getTriggerSpinnerSprite(entity, foreground)
 
     local texture = getTriggerSpinnerTexture(entity, color, foreground)
     local sprite = drawableSpriteStruct.fromTexture(texture, position)
-
-    -- Check if texture color exists, otherwise use default color
-    -- Needed because Rainbow and Core colors doesn't have textures
     if sprite then
         return sprite
 
@@ -80,7 +77,6 @@ local function getTriggerSpinnerSprite(entity, foreground)
 end
 
 local function getConnectionSprites(room, entity)
-    -- TODO - This can create some overlaps, can be improved later
 
     local sprites = {}
 
@@ -144,16 +140,7 @@ function TriggerSpinner.sprite(room, entity)
 end
 
 function TriggerSpinner.selection(room, entity)
-    local dusty = entity.dust
-
-    if dusty then
-        local baseSprite = drawableSpriteStruct.fromTexture("danger/dustcreature/base00", entity)
-
-        return baseSprite:getRectangle()
-
-    else
-        return utils.rectangle(entity.x - 8, entity.y - 8, 16, 16)
-    end
+    return utils.rectangle(entity.x - 8, entity.y - 8, 16, 16)
 end
 
 return TriggerSpinner

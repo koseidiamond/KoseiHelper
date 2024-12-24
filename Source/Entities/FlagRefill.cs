@@ -38,7 +38,7 @@ public class FlagRefill : Entity
         base.Collider = new Hitbox(16f, 16f, -8f, -8f);
         base.Add(new PlayerCollider(new Action<Player>(this.OnPlayer), null, null));
         this.oneUse = oneUse;
-        str = "objects/refill/";
+        str = "objects/KoseiHelper/Refills/FlagRefill/";
         this.p_shatter = Refill.P_Shatter;
         this.p_regen = Refill.P_Regen;
         this.p_glow = Refill.P_Glow;
@@ -74,7 +74,7 @@ public class FlagRefill : Entity
         base.Collider = new Hitbox(16f, 16f, -8f, -8f);
         base.Add(new PlayerCollider(new Action<Player>(this.OnPlayer), null, null));
         this.oneUse = data.Bool("oneUse", false);
-        str = data.Attr("sprite", "objects/refill/");
+        str = data.Attr("sprite", "objects/KoseiHelper/Refills/FlagRefill/");
         this.p_shatter = Refill.P_Shatter;
         this.p_regen = Refill.P_Regen;
         this.p_glow = Refill.P_Glow;

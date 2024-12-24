@@ -17,12 +17,14 @@ CustomHahaha.placements = {
 		timeForHa = 0.6,
 		timeForSfx = 0.4,
 		depth = -10001,
-		left = false
+		left = false,
+		groupSize = 3
     }
 }
 
 CustomHahaha.fieldInformation = {
-	depth = { fieldType = "integer" }
+	depth = { fieldType = "integer" },
+	groupSize = { fieldType = "integer" }
 }
 
 local texture = "characters/oldlady/ha00"

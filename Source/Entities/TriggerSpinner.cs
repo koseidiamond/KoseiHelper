@@ -10,12 +10,23 @@ namespace Celeste.Mod.KoseiHelper.Entities
     [Tracked]
     public class TriggerSpinner : Entity
     {
-        public CrystalColor color;
+        public enum TriggerSpinnerColor
+        {
+            Blue,
+            Red,
+            Purple,
+            Rainbow,
+            Custom
+        }
+
+        public TriggerSpinnerColor color;
+        public string customPathTriggered, customPathIndicator;
         public bool attachToSolid;
         private int randomSeed;
         private bool expanded;
         private bool playerInRange;
         private bool isActivated;
+        private Sprite spriteIndicator;
         private List<Image> images = new List<Image>();
 
         public TriggerSpinner(EntityData data, Vector2 offset) : base(data.Position + offset)
@@ -23,6 +34,7 @@ namespace Celeste.Mod.KoseiHelper.Entities
             Visible = true;
             Collidable = true;
             Collider = new ColliderList(new Circle(6f), new Hitbox(16f, 4f, -8f, -3f));
+
             attachToSolid = data.Bool("attachToSolid", false);
                 if (attachToSolid)
                 {
@@ -33,7 +45,13 @@ namespace Celeste.Mod.KoseiHelper.Entities
                         OnDestroy = base.RemoveSelf
                     });
                 }
-            color = data.Enum("color", CrystalColor.Blue);
+            color = data.Enum("color", TriggerSpinnerColor.Blue);
+            customPathTriggered = data.Attr("customPathTriggered", "");
+            customPathIndicator = data.Attr("customPathIndicator", "objects/KoseiHelper/TriggerSpinner/");
+            Add(spriteIndicator = new Sprite(GFX.Game, customPathIndicator + "indicator"));
+            spriteIndicator.AddLoop("indicator", "", 0.1f);
+            spriteIndicator.Play("indicator", false, false);
+            spriteIndicator.CenterOrigin();
             randomSeed = Calc.Random.Next();
             Add(new PlayerCollider(OnPlayerTouch));
             Depth = -8500;
@@ -53,7 +71,8 @@ namespace Celeste.Mod.KoseiHelper.Entities
                 {
                     playerInRange = false;
                     isActivated = true;
-                    CreateSprites();
+                    TriggeredSprite();
+                    spriteIndicator.Visible = false;
                 }
                 if (playerInRange && !expanded)
                     expanded = true;
@@ -68,28 +87,27 @@ namespace Celeste.Mod.KoseiHelper.Entities
                 playerInRange = true;
         }
 
-        private void CreateSprites()
+        private void TriggeredSprite()
         {
             if (!expanded) return;
             Calc.PushRandom(randomSeed);
             List<MTexture> atlasSubtextures = GFX.Game.GetAtlasSubtextures(GetTextureForColor(this.color));
             MTexture mTexture = Calc.Random.Choose(atlasSubtextures);
-            Color spriteColor = (this.color == CrystalColor.Rainbow) ? GetHue(Position) : Color.White;
-            if (!SolidCheck(new Vector2(base.X - 4f, base.Y - 4f)))
+            Color spriteColor = (this.color == TriggerSpinnerColor.Rainbow) ? GetHue(Position) : Color.White;
+            if (color != TriggerSpinnerColor.Custom)
             {
-                images.Add(new Image(mTexture.GetSubtexture(0, 0, 14, 14)).SetOrigin(12f, 12f).SetColor(spriteColor));
+                if (!SolidCheck(new Vector2(base.X - 4f, base.Y - 4f)))
+                    images.Add(new Image(mTexture.GetSubtexture(0, 0, 14, 14)).SetOrigin(12f, 12f).SetColor(spriteColor));
+                if (!SolidCheck(new Vector2(base.X + 4f, base.Y - 4f)))
+                    images.Add(new Image(mTexture.GetSubtexture(10, 0, 14, 14)).SetOrigin(2f, 12f).SetColor(spriteColor));
+                if (!SolidCheck(new Vector2(base.X + 4f, base.Y + 4f)))
+                    images.Add(new Image(mTexture.GetSubtexture(10, 10, 14, 14)).SetOrigin(2f, 2f).SetColor(spriteColor));
+                if (!SolidCheck(new Vector2(base.X - 4f, base.Y + 4f)))
+                    images.Add(new Image(mTexture.GetSubtexture(0, 10, 14, 14)).SetOrigin(12f, 2f).SetColor(spriteColor));
             }
-            if (!SolidCheck(new Vector2(base.X + 4f, base.Y - 4f)))
+            else
             {
-                images.Add(new Image(mTexture.GetSubtexture(10, 0, 14, 14)).SetOrigin(2f, 12f).SetColor(spriteColor));
-            }
-            if (!SolidCheck(new Vector2(base.X + 4f, base.Y + 4f)))
-            {
-                images.Add(new Image(mTexture.GetSubtexture(10, 10, 14, 14)).SetOrigin(2f, 2f).SetColor(spriteColor));
-            }
-            if (!SolidCheck(new Vector2(base.X - 4f, base.Y + 4f)))
-            {
-                images.Add(new Image(mTexture.GetSubtexture(0, 10, 14, 14)).SetOrigin(12f, 2f).SetColor(spriteColor));
+                images.Add(new Image(mTexture.GetSubtexture(0, 0, 16, 16)).CenterOrigin().SetColor(spriteColor));
             }
             foreach (var image in images)
             {
@@ -108,15 +126,22 @@ namespace Celeste.Mod.KoseiHelper.Entities
             return false;
         }
 
-        private string GetTextureForColor(CrystalColor color)
+        private string GetTextureForColor(TriggerSpinnerColor color)
         {
             switch (color)
             {
-                case CrystalColor.Blue: return "danger/crystal/fg_blue";
-                case CrystalColor.Red: return "danger/crystal/fg_red";
-                case CrystalColor.Purple: return "danger/crystal/fg_purple";
-                case CrystalColor.Rainbow: return "danger/crystal/fg_white";
-                default: return "danger/crystal/fg_blue";
+                case TriggerSpinnerColor.Blue:
+                    return "danger/crystal/fg_blue";
+                case TriggerSpinnerColor.Red:
+                    return "danger/crystal/fg_red";
+                case TriggerSpinnerColor.Purple:
+                    return "danger/crystal/fg_purple";
+                case TriggerSpinnerColor.Rainbow:
+                    return "danger/crystal/fg_white";
+                case TriggerSpinnerColor.Custom:
+                    return customPathTriggered;
+                default:
+                    return "danger/crystal/fg_blue";
             }
         }
 

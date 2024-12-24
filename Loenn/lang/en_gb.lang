@@ -15,6 +15,14 @@ entities.KoseiHelper/Goomba.attributes.description.timeToSpawnMinis=Time that ne
 entities.KoseiHelper/Goomba.attributes.description.behavior=Chaser: The goomba walks towards the player.\nDumb: The goomba moves always in the same direction, determined by the speed sign.\nSmart: The goomba moves in the same direction, but changes its mind before falling if it detects a hole.
 entities.KoseiHelper/Goomba.attributes.description.gravityMultiplier=The vertical speed will be affected by this multiplier.
 
+#Trigger Spinner
+entities.KoseiHelper/TriggerSpinner.placements.name.TriggerSpinner=Trigger Spinner
+entities.KoseiHelper/TriggerSpinner.placements.description.TriggerSpinner=Spinner that appears after the player touches and leaves its hitbox.\nUnlike normal spinners, these don't have "juice".
+entities.KoseiHelper/TriggerSpinner.attributes.description.color=The color of the trigger spinner.
+entities.KoseiHelper/TriggerSpinner.attributes.description.attachToSolid=If the trigger spinner should be attached to solids.
+entities.KoseiHelper/TriggerSpinner.attributes.description.customPathTriggered=If the custom option is chosen, this determines the path to your custom texture when the spinner is triggered.\nIt's relative to Graphics/Atlases/Gameplay/. The size of the image should be 24x24.
+entities.KoseiHelper/TriggerSpinner.attributes.description.customPathIndicator=Determines the path to the indicator when the spinner has not been triggered yet.\nIt's relative to Gameplay/Atlases/Gameplay/. The size of the image should be 24x24.
+
 # Mary Block
 entities.KoseiHelper/MaryBlock.placements.name.maryblock=Mary Block
 entities.KoseiHelper/MaryBlock.placements.description.Mary Block=These flowers bounce the player from both sides, like a spring but with less strength.
@@ -171,6 +179,12 @@ entities.KoseiHelper/PufferRefill.placements.description.PufferRefill=The player
 entities.KoseiHelper/PufferRefill.attributes.description.sprite=The path to your custom sprite.\nIt needs flash and idle animations, an an outline image.
 entities.KoseiHelper/PufferRefill.attributes.description.oneUse=If the refill should be consumed upon use or respawn after a while.
 
+#Flag Refill
+entities.KoseiHelper/FlagRefill.placements.name.FlagRefill=Flag Refill
+entities.KoseiHelper/FlagRefill.placements.description.FlagRefill=A flag will be enabled when the player collects the refill.\nThis flag will be reset if the player dashes or dies, as some sort of "temporary powerup".
+entities.KoseiHelper/FlagRefill.attributes.description.sprite=The path to your custom sprite.\nIt needs flash and idle animations, an an outline image.
+entities.KoseiHelper/FlagRefill.attributes.description.oneUse=If the refill should be consumed upon use or respawn after a while.
+
 
 #CONTROLLERS
 
@@ -208,11 +222,12 @@ entities.KoseiHelper/CustomHahaha.attributes.description.flag=The flag that need
 entities.KoseiHelper/CustomHahaha.attributes.description.triggerLaughSfx=If the sound should play.
 entities.KoseiHelper/CustomHahaha.attributes.description.sprite=The path to your custom animation, which should be called ha.
 entities.KoseiHelper/CustomHahaha.attributes.description.sound=The sound that should play when laughing.\nThe vanilla sound is "event:/char/granny/laugh_oneha".
-entities.KoseiHelper/CustomHahaha.attributes.description.timeForHahaha=The time that needs to pass until a group of 3 Has is spawned.
+entities.KoseiHelper/CustomHahaha.attributes.description.timeForHahaha=The time that needs to pass until a group of Has is spawned.
 entities.KoseiHelper/CustomHahaha.attributes.description.timeForHa=The time that needs to pass for each Ha in the group to spawn.
 entities.KoseiHelper/CustomHahaha.attributes.description.timeForSfx=The time that needs to pass until the sfx is played again.
 entities.KoseiHelper/CustomHahaha.attributes.description.left=If the Hahaha should move towards the left instead of right.
 entities.KoseiHelper/CustomHahaha.attributes.description.synchronizedSfx=If the sound should play with each spawned Ha instead of on a fixed interval.
+entities.KoseiHelper/CustomHahaha.attributes.description.groupSize=How many Has should be in each group.
 
 # Sleepy Controller
 entities.KoseiHelper/SleepyController.placements.name.SleepyController=Sleepy Controller

@@ -35,6 +35,7 @@ namespace Celeste.Mod.KoseiHelper.Entities
         public float timeForHahaha, timeForHa, timeToSfx;
         public bool synchronizedSfx;
         public bool left;
+        public int groupsSize;
 
         public bool Enabled
         {
@@ -57,6 +58,7 @@ namespace Celeste.Mod.KoseiHelper.Entities
             timeForHahaha = data.Float("timeForHahaha", 1.5f);
             timeForHa = data.Float("timeForHa", 0.6f);
             timeToSfx = data.Float("timeToSfx", 0.4f);
+            groupsSize = data.Int("groupSize", 3);
             left = data.Bool("left", false);
             synchronizedSfx = data.Bool("synchronizedSfx", false);
             base.Depth = data.Int("depth", -10001);
@@ -87,7 +89,7 @@ namespace Celeste.Mod.KoseiHelper.Entities
                         Audio.Play(audioPath, Center);
                     has.Add(new Ha(spritePath));
                     counter++;
-                    if (counter >= 3)
+                    if (counter >= groupsSize)
                     {
                         counter = 0;
                         timer = timeForHahaha;
