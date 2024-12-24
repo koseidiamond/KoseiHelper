@@ -1,5 +1,18 @@
 #ENTITIES
 
+# Custom Hahaha
+entities.KoseiHelper/CustomHahaha.placements.name.CustomHahaha=Custom Hahaha
+entities.KoseiHelper/CustomHahaha.placements.description.CustomHahaha=Granny's laugh but the sprite and sound can be customized.
+entities.KoseiHelper/CustomHahaha.attributes.description.flag=The flag that needs to be set for the hahaha to appear.
+entities.KoseiHelper/CustomHahaha.attributes.description.triggerLaughSfx=If the sound should play.
+entities.KoseiHelper/CustomHahaha.attributes.description.sprite=The path to your custom animation, which should be called ha.
+entities.KoseiHelper/CustomHahaha.attributes.description.sound=The sound that should play when laughing.\nThe vanilla sound is "event:/char/granny/laugh_oneha".
+entities.KoseiHelper/CustomHahaha.attributes.description.timeForHahaha=The time that needs to pass until a group of Has is spawned.
+entities.KoseiHelper/CustomHahaha.attributes.description.timeForHa=The time that needs to pass for each Ha in the group to spawn.
+entities.KoseiHelper/CustomHahaha.attributes.description.timeForSfx=The time that needs to pass until the sfx is played again.
+entities.KoseiHelper/CustomHahaha.attributes.description.left=If the Hahaha should move towards the left instead of right.
+entities.KoseiHelper/CustomHahaha.attributes.description.synchronizedSfx=If the sound should play with each spawned Ha instead of on a fixed interval.
+entities.KoseiHelper/CustomHahaha.attributes.description.groupSize=How many Has should be in each group.
 
 # Goomba
 entities.KoseiHelper/Goomba.placements.name.goomba=Goomba
@@ -215,20 +228,6 @@ entities.KoseiHelper/TheoPetController.attributes.description.jumpStrength=How m
 #entities.KoseiHelper/TopDownViewController.placements.name.TopDownViewController=Top Down View Controller
 #entities.KoseiHelper/TopDownViewController.placements.description.Top Down View Controller=This controller allows the player to move similarly to top-down view RPGs.
 
-# Custom Hahaha
-entities.KoseiHelper/CustomHahaha.placements.name.CustomHahaha=Custom Hahaha
-entities.KoseiHelper/CustomHahaha.placements.description.CustomHahaha=Granny's laugh but the sprite and sound can be customized.
-entities.KoseiHelper/CustomHahaha.attributes.description.flag=The flag that needs to be set for the hahaha to appear.
-entities.KoseiHelper/CustomHahaha.attributes.description.triggerLaughSfx=If the sound should play.
-entities.KoseiHelper/CustomHahaha.attributes.description.sprite=The path to your custom animation, which should be called ha.
-entities.KoseiHelper/CustomHahaha.attributes.description.sound=The sound that should play when laughing.\nThe vanilla sound is "event:/char/granny/laugh_oneha".
-entities.KoseiHelper/CustomHahaha.attributes.description.timeForHahaha=The time that needs to pass until a group of Has is spawned.
-entities.KoseiHelper/CustomHahaha.attributes.description.timeForHa=The time that needs to pass for each Ha in the group to spawn.
-entities.KoseiHelper/CustomHahaha.attributes.description.timeForSfx=The time that needs to pass until the sfx is played again.
-entities.KoseiHelper/CustomHahaha.attributes.description.left=If the Hahaha should move towards the left instead of right.
-entities.KoseiHelper/CustomHahaha.attributes.description.synchronizedSfx=If the sound should play with each spawned Ha instead of on a fixed interval.
-entities.KoseiHelper/CustomHahaha.attributes.description.groupSize=How many Has should be in each group.
-
 # Sleepy Controller
 entities.KoseiHelper/SleepyController.placements.name.SleepyController=Sleepy Controller
 entities.KoseiHelper/SleepyController.placements.description.SleepyController=Similarly to the Hiccup variant, this makes the player to sleep on random intervals.\nNot compatible with skinmods.
@@ -239,13 +238,20 @@ entities.KoseiHelper/SleepyController.attributes.description.adjustHairColor=If 
 entities.KoseiHelper/SleepyController.attributes.description.cassetteSleep=The player will sleep at the rythm of the cassettes.\nThe min/max times will not be used if this is checked.
 
 # Custom Pause Controller
-entities.KoseiHelper/CustomPauseController.placements.name.CustomPauseController= Custom Pause Controller
+entities.KoseiHelper/CustomPauseController.placements.name.CustomPauseController=Custom Pause Controller
 entities.KoseiHelper/CustomPauseController.placements.description.Custom Pause Controller=This controller can disallow several options regarding the Pause Menu.
 entities.KoseiHelper/CustomPauseController.attributes.description.canPause=If the player should be able to open the Pause Menu.
 entities.KoseiHelper/CustomPauseController.attributes.description.canRetry=If the Retry option should be enabled in the Pause Menu.
 entities.KoseiHelper/CustomPauseController.attributes.description.canSaveAndQuit=If the Save And Quit option should be enabled in the Pause Menu.
 entities.KoseiHelper/CustomPauseController.attributes.description.timerIsStopped=If the timer for the map should stop running while the player is in the room.
 entities.KoseiHelper/CustomPauseController.attributes.description.dieOnUnpause=If the player should be punished with death after pausing the game.\nPrevents pause buffering.
+
+# Flag Refill Controller
+entities.KoseiHelper/FlagRefillController.placements.name.FlagRefillController=Flag Refill Controller
+entities.KoseiHelper/FlagRefillController.placements.description.FlagRefillController=Controller that allows to customize several options that apply to all Flag Refills.
+entities.KoseiHelper/FlagRefillController.attributes.description.hairColor=The color that the hair should be while having a flag from a Flag Refill.
+entities.KoseiHelper/FlagRefillController.attributes.description.flagName=The name of the flag that Flag Refills set to true when collected.
+entities.KoseiHelper/FlagRefillController.attributes.description.persistent=If this controller should persist between rooms.
 
 # Spawn Controller - General attributes
 entities.KoseiHelper/SpawnController.placements.name.SpawnController=Spawn Controller

@@ -3,6 +3,7 @@ using Monocle;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
+using System.Collections;
 
 namespace Celeste.Mod.KoseiHelper.Entities
 {
@@ -26,7 +27,7 @@ namespace Celeste.Mod.KoseiHelper.Entities
         private bool expanded;
         private bool playerInRange;
         private bool isActivated;
-        private Sprite spriteIndicator;
+        private Sprite spriteIndicator, spriteGrow;
         private List<Image> images = new List<Image>();
 
         public TriggerSpinner(EntityData data, Vector2 offset) : base(data.Position + offset)
@@ -48,10 +49,15 @@ namespace Celeste.Mod.KoseiHelper.Entities
             color = data.Enum("color", TriggerSpinnerColor.Blue);
             customPathTriggered = data.Attr("customPathTriggered", "");
             customPathIndicator = data.Attr("customPathIndicator", "objects/KoseiHelper/TriggerSpinner/");
+
             Add(spriteIndicator = new Sprite(GFX.Game, customPathIndicator + "indicator"));
             spriteIndicator.AddLoop("indicator", "", 0.1f);
             spriteIndicator.Play("indicator", false, false);
             spriteIndicator.CenterOrigin();
+
+            Add(spriteGrow = new Sprite(GFX.Game, customPathIndicator + "grow"));
+            spriteGrow.CenterOrigin();
+
             randomSeed = Calc.Random.Next();
             Add(new PlayerCollider(OnPlayerTouch));
             Depth = -8500;
@@ -68,11 +74,8 @@ namespace Celeste.Mod.KoseiHelper.Entities
                 if (playerCollides && !playerInRange)
                     playerInRange = true;
                 else if (!playerCollides && playerInRange)
-                {
-                    playerInRange = false;
-                    isActivated = true;
-                    TriggeredSprite();
-                    spriteIndicator.Visible = false;
+                { // Spinner is triggered here
+                    Add(new Coroutine(Grow(), true));
                 }
                 if (playerInRange && !expanded)
                     expanded = true;
@@ -87,9 +90,24 @@ namespace Celeste.Mod.KoseiHelper.Entities
                 playerInRange = true;
         }
 
-        private void TriggeredSprite()
+        private IEnumerator Grow()
         {
-            if (!expanded) return;
+            playerInRange = false;
+            spriteIndicator.Visible = false;
+            spriteGrow.AddLoop("grow", "", 0.1f);
+            spriteGrow.Play("grow", false, false);
+            spriteGrow.CenterOrigin();
+            yield return 0.4f;
+            isActivated = true;
+            spriteGrow.Visible = false;
+            ActivatedSprite();
+            yield return null;
+        }
+
+        private void ActivatedSprite()
+        {
+            if (!expanded)
+                return;
             Calc.PushRandom(randomSeed);
             List<MTexture> atlasSubtextures = GFX.Game.GetAtlasSubtextures(GetTextureForColor(this.color));
             MTexture mTexture = Calc.Random.Choose(atlasSubtextures);
@@ -105,10 +123,8 @@ namespace Celeste.Mod.KoseiHelper.Entities
                 if (!SolidCheck(new Vector2(base.X - 4f, base.Y + 4f)))
                     images.Add(new Image(mTexture.GetSubtexture(0, 10, 14, 14)).SetOrigin(12f, 2f).SetColor(spriteColor));
             }
-            else
-            {
+            else // Custom Texture
                 images.Add(new Image(mTexture.GetSubtexture(0, 0, 16, 16)).CenterOrigin().SetColor(spriteColor));
-            }
             foreach (var image in images)
             {
                 Add(image);
@@ -156,9 +172,7 @@ namespace Celeste.Mod.KoseiHelper.Entities
             foreach (Component component in base.Components)
             {
                 if (component is Image image)
-                {
                     image.Position += pos;
-                }
             }
         }
 

@@ -179,7 +179,7 @@ public class FlagRefill : Entity
             base.Add(new Coroutine(this.RefillRoutine(player), true));
             player.UseRefill(false);
             KoseiHelperModule.Session.HasFlagDash = true;
-            level.Session.SetFlag("KoseiHelper_FlagRefill", true);
+            level.Session.SetFlag(KoseiHelperModule.Session.flagRefillFlag, true);
             this.respawnTimer = 2.5f;
         }
     }
@@ -225,7 +225,7 @@ public class FlagRefill : Entity
     public static Color FlagDashHairColor(On.Celeste.PlayerHair.orig_GetHairColor orig, PlayerHair self, int index)
     {
         if (KoseiHelperModule.Session.HasFlagDash)
-            return Color.FromNonPremultiplied(230, 0, 30, 255);
+            return KoseiHelperModule.Session.FlagDashColor;
         else
             return orig(self, index);
 
@@ -237,7 +237,7 @@ public class FlagRefill : Entity
         {
             KoseiHelperModule.Session.HasFlagDash = false;
             KoseiHelperModule.Session.FlagDashActive = false;
-            self.SceneAs<Level>().Session.SetFlag("KoseiHelper_FlagRefill", false);
+            self.SceneAs<Level>().Session.SetFlag(KoseiHelperModule.Session.flagRefillFlag, false);
         }
         return orig(self, direction, evenIfInvincible, registerDeathInStats);
     }
@@ -246,7 +246,7 @@ public class FlagRefill : Entity
         if (KoseiHelperModule.Session.HasFlagDash)
         {
             KoseiHelperModule.Session.FlagDashActive = true;
-            self.SceneAs<Level>().Session.SetFlag("KoseiHelper_FlagRefill", false);
+            self.SceneAs<Level>().Session.SetFlag(KoseiHelperModule.Session.flagRefillFlag, false);
             FlagEndDelayCoroutine?.Cancel();
             FlagEndDelayCoroutine?.RemoveSelf();
         }
