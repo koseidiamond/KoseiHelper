@@ -65,6 +65,18 @@ entities.KoseiHelper/CustomTempleCrackedBlock.attributes.description.breakSound=
 entities.KoseiHelper/CustomTempleCrackedBlock.attributes.description.prebreakSound=The sound that will play if the health is reduced but the block is not broken yet.
 entities.KoseiHelper/CustomTempleCrackedBlock.attributes.description.health=The number of hits until the block is broken.
 
+#Shatter Dash Block
+entities.KoseiHelper/ShatterDashBlock.placements.name.ShatterDashBlock=Shatter Dash Block
+entities.KoseiHelper/ShatterDashBlock.placements.description.ShatterDashBlock=A Dash block that can be broken with enough speed.
+entities.KoseiHelper/ShatterDashBlock.attributes.description.tiletype=The tileset id.
+entities.KoseiHelper/ShatterDashBlock.attributes.description.blendin=If the block should try to blend with other tiles of the same type.
+entities.KoseiHelper/ShatterDashBlock.attributes.description.canDash=If the block can be broken with a dash.
+entities.KoseiHelper/ShatterDashBlock.attributes.description.permanent=If the block should reappear upon death/transition/room reload or shatter for the entire session.
+entities.KoseiHelper/ShatterDashBlock.attributes.description.FreezeTime=How much time the game should freeze when shattering.\nVanilla dash blocks give 3f (0.05s). The SJ map used 0.03s.
+entities.KoseiHelper/ShatterDashBlock.attributes.description.SpeedRequirement=The minimum horizontal speed that the player should be moving in order to shatter the block.
+entities.KoseiHelper/ShatterDashBlock.attributes.description.SpeedDecrease=How much speed should be substracted when shattering the block.
+entities.KoseiHelper/ShatterDashBlock.attributes.description.ShakeTime=The time the screen should shake when shattering.
+
 #Oshiro Doors
 entities.KoseiHelper/CustomOshiroDoor.placements.name.CustomOshiroDoor= Custom Oshiro Door
 entities.KoseiHelper/CustomOshiroDoor.placements.description.Custom Oshiro Door= The bouncy oshiro/ghost door but more customizable.
@@ -192,10 +204,15 @@ entities.KoseiHelper/TheoPetController.attributes.description.jumpStrength=How m
 # Custom Hahaha
 entities.KoseiHelper/CustomHahaha.placements.name.CustomHahaha=Custom Hahaha
 entities.KoseiHelper/CustomHahaha.placements.description.CustomHahaha=Granny's laugh but the sprite and sound can be customized.
-entities.KoseiHelper/CustomHahaha.attributes.description.ifset=The flag that needs to be set for the hahaha to appear.
+entities.KoseiHelper/CustomHahaha.attributes.description.flag=The flag that needs to be set for the hahaha to appear.
 entities.KoseiHelper/CustomHahaha.attributes.description.triggerLaughSfx=If the sound should play.
 entities.KoseiHelper/CustomHahaha.attributes.description.sprite=The path to your custom animation, which should be called ha.
 entities.KoseiHelper/CustomHahaha.attributes.description.sound=The sound that should play when laughing.\nThe vanilla sound is "event:/char/granny/laugh_oneha".
+entities.KoseiHelper/CustomHahaha.attributes.description.timeForHahaha=The time that needs to pass until a group of 3 Has is spawned.
+entities.KoseiHelper/CustomHahaha.attributes.description.timeForHa=The time that needs to pass for each Ha in the group to spawn.
+entities.KoseiHelper/CustomHahaha.attributes.description.timeForSfx=The time that needs to pass until the sfx is played again.
+entities.KoseiHelper/CustomHahaha.attributes.description.left=If the Hahaha should move towards the left instead of right.
+entities.KoseiHelper/CustomHahaha.attributes.description.synchronizedSfx=If the sound should play with each spawned Ha instead of on a fixed interval.
 
 # Sleepy Controller
 entities.KoseiHelper/SleepyController.placements.name.SleepyController=Sleepy Controller
@@ -205,7 +222,6 @@ entities.KoseiHelper/SleepyController.attributes.description.maxTime=The maximum
 entities.KoseiHelper/SleepyController.attributes.description.napTime=The time that the player will sleep on each nap.\nIt should be lower than the min/max values.
 entities.KoseiHelper/SleepyController.attributes.description.adjustHairColor=If the player should have the appropiate hair color while taking a nap.\nOtherwise it will default to the vanilla sprite (red hair).
 entities.KoseiHelper/SleepyController.attributes.description.cassetteSleep=The player will sleep at the rythm of the cassettes.\nThe min/max times will not be used if this is checked.
-
 
 # Custom Pause Controller
 entities.KoseiHelper/CustomPauseController.placements.name.CustomPauseController= Custom Pause Controller

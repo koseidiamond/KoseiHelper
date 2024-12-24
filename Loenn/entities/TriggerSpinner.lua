@@ -37,25 +37,14 @@ TriggerSpinner.fieldInformation = {
 }
 TriggerSpinner.placements = {
     {
-        name = "dust_sprite",
+        name = "TriggerSpinner",
         data = {
             color = "blue",
-            dust = true,
             attachToSolid = false
         }
     }
 }
 
-for _, color in ipairs(TriggerSpinnerColors) do
-    table.insert(TriggerSpinner.placements, {
-        name = color,
-        data = {
-            color = color,
-            dust = false,
-            attachToSolid = false
-        }
-    })
-end
 
 local function getTriggerSpinnerTexture(entity, color, foreground)
     local prefix = (foreground or foreground == nil) and "fg_" or "bg_"

@@ -24,6 +24,15 @@ namespace Celeste.Mod.KoseiHelper.Entities
             Collidable = true;
             Collider = new ColliderList(new Circle(6f), new Hitbox(16f, 4f, -8f, -3f));
             attachToSolid = data.Bool("attachToSolid", false);
+                if (attachToSolid)
+                {
+                    Add(new StaticMover
+                    {
+                        OnShake = OnShake,
+                        SolidChecker = IsRiding,
+                        OnDestroy = base.RemoveSelf
+                    });
+                }
             color = data.Enum("color", CrystalColor.Blue);
             randomSeed = Calc.Random.Next();
             Add(new PlayerCollider(OnPlayerTouch));
@@ -38,11 +47,8 @@ namespace Celeste.Mod.KoseiHelper.Entities
             if (player != null)
             {
                 bool playerCollides = CollideCheck(player);
-
                 if (playerCollides && !playerInRange)
-                {
                     playerInRange = true;
-                }
                 else if (!playerCollides && playerInRange)
                 {
                     playerInRange = false;
@@ -50,23 +56,16 @@ namespace Celeste.Mod.KoseiHelper.Entities
                     CreateSprites();
                 }
                 if (playerInRange && !expanded)
-                {
                     expanded = true;
-                    
-                }
             }
         }
 
         private void OnPlayerTouch(Player player)
         {
             if (isActivated)
-            {
                 player.Die((player.Position - Position).SafeNormalize());
-            }
             else
-            {
                 playerInRange = true;
-            }
         }
 
         private void CreateSprites()
@@ -95,29 +94,16 @@ namespace Celeste.Mod.KoseiHelper.Entities
             foreach (var image in images)
             {
                 Add(image);
-                //CursedImage(image);
             }
-
             Calc.PopRandom();
-        }
-
-        private void CursedImage(Image image) // TODO fix wtf is wrong with this image prob better to just copypaste from CrystalStaticSpinner
-        {
-            Vector2 position = image.Position;
-            foreach (var offset in new[] { new Vector2(0f, -1f), new Vector2(0f, 1f), new Vector2(-1f, 0f), new Vector2(1f, 0f) })
-            {
-                var borderImage = new Image(image.Texture);
-                borderImage.Position = position + offset;
-                borderImage.Color = Color.White;
-                Add(borderImage);
-            }
         }
 
         private bool SolidCheck(Vector2 position)
         {
             foreach (Solid solid in base.Scene.CollideAll<Solid>(position))
             {
-                if (solid is SolidTiles) return true;
+                if (solid is SolidTiles)
+                    return true;
             }
             return false;
         }
@@ -139,6 +125,21 @@ namespace Celeste.Mod.KoseiHelper.Entities
             float num = 280f;
             float value = (position.Length() + base.Scene.TimeActive * 50f) % num / num;
             return Calc.HsvToColor(0.4f + Calc.YoYo(value) * 0.4f, 0.4f, 0.9f);
+        }
+        private void OnShake(Vector2 pos)
+        {
+            foreach (Component component in base.Components)
+            {
+                if (component is Image image)
+                {
+                    image.Position += pos;
+                }
+            }
+        }
+
+        private bool IsRiding(Solid solid)
+        {
+            return CollideCheck(solid);
         }
     }
 }

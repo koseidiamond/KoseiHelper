@@ -26,13 +26,16 @@ namespace Celeste.Mod.KoseiHelper.Entities
         }
 
         private bool enabled;
-        private string ifSet;
+        private string flag;
         private float timer;
         private int counter;
         private List<Ha> has = new List<Ha>();
         private bool autoTriggerLaughSfx = true;
         private Vector2 autoTriggerLaughOrigin;
         private string spritePath, audioPath;
+        public float timeForHahaha, timeForHa, timeToSfx;
+        public bool synchronizedSfx;
+        public bool left;
 
         public bool Enabled
         {
@@ -52,9 +55,14 @@ namespace Celeste.Mod.KoseiHelper.Entities
         {
             spritePath = data.Attr("sprite", "characters/oldlady/");
             audioPath = data.Attr("sound", "event:/char/granny/laugh_oneha");
-            base.Depth = -10001;
-            this.ifSet = data.Attr("ifset", "");
-            if (data.Bool("triggerLaughSfx", false))
+            timeForHahaha = data.Float("timeForHahaha", 1.5f);
+            timeForHa = data.Float("timeForHa", 0.6f);
+            timeToSfx = data.Float("timeToSfx", 0.4f);
+            left = data.Bool("left", false);
+            synchronizedSfx = data.Bool("synchronizedSfx", false);
+            base.Depth = data.Int("depth", -10001);
+            this.flag = data.Attr("flag", "");
+            if (data.Bool("synchronizedSfx", false))
             {
                 autoTriggerLaughSfx = true;
                 autoTriggerLaughOrigin = offset;
@@ -64,7 +72,7 @@ namespace Celeste.Mod.KoseiHelper.Entities
         public override void Added(Scene scene)
         {
             base.Added(scene);
-            if (!string.IsNullOrEmpty(ifSet) && !(base.Scene as Level).Session.GetFlag(ifSet))
+            if (!string.IsNullOrEmpty(flag) && !(base.Scene as Level).Session.GetFlag(flag))
             {
                 Enabled = false;
             }
@@ -77,19 +85,21 @@ namespace Celeste.Mod.KoseiHelper.Entities
                 timer -= Engine.DeltaTime;
                 if (timer <= 0f)
                 {
+                    if (synchronizedSfx)
+                        Audio.Play(audioPath, Center);
                     has.Add(new Ha(spritePath));
                     counter++;
                     if (counter >= 3)
                     {
                         counter = 0;
-                        timer = 1.5f;
+                        timer = timeForHahaha;
                     }
                     else
                     {
-                        timer = 0.6f;
+                        timer = timeForHa;
                     }
                 }
-                if (autoTriggerLaughSfx && base.Scene.OnInterval(0.4f))
+                if (autoTriggerLaughSfx && base.Scene.OnInterval(timeToSfx) && !synchronizedSfx)
                 {
                     Audio.Play(audioPath, Center);
                 }
@@ -108,7 +118,7 @@ namespace Celeste.Mod.KoseiHelper.Entities
                 }
             }
 
-            if (!Enabled && !string.IsNullOrEmpty(ifSet) && (base.Scene as Level).Session.GetFlag(ifSet))
+            if (!Enabled && !string.IsNullOrEmpty(flag) && (base.Scene as Level).Session.GetFlag(flag))
             {
                 Enabled = true;
             }
@@ -120,7 +130,10 @@ namespace Celeste.Mod.KoseiHelper.Entities
         {
             foreach (Ha ha in has)
             {
+                if (!left)
                 ha.Sprite.Position = Position + new Vector2(ha.Percent * 60f, -10f + (float)(0.0 - Math.Sin(ha.Percent * 13f)) * 4f + ha.Percent * -16f);
+                else
+                    ha.Sprite.Position = Position + new Vector2(ha.Percent * -60f, -10f + (float)(0.0 - Math.Sin(ha.Percent * 13f)) * 4f + ha.Percent * -16f);
                 ha.Sprite.Render();
             }
         }

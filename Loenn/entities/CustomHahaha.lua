@@ -9,10 +9,15 @@ CustomHahaha.nodeLimits = {1, 1}
 CustomHahaha.placements = {
     name = "CustomHahaha",
     data = {
-        ifset = "",
-        triggerLaughSfx = true,
+        flag = "VivHelper/IsPlayerAlive",
+        synchronizedSfx = false,
 		sprite = "characters/oldlady/KoseiHelper/",
-		sound = "event:/KoseiHelper/laugh_oneho"
+		sound = "event:/KoseiHelper/laugh_oneho",
+		timeForHahaha = 1.5,
+		timeForHa = 0.6,
+		timeForSfx = 0.4,
+		depth = -10001,
+		left = false
     }
 }
 
