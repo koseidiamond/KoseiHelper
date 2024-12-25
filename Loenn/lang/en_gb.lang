@@ -28,6 +28,7 @@ entities.KoseiHelper/Goomba.attributes.description.timeToSpawnMinis=Time that ne
 entities.KoseiHelper/Goomba.attributes.description.behavior=Chaser: The goomba walks towards the player.\nDumb: The goomba moves always in the same direction, determined by the speed sign.\nSmart: The goomba moves in the same direction, but changes its mind before falling if it detects a hole.
 entities.KoseiHelper/Goomba.attributes.description.gravityMultiplier=The vertical speed will be affected by this multiplier.
 entities.KoseiHelper/Goomba.attributes.description.canEnableTouchSwitches=If the Goomba can turn on vanilla touch switches.
+entities.KoseiHelper/Goomba.attributes.description.minisAmount=If the goomba can spawn minigoombas, this limits the max number of minis per goomba.\n(Number not reset if a mini is killed)
 
 #Trigger Spinner
 entities.KoseiHelper/TriggerSpinner.placements.name.TriggerSpinner=Trigger Spinner
@@ -315,6 +316,7 @@ entities.KoseiHelper/SpawnController.attributes.description.soundIndex=The sound
 entities.KoseiHelper/SpawnController.attributes.description.blockSinks=If the block sinks when the player steps on it.
 entities.KoseiHelper/SpawnController.attributes.description.crushBlockAxe=Determines which sides of the Kevin block are hittable.
 entities.KoseiHelper/SpawnController.attributes.description.crushBlockChillout=If the block should have the large face and get tired after being hit.
+entities.KoseiHelper/SpawnController.attributes.description.flagCycleAt=The "spawned flag" will cycle until reaching this number, then it will reset the values again.\nFor example, if the cycle is 3, the process will be:\nkoseiFlag1 > koseiFlag2 > koseiFlag3 > !koseiFlag1 > !koseiFlag2 > !koseiFlag3 > koseiFlag1 > ...
 #Spawn Controller - custom entity attributes
 entities.KoseiHelper/SpawnController.attributes.description.entityPath=The full path to the entity class to be spawned.\nSpawning will only work for entities that accept an EntityData and Vector2 parameterized constructor.\For example, Celeste.Strawberry.
 entities.KoseiHelper/SpawnController.attributes.description.dictKeys=The names of the keys the Values dictionary of the EntityData used to spawn the entity will use.\nMust match the ones expected by the entity in its constructor for the Entity to find them.\nIn simple words, the parameters separated by commas. For example, winged,moon.

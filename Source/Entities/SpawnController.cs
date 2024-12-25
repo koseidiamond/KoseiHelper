@@ -38,6 +38,7 @@ public enum EntityType
     CrushBlock,
     Decal,
     Flag,
+    Counter,
     //The following entities are just alternate names so the name from the plugin is renamed:
     SwapBlock,
     Kevin,
@@ -81,7 +82,8 @@ public class SpawnController : Entity
     private int currentCassetteIndex, previousCassetteIndex;
     private bool canSpawnFromCassette = false;
     public int flagCount = 1;
-
+    public int flagCycleAt = 9999;
+    public bool cycledFlag;
     //other important variables
     private int entityID = 7388544; // Very high value so it doesn't conflict with other ids (hopefully)
     private List<EntityWithTTL> spawnedEntitiesWithTTL = new List<EntityWithTTL>();
@@ -218,6 +220,8 @@ public class SpawnController : Entity
 
         decalTexture = data.Attr("decalTexture", "10-farewell/creature_f00");
         decalDepth = data.Int("decalDepth", 9000);
+
+        flagCycleAt = data.Int("flagCycleAt", 9999);
 
         //Custom Entities
         entityPath = data.Attr("entityPath");
@@ -423,7 +427,16 @@ public class SpawnController : Entity
                             spawnedEntity = new Decal(decalTexture, spawnPosition, new Vector2(1, 1), decalDepth);
                         break;
                     case EntityType.Flag:
-                        level.Session.SetFlag("koseiFlag" + flagCount, true);
+                        if (flagCount > flagCycleAt)
+                        {
+                            flagCount = 1;
+                            cycledFlag = !cycledFlag;
+                        }
+                        if (!cycledFlag)
+                            level.Session.SetFlag("koseiFlag" + flagCount, true);
+                        else
+                            level.Session.SetFlag("koseiFlag" + flagCount, false);
+                        Audio.Play(appearSound, player.Position);
                         flagCount++;
                         break;
                     case EntityType.CustomEntity:

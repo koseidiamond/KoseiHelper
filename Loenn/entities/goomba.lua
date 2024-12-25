@@ -17,10 +17,33 @@ Goomba.placements = {
 			flyAway = false,
 			behavior = "Chaser",
 			gravityMultiplier = 1,
-			canEnableTouchSwitches = false
+			canEnableTouchSwitches = false,
+			minisAmount = 10
 		}
 	}
 }
+
+function Goomba.ignoredFields(entity)
+	local ignored = {
+	"_name",
+    "_id",
+	"minisAmount",
+	"timeToSpawnMinis"
+	}
+    local function doNotIgnore(value)
+        for i = #ignored, 1, -1 do
+            if ignored[i] == value then
+                table.remove(ignored, i)
+                return
+            end
+        end
+    end
+	if entity.spawnMinis == true then
+		doNotIgnore("minisAmount")
+		doNotIgnore("timeToSpawnMinis")
+	end
+	return ignored
+end
 
 Goomba.fieldInformation = {
 	timeToSpawnMinis = {

@@ -63,6 +63,7 @@ SpawnController.placements = {
 		crushBlockChillout = false,
 		decalTexture = "10-farewell/creature_f00",
 		decalDepth = 9000,
+		flagCycleAt = 9999,
 
 		-- Custom Entity (or any entity that can be spawned with EntityData)
 		entityPath = "",
@@ -175,6 +176,7 @@ SpawnController.fieldInformation = function (entity) return {
 	jumpthruTexture = {
         options = textures
     },
+	flagCycleAt = { fieldType = "integer" },
 	dictKeys = {
 		fieldType = "list",
 		elementOptions = {
@@ -229,7 +231,8 @@ function SpawnController.ignoredFields(entity)
 	"decalDepth",
 	"entityPath",
 	"dictKeys",
-	"dictValues"
+	"dictValues",
+	"flagCycleAt"
 	}
     local function doNotIgnore(value)
         for i = #ignored, 1, -1 do
@@ -307,6 +310,9 @@ function SpawnController.ignoredFields(entity)
 	if entity.entityToSpawn == "Decal" then
 		doNotIgnore("decalTexture")
 		doNotIgnore("decalDepth")
+	end
+	if entity.entityToSpawn == "Flag" then
+		doNotIgnore("flagCycleAt")
 	end
 	-- Noded entities
 	if entity.entityToSpawn == "ZipMover" or entity.entityToSpawn == "SwapBlock" or entity.entityToSpawn == "Iceball" then

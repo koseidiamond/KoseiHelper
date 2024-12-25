@@ -46,6 +46,7 @@ public class Goomba : Actor
     public string deathSound;
     public bool isBaby;
     public int springDirection;
+    public int minisAmount;
     public Goomba(EntityData data, Vector2 offset) : base(data.Position + offset)
     {
         isBaby = false;
@@ -66,6 +67,7 @@ public class Goomba : Actor
         gravityMult = data.Float("gravityMultiplier", 1f);
         canEnableTouchSwitches = data.Bool("canEnableTouchSwitches", false);
         deathSound = data.Attr("deathSound", "event:/KoseiHelper/goomba");
+        minisAmount = data.Int("minisAmount", 10);
         if (!isWide)
         {
             Collider = new Hitbox(13, 12, -7, -4);
@@ -129,7 +131,7 @@ public class Goomba : Actor
     public override void Update()
     {
         Level level = SceneAs<Level>();
-        if (Scene.OnInterval(timeToSpawnMinis) && canSpawnMinis && minisSpawned < 10)
+        if (Scene.OnInterval(timeToSpawnMinis) && canSpawnMinis && minisSpawned < minisAmount)
         {
             this.Scene.Add(new Goomba(new Vector2(this.Position.X, this.Position.Y + 4), originalSpeedX + originalSpeedX / 4, false, false, false, true));
             minisSpawned += 1;
@@ -299,7 +301,7 @@ public class Goomba : Actor
             }
             else
             {
-                springTimer = 0.2f;
+                springTimer = 0.25f;
                 springDirection = 1;
                 speedX = 220f;
             }
@@ -320,7 +322,7 @@ public class Goomba : Actor
             }
             else
             {
-                springTimer = 0.2f;
+                springTimer = 0.25f;
                 springDirection = -1;
                 speedX = 220f;
             }
