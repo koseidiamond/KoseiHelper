@@ -42,6 +42,9 @@
       <Reference Include="LuaCutscenes">
         <HintPath>..\lib\LuaCutscenes.dll</HintPath>
       </Reference>
+      <Reference Include="MaxHelpingHand">
+        <HintPath>..\lib\MaxHelpingHand.dll</HintPath>
+      </Reference>
       <Reference Include="MMHOOK_Celeste">
         <HintPath>..\lib\MMHOOK_Celeste.dll</HintPath>
       </Reference>

@@ -3,7 +3,8 @@ using Monocle;
 using System;
 using Microsoft.Xna.Framework;
 using System.Collections;
-using System.Reflection.Metadata;
+using Celeste.Mod.MaxHelpingHand.Entities;
+using System.Runtime.CompilerServices;
 
 namespace Celeste.Mod.KoseiHelper.Entities;
 public enum GoombaBehavior
@@ -42,8 +43,11 @@ public class Goomba : Actor
     public int minisSpawned = 0;
     public static ParticleType goombaParticle = Player.P_Split;
     public bool canEnableTouchSwitches;
+    public string deathSound;
+    public bool isBaby;
     public Goomba(EntityData data, Vector2 offset) : base(data.Position + offset)
     {
+        isBaby = false;
         Depth = -1;
         originalSpeedX = speedX = data.Float("speed", 50f);
         if (!isWinged)
@@ -60,6 +64,7 @@ public class Goomba : Actor
         timeToSpawnMinis = data.Float("timeToSpawnMinis", 1);
         gravityMult = data.Float("gravityMultiplier", 1f);
         canEnableTouchSwitches = data.Bool("canEnableTouchSwitches", false);
+        deathSound = data.Attr("deathSound", "event:/KoseiHelper/goomba");
         if (!isWide)
         {
             Collider = new Hitbox(13, 12, -7, -4);
@@ -83,6 +88,7 @@ public class Goomba : Actor
     // this ctor is used for the minigoombas when a goomba can spawn minis
     public Goomba(Vector2 position, float newSpeed, bool newOutline, bool newIsWide, bool newIsWinged, bool newCanBeBounced) : base(position)
     {
+        isBaby = true;
         Depth = -1;
         originalSpeedX = speedX = newSpeed;
         if (!isWinged)
@@ -124,7 +130,7 @@ public class Goomba : Actor
         Level level = SceneAs<Level>();
         if (Scene.OnInterval(timeToSpawnMinis) && canSpawnMinis && minisSpawned < 10)
         {
-            this.Scene.Add(new Goomba(new Vector2(this.Position.X, this.Position.Y + 6), originalSpeedX + originalSpeedX / 4, false, false, false, true));
+            this.Scene.Add(new Goomba(new Vector2(this.Position.X, this.Position.Y + 4), originalSpeedX + originalSpeedX / 4, false, false, false, true));
             minisSpawned += 1;
         }
         if (speedX != 0)
@@ -225,10 +231,14 @@ public class Goomba : Actor
             MoveV(-30 * Engine.DeltaTime * sine.Value, onCollideV);
         }
 
-        if (CollideCheck<Solid>())
+        SquishCallback = (CollisionData d) =>
         {
-            RemoveSelf();
-        }
+            if (!TrySquishWiggle(d, 2, 2))
+            {
+                Audio.Play("event:/game/05_mirror_temple/seeker_death", Center);
+                RemoveSelf();
+            }
+        };
     }
 
     private void OnPlayer(Player player)
@@ -244,10 +254,11 @@ public class Goomba : Actor
         Level level = SceneAs<Level>();
         Celeste.Freeze(0.05f);
         player.Bounce(base.Top - 2f);
+        if (!isBaby)
+            Audio.Play(deathSound, Position);
         this.RemoveSelf();
         float angle = player.Speed.Angle();
         level.ParticlesFG.Emit(goombaParticle, 5, Position, Vector2.One * 4f, angle - (float)Math.PI / 2f);
-        Audio.Play("event:/KoseiHelper/goomba", Position);
     }
 
     public override void Render()
@@ -284,7 +295,7 @@ public class Goomba : Actor
         {
             MoveTowardsY(spring.CenterY + 5f, 4f);
             if (behavior == GoombaBehavior.Chaser)
-            speedX = -220f;
+                speedX = -220f;
             if (behavior != GoombaBehavior.Chaser)
             {
                 speedX = 220f;
@@ -330,6 +341,8 @@ public class Goomba : Actor
     public void Killed(Player player, Level level)
     {
         Celeste.Freeze(0.05f);
+        if (!isBaby)
+            Audio.Play(deathSound, Position);
         this.RemoveSelf();
         float angle = player.Speed.Angle();
         level.ParticlesFG.Emit(goombaParticle, 5, Position, Vector2.One * 4f, angle - (float)Math.PI / 2f);
@@ -338,10 +351,17 @@ public class Goomba : Actor
     public void EnableTouchSwitch()
     {
         foreach (Entity entity in Scene.Entities)
+        {
             if (entity is TouchSwitch touchSwitch)
             {
                 if (CollideCheck(touchSwitch) && !touchSwitch.Switch.Activated)
                     touchSwitch.TurnOn();
             }
+            if (entity is FlagTouchSwitch flagTouchSwitch)
+            {
+                if (CollideCheck(flagTouchSwitch) && !flagTouchSwitch.Activated)
+                    flagTouchSwitch.TurnOn();
+            }
+        }
     }
 }

@@ -1,3 +1,5 @@
+local utils = require("utils")
+
 local DefrostableBlock = {}
 
 DefrostableBlock.name = "KoseiHelper/DefrostableBlock"
@@ -16,11 +18,11 @@ DefrostableBlock.placements = {
 
 function DefrostableBlock.selection(room, entity)
 	local big = entity.big
-    local size = 16
 	if big then
-		size = 32
+		return utils.rectangle(entity.x - 32 / 2, entity.y - 32 / 2, 32, 32)
+	else
+		return utils.rectangle(entity.x - 16 / 2, entity.y - 16 / 2, 16, 16)
 	end
-    return utils.rectangle(entity.x - size / 2, entity.y - size / 2, size, size)
 end
 
 function DefrostableBlock.texture(room, entity)

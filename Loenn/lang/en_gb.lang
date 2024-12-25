@@ -71,7 +71,7 @@ entities.KoseiHelper/Plant.attributes.description.movingSpeed=A multiplier for t
 entities.KoseiHelper/Plant.attributes.description.cycleOffset=If the plant is green, this determines whether the plant should wait 2 seconds before moving for the first time.
 
 #Defrostable Block
-entities.KoseiHelper/DefrostableBlock.placements.name.DefrostableBlock=DefrostableBlock
+entities.KoseiHelper/DefrostableBlock.placements.name.Defrostable Block=Defrostable Block
 entities.KoseiHelper/DefrostableBlock.placements.description.Defrostable Block=An ice block that melts when it comes in contact with a plant bullet or if Core Mode is hot.
 entities.KoseiHelper/DefrostableBlock.attributes.description.big=If the defrostable block should be 32x32 or 16x16.
 entities.KoseiHelper/DefrostableBlock.attributes.description.sprite=The sprite id that the block should use.\nYou can copy it from KoseiHelper/Graphics/Sprites.xml but make sure your xml path is unique.
