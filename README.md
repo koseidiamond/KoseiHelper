@@ -63,7 +63,7 @@ Outbound refills allow the player to escape the current screen. Inbound refills 
 A refill that grants a puffer explosion after the player dashes.
 ### Flag/Counter Refills
 Refill that sets a flag to true until the player dashes again or dies.
-Refill that increases or decreases a counter when collected or when dashing after collecting it.
+Refill that increases or decreases the counter `KoseiHelper_CounterRefill` when collected or when dashing after collecting it.
 
 # Controllers
 
