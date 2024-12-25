@@ -28,7 +28,7 @@ public class Goomba : Actor
     public float originalSpeedX;
     public float speedY;
     public bool outline;
-    public float noGravityTimer;
+    public float noGravityTimer, springTimer;
     public bool isWide;
     public bool isWinged;
     public bool canBeBounced;
@@ -45,6 +45,7 @@ public class Goomba : Actor
     public bool canEnableTouchSwitches;
     public string deathSound;
     public bool isBaby;
+    public int springDirection;
     public Goomba(EntityData data, Vector2 offset) : base(data.Position + offset)
     {
         isBaby = false;
@@ -179,12 +180,17 @@ public class Goomba : Actor
                 (walkDirection > 0 && !CollidingWithGround(Position + new Vector2(10, 2)) || walkDirection < 0 && !CollidingWithGround(Position + new Vector2(-10, 2))))
                 walkDirection = -walkDirection;
         }
-        if (Scene.Tracker.GetEntity<Player>() != null)
+        if (SceneAs<Level>().Tracker.GetEntity<Player>() != null)
         {
             if (behavior == GoombaBehavior.Chaser)
             {
-                walkDirection = (int)(Scene.Tracker.GetEntity<Player>().Position.X - this.Position.X);
-                MoveH(speedX * Math.Sign(walkDirection) * Engine.DeltaTime, onCollideH);
+                if (springTimer == 0)
+                {
+                    walkDirection = (int)(Scene.Tracker.GetEntity<Player>().Position.X - this.Position.X);
+                    MoveH(speedX * Math.Sign(walkDirection) * Engine.DeltaTime, onCollideH);
+                }
+                else
+                    MoveH(speedX * Math.Sign(springDirection) * Engine.DeltaTime, onCollideH);
             }
             else
             {
@@ -196,7 +202,7 @@ public class Goomba : Actor
 
         foreach (Spring spring in SceneAs<Level>().Entities.FindAll<Spring>())
         {
-            if (CollideCheck(spring))
+            if (CollideCheck(spring) && springTimer == 0)
             {
                 Audio.Play("event:/game/general/spring", spring.BottomCenter);
                 spring.sprite.Play("bounce", restart: true);
@@ -204,6 +210,10 @@ public class Goomba : Actor
                 HitSpring(spring);
             }
         }
+        if (springTimer > 0)
+            springTimer -= Engine.DeltaTime;
+        else
+            springTimer = 0;
 
         if (base.Bottom > (float)level.Bounds.Bottom + 16)
             this.RemoveSelf();
@@ -268,7 +278,7 @@ public class Goomba : Actor
         base.Render();
     }
 
-    public bool HitSpring(Spring spring)
+    public bool HitSpring(Spring spring) // I have no clue how this works but it took me HOURS to fix it
     {
         if (spring.Orientation == Spring.Orientations.Floor && speedY >= 0f)
         {
@@ -280,13 +290,20 @@ public class Goomba : Actor
         if (spring.Orientation == Spring.Orientations.WallLeft)
         {
             MoveTowardsY(spring.CenterY + 5f, 4f);
-            if (behavior == GoombaBehavior.Chaser)
-                speedX = -220f;
             if (behavior != GoombaBehavior.Chaser)
             {
-                speedX = 220f;
-                walkDirection = -walkDirection;
+                if (speedX > 0)
+                    speedX = 220f;
+                else
+                    speedX = 220f;
             }
+            else
+            {
+                springTimer = 0.2f;
+                springDirection = 1;
+                speedX = 220f;
+            }
+
             speedY = -500f;
             noGravityTimer = 0.1f;
             return true;
@@ -294,12 +311,18 @@ public class Goomba : Actor
         if (spring.Orientation == Spring.Orientations.WallRight)
         {
             MoveTowardsY(spring.CenterY + 5f, 4f);
-            if (behavior == GoombaBehavior.Chaser)
-                speedX = -220f;
             if (behavior != GoombaBehavior.Chaser)
             {
+                if (speedX > 0)
+                    speedX = -220f;
+                else
+                    speedX = -220f;
+            }
+            else
+            {
+                springTimer = 0.2f;
+                springDirection = -1;
                 speedX = 220f;
-                walkDirection = -walkDirection;
             }
             speedY = -500f;
             noGravityTimer = 0.1f;

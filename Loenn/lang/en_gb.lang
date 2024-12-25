@@ -17,7 +17,7 @@ entities.KoseiHelper/CustomHahaha.attributes.description.groupSize=How many Has 
 # Goomba
 entities.KoseiHelper/Goomba.placements.name.goomba=Goomba
 entities.KoseiHelper/Goomba.placements.description.Goomba=These creatures chase the player and have several customization options.
-entities.KoseiHelper/Goomba.attributes.description.speed=The horizontal speed that the goomba will move at.
+entities.KoseiHelper/Goomba.attributes.description.speed=The horizontal speed that the goomba will move at.\nTip:Use a negative speed to make the goomba start moving left (or escape from the player).
 entities.KoseiHelper/Goomba.attributes.description.outline=If the sprite should be rendered with an outline.
 entities.KoseiHelper/Goomba.attributes.description.isWide=If the goomba will be wider than normal.
 entities.KoseiHelper/Goomba.attributes.description.isWinged=If the goomba will have wings.

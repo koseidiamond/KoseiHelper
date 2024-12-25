@@ -1,8 +1,10 @@
 # KoseiHelper
 Celeste mod with several random mechanics.
+
 Contributors:
-DavDualMain (Entity Spawner modded entity support)
-Vividescence (Shatter Dash blocks)
+
+- DavDualMain (Entity Spawner modded entity support)
+- Vividescence (Shatter Dash blocks)
 
 # Table of contents
 * [Entities](#entities)
