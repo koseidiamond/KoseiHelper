@@ -22,7 +22,7 @@ public class ShatterDashBlock : Solid
     //Temporary Debug Variables, these will be consts by the end of the workload
     private float speedDec;
     private float shakeTime;
-
+    private bool canDash = true;
     public ShatterDashBlock(EntityData data, Vector2 offset, EntityID id) : base(data.Position + offset, data.Width, data.Height, true)
     {
         base.Depth = Depths.FakeWalls + 1;
@@ -32,6 +32,7 @@ public class ShatterDashBlock : Solid
         height = data.Height;
         blendIn = data.Bool("blendin");
         tileType = data.Char("tiletype", '3');
+        canDash = data.Bool("canDash", true);
         delay = MathHelper.Clamp(data.Float("FreezeTime", 0.1f), 0, 0.5f);
         speedReq = Math.Max(0f, data.Float("SpeedRequirement", 0f));
         speedDec = Math.Max(0f, data.Float("SpeedDecrease", 0f));
@@ -124,7 +125,7 @@ public class ShatterDashBlock : Solid
 
     private DashCollisionResults OnDashed(Player player, Vector2 direction)
     {
-        if (Math.Abs(player.Speed.X) > speedReq)
+        if (Math.Abs(player.Speed.X) > speedReq && (canDash || (!canDash && player.StateMachine.state != 2)))
         {
             Break(player, direction, true);
             return DashCollisionResults.Ignore;
