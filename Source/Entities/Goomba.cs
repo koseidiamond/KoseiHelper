@@ -41,6 +41,7 @@ public class Goomba : Actor
     private SineWave sine;
     public int minisSpawned = 0;
     public static ParticleType goombaParticle = Player.P_Split;
+    public bool canEnableTouchSwitches;
     public Goomba(EntityData data, Vector2 offset) : base(data.Position + offset)
     {
         Depth = -1;
@@ -58,6 +59,7 @@ public class Goomba : Actor
         behavior = data.Enum("behavior", GoombaBehavior.Chaser);
         timeToSpawnMinis = data.Float("timeToSpawnMinis", 1);
         gravityMult = data.Float("gravityMultiplier", 1f);
+        canEnableTouchSwitches = data.Bool("canEnableTouchSwitches", false);
         if (!isWide)
         {
             Collider = new Hitbox(13, 12, -7, -4);
@@ -147,7 +149,8 @@ public class Goomba : Actor
             sprite.Play("wideidle");
         else
             sprite.Play("widewingedidle");
-
+        if (canEnableTouchSwitches)
+            EnableTouchSwitch();
         speedY = Math.Min(speedY * 0.6f, 0f);
         if (speedX != 0f && speedY == 0f && !isWinged)
             speedY = 60f;
@@ -330,5 +333,15 @@ public class Goomba : Actor
         this.RemoveSelf();
         float angle = player.Speed.Angle();
         level.ParticlesFG.Emit(goombaParticle, 5, Position, Vector2.One * 4f, angle - (float)Math.PI / 2f);
+    }
+
+    public void EnableTouchSwitch()
+    {
+        foreach (Entity entity in Scene.Entities)
+            if (entity is TouchSwitch touchSwitch)
+            {
+                if (CollideCheck(touchSwitch) && !touchSwitch.Switch.Activated)
+                    touchSwitch.TurnOn();
+            }
     }
 }

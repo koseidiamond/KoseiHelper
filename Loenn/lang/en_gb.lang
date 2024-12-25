@@ -27,6 +27,7 @@ entities.KoseiHelper/Goomba.attributes.description.flyAway=If the winged goombas
 entities.KoseiHelper/Goomba.attributes.description.timeToSpawnMinis=Time that needs to pass after a minigoomba is spawned.
 entities.KoseiHelper/Goomba.attributes.description.behavior=Chaser: The goomba walks towards the player.\nDumb: The goomba moves always in the same direction, determined by the speed sign.\nSmart: The goomba moves in the same direction, but changes its mind before falling if it detects a hole.
 entities.KoseiHelper/Goomba.attributes.description.gravityMultiplier=The vertical speed will be affected by this multiplier.
+entities.KoseiHelper/Goomba.attributes.description.canEnableTouchSwitches=If the Goomba can turn on vanilla touch switches.
 
 #Trigger Spinner
 entities.KoseiHelper/TriggerSpinner.placements.name.TriggerSpinner=Trigger Spinner

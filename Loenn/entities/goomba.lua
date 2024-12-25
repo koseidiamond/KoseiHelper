@@ -16,9 +16,10 @@ Goomba.placements = {
 			timeToSpawnMinis = 1,
 			flyAway = false,
 			behavior = "Chaser",
-			gravityMultiplier = 1
-		},
-	},
+			gravityMultiplier = 1,
+			canEnableTouchSwitches = false
+		}
+	}
 }
 
 Goomba.fieldInformation = {
