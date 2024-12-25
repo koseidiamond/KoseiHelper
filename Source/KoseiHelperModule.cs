@@ -50,6 +50,7 @@ public class KoseiHelperModule : EverestModule {
         CustomTempleCrackedBlock.Load();
         PufferRefill.Load();
         FlagRefill.Load();
+        CounterRefill.Load();
         BoundRefill.Load();
         OOBTrigger.Load();
     }
@@ -60,6 +61,7 @@ public class KoseiHelperModule : EverestModule {
         CustomTempleCrackedBlock.Unload();
         PufferRefill.Unload();
         FlagRefill.Unload();
+        CounterRefill.Unload();
         BoundRefill.Unload();
         OOBTrigger.Unload();
     }

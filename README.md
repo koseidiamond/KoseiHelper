@@ -1,5 +1,8 @@
 # KoseiHelper
 Celeste mod with several random mechanics.
+Contributors:
+DavDualMain (Entity Spawner modded entity support)
+Vividescence (Shatter Dash blocks)
 
 # Table of contents
 * [Entities](#entities)
@@ -50,7 +53,6 @@ The red blocks in chapter 5 that can be broken by seekers, but allowing custom v
 ### Shatter Block
 Ported from Strawberry Jam (Fractured Iridescence). These blocks can be destroyed if the player has enough speed.
 
-
 ## Refills
 
 ### Tile Refill
@@ -59,11 +61,14 @@ Can enable or disable the Collidable and Visible properties of foreground tiles.
 Outbound refills allow the player to escape the current screen. Inbound refills bound the player to the screen they are overlapping.
 ### Puffer Refill
 A refill that grants a puffer explosion after the player dashes.
-### Flag Refill
-A refill that sets a flag to true until the player dashes again or dies.
+### Flag/Counter Refills
+Refill that sets a flag to true until the player dashes again or dies.
+Refill that increases or decreases a counter when collected or when dashing after collecting it.
 
 # Controllers
 
+### Flag/Counter Refill Controller
+Allows customization of the flags/counters and hair color that Flag/Counter Refills give.
 ### IRL Controller
 Sets flags depending on the time of the day, day and month. For example, if it's 17:01, November 18th, the flags `kosei_irlMinute01`, `kosei_irlHour17`, `kosei_irlDay18` and `kosei_irlMonth11` will be set. It also sets the flags `kosei_irlMorning`, `kosei_irlAfternoon` and `kosei_irlNight`. It also has an option to adapt the darkness of the room to the current hour.
 ### Custom Pause Controller

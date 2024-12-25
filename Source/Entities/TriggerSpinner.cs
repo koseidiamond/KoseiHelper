@@ -26,9 +26,10 @@ namespace Celeste.Mod.KoseiHelper.Entities
         private int randomSeed;
         private bool expanded;
         private bool playerInRange;
-        private bool isActivated;
+        private bool isActivated, hasPlayedSound;
         private Sprite spriteIndicator, spriteGrow;
         private List<Image> images = new List<Image>();
+        private string sfx;
 
         public TriggerSpinner(EntityData data, Vector2 offset) : base(data.Position + offset)
         {
@@ -49,7 +50,7 @@ namespace Celeste.Mod.KoseiHelper.Entities
             color = data.Enum("color", TriggerSpinnerColor.Blue);
             customPathTriggered = data.Attr("customPathTriggered", "");
             customPathIndicator = data.Attr("customPathIndicator", "objects/KoseiHelper/TriggerSpinner/");
-
+            sfx = data.Attr("sound", "event:/game/general/assist_nonsolid_out");
             Add(spriteIndicator = new Sprite(GFX.Game, customPathIndicator + "indicator"));
             spriteIndicator.AddLoop("indicator", "", 0.1f);
             spriteIndicator.Play("indicator", false, false);
@@ -73,8 +74,9 @@ namespace Celeste.Mod.KoseiHelper.Entities
                 bool playerCollides = CollideCheck(player);
                 if (playerCollides && !playerInRange)
                     playerInRange = true;
-                else if (!playerCollides && playerInRange)
+                else if (!playerCollides && playerInRange && !hasPlayedSound)
                 { // Spinner is triggered here
+                    hasPlayedSound = true;
                     Add(new Coroutine(Grow(), true));
                 }
                 if (playerInRange && !expanded)
@@ -97,7 +99,9 @@ namespace Celeste.Mod.KoseiHelper.Entities
             spriteGrow.AddLoop("grow", "", 0.1f);
             spriteGrow.Play("grow", false, false);
             spriteGrow.CenterOrigin();
-            yield return 0.4f;
+            yield return 0.3f;
+            Audio.Play(sfx);
+            yield return 0.1f;
             isActivated = true;
             spriteGrow.Visible = false;
             ActivatedSprite();

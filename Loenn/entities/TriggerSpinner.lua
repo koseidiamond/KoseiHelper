@@ -41,11 +41,11 @@ TriggerSpinner.placements = {
             color = "blue",
             attachToSolid = false,
 			customPathTriggered = "",
-			customPathIndicator = "objects/KoseiHelper/TriggerSpinner/"
+			customPathIndicator = "objects/KoseiHelper/TriggerSpinner/blue/",
+			sound = "event:/game/general/assist_nonsolid_out"
         }
     }
 }
-
 
 local function getTriggerSpinnerTexture(entity, color, foreground)
     local prefix = (foreground or foreground == nil) and "fg_" or "bg_"
@@ -76,67 +76,13 @@ local function getTriggerSpinnerSprite(entity, foreground)
     end
 end
 
-local function getConnectionSprites(room, entity)
-
-    local sprites = {}
-
-    for _, target in ipairs(room.entities) do
-        if target == entity then
-            break
-        end
-
-        if entity._name == target._name and not target.dust and entity.attachToSolid == target.attachToSolid then
-            if utils.distanceSquared(entity.x, entity.y, target.x, target.y) < TriggerSpinnerConnectionDistanceSquared then
-                local connectorData = {
-                    x = math.floor((entity.x + target.x) / 2),
-                    y = math.floor((entity.y + target.y) / 2),
-                    color = entity.color
-                }
-                local sprite = getTriggerSpinnerSprite(connectorData, false)
-
-                sprite.depth = -8499
-
-                table.insert(sprites, sprite)
-            end
-        end
-    end
-
-    return sprites
-end
 
 function TriggerSpinner.depth(room, entity)
     return entity.dusty and -50 or -8500
 end
 
 function TriggerSpinner.sprite(room, entity)
-    local dusty = entity.dust
-
-    if dusty then
-        local position = {
-            x = entity.x,
-            y = entity.y
-        }
-
-        local baseTexture = "danger/dustcreature/base00"
-        local baseOutlineTexture = "dust_creature_outlines/base00"
-        local baseSprite = drawableSpriteStruct.fromTexture(baseTexture, position)
-        local baseOutlineSprite = drawableSpriteStruct.fromInternalTexture(baseOutlineTexture, entity)
-
-        baseOutlineSprite:setColor(dustEdgeColor)
-
-        return {
-            baseOutlineSprite,
-            baseSprite
-        }
-
-    else
-        local sprites = getConnectionSprites(room, entity)
-        local mainSprite = getTriggerSpinnerSprite(entity)
-
-        table.insert(sprites, mainSprite)
-
-        return sprites
-    end
+        return getTriggerSpinnerSprite(entity)
 end
 
 function TriggerSpinner.selection(room, entity)

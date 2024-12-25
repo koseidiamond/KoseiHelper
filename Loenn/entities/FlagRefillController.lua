@@ -6,16 +6,32 @@ FlagRefillController.texture = "objects/KoseiHelper/Controllers/FlagRefillContro
 FlagRefillController.placements = {
 	{
 		name = "FlagRefillController",
+		alternativeName = "CounterRefillController",
 		data = {
-			hairColor = "e6001e",
+			flagHairColor = "e6001e",
+			counterHairColor = "1e00e6",
 			flagName = "KoseiHelper_FlagRefill",
-			persistent = false
+			persistent = false,
+			decrease = false,
+			countWhenUsed = false
 		}
 	}
 }
 
+FlagRefillController.fieldOrder = {
+	"x",
+	"y",
+	"flagHairColor",
+	"flagName",
+	"counterHairColor",
+	"decrease",
+	"countWhenUsed",
+	"persistent"
+}
+
 FlagRefillController.fieldInformation = {
-	hairColor = { fieldType = "color" }
+	flagHairColor = { fieldType = "color" },
+	counterHairColor = { fieldType = "color" }
 }
 
 return FlagRefillController

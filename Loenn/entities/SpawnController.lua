@@ -10,6 +10,7 @@ SpawnController.depth = -9500
 SpawnController.placements = {
 	{
 		name = "SpawnController",
+		alternativeName = "EntitySpawner",
 		data = {
 		offsetX = 0,
 		offsetY = 8,
@@ -28,6 +29,7 @@ SpawnController.placements = {
 		persistent = false,
 		--Spawn conditions
 		spawnFlag = "koseiHelper_spawn",
+		spawnFlagValue = true,
 		spawnSpeed = 300,
 		spawnLimit = -1,
 		everyXDashes = 1,
@@ -212,6 +214,7 @@ function SpawnController.ignoredFields(entity)
 	"swapBlockTheme", 
 	"zipMoverTheme",
 	"spawnFlag",
+	"spawnFlagValue",
 	"spawnSpeed",
 	"fallingBlockBadeline",
 	"fallingBlockClimbFall",
@@ -239,6 +242,7 @@ function SpawnController.ignoredFields(entity)
 	-- Spawn mode attributes
 	if entity.spawnCondition == "OnFlagEnabled" then
 		doNotIgnore("spawnFlag")
+		doNotIgnore("spawnFlagValue")
 	end
 	if entity.spawnCondition == "OnSpeedX" then
 		doNotIgnore("spawnSpeed")
@@ -356,6 +360,7 @@ SpawnController.fieldOrder =  {
 	"blockTileType",
 	"flag",
 	"flagValue",
+	"spawnFlagValue",
 	"removeDash",
 	"removeStamina",
 	"relativeToPlayerFacing",

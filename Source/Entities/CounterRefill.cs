@@ -7,11 +7,11 @@ using System.ComponentModel;
 
 namespace Celeste.Mod.KoseiHelper.Entities;
 
-[CustomEntity("KoseiHelper/FlagRefill")]
+[CustomEntity("KoseiHelper/CounterRefill")]
 [Tracked]
-public class FlagRefill : Entity
+public class CounterRefill : Entity
 {
-    private static Coroutine FlagEndDelayCoroutine;
+    private static Coroutine CounterEndDelayCoroutine;
     public static ParticleType P_Shatter;
     public static ParticleType P_Regen;
     public static ParticleType P_Glow;
@@ -33,12 +33,14 @@ public class FlagRefill : Entity
     private ParticleType p_glow;
     private float respawnTimer;
     private string str;
-    public FlagRefill(Vector2 position, bool oneUse) : base(position)
+
+    public bool decrease;
+    public CounterRefill(Vector2 position, bool oneUse) : base(position)
     {
         base.Collider = new Hitbox(16f, 16f, -8f, -8f);
         base.Add(new PlayerCollider(new Action<Player>(this.OnPlayer), null, null));
         this.oneUse = oneUse;
-        str = "objects/KoseiHelper/Refills/FlagRefill/";
+        str = "objects/KoseiHelper/Refills/CounterRefill/";
         this.p_shatter = Refill.P_Shatter;
         this.p_regen = Refill.P_Regen;
         this.p_glow = Refill.P_Glow;
@@ -69,12 +71,13 @@ public class FlagRefill : Entity
         this.UpdateY();
         base.Depth = -100;
     }
-    public FlagRefill(EntityData data, Vector2 offset) : this(data.Position + offset, data.Bool("oneUse", false))
+    public CounterRefill(EntityData data, Vector2 offset) : this(data.Position + offset, data.Bool("oneUse", false))
     {
         base.Collider = new Hitbox(16f, 16f, -8f, -8f);
         base.Add(new PlayerCollider(new Action<Player>(this.OnPlayer), null, null));
         this.oneUse = data.Bool("oneUse", false);
-        str = data.Attr("sprite", "objects/KoseiHelper/Refills/FlagRefill/");
+        this.decrease = data.Bool("decrease", false);
+        str = data.Attr("sprite", "objects/KoseiHelper/Refills/CounterRefill/");
         this.p_shatter = Refill.P_Shatter;
         this.p_regen = Refill.P_Regen;
         this.p_glow = Refill.P_Glow;
@@ -171,15 +174,21 @@ public class FlagRefill : Entity
     //Here's where the actual functionality from this refill starts
     private void OnPlayer(Player player)
     {
-        if (KoseiHelperModule.Session.HasFlagDash == false)
+        if (KoseiHelperModule.Session.HasCounterDash == false)
         {
             Audio.Play(this.twoDashes ? "event:/new_content/game/10_farewell/pinkdiamond_touch" : "event:/game/general/diamond_touch", this.Position);
             Input.Rumble(RumbleStrength.Medium, RumbleLength.Medium);
             this.Collidable = false;
             base.Add(new Coroutine(this.RefillRoutine(player), true));
             player.UseRefill(false);
-            KoseiHelperModule.Session.HasFlagDash = true;
-            level.Session.SetFlag(KoseiHelperModule.Session.flagRefillFlag, true);
+            KoseiHelperModule.Session.HasCounterDash = true;
+            if (!KoseiHelperModule.Session.counterRefillWhenUsed)
+            {
+                if (!decrease)
+                    level.Session.IncrementCounter("KoseiHelper_CounterRefill");
+                else
+                    level.Session.SetCounter("KoseiHelper_CounterRefill", level.Session.GetCounter("KoseiHelper_CounterRefill") - 1);
+            }
             this.respawnTimer = 2.5f;
         }
     }
@@ -209,61 +218,66 @@ public class FlagRefill : Entity
     }
     public static void Load()
     {
-        On.Celeste.Player.Die += FlagDash;
-        On.Celeste.Player.DashEnd += FlagDashEnd;
-        On.Celeste.Player.DashBegin += FlagDashBegin;
-        On.Celeste.PlayerHair.GetHairColor += FlagDashHairColor;
+        On.Celeste.Player.Die += CounterDash;
+        On.Celeste.Player.DashEnd += CounterDashEnd;
+        On.Celeste.Player.DashBegin += CounterDashBegin;
+        On.Celeste.PlayerHair.GetHairColor += CounterDashHairColor;
     }
     public static void Unload()
     {
-        On.Celeste.Player.Die -= FlagDash;
-        On.Celeste.Player.DashEnd -= FlagDashEnd;
-        On.Celeste.Player.DashBegin -= FlagDashBegin;
-        On.Celeste.PlayerHair.GetHairColor -= FlagDashHairColor;
+        On.Celeste.Player.Die -= CounterDash;
+        On.Celeste.Player.DashEnd -= CounterDashEnd;
+        On.Celeste.Player.DashBegin -= CounterDashBegin;
+        On.Celeste.PlayerHair.GetHairColor -= CounterDashHairColor;
     }
 
-    public static Color FlagDashHairColor(On.Celeste.PlayerHair.orig_GetHairColor orig, PlayerHair self, int index)
+    public static Color CounterDashHairColor(On.Celeste.PlayerHair.orig_GetHairColor orig, PlayerHair self, int index)
     {
-        if (KoseiHelperModule.Session.HasFlagDash)
-            return KoseiHelperModule.Session.FlagDashColor;
+        if (KoseiHelperModule.Session.HasCounterDash)
+            return KoseiHelperModule.Session.CounterDashColor;
         else
             return orig(self, index);
     }
 
-    private static PlayerDeadBody FlagDash(On.Celeste.Player.orig_Die orig, Player self, Vector2 direction, bool evenIfInvincible = false, bool registerDeathInStats = true)
+    private static PlayerDeadBody CounterDash(On.Celeste.Player.orig_Die orig, Player self, Vector2 direction, bool evenIfInvincible = false, bool registerDeathInStats = true)
     {
-        if (!KoseiHelperModule.Session.FlagDashActive || evenIfInvincible)
+        if (!KoseiHelperModule.Session.CounterDashActive || evenIfInvincible)
         {
-            KoseiHelperModule.Session.HasFlagDash = false;
-            KoseiHelperModule.Session.FlagDashActive = false;
-            self.SceneAs<Level>().Session.SetFlag(KoseiHelperModule.Session.flagRefillFlag, false);
+            KoseiHelperModule.Session.HasCounterDash = false;
+            KoseiHelperModule.Session.CounterDashActive = false;
         }
         return orig(self, direction, evenIfInvincible, registerDeathInStats);
     }
-    private static void FlagDashBegin(On.Celeste.Player.orig_DashBegin orig, Player self)
+    private static void CounterDashBegin(On.Celeste.Player.orig_DashBegin orig, Player self)
     {
-        if (KoseiHelperModule.Session.HasFlagDash)
+        if (KoseiHelperModule.Session.HasCounterDash)
         {
-            KoseiHelperModule.Session.FlagDashActive = true;
-            self.SceneAs<Level>().Session.SetFlag(KoseiHelperModule.Session.flagRefillFlag, false);
-            FlagEndDelayCoroutine?.Cancel();
-            FlagEndDelayCoroutine?.RemoveSelf();
+            KoseiHelperModule.Session.CounterDashActive = true;
+            if (KoseiHelperModule.Session.counterRefillWhenUsed)
+            {
+                if (!KoseiHelperModule.Session.counterRefillDecrease)
+                    self.SceneAs<Level>().Session.IncrementCounter("KoseiHelper_CounterRefill");
+                else
+                    self.SceneAs<Level>().Session.SetCounter("KoseiHelper_CounterRefill", self.SceneAs<Level>().Session.GetCounter("KoseiHelper_CounterRefill")-1);
+            }
+            CounterEndDelayCoroutine?.Cancel();
+            CounterEndDelayCoroutine?.RemoveSelf();
         }
-        KoseiHelperModule.Session.HasFlagDash = false;
+        KoseiHelperModule.Session.HasCounterDash = false;
         orig(self);
     }
-    private static void FlagDashEnd(On.Celeste.Player.orig_DashEnd orig, Player self)
+    private static void CounterDashEnd(On.Celeste.Player.orig_DashEnd orig, Player self)
     {
         orig(self);
-        if (self.StateMachine.State != 2 && KoseiHelperModule.Session.FlagDashActive)
+        if (self.StateMachine.State != 2 && KoseiHelperModule.Session.CounterDashActive)
         {
-            FlagEndDelayCoroutine = new Coroutine(FlagEndDelay());
-            self.Add(FlagEndDelayCoroutine);
+            CounterEndDelayCoroutine = new Coroutine(CounterEndDelay());
+            self.Add(CounterEndDelayCoroutine);
         }
     }
-    private static IEnumerator FlagEndDelay()
+    private static IEnumerator CounterEndDelay()
     {
         yield return 0.03f;
-        KoseiHelperModule.Session.FlagDashActive = false;
+        KoseiHelperModule.Session.CounterDashActive = false;
     }
 }

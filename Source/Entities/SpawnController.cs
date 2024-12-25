@@ -65,6 +65,7 @@ public class SpawnController : Entity
     public bool relativeToPlayerFacing, nodeRelativeToPlayerFacing;
     public SpawnCondition spawnCondition;
     public string spawnFlag;
+    public bool spawnFlagValue;
     public float spawnSpeed;
     public int spawnLimit;
     public bool persistency;
@@ -164,6 +165,7 @@ public class SpawnController : Entity
         flagValue = data.Bool("flagValue", true);
         spawnCondition = data.Enum("spawnCondition", SpawnCondition.OnCustomButtonPress);
         spawnFlag = data.Attr("spawnFlag", "koseiHelper_spawn");
+        spawnFlagValue = data.Bool("spawnFlagValue", true);
         spawnSpeed = data.Float("spawnSpeed", 300f);
         spawnLimit = data.Int("spawnLimit", 3);
         persistency = data.Bool("persistent", false);
@@ -282,7 +284,7 @@ public class SpawnController : Entity
                 else
                     canSpawnFromCassette = false;
             }
-            currentHasSpawnedFromFlag = level.Session.GetFlag(spawnFlag);
+            currentHasSpawnedFromFlag = spawnFlagValue ? level.Session.GetFlag(spawnFlag) : !level.Session.GetFlag(spawnFlag);
             bool conditionMet = spawnCondition switch
             {   //If the spawn conditions are met, spawn the entity:
                 SpawnCondition.OnFlagEnabled => currentHasSpawnedFromFlag && !previousHasSpawnedFromFlag,

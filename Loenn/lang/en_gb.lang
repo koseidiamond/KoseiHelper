@@ -34,7 +34,8 @@ entities.KoseiHelper/TriggerSpinner.placements.description.TriggerSpinner=Spinne
 entities.KoseiHelper/TriggerSpinner.attributes.description.color=The color of the trigger spinner.
 entities.KoseiHelper/TriggerSpinner.attributes.description.attachToSolid=If the trigger spinner should be attached to solids.
 entities.KoseiHelper/TriggerSpinner.attributes.description.customPathTriggered=If the custom option is chosen, this determines the path to your custom texture when the spinner is triggered.\nIt's relative to Graphics/Atlases/Gameplay/. The size of the image should be 24x24.
-entities.KoseiHelper/TriggerSpinner.attributes.description.customPathIndicator=Determines the path to the indicator when the spinner has not been triggered yet.\nIt's relative to Gameplay/Atlases/Gameplay/. The size of the image should be 24x24.
+entities.KoseiHelper/TriggerSpinner.attributes.description.customPathIndicator=Determines the path to the indicator when the spinner has not been triggered yet.\nIt's relative to Gameplay/Atlases/Gameplay/. The size of the image should be 24x24.\nFeel free to change the last folder to red/purple/white for the other default textures.
+entities.KoseiHelper/TriggerSpinner.attributes.description.sound=The sound that the trigger spinners make when popping out.
 
 # Mary Block
 entities.KoseiHelper/MaryBlock.placements.name.maryblock=Mary Block
@@ -198,6 +199,12 @@ entities.KoseiHelper/FlagRefill.placements.description.FlagRefill=A flag will be
 entities.KoseiHelper/FlagRefill.attributes.description.sprite=The path to your custom sprite.\nIt needs flash and idle animations, an an outline image.
 entities.KoseiHelper/FlagRefill.attributes.description.oneUse=If the refill should be consumed upon use or respawn after a while.
 
+#Counter Refill
+entities.KoseiHelper/CounterRefill.placements.name.CounterRefill=Counter Refill
+entities.KoseiHelper/CounterRefill.placements.description.CounterRefill=A flag will be enabled when the player collects the refill.\nThis flag will be reset if the player dashes or dies, as some sort of "temporary powerup".
+entities.KoseiHelper/CounterRefill.attributes.description.sprite=The path to your custom sprite.\nIt needs flash and idle animations, an an outline image.
+entities.KoseiHelper/CounterRefill.attributes.description.oneUse=If the refill should be consumed upon use or respawn after a while.
+entities.KoseiHelper/CounterRefill.attributes.description.decrease=If the counter should be decreased instead of increased.
 
 #CONTROLLERS
 
@@ -247,11 +254,15 @@ entities.KoseiHelper/CustomPauseController.attributes.description.timerIsStopped
 entities.KoseiHelper/CustomPauseController.attributes.description.dieOnUnpause=If the player should be punished with death after pausing the game.\nPrevents pause buffering.
 
 # Flag Refill Controller
-entities.KoseiHelper/FlagRefillController.placements.name.FlagRefillController=Flag Refill Controller
+entities.KoseiHelper/FlagRefillController.placements.name.FlagRefillController=Flag/Counter Refill Controller
 entities.KoseiHelper/FlagRefillController.placements.description.FlagRefillController=Controller that allows to customize several options that apply to all Flag Refills.
+entities.KoseiHelper/FlagRefillController.attributes.name.countWhenUsed=Count When Dashing
 entities.KoseiHelper/FlagRefillController.attributes.description.hairColor=The color that the hair should be while having a flag from a Flag Refill.
 entities.KoseiHelper/FlagRefillController.attributes.description.flagName=The name of the flag that Flag Refills set to true when collected.
 entities.KoseiHelper/FlagRefillController.attributes.description.persistent=If this controller should persist between rooms.
+entities.KoseiHelper/FlagRefillController.attributes.description.countWhenUsed=Counter Refills will increase/decrease when the player dashes instead of when collecting the refill.
+entities.KoseiHelper/FlagRefillController.attributes.description.decrease=Counter refills will decrease instead.\nThis option only applies for the Dashing mode because it affects the player instead of individual refills!
+
 
 # Spawn Controller - General attributes
 entities.KoseiHelper/SpawnController.placements.name.SpawnController=Spawn Controller
@@ -263,7 +274,7 @@ entities.KoseiHelper/SpawnController.attributes.description.spawnCooldown=The ti
 entities.KoseiHelper/SpawnController.attributes.description.removeDash=If spawning an entity should consume a dash.
 entities.KoseiHelper/SpawnController.attributes.description.removeStamina=If spawning an entity should consume all stamina.
 entities.KoseiHelper/SpawnController.attributes.description.flag=If the ability should only be available once the flag is set to the correct Flag Value.\nLeave empty for no flag required.
-entities.KoseiHelper/SpawnController.attributes.description.flagValue=If the flag should be active (true) or inactive (false).\nIf you're not using a flag, don't worry about this.
+entities.KoseiHelper/SpawnController.attributes.description.flagValue=If the flag should be active (true) or inactive (false).\nIf you have the flag field empty, don't worry about this.
 entities.KoseiHelper/SpawnController.attributes.description.relativeToPlayerFacing=A relative Offset X means that the entity will always appear\nin front of the player if the value is positive,\nor behind the player if the value is negative.\nIf the offset is not relative, the entity will always spawn to the left/right.
 entities.KoseiHelper/SpawnController.attributes.description.timeToLive=The time the entity spawned can exist before poofing into nonexistence.\nLeave as 0 if the entity should not expire with time (until transition or respawn).
 entities.KoseiHelper/SpawnController.attributes.description.appearSound=The sound that will play when an entity is spawned.
@@ -272,7 +283,8 @@ entities.KoseiHelper/SpawnController.attributes.description.nodeRelativeToPlayer
 entities.KoseiHelper/SpawnController.attributes.description.nodeX=Horizontal offset relative to the player position where the node of the entity will be.\n(Can be negative for the opposite side)
 entities.KoseiHelper/SpawnController.attributes.description.nodeY=Vertical offset relative to the player position where the node of the entity will be.\n(Can be negative for the opposite side)
 entities.KoseiHelper/SpawnController.attributes.description.spawnCondition=The condition that needs to be met in order to spawn an entity. Save and reopen to configure the new spawn condition.\nOn flag enabled: the entity will spawn each time the flag is set to true.\nOn dash: the entity will spawn every time the player dashes.\nOnCassetteBeat: the entity will spawn every time the the beat of the cassette progresses (recommended to have a cooldown of 0 for this mode).\nOn custom button press: the entity will spawn every time the custom keybind is pressed (Mod Options>Kosei Helper to configure).\nOnSpeedX: the entity will spawn once a certain SpeedX threshold is achieved.\nOn interval: the entity will spawn on a fixed interval, every x seconds (determined by the Spawn Cooldown).
-entities.KoseiHelper/SpawnController.attributes.description.spawnFlag=The flag that will spawn an entity once it's set to true.
+entities.KoseiHelper/SpawnController.attributes.description.spawnFlag=The flag that will spawn an entity each time it's set to true.\nUsed with the OnFlagEnabled Spawn Condition!
+entities.KoseiHelper/SpawnController.attributes.description.spawnFlagValue=The value (true or false) of the spawn flag, which spawns an entity each time it changes to this value.\n(Not to be confused with the flag value, which instead determines if this spawner should be active!)
 entities.KoseiHelper/SpawnController.attributes.description.spawnSpeed=The minimum horizontal speed that needs to be reached to spawn an entity.
 entities.KoseiHelper/SpawnController.attributes.description.everyXDashes=The entity will spawn only every certain number of dashes.\nLeave 1 for spawning whenever the player dashes.
 entities.KoseiHelper/SpawnController.attributes.description.spawnLimit=The maximum amount of entities that can be spawned per screen.\nLeave a negative value for no limit.
