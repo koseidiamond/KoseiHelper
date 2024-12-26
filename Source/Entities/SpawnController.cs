@@ -120,7 +120,7 @@ public class SpawnController : Entity
     public SwapBlockNoBg.Themes swapBlockNoBgTheme;
     public ZipMover.Themes zipMoverTheme;
 
-    public string flag;
+    public string flagToEnableSpawner;
     public bool flagValue;
 
     public bool refillTwoDashes;
@@ -163,7 +163,7 @@ public class SpawnController : Entity
         timeToLive = data.Float("timeToLive", 0f);
         appearSound = data.Attr("appearSound", "event:/KoseiHelper/spawn");
         disappearSound = data.Attr("disappearSound", "event:/game/general/assist_dash_aim");
-        flag = data.Attr("flag", "");
+        flagToEnableSpawner = data.Attr("flag", "");
         flagValue = data.Bool("flagValue", true);
         spawnCondition = data.Enum("spawnCondition", SpawnCondition.OnCustomButtonPress);
         spawnFlag = data.Attr("spawnFlag", "koseiHelper_spawn");
@@ -269,14 +269,13 @@ public class SpawnController : Entity
         EntityType.ZipMover
         };
         bool isBlock = blockEntities.Contains(entityToSpawn);
-        // If the flag is true, or if no flag is required, check if the spawn conditions are met
+        // If the flag flagToEnableSpawner is true, or if no flag is required, check if the spawn conditions are met
         // (Not to be confused with spawnFlag, this one is just a common requirement, the other is for the Flag Mode)
-        if (((flagValue && level.Session.GetFlag(flag)) || string.IsNullOrEmpty(flag) || (!flagValue && !level.Session.GetFlag(flag))) && player != null && !player.JustRespawned)
+        if (((flagValue && level.Session.GetFlag(flagToEnableSpawner)) || string.IsNullOrEmpty(flagToEnableSpawner) ||
+            (!flagValue && !level.Session.GetFlag(flagToEnableSpawner))) && player != null && !player.JustRespawned)
         {
             if (cassetteBlockManager != null)
             {
-                if (Scene.OnInterval(1f)) Logger.Debug(nameof(KoseiHelperModule), $"Player bounds: {player.Bottom} bottom, {player.Top} top, {player.Left} left, {player.Right} right." +
-                    $"\nLevel bounds: {level.Bounds.Bottom} bottom, {level.Bounds.Top} top, {level.Bounds.Left} left, {level.Bounds.Right} right.");
                 if (currentCassetteIndex != cassetteBlockManager.currentIndex && // Make sure the player is not too close to the bounds of the level to prevent transition jank
                 player.Bottom < (float)level.Bounds.Bottom && player.Top > (float)level.Bounds.Top + 4 &&
                 player.Left > (float)level.Bounds.Left + 8 && player.Right < (float)level.Bounds.Right - 8)
@@ -293,13 +292,13 @@ public class SpawnController : Entity
             {   //If the spawn conditions are met, spawn the entity:
                 SpawnCondition.OnFlagEnabled => currentHasSpawnedFromFlag && !previousHasSpawnedFromFlag,
                 SpawnCondition.OnSpeedX => Math.Abs(player.Speed.X) >= spawnSpeed && !hasSpawnedFromSpeed,
-                SpawnCondition.OnDash => player.StartedDashing && dashCount % everyXDashes == 0,
+                SpawnCondition.OnDash => player.StartedDashing && player.StateMachine.state == 2 && dashCount % everyXDashes == 0,
                 SpawnCondition.OnCassetteBeat => canSpawnFromCassette,
                 SpawnCondition.OnInterval => spawnCooldown == 0,
                 SpawnCondition.OnCustomButtonPress => KoseiHelperModule.Settings.SpawnButton.Pressed && spawnCooldown == 0,
                 _ => false
             };
-            if (conditionMet && spawnLimit != 0 && player != null)
+            if (conditionMet && spawnLimit != 0 && spawnCooldown == 0 && player != null)
             {
                 if (entityToSpawn != EntityType.CustomEntity)
                     Logger.Debug(nameof(KoseiHelperModule), $"An entity is going to spawn: {entityToSpawn}");

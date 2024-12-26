@@ -6,7 +6,7 @@ local textures = {"wood", "dream", "temple", "templeB", "cliffside", "reflection
 local SpawnController = {}
 
 SpawnController.name = "KoseiHelper/SpawnController"
-SpawnController.depth = -9500
+SpawnController.depth = -10250
 SpawnController.placements = {
 	{
 		name = "SpawnController",
