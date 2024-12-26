@@ -5,6 +5,7 @@ CounterBarController.depth = -10500
 CounterBarController.placements = {
 	{
 		name = "CounterBarController",
+		alternativeName = "BarDisplay",
 		data = {
 		color = "32cd32",
 		xPosition = 80,

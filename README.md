@@ -69,6 +69,8 @@ Refill that increases or decreases the counter `KoseiHelper_CounterRefill` when 
 
 # Controllers
 
+### Counter/Slider Bar Controller
+Displays a customizable UI bar that shows the value of a counter/slider (integer/float) between 0 and a max value. This bar can render with the chosen color or with a custom image.
 ### Flag/Counter Refill Controller
 Allows customization of the flags/counters and hair color that Flag/Counter Refills give.
 ### IRL Controller
@@ -85,7 +87,8 @@ A silly controller that makes the player to take short naps every certain interv
 The **Entity Spawner Controllers** allow you to spawn different types of entities on a certain position when a condition is met. They are highly customizable.
 - You can specify the position where the entity will spawn. This position can be relative to the player (always left/right) or adjust to the facing (in front of/behind). Noded entities (like swap blocks) also support these settings for the node.
 - The following **entities** can be spawned: Puffers, Clouds, Badeline orbs, Fake hearts, Dream blocks, Boosters, Bumpers, Ice/Lava barriers, Dash blocks, Core blocks, Falling blocks, Feathers, Ice/Fireballs, Moving blocks, Refills, Seekers, Swap blocks, Zip movers, Crumble platforms, Glass blocks, Starjump blocks, Jump throughs, Floaty blocks, Kevins and Decals.
-You can also "spawn" (set to true) new flags that follow the naming `koseiFlagN` where `N` is a number that increases each time it's "spawned" (koseiFlag9, koseiFlag10, and so on), starting at `koseiFlag1`. Advanced tip: You can use a Flag Spawner with a reasonable cycle as a main controller for cycling between multiple spawners.
+You can also "spawn" (set to true) new flags that follow the naming `koseiFlagN` where `N` is a number that increases each time it's "spawned" (koseiFlag9, koseiFlag10, and so on), starting at `koseiFlag1`. Same for Counters, which go by the name `koseiCounterN`.
+Advanced tip: You can use a Flag/Counter Spawner with a reasonable cycle as a main controller for cycling between multiple spawners.
 - You can specify a **flag** that needs a specific value (true/false) before the Spawner has effect.
 - You can specify a max number of entities that can spawn per room (**Limit**), the time that needs to pass until a new one can appear (**Cooldown**) and if they should disappear after a certain time (TTL or **Time To Live**).
 - Appear/disappear **sounds** are customizable. Set them to `event:/none` if you don't want a sound.
