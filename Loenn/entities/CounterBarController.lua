@@ -16,7 +16,8 @@ CounterBarController.placements = {
 		framePath = "",
 		vertical = false,
 		canOverflow = false,
-		slider = false
+		slider = false,
+		initialValue = 1
 		}
 	}
 }

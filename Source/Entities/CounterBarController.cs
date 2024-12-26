@@ -31,6 +31,8 @@ namespace Celeste.Mod.KoseiHelper.Entities
             height = data.Int("barHeight", 16);
             maxCounterValue = data.Int("maxValue", 10);
             maxSliderValue = data.Float("maxValue", 10);
+            currentCountValue = data.Int("initialValue", 1);
+            currentSliderValue = data.Float("initialValue", 1f);
             countName = data.Attr("countName", "koseiHelper_counterBar");
             framePath = data.Attr("framePath", "");
             vertical = data.Bool("vertical", false);
