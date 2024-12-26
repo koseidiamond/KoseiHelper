@@ -19,11 +19,16 @@ namespace Celeste.Mod.KoseiHelper.Entities
         private bool vertical, canOverflow, slider;
         private float currentSliderValue, maxSliderValue;
         private MTexture texture;
+        private bool persistent, flagTrue;
+        private string flag;
 
         public CounterBarController(EntityData data, Vector2 offset) : base(data.Position + offset)
         {
             Tag = TagsExt.SubHUD;
-
+            persistent = data.Bool("persistent", false);
+            if (persistent)
+                Tag = Tags.Persistent;
+            flag = data.Attr("flag", "");
             color = data.HexColor("color", Color.LimeGreen);
             xPosition = data.Int("xPosition", 80);
             yPosition = data.Int("yPosition", 1000);
@@ -51,6 +56,7 @@ namespace Celeste.Mod.KoseiHelper.Entities
         public override void Update()
         {
             Level level = SceneAs<Level>();
+            flagTrue = level.Session.GetFlag(flag);
             if (!slider)
                 currentCountValue = level.Session.GetCounter(countName);
             else
@@ -81,18 +87,21 @@ namespace Celeste.Mod.KoseiHelper.Entities
 
         public override void Render()
         {
-            if (!string.IsNullOrEmpty(framePath))
+            if (string.IsNullOrEmpty(flag) || (!string.IsNullOrEmpty(flag) && flagTrue))
             {
+                if (!string.IsNullOrEmpty(framePath))
+                {
+                    if (!vertical)
+                        texture.DrawJustified(new Vector2(xPosition + width / 2, yPosition + height / 2), new Vector2(0.5f, 0.5f));
+                    else
+                        texture.DrawJustified(new Vector2(xPosition + width / 2, yPosition + height / 2), new Vector2(0.5f, 0.5f));
+                }
                 if (!vertical)
-                    texture.DrawJustified(new Vector2(xPosition + width / 2, yPosition + height / 2), new Vector2(0.5f, 0.5f));
+                    Draw.Rect(new Vector2(xPosition, yPosition), filled, Collider.Height, color);
                 else
-                    texture.DrawJustified(new Vector2(xPosition + width / 2, yPosition + height / 2), new Vector2(0.5f, 0.5f));
+                    Draw.Rect(new Vector2(xPosition, yPosition), Collider.Width, filled, color);
+                base.Render();
             }
-            if (!vertical)
-                Draw.Rect(new Vector2(xPosition, yPosition), filled, Collider.Height, color);
-            else
-                Draw.Rect(new Vector2(xPosition, yPosition), Collider.Width, filled, color);
-            base.Render();
         }
     }
 }

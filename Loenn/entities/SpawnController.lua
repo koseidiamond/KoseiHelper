@@ -10,7 +10,7 @@ SpawnController.depth = -10250
 SpawnController.placements = {
 	{
 		name = "SpawnController",
-		alternativeName = "EntitySpawner",
+		alternativeName = "Spawner",
 		data = {
 		offsetX = 0,
 		offsetY = 8,
@@ -64,6 +64,9 @@ SpawnController.placements = {
 		decalTexture = "10-farewell/creature_f00",
 		decalDepth = 9000,
 		flagCycleAt = 9999,
+		minCounterCap = 0,
+		maxCounterCap = 9999,
+		decreaseCounter = false,
 
 		-- Custom Entity (or any entity that can be spawned with EntityData)
 		entityPath = "",
@@ -102,6 +105,7 @@ SpawnController.fieldInformation = function (entity) return {
 		"Kevin",
 		"Decal",
 		"Flag",
+		"Counter",
 		"CustomEntity"
 		},
 		editable = false
@@ -177,6 +181,8 @@ SpawnController.fieldInformation = function (entity) return {
         options = textures
     },
 	flagCycleAt = { fieldType = "integer" },
+	minCounterCap = { fieldType = "integer" },
+	maxCounterCap = { fieldType = "integer" },
 	dictKeys = {
 		fieldType = "list",
 		elementOptions = {
@@ -232,7 +238,10 @@ function SpawnController.ignoredFields(entity)
 	"entityPath",
 	"dictKeys",
 	"dictValues",
-	"flagCycleAt"
+	"flagCycleAt",
+	"minCounterCap",
+	"maxCounterCap",
+	"decreaseCounter"
 	}
     local function doNotIgnore(value)
         for i = #ignored, 1, -1 do
@@ -313,6 +322,11 @@ function SpawnController.ignoredFields(entity)
 	end
 	if entity.entityToSpawn == "Flag" then
 		doNotIgnore("flagCycleAt")
+	end
+	if entity.entityToSpawn == "Counter" then
+		doNotIgnore("minCounterCap")
+		doNotIgnore("maxCounterCap")
+		doNotIgnore("decreaseCounter")
 	end
 	-- Noded entities
 	if entity.entityToSpawn == "ZipMover" or entity.entityToSpawn == "SwapBlock" or entity.entityToSpawn == "Iceball" then
@@ -430,6 +444,8 @@ function SpawnController.texture(room, entity)
 		return "objects/KoseiHelper/Controllers/SpawnController/Decal"
 	elseif entityToSpawn == "Flag" then
 		return "objects/KoseiHelper/Controllers/SpawnController/Flag"
+	elseif entityToSpawn == "Counter" then
+		return "objects/KoseiHelper/Controllers/SpawnController/Counter"
 	else
 		return "objects/KoseiHelper/Controllers/SpawnController/Broken"
     end

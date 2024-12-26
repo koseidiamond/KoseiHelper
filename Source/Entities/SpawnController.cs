@@ -139,6 +139,9 @@ public class SpawnController : Entity
     private CoreModes coreMode;
     private CassetteBlockManager cassetteBlockManager;
 
+    public int minCounterCap = 0, maxCounterCap = 9999;
+    public bool decreaseCounter;
+
     //Custom Entity Fields
     private string entityPath;
     private List<string> dictionaryKeys;
@@ -222,6 +225,10 @@ public class SpawnController : Entity
         decalDepth = data.Int("decalDepth", 9000);
 
         flagCycleAt = data.Int("flagCycleAt", 9999);
+
+        minCounterCap = data.Int("minCounterCap", 0);
+        maxCounterCap = data.Int("maxCounterCap", 9999);
+        decreaseCounter = data.Bool("decreaseCounter", false);
 
         //Custom Entities
         entityPath = data.Attr("entityPath");
@@ -435,8 +442,15 @@ public class SpawnController : Entity
                             level.Session.SetFlag("koseiFlag" + flagCount, true);
                         else
                             level.Session.SetFlag("koseiFlag" + flagCount, false);
-                        Audio.Play(appearSound, player.Position);
+                        Audio.Play(appearSound, player.Position); //Audio is here because it doesn't actually spawn anything
                         flagCount++;
+                        break;
+                    case EntityType.Counter:
+                        if (decreaseCounter && level.Session.GetCounter("koseiCounter") > minCounterCap)
+                            level.Session.SetCounter("koseiCounter", level.Session.GetCounter("koseiCounter") - 1);
+                        if (!decreaseCounter && level.Session.GetCounter("koseiCounter") < maxCounterCap)
+                            level.Session.IncrementCounter("koseiCounter");
+                        Audio.Play(appearSound, player.Position); //Audio is here because it doesn't actually spawn anything
                         break;
                     case EntityType.CustomEntity:
                         spawnedEntity = GetEntityFromPath(spawnPosition, nodePosition, level.Session.LevelData);

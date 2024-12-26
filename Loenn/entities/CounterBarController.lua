@@ -17,7 +17,9 @@ CounterBarController.placements = {
 		vertical = false,
 		canOverflow = false,
 		slider = false,
-		initialValue = 1
+		initialValue = 1,
+		persistent = false,
+		flag = ""
 		}
 	}
 }
@@ -41,12 +43,12 @@ CounterBarController.fieldInformation = {
 		fieldType = "integer"
 	},
 	maxValue = {
-		minimumValue = 0.000000000000000000000000000000000000000000000001
+		minimumValue = 0.00000000000000000000000000000000000000000001
 	}
 }
 
 function CounterBarController.texture(room, entity)
-    return "objects/KoseiHelper/Controllers/TheoPetController"
+    return "objects/KoseiHelper/Controllers/BarController"
 end
 
 return CounterBarController

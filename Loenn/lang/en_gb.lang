@@ -16,6 +16,9 @@ entities.KoseiHelper/CounterBarController.attributes.description.vertical=If the
 entities.KoseiHelper/CounterBarController.attributes.description.canOverflow=If the value of the counter/slider is bigger than the Max Value, the bar will overflow besides that point.
 entities.KoseiHelper/CounterBarController.attributes.description.slider=If the counting number should be a slider (float/decimal) or a counter (integer).
 entities.KoseiHelper/CounterBarController.attributes.description.initialValue=The initial value of the counter/slider before it is changed for the first time.
+entities.KoseiHelper/CounterBarController.attributes.description.persistent=If this controller should persist after transitioning to a different room.
+entities.KoseiHelper/CounterBarController.attributes.description.flag=The bar will only display while the flag specified is set to true.\nLeave empty for no flag required.
+
 # Custom Hahaha
 entities.KoseiHelper/CustomHahaha.placements.name.CustomHahaha=Custom Hahaha
 entities.KoseiHelper/CustomHahaha.placements.description.CustomHahaha=Granny's laugh but the sprite and sound can be customized.
@@ -333,6 +336,10 @@ entities.KoseiHelper/SpawnController.attributes.description.blockSinks=If the bl
 entities.KoseiHelper/SpawnController.attributes.description.crushBlockAxe=Determines which sides of the Kevin block are hittable.
 entities.KoseiHelper/SpawnController.attributes.description.crushBlockChillout=If the block should have the large face and get tired after being hit.
 entities.KoseiHelper/SpawnController.attributes.description.flagCycleAt=The "spawned flag" will cycle until reaching this number, then it will reset the values again.\nFor example, if the cycle is 3, the process will be:\nkoseiFlag1 > koseiFlag2 > koseiFlag3 > !koseiFlag1 > !koseiFlag2 > !koseiFlag3 > koseiFlag1 > ...
+entities.KoseiHelper/SpawnController.attributes.description.minCounterCap=The minimum value that the counter "koseiCounter" can reach.
+entities.KoseiHelper/SpawnController.attributes.description.maxCounterCap=The maximum value that the counter "koseiCounter" can reach.
+entities.KoseiHelper/SpawnController.attributes.description.decreaseCounter=If the counter "koseiCounter" should decrease by 1 instead of increase by 1 on each "spawn".
+
 #Spawn Controller - custom entity attributes
 entities.KoseiHelper/SpawnController.attributes.description.entityPath=The full path to the entity class to be spawned.\nSpawning will only work for entities that accept an EntityData and Vector2 parameterized constructor.\For example, Celeste.Strawberry.
 entities.KoseiHelper/SpawnController.attributes.description.dictKeys=The names of the keys the Values dictionary of the EntityData used to spawn the entity will use.\nMust match the ones expected by the entity in its constructor for the Entity to find them.\nIn simple words, the parameters separated by commas. For example, winged,moon.

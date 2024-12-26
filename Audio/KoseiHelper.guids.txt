@@ -1,6 +1,7 @@
 {d802eb06-3489-48e9-b0e9-daab511758f5} event:/KoseiHelper/goomba
 {3edaffa9-2a67-4163-abaa-c1ecd21b5f9f} event:/KoseiHelper/mary
 {5378b6db-9e8a-4ac4-87de-5760cfc1f59e} event:/KoseiHelper/spawn
+{e716e9bd-5d80-4c21-87c1-68c34b0461cf} event:/KoseiHelper/nwaps
 {15ad16dd-88a5-422b-8a52-678fecbe9a28} event:/KoseiHelper/crackedwall_prebreak
 {182cf9dc-0163-4f46-836f-602378231718} event:/KoseiHelper/bullet
 {8ffb32e6-512f-41a9-a2c6-dbea0ac2765c} event:/KoseiHelper/bulletB
