@@ -1,5 +1,20 @@
 #ENTITIES
 
+# Counter Bar Controller
+entities.KoseiHelper/CounterBarController.placements.name.CounterBarController=Counter/Slider Bar
+entities.KoseiHelper/CounterBarController.placements.description.CounterBarController=Displays a custom HD bar that fills/empties according to the values specified.
+entities.KoseiHelper/CounterBarController.attributes.description.color=The filler color inside the bar.
+entities.KoseiHelper/CounterBarController.attributes.description.xPosition=Where on the screen (from 0 to 1920) the left side of the bar should be.
+entities.KoseiHelper/CounterBarController.attributes.description.yPosition=Where on the screen (from 0 to 1080) the top side of the bar should be.
+entities.KoseiHelper/CounterBarController.attributes.description.width=How long in pixels the bar should be.
+entities.KoseiHelper/CounterBarController.attributes.description.height=How tall in pixels the bar should be.
+entities.KoseiHelper/CounterBarController.attributes.description.maxValue=The maximum value of the counter/slider (int/float) where the bar would be completely filled.
+entities.KoseiHelper/CounterBarController.attributes.description.countName=The name of the counter/slider (int/float).
+entities.KoseiHelper/CounterBarController.attributes.description.framePath=The path to the frame, an image that renders on top of the bar, relative to Graphics/Atlases/Gui/.
+entities.KoseiHelper/CounterBarController.attributes.description.vertical=If the bar should empty/fill vertically instead of horizontally.
+entities.KoseiHelper/CounterBarController.attributes.description.canOverflow=If the value of the counter/slider is bigger than the Max Value, the bar will overflow besides that point.
+entities.KoseiHelper/CounterBarController.attributes.description.slider=If the counting number should be a slider (float/decimal) or a counter (integer).
+
 # Custom Hahaha
 entities.KoseiHelper/CustomHahaha.placements.name.CustomHahaha=Custom Hahaha
 entities.KoseiHelper/CustomHahaha.placements.description.CustomHahaha=Granny's laugh but the sprite and sound can be customized.
