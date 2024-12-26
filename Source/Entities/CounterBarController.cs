@@ -13,13 +13,13 @@ namespace Celeste.Mod.KoseiHelper.Entities
 
         private Color color;
         private int xPosition, yPosition, width, height, maxCounterValue;
-        private string countName, framePath;
+        private string countName, framePath, innerTexturePath;
         private int currentCountValue;
         private float filled;
         private bool vertical, canOverflow, slider;
         private float currentSliderValue, maxSliderValue;
-        private MTexture texture;
-        private bool persistent, flagTrue;
+        private MTexture texture, innerTexture;
+        private bool persistent, flagTrue, outline;
         private string flag;
 
         public CounterBarController(EntityData data, Vector2 offset) : base(data.Position + offset)
@@ -40,12 +40,15 @@ namespace Celeste.Mod.KoseiHelper.Entities
             currentSliderValue = data.Float("initialValue", 1f);
             countName = data.Attr("countName", "koseiHelper_counterBar");
             framePath = data.Attr("framePath", "");
+            innerTexturePath = data.Attr("innerTexturePath", "");
             vertical = data.Bool("vertical", false);
+            outline = data.Bool("outline", true);
             canOverflow = data.Bool("canOverflow", false);
             slider = data.Bool("slider", false);
 
             Collider = new Hitbox(width, height);
             texture = GFX.Gui[framePath];
+            innerTexture = GFX.Gui[innerTexturePath];
         }
 
         public override void Added(Scene scene)
@@ -71,16 +74,16 @@ namespace Celeste.Mod.KoseiHelper.Entities
             if (!vertical)
             {
                 if (!slider)
-                    filled = ((float)currentCountValue / maxCounterValue) * width;
+                    filled = Math.Max(((float)currentCountValue / maxCounterValue) * width, 0);
                 else
-                    filled = ((float)currentSliderValue / maxSliderValue) * width;
+                    filled = Math.Max(((float)currentSliderValue / maxSliderValue) * width, 0);
             }
             else
             {
                 if (!slider)
-                    filled = ((float)currentCountValue / maxCounterValue) * height;
+                    filled = Math.Max(((float)currentCountValue / maxCounterValue) * height, 0);
                 else
-                    filled = ((float)currentSliderValue / maxSliderValue) * height;
+                    filled = Math.Max(((float)currentSliderValue / maxSliderValue) * height, 0);
             }
             base.Update();
         }
@@ -89,17 +92,43 @@ namespace Celeste.Mod.KoseiHelper.Entities
         {
             if (string.IsNullOrEmpty(flag) || (!string.IsNullOrEmpty(flag) && flagTrue))
             {
-                if (!string.IsNullOrEmpty(framePath))
+                if (string.IsNullOrEmpty(innerTexturePath))
+                {
+                    if (!string.IsNullOrEmpty(framePath))
+                    {
+                        if (!vertical)
+                            texture.DrawJustified(new Vector2(xPosition + width / 2, yPosition + height / 2), new Vector2(0.5f, 0.5f));
+                        else
+                            texture.DrawJustified(new Vector2(xPosition + width / 2, yPosition + height / 2), new Vector2(0.5f, 0.5f));
+                    }
+                    if (!vertical)
+                    {
+                        Draw.Rect(new Vector2(xPosition, yPosition), filled, Collider.Height, color);
+                        if (outline)
+                            Draw.HollowRect(new Vector2(xPosition, yPosition), Collider.Width, Collider.Height, Color.Black);
+                    }
+                    else
+                    {
+                        Draw.Rect(new Vector2(xPosition, yPosition), Collider.Width, filled, color);
+                        if (outline)
+                            Draw.HollowRect(new Vector2(xPosition, yPosition), Collider.Width, Collider.Height, Color.Black);
+                    }
+                }
+                else // Inner texture provided, render using the texture
                 {
                     if (!vertical)
-                        texture.DrawJustified(new Vector2(xPosition + width / 2, yPosition + height / 2), new Vector2(0.5f, 0.5f));
+                    {
+                        int textureWidth = (int)filled;
+                        MTexture subtexture = innerTexture.GetSubtexture(0, 0, textureWidth, innerTexture.Height);
+                        subtexture.Draw(new Vector2(xPosition, yPosition));
+                    }
                     else
-                        texture.DrawJustified(new Vector2(xPosition + width / 2, yPosition + height / 2), new Vector2(0.5f, 0.5f));
+                    {
+                        int textureHeight = (int)filled;
+                        MTexture subtexture = innerTexture.GetSubtexture(0, 0, innerTexture.Width, textureHeight);
+                        subtexture.Draw(new Vector2(xPosition, yPosition));
+                    }
                 }
-                if (!vertical)
-                    Draw.Rect(new Vector2(xPosition, yPosition), filled, Collider.Height, color);
-                else
-                    Draw.Rect(new Vector2(xPosition, yPosition), Collider.Width, filled, color);
                 base.Render();
             }
         }

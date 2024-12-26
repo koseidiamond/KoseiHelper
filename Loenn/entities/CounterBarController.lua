@@ -14,12 +14,14 @@ CounterBarController.placements = {
 		maxValue = 10,
 		countName = "koseiHelper_counterBar",
 		framePath = "",
+		innerTexturePath = "",
 		vertical = false,
 		canOverflow = false,
 		slider = false,
 		initialValue = 1,
 		persistent = false,
-		flag = ""
+		flag = "",
+		outline = true
 		}
 	}
 }
