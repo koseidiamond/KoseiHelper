@@ -52,7 +52,8 @@ public enum SpawnCondition
     OnCassetteBeat = 3,
     OnCustomButtonPress = 4,
     OnSpeedX = 5,
-    OnInterval = 6
+    OnInterval = 6,
+    OnClimb = 7
 }
 
 [CustomEntity("KoseiHelper/SpawnController")]
@@ -303,6 +304,7 @@ public class SpawnController : Entity
                 SpawnCondition.OnCassetteBeat => canSpawnFromCassette,
                 SpawnCondition.OnInterval => spawnCooldown == 0,
                 SpawnCondition.OnCustomButtonPress => KoseiHelperModule.Settings.SpawnButton.Pressed && spawnCooldown == 0,
+                SpawnCondition.OnClimb => player.StateMachine.state == 1,
                 _ => false
             };
             if (conditionMet && spawnLimit != 0 && spawnCooldown == 0 && player != null)

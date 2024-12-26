@@ -109,7 +109,7 @@ namespace Celeste.Mod.KoseiHelper.Entities
                     }
                     else
                     {
-                        Draw.Rect(new Vector2(xPosition, yPosition), Collider.Width, filled, color);
+                        Draw.Rect(new Vector2(xPosition, yPosition + height - filled), Collider.Width, filled, color);
                         if (outline)
                             Draw.HollowRect(new Vector2(xPosition, yPosition), Collider.Width, Collider.Height, Color.Black);
                     }
@@ -126,7 +126,7 @@ namespace Celeste.Mod.KoseiHelper.Entities
                     {
                         int textureHeight = (int)filled;
                         MTexture subtexture = innerTexture.GetSubtexture(0, 0, innerTexture.Width, textureHeight);
-                        subtexture.Draw(new Vector2(xPosition, yPosition));
+                        subtexture.Draw(new Vector2(xPosition, yPosition + height - textureHeight));
                     }
                 }
                 base.Render();
