@@ -31,6 +31,8 @@ They have the vanilla colors and can be attached to solids.
 A group of sprites that wave towards a direction while playing a sound when a flag is true.
 ### Mary Block
 Single-use flowers that launch the player with more or less strength depending on the mode. Compatible with Theo.
+### Custom Trapdoor
+Decorative entity. Vertical door that can be reskinned through Sprites.xml, change the sounds, or choose if the light can pass through it.
 ### Winged Key
 They function as normal keys but they can fly away like winged strawberries at a customizable speed.
 ### Falling Platform/Donut
