@@ -64,6 +64,7 @@ SpawnController.placements = {
 		decalTexture = "10-farewell/creature_f00",
 		decalDepth = 9000,
 		flagCycleAt = 9999,
+		flagStop = false,
 		minCounterCap = 0,
 		maxCounterCap = 9999,
 		decreaseCounter = false,
@@ -240,6 +241,7 @@ function SpawnController.ignoredFields(entity)
 	"dictKeys",
 	"dictValues",
 	"flagCycleAt",
+	"flagStop",
 	"minCounterCap",
 	"maxCounterCap",
 	"decreaseCounter"
@@ -323,6 +325,7 @@ function SpawnController.ignoredFields(entity)
 	end
 	if entity.entityToSpawn == "Flag" then
 		doNotIgnore("flagCycleAt")
+		doNotIgnore("flagStop")
 	end
 	if entity.entityToSpawn == "Counter" then
 		doNotIgnore("minCounterCap")

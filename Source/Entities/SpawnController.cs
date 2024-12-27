@@ -84,7 +84,7 @@ public class SpawnController : Entity
     private bool canSpawnFromCassette = false;
     public int flagCount = 1;
     public int flagCycleAt = 9999;
-    public bool cycledFlag;
+    public bool flagStop;
     //other important variables
     private int entityID = 7388544; // Very high value so it doesn't conflict with other ids (hopefully)
     private List<EntityWithTTL> spawnedEntitiesWithTTL = new List<EntityWithTTL>();
@@ -226,6 +226,7 @@ public class SpawnController : Entity
         decalDepth = data.Int("decalDepth", 9000);
 
         flagCycleAt = data.Int("flagCycleAt", 9999);
+        flagStop = data.Bool("flagStop", false);
 
         minCounterCap = data.Int("minCounterCap", 0);
         maxCounterCap = data.Int("maxCounterCap", 9999);
@@ -435,16 +436,19 @@ public class SpawnController : Entity
                             spawnedEntity = new Decal(decalTexture, spawnPosition, new Vector2(1, 1), decalDepth);
                         break;
                     case EntityType.Flag:
-                        if (flagCount > flagCycleAt)
+                        if (flagCount > flagCycleAt) // If the counter has exceeded the max (e.g. 4>3)
                         {
-                            flagCount = 1;
-                            cycledFlag = !cycledFlag;
+                            level.Session.SetFlag("koseiFlag" + flagCycleAt, false);
+                            if (!flagStop)
+                                flagCount = 1; // The counter is reset
+                            else
+                                RemoveSelf();
                         }
-                        if (!cycledFlag)
                             level.Session.SetFlag("koseiFlag" + flagCount, true);
-                        else
-                            level.Session.SetFlag("koseiFlag" + flagCount, false);
+                            level.Session.SetFlag("koseiFlag" + (flagCount-1), false);
                         Audio.Play(appearSound, player.Position); //Audio is here because it doesn't actually spawn anything
+                        if (spawnCondition == SpawnCondition.OnInterval)
+                            spawnCooldown = spawnTime;
                         flagCount++;
                         break;
                     case EntityType.Counter:
@@ -453,6 +457,8 @@ public class SpawnController : Entity
                         if (!decreaseCounter && level.Session.GetCounter("koseiCounter") < maxCounterCap)
                             level.Session.IncrementCounter("koseiCounter");
                         Audio.Play(appearSound, player.Position); //Audio is here because it doesn't actually spawn anything
+                        if (spawnCondition == SpawnCondition.OnInterval)
+                            spawnCooldown = spawnTime;
                         break;
                     case EntityType.CustomEntity:
                         spawnedEntity = GetEntityFromPath(spawnPosition, nodePosition, level.Session.LevelData);

@@ -35,6 +35,15 @@ entities.KoseiHelper/CustomHahaha.attributes.description.left=If the Hahaha shou
 entities.KoseiHelper/CustomHahaha.attributes.description.synchronizedSfx=If the sound should play with each spawned Ha instead of on a fixed interval.
 entities.KoseiHelper/CustomHahaha.attributes.description.groupSize=How many Has should be in each group.
 
+# Custom Trapdoor
+entities.KoseiHelper/CustomTrapdoor.placements.name.CustomTrapdoor=Custom Trapdoor
+entities.KoseiHelper/CustomTrapdoor.placements.description.CustomTrapdoor=A vertical door for deco. It can be resprited through Sprites.xml.
+entities.KoseiHelper/CustomTrapdoor.attributes.description.sfxTop=The sound the trapdoor makes when being opened from top.
+entities.KoseiHelper/CustomTrapdoor.attributes.description.sfxBottom=The sound the trapdoor makes when being opened from bottom.
+entities.KoseiHelper/CustomTrapdoor.attributes.description.depth=The visual depth of the trapdoor.
+entities.KoseiHelper/CustomTrapdoor.attributes.description.spriteID=The ID or tag of the sprite in your Sprites.xml.
+entities.KoseiHelper/CustomTrapdoor.attributes.description.occludesLight=If the light should be able to pass through the trapdoor.
+
 # Goomba
 entities.KoseiHelper/Goomba.placements.name.goomba=Goomba
 entities.KoseiHelper/Goomba.placements.description.Goomba=These creatures chase the player and have several customization options.
@@ -154,6 +163,7 @@ entities.KoseiHelper/BoundRefill.placements.name.boundRefill=Bound Refill
 entities.KoseiHelper/BoundRefill.placements.description.Bound Refill=OutBound refills allow the player to never transition and be outside of the current room (and force the camera to follow the player).\nInBound refills allow the player to immediately transition to the room they are in ("bounded" again).
 entities.KoseiHelper/BoundRefill.attributes.description.outBound=If this is true, this will be an OutBound refill. These are generally placed inside a room.\nIf it's false, it will be an InBound refill. These are generally placed out of bounds, overlapping with a different room.
 entities.KoseiHelper/BoundRefill.attributes.description.climbFix=In vanilla, the player can't climb if they are to the left/right of the current screen.\nNot recommended to disable.\n(The refill with the highest ID determines if the player can climb outside the current room or not).
+entities.KoseiHelper/BoundRefill.attributes.description.oneUse=If the bound refill should reappear after 2.5 seconds or only on room reload.
 
 #Tile Refill
 entities.KoseiHelper/TileRefill.placements.name.tileRefill=Tile Refill
@@ -224,7 +234,7 @@ entities.KoseiHelper/FlagRefill.attributes.description.oneUse=If the refill shou
 
 #Counter Refill
 entities.KoseiHelper/CounterRefill.placements.name.CounterRefill=Counter Refill
-entities.KoseiHelper/CounterRefill.placements.description.CounterRefill=A flag will be enabled when the player collects the refill.\nThis flag will be reset if the player dashes or dies, as some sort of "temporary powerup".
+entities.KoseiHelper/CounterRefill.placements.description.CounterRefill=The counter KoseiHelper_CounterRefill will increase/decrease when the refill is collected/used.
 entities.KoseiHelper/CounterRefill.attributes.description.sprite=The path to your custom sprite.\nIt needs flash and idle animations, an an outline image.
 entities.KoseiHelper/CounterRefill.attributes.description.oneUse=If the refill should be consumed upon use or respawn after a while.
 entities.KoseiHelper/CounterRefill.attributes.description.decrease=If the counter should be decreased instead of increased.
@@ -338,13 +348,14 @@ entities.KoseiHelper/SpawnController.attributes.description.blockSinks=If the bl
 entities.KoseiHelper/SpawnController.attributes.description.crushBlockAxe=Determines which sides of the Kevin block are hittable.
 entities.KoseiHelper/SpawnController.attributes.description.crushBlockChillout=If the block should have the large face and get tired after being hit.
 entities.KoseiHelper/SpawnController.attributes.description.flagCycleAt=The "spawned flag" will cycle until reaching this number, then it will reset the values again.\nFor example, if the cycle is 3, the process will be:\nkoseiFlag1 > koseiFlag2 > koseiFlag3 > !koseiFlag1 > !koseiFlag2 > !koseiFlag3 > koseiFlag1 > ...
+entities.KoseiHelper/SpawnController.attributes.description.flagStop=The spawner will remove itself (stop) after the flag koseiFlagN has reached the Cycle At value.
 entities.KoseiHelper/SpawnController.attributes.description.minCounterCap=The minimum value that the counter "koseiCounter" can reach.
 entities.KoseiHelper/SpawnController.attributes.description.maxCounterCap=The maximum value that the counter "koseiCounter" can reach.
 entities.KoseiHelper/SpawnController.attributes.description.decreaseCounter=If the counter "koseiCounter" should decrease by 1 instead of increase by 1 on each "spawn".
 
 #Spawn Controller - custom entity attributes
-entities.KoseiHelper/SpawnController.attributes.description.entityPath=The full path to the entity class to be spawned.\nSpawning will only work for entities that accept an EntityData and Vector2 parameterized constructor.\For example, Celeste.Strawberry.
-entities.KoseiHelper/SpawnController.attributes.description.dictKeys=The names of the keys the Values dictionary of the EntityData used to spawn the entity will use.\nMust match the ones expected by the entity in its constructor for the Entity to find them.\nIn simple words, the parameters separated by commas. For example, winged,moon.
+entities.KoseiHelper/SpawnController.attributes.description.entityPath=The full path to the entity class to be spawned.\nSpawning will only work for entities that accept an EntityData and Vector2 parameterized constructor.\n For example, Celeste.Strawberry.
+entities.KoseiHelper/SpawnController.attributes.description.dictKeys=The names of the keys the Values dictionary of the EntityData used to spawn the entity will use.\nMust match the ones expected by the entity in its constructor for the Entity to find them.\n In simple words, the parameters separated by commas. For example, winged,moon.
 entities.KoseiHelper/SpawnController.attributes.description.dictValues=The values of the Values dictionary of the EntityData used to spawn the entity.\nEach value will be associated with the corresponding key as the values are organized, first key with first value and so forth.\nAny values that exceed the amount of keys will be ignored, and any keys with no corresponding value will have no value.\In simple words, the values of the parameters (in the same order, separated by commas). For example, true,false.
 entities.KoseiHelper/SpawnController.attributes.name.dictKeys=Attributes
 entities.KoseiHelper/SpawnController.attributes.name.dictValues=Attribute values

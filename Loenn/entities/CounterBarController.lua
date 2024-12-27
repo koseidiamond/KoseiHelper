@@ -50,6 +50,27 @@ CounterBarController.fieldInformation = {
 	}
 }
 
+CounterBarController.fieldOrder = {
+	"x",
+	"y",
+	"xPosition",
+	"yPosition",
+	"barWidth",
+	"barHeight",
+	"color",
+	"framePath",
+	"innerTexturePath",
+	"countName",
+	"flag",
+	"initialValue",
+	"maxValue",
+	"outline",
+	"vertical",
+	"canOverflow",
+	"slider",
+	"persistent"
+}
+
 function CounterBarController.texture(room, entity)
     return "objects/KoseiHelper/Controllers/BarController"
 end
