@@ -3,6 +3,8 @@ using Monocle;
 using System;
 using Microsoft.Xna.Framework;
 using System.Net.Sockets;
+using System.Globalization;
+using Microsoft.Xna.Framework.Input;
 
 namespace Celeste.Mod.KoseiHelper.Entities;
 
@@ -34,6 +36,14 @@ public class IRLController : Entity
         base.Added(scene);
         Level level = SceneAs<Level>();
         int currentMonth = DateTime.Now.Month;
+
+        // day of week
+        level.Session.SetFlag("kosei_irl" + DateTime.Now.DayOfWeek.ToString());
+        // system username
+        level.Session.SetFlag("kosei_irlName" + Environment.UserName);
+        // if a gamepad is plugged to the pc or not
+        level.Session.SetFlag("kosei_irlGamePad" + (GamePad.GetState(PlayerIndex.One).IsConnected ? "True" : "False"));
+
         currentHour = DateTime.Now.Hour;
         currentMinute = DateTime.Now.Minute;
         for (int month = 1; month <= 12; month++)
@@ -41,13 +51,9 @@ public class IRLController : Entity
             string kosei_irlMonth = $"kosei_irlMonth{month}";
 
             if (month == currentMonth)
-            {
                 level.Session.SetFlag(kosei_irlMonth, true);
-            }
             else
-            {
                 level.Session.SetFlag(kosei_irlMonth, false);
-            }
         }
     }
 

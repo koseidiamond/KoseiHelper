@@ -44,6 +44,20 @@ entities.KoseiHelper/CustomTrapdoor.attributes.description.depth=The visual dept
 entities.KoseiHelper/CustomTrapdoor.attributes.description.spriteID=The ID or tag of the sprite in your Sprites.xml.
 entities.KoseiHelper/CustomTrapdoor.attributes.description.occludesLight=If the light should be able to pass through the trapdoor.
 
+# Flag Fake Berry
+entities.KoseiHelper/FlagFakeBerry.placements.name.FlagFakeBerry=Flag Fake Berry
+entities.KoseiHelper/FlagFakeBerry.placements.description.FlagFakeBerry=A fake/troll berry (doesn't count towards total) that can set a flag and disappear upon "collection".
+entities.KoseiHelper/FlagFakeBerry.attributes.description.winged=Whether the berry should fly away when the player dashes.
+entities.KoseiHelper/FlagFakeBerry.attributes.description.moon=Whether the berry should use the moonberry sprite.
+entities.KoseiHelper/FlagFakeBerry.attributes.description.flag=The flag that the berry will set when "collected".\n(Doesn't set a flag if the berry reappears instantly)
+entities.KoseiHelper/FlagFakeBerry.attributes.description.reappearMode=If the berry should reappear when the player dies/re-enters the room, instantly (unable to be collected) or never.
+entities.KoseiHelper/FlagFakeBerry.attributes.description.collectSfx=The sound the berry makes when "collected".
+entities.KoseiHelper/FlagFakeBerry.attributes.description.reappearSfx=The sound the berry makes when reappearing.
+entities.KoseiHelper/FlagFakeBerry.attributes.description.depthBeforeFollowing=The depth when the berry is not following the player.
+entities.KoseiHelper/FlagFakeBerry.attributes.description.depthWhileFollowing=The depth while the berry is following the player.\n(A very low value means it will render above everything else)
+entities.KoseiHelper/FlagFakeBerry.attributes.description.collectTime=The time that the player needs to be on safe ground until the berry is "collected".
+entities.KoseiHelper/FlagFakeBerry.attributes.description.resetsFlag=The flag will be unset when the strawberry reappears (including on room reload).
+
 # Goomba
 entities.KoseiHelper/Goomba.placements.name.goomba=Goomba
 entities.KoseiHelper/Goomba.placements.description.Goomba=These creatures chase the player and have several customization options.

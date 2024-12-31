@@ -19,6 +19,8 @@ All entities that don't provide direct sprite/texture fields are customizable th
 
 ## Miscellaneous
 
+### Flag Fake Berry
+Similar to Troll Berries, these can set a flag upon "collection" and can reappear instantly or on room reload.
 ### Goomba
 This entity can follow the player horizontally or move in a fixed direction. Kills on contact, and can optionally be bounced on. It has several customizable options, including spawning mini versions each x seconds, flying away like strawberries, or be winged. They can also interact with springs.
 ### Plant
@@ -31,6 +33,8 @@ They have the vanilla colors and can be attached to solids.
 A group of sprites that wave towards a direction while playing a sound when a flag is true.
 ### Mary Block
 Single-use flowers that launch the player with more or less strength depending on the mode. Compatible with Theo.
+### Custom Trapdoor
+Decorative entity. Vertical door that can be reskinned through Sprites.xml, change the sounds, or choose if the light can pass through it.
 ### Winged Key
 They function as normal keys but they can fly away like winged strawberries at a customizable speed.
 ### Falling Platform/Donut
