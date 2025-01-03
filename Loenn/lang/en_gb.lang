@@ -1,7 +1,7 @@
 #ENTITIES
 
 # Counter Bar Controller
-entities.KoseiHelper/CounterBarController.placements.name.CounterBarController=Counter/Slider Bar
+entities.KoseiHelper/CounterBarController.placements.name.CounterBarController=Counter/Slider Bar Display
 entities.KoseiHelper/CounterBarController.placements.description.CounterBarController=Displays a custom HD bar that fills/empties according to the values specified.
 entities.KoseiHelper/CounterBarController.attributes.description.color=The filler color inside the bar.
 entities.KoseiHelper/CounterBarController.attributes.description.xPosition=Where on the screen (from 0 to 1920) the left side of the bar should be.
@@ -20,6 +20,15 @@ entities.KoseiHelper/CounterBarController.attributes.description.initialValue=Th
 entities.KoseiHelper/CounterBarController.attributes.description.persistent=If this controller should persist after transitioning to a different room.
 entities.KoseiHelper/CounterBarController.attributes.description.flag=The bar will only display while the flag specified is set to true.\nLeave empty for no flag required.
 entities.KoseiHelper/CounterBarController.attributes.description.outline=If the bar should render a black outline or not.
+
+entities.KoseiHelper/FallDamageController.placements.name.FallDamageController=Fall Damage Controller
+entities.KoseiHelper/FallDamageController.placements.description.FallDamageController=The player will lose a certain amount of health when falling too fast, and die when the health is 0.
+entities.KoseiHelper/FallDamageController.attributes.description.terminalSpeed=The maximum speed that is normally reached through gravity when there is no wind, fastfalling, etc.\nNot recommended to change unless you are using Extended Variants or something.
+entities.KoseiHelper/FallDamageController.attributes.description.fallTimeThreshold=The falling time required so the fall damage can be triggered.\nThis timer is reset if you're in the air but not falling (e.g. climbing, dashing horizontally...).
+entities.KoseiHelper/FallDamageController.attributes.description.fallDamageThreshold=The speed required so the fall damage can be triggered.
+entities.KoseiHelper/FallDamageController.attributes.description.fallDamageAmount=The base amount of damage that the player will take after the fall.\nThis value will scale if the speed when touching the ground is bigger than the terminal speed. 
+entities.KoseiHelper/FallDamageController.attributes.description.playerHealth=The amount of health that the player has.\n(This is a Session Slider called koseiHelper_health so you can display it with a Slider Bar if you want)
+entities.KoseiHelper/FallDamageController.attributes.description.persistent=If the controller should persist across rooms.
 
 # Custom Hahaha
 entities.KoseiHelper/CustomHahaha.placements.name.CustomHahaha=Custom Hahaha
