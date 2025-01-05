@@ -21,14 +21,15 @@ entities.KoseiHelper/CounterBarController.attributes.description.persistent=If t
 entities.KoseiHelper/CounterBarController.attributes.description.flag=The bar will only display while the flag specified is set to true.\nLeave empty for no flag required.
 entities.KoseiHelper/CounterBarController.attributes.description.outline=If the bar should render a black outline or not.
 
-entities.KoseiHelper/FallDamageController.placements.name.FallDamageController=Fall Damage Controller
-entities.KoseiHelper/FallDamageController.placements.description.FallDamageController=The player will lose a certain amount of health when falling too fast, and die when the health is 0.
-entities.KoseiHelper/FallDamageController.attributes.description.terminalSpeed=The maximum speed that is normally reached through gravity when there is no wind, fastfalling, etc.\nNot recommended to change unless you are using Extended Variants or something.
-entities.KoseiHelper/FallDamageController.attributes.description.fallTimeThreshold=The falling time required so the fall damage can be triggered.\nThis timer is reset if you're in the air but not falling (e.g. climbing, dashing horizontally...).
-entities.KoseiHelper/FallDamageController.attributes.description.fallDamageThreshold=The speed required so the fall damage can be triggered.
-entities.KoseiHelper/FallDamageController.attributes.description.fallDamageAmount=The base amount of damage that the player will take after the fall.\nThis value will scale if the speed when touching the ground is bigger than the terminal speed. 
-entities.KoseiHelper/FallDamageController.attributes.description.playerHealth=The amount of health that the player has.\n(This is a Session Slider called koseiHelper_health so you can display it with a Slider Bar if you want)
-entities.KoseiHelper/FallDamageController.attributes.description.persistent=If the controller should persist across rooms.
+# Fall Damage Controller
+#entities.KoseiHelper/FallDamageController.placements.name.FallDamageController=Fall Damage Controller
+#entities.KoseiHelper/FallDamageController.placements.description.FallDamageController=The player will lose a certain amount of health when falling too fast, and die when the health is 0.
+#entities.KoseiHelper/FallDamageController.attributes.description.terminalSpeed=The maximum speed that is normally reached through gravity when there is no wind, fastfalling, etc.\nNot recommended to change unless you are using Extended Variants or something.
+#entities.KoseiHelper/FallDamageController.attributes.description.fallTimeThreshold=The falling time required so the fall damage can be triggered.\nThis timer is reset if you're in the air but not falling (e.g. climbing, dashing horizontally...).
+#entities.KoseiHelper/FallDamageController.attributes.description.fallDamageThreshold=The speed required so the fall damage can be triggered.
+#entities.KoseiHelper/FallDamageController.attributes.description.fallDamageAmount=The base amount of damage that the player will take after the fall.\nThis value will scale if the speed when touching the ground is bigger than the terminal speed. 
+#entities.KoseiHelper/FallDamageController.attributes.description.playerHealth=The amount of health that the player has.\n(This is a Session Slider called koseiHelper_health so you can display it with a Slider Bar if you want)
+#entities.KoseiHelper/FallDamageController.attributes.description.persistent=If the controller should persist across rooms.
 
 # Custom Hahaha
 entities.KoseiHelper/CustomHahaha.placements.name.CustomHahaha=Custom Hahaha
@@ -307,7 +308,9 @@ entities.KoseiHelper/CustomPauseController.attributes.description.canPause=If th
 entities.KoseiHelper/CustomPauseController.attributes.description.canRetry=If the Retry option should be enabled in the Pause Menu.
 entities.KoseiHelper/CustomPauseController.attributes.description.canSaveAndQuit=If the Save And Quit option should be enabled in the Pause Menu.
 entities.KoseiHelper/CustomPauseController.attributes.description.timerIsStopped=If the timer for the map should stop running while the player is in the room.
+entities.KoseiHelper/CustomPauseController.attributes.description.timerHidden=If the timer for the map should not be displayed.
 entities.KoseiHelper/CustomPauseController.attributes.description.dieOnUnpause=If the player should be punished with death after pausing the game.\nPrevents pause buffering.
+entities.KoseiHelper/CustomPauseController.attributes.description.persistent=If this controller should persist across rooms.
 
 # Flag Refill Controller
 entities.KoseiHelper/FlagRefillController.placements.name.FlagRefillController=Flag/Counter Refill Controller

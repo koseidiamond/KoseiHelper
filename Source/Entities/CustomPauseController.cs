@@ -11,7 +11,7 @@ public class CustomPauseController : Entity
     public bool canPause = true;
     public bool canRetry = true;
     public bool canSaveAndQuit = true;
-    public bool timerIsStopped = false;
+    public bool timerIsStopped, timerHidden = false;
     public bool pauseTimerWhilePauseMenu = false;
     public bool dieOnUnpause = false;
 
@@ -21,8 +21,12 @@ public class CustomPauseController : Entity
         canRetry = data.Bool("canRetry", true);
         canSaveAndQuit = data.Bool("canSaveAndQuit", true);
         timerIsStopped = data.Bool("timerIsStopped", false);
+        timerHidden = data.Bool("timerHidden", false);
         pauseTimerWhilePauseMenu = data.Bool("pauseTimerWhilePauseMenu", false);
         dieOnUnpause = data.Bool("dieOnUnpause", false);
+        if (data.Bool("persistent", false))
+            Tag = Tags.Persistent;
+
     }
 
     public override void Awake(Scene scene)
@@ -40,6 +44,7 @@ public class CustomPauseController : Entity
         level.CanRetry = canRetry;
         level.SaveQuitDisabled = !canSaveAndQuit;
         level.TimerStopped = timerIsStopped;
+        level.TimerHidden = timerHidden;
         level.PauseMainMenuOpen = true;
         if (level.Paused)
             level.TimerStopped = true;
