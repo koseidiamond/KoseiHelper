@@ -29,7 +29,7 @@ DebugRenderer.placements = {
 		message = "text",
 		font = "Consolas12",
 		fontSize = 1,
-		ellipseSegments = 9999
+		ellipseSegments = 99
     }
 }
 
@@ -53,6 +53,7 @@ DebugRenderer.fieldInformation = {
 			"HollowRectangle",
 			"FilledRectangle",
 			"Circle",
+			"Ellipse",
 			"Point",
 			"Line",
 			"Text"
@@ -79,7 +80,8 @@ function DebugRenderer.ignoredFields(entity)
     "_id",
 	"font",
 	"fontSize",
-	"message"
+	"message",
+	"ellipseSegments"
 	}
     local function doNotIgnore(value)
         for i = #ignored, 1, -1 do
@@ -93,6 +95,9 @@ function DebugRenderer.ignoredFields(entity)
 		doNotIgnore("font")
 		doNotIgnore("fontSize")
 		doNotIgnore("message")
+	end
+	if entity.shape == "Ellipse" then
+		doNotIgnore("ellipseSegments")
 	end
 	return ignored
 end

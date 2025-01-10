@@ -2,7 +2,7 @@ local drawableRectangle = require("structs.drawable_rectangle")
 
 local CustomTrapdoor = {}
 
-CustomTrapdoor.name = "CustomTrapdoor"
+CustomTrapdoor.name = "KoseiHelper/CustomTrapdoor"
 CustomTrapdoor.depth = 8999
 CustomTrapdoor.placements = {
     name = "CustomTrapdoor",

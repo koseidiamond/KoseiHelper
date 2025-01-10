@@ -4,12 +4,13 @@
 entities.KoseiHelper/DebugRenderer.placements.name.DebugRenderer=Debug Renderer
 entities.KoseiHelper/DebugRenderer.placements.description.DebugRenderer=Displays colored shapes on debug (when hitboxes are enabled).
 entities.KoseiHelper/DebugRenderer.attributes.description.color=The color of the shape.
-entities.KoseiHelper/DebugRenderer.attributes.description.shape=HollowRectangle: Outline of a rectangle (like normal hitboxes).\nFilledRectangle: A rectangle that is completely filled (useful for hiding things like fake walls).\nCircle: The radius is determined by (WIP).\Point: A single pixel is drawn at the position of the entity.\nLine: A line that goes from the position towards the node (press N).\nText: A message will appear with the chosen font.
+entities.KoseiHelper/DebugRenderer.attributes.description.shape=HollowRectangle: Outline of a rectangle (like normal hitboxes).\nFilledRectangle: Draws a rectangle that is completely filled (useful for hiding things like fake walls).\nCircle: Draws a circle in the center of the entity.\nEllipse: Draws an ellipse (or a polygon with certain amount of sides).\nPoint: A single pixel is drawn at the position of the entity.\nLine: A line that goes from the position towards the node (press N).\nText: A message will appear with the chosen font.
 entities.KoseiHelper/DebugRenderer.attributes.description.flag=The flag that needs to be set for the debug shape to appear.\nLeave empty for no flag required.
 entities.KoseiHelper/DebugRenderer.attributes.description.message=If the shape is Text, this is the string that will be rendered.
 entities.KoseiHelper/DebugRenderer.attributes.description.font=If the shape is Text, this is the font chosen for the given string.
 entities.KoseiHelper/DebugRenderer.attributes.description.fontSize=If the shape is Text, this is a size multiplier for the font.\nKeep in mind that Debug is not HD, so low sizes may look pixelated and blurry.
-entities.KoseiHelper/DebugRenderer.attributes.description.ellipseSegments=If the shape is a Circle, the number of sides of the ellipse.\nWrite a low number for a polygon.
+entities.KoseiHelper/DebugRenderer.attributes.description.ellipseSegments=If the shape is an Ellipse, the number of "sides" of the ellipse.\nWrite a low number for a polygon.\nWARNING: Writing values higher than a few thousands can cause tons of lag.
+
 # Counter Bar Controller
 entities.KoseiHelper/CounterBarController.placements.name.CounterBarController=Counter/Slider Bar Display
 entities.KoseiHelper/CounterBarController.placements.description.CounterBarController=Displays a custom HD bar that fills/empties according to the values specified.
