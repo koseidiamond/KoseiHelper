@@ -2,8 +2,6 @@ using Celeste.Mod.Entities;
 using Monocle;
 using Microsoft.Xna.Framework;
 using System.Collections;
-using System;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace Celeste.Mod.KoseiHelper.Entities;
 
@@ -16,17 +14,17 @@ public class DebugRenderer : Entity
     public string flagName;
     public bool flagValue;
     public string message;
-    public int ellipseSegments;
-    public float fontSize;
+    public string imagePath;
+    public bool scaled;
     public enum Shape
     {
         HollowRectangle,
         FilledRectangle,
         Circle,
-        Ellipse,
         Point,
         Line,
-        Text
+        Text,
+        Image
     }
     public Shape shape;
     public enum Font
@@ -35,6 +33,7 @@ public class DebugRenderer : Entity
         Renogare
     }
     public Font font;
+
     public DebugRenderer(EntityData data, Vector2 offset) : base(data.Position + offset)
     {
         color = data.HexColor("color", Calc.HexToColor("ffffff"));
@@ -45,8 +44,8 @@ public class DebugRenderer : Entity
         flagName = data.Attr("flag", "");
         message = data.Attr("message", "text");
         font = data.Enum("font", Font.Consolas12);
-        fontSize = data.Float("fontSize", 1f);
-        ellipseSegments = data.Int("ellipseSegments", 99);
+        imagePath = data.Attr("imagePath", "");
+        scaled = data.Bool("scaled", true);
     }
 
     public override void Update()
@@ -69,10 +68,7 @@ public class DebugRenderer : Entity
                     Draw.Rect(X, Y, width, height, color);
                     break;
                 case Shape.Circle:
-                        Draw.Circle(new Vector2(X + width / 2, Y + height / 2), width / 2, color, 1);
-                    break;
-                case Shape.Ellipse:
-                    DrawEllipse(X + width / 2, Y + height / 2, width / 2, height / 2, color);
+                    Draw.Circle(new Vector2(X + width / 2, Y + height / 2), width / 2, color, 1);
                     break;
                 case Shape.Point:
                     Draw.Point(this.Position, color);
@@ -84,29 +80,26 @@ public class DebugRenderer : Entity
                     switch (font)
                     {
                         case Font.Consolas12:
-                            Draw.Text(Draw.DefaultFont, message, new Vector2(X, Y), color, Vector2.Zero, Vector2.One * fontSize, 0);
+                            Draw.Text(Draw.DefaultFont, message, new Vector2(X, Y), color);
                             break;
                         case Font.Renogare:
-                            ActiveFont.Draw(message, new Vector2(X, Y), Vector2.Zero, Vector2.One * fontSize / 2, color);
+                            ActiveFont.Draw(message, new Vector2(X, Y), color);
                             break;
                     }
                     break;
+                case Shape.Image:
+                    if (!string.IsNullOrEmpty(imagePath))
+                    {
+                        Image image = new Image(GFX.Game[imagePath]);
+                        image.Position = Position;
+                        if (scaled)
+                            image.Scale = new Vector2(width / image.Width, height / image.Height);
+                        image.Render();
+                    }
+                    break;
             }
-            base.DebugRender(camera);
-        }
-    }
 
-    private void DrawEllipse(float x, float y, float rx, float ry, Color color)
-    {
-        Vector2 prevPoint = new Vector2(x + rx, y);
-        for (int i = 1; i <= ellipseSegments; i++)
-        {
-            float theta = MathHelper.TwoPi * i / ellipseSegments;
-            float dx = rx * (float)Math.Cos(theta);
-            float dy = ry * (float)Math.Sin(theta);
-            Vector2 newPoint = new Vector2(x + dx, y + dy);
-            Draw.Line(prevPoint, newPoint, color);
-            prevPoint = newPoint;
+            base.DebugRender(camera);
         }
     }
 }

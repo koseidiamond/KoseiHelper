@@ -19,6 +19,9 @@ All entities that don't provide direct sprite/texture fields are customizable th
 
 ## Miscellaneous
 
+### Debug Renderer
+Allows you to display a custom shape/text/image on debug/hitboxes. Install CelesteTAS to be able to see debug/hitboxes.
+
 ### Flag Fake Berry
 Similar to Troll Berries, these can set a flag upon "collection" and can reappear instantly or on room reload.
 ### Goomba

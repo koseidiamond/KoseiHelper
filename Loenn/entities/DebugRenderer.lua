@@ -29,7 +29,9 @@ DebugRenderer.placements = {
 		message = "text",
 		font = "Consolas12",
 		fontSize = 1,
-		ellipseSegments = 99
+		ellipseSegments = 99,
+		imagePath = "characters/bird/Recover03",
+		scaled = true
     }
 }
 
@@ -44,7 +46,9 @@ DebugRenderer.fieldOrder = {
 	"message",
 	"font",
 	"fontSize",
-	"ellipseSegments"
+	"ellipseSegments",
+	"imagePath",
+	"scaled"
 }
 
 DebugRenderer.fieldInformation = {
@@ -56,7 +60,8 @@ DebugRenderer.fieldInformation = {
 			"Ellipse",
 			"Point",
 			"Line",
-			"Text"
+			"Text",
+			"Image"
 		},
 		editable = false
 	},
@@ -81,7 +86,10 @@ function DebugRenderer.ignoredFields(entity)
 	"font",
 	"fontSize",
 	"message",
-	"ellipseSegments"
+	"ellipseSegments",
+	"imagePath",
+	"scaled",
+	"color"
 	}
     local function doNotIgnore(value)
         for i = #ignored, 1, -1 do
@@ -91,6 +99,9 @@ function DebugRenderer.ignoredFields(entity)
             end
         end
     end
+	if entity.shape ~= "Image" then
+		doNotIgnore("color")
+	end
 	if entity.shape == "Text" then
 		doNotIgnore("font")
 		doNotIgnore("fontSize")
@@ -98,6 +109,10 @@ function DebugRenderer.ignoredFields(entity)
 	end
 	if entity.shape == "Ellipse" then
 		doNotIgnore("ellipseSegments")
+	end
+	if entity.shape == "Image" then
+		doNotIgnore("imagePath")
+		doNotIgnore("scaled")
 	end
 	return ignored
 end
