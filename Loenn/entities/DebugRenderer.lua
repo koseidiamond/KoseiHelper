@@ -6,7 +6,7 @@ DebugRenderer.name = "KoseiHelper/DebugRenderer"
 DebugRenderer.depth = -1
 DebugRenderer.nodeLineRenderType = "line"
 DebugRenderer.nodeLimits = {0,1}
-DebugRenderer.nodeVisibility= "selected"
+DebugRenderer.nodeVisibility= "always"
 DebugRenderer.fieldInformation = {
     depth = {
         fieldType = "integer"
@@ -15,6 +15,7 @@ DebugRenderer.fieldInformation = {
         fieldType = "color"
     }
 }
+
 DebugRenderer.placements = {
     name = "DebugRenderer",
     data = {
@@ -29,7 +30,8 @@ DebugRenderer.placements = {
 		ellipseSegments = 99,
 		imagePath = "characters/bird/Recover03",
 		scaled = true,
-		nonDebug = false
+		nonDebug = false,
+		depth = -999999
     }
 }
 
@@ -72,6 +74,7 @@ DebugRenderer.fieldInformation = {
 		editable = false
 	},
 	color = { fieldType = "color" },
+	depth = { fieldType = "integer" },
 	ellipseSegments = {
 		fieldType = "integer",
 		minimumValue = 3
@@ -88,7 +91,9 @@ function DebugRenderer.ignoredFields(entity)
 	"ellipseSegments",
 	"imagePath",
 	"scaled",
-	"color"
+	"color",
+	"depth",
+	"nonDebug"
 	}
     local function doNotIgnore(value)
         for i = #ignored, 1, -1 do
@@ -112,6 +117,9 @@ function DebugRenderer.ignoredFields(entity)
 	if entity.shape == "Image" then
 		doNotIgnore("imagePath")
 		doNotIgnore("scaled")
+	end
+	if entity.nonDebug == true then
+		doNotIgnore("depth")
 	end
 	return ignored
 end
@@ -138,8 +146,9 @@ function DebugRenderer.draw(room, entity)
     -- Set color from entity
     local colorHex = entity.color or DebugRenderer.color
     local r, g, b = hexToRGB(colorHex)
-
- love.graphics.setColor(r, g, b)
+	local nodes = entity.nodes or {{x = 0, y = 0}}
+	
+	love.graphics.setColor(r, g, b)
     -- Draw shape based on entity's shape type
     if entity.shape == "HollowRectangle" then
         love.graphics.rectangle("line", entity.x, entity.y, entity.width, entity.height)
@@ -152,15 +161,22 @@ function DebugRenderer.draw(room, entity)
     elseif entity.shape == "Point" then
         love.graphics.rectangle("fill", entity.x, entity.y, 1, 1)
     elseif entity.shape == "Line" then
-        if entity.node and entity.node.x and entity.node.y then
-			love.graphics.rectangle("line", entity.x, entity.y, entity.node.x, entity.node.y)
-        end
+			love.graphics.rectangle("fill", entity.x, entity.y, 4, 4)
+			love.graphics.rectangle("fill", nodes[1].x, nodes[1].y, 4, 4)
+			love.graphics.line(entity.x + 2, entity.y + 2, nodes[1].x + 2, nodes[1].y + 2)
     elseif entity.shape == "Text" then
         love.graphics.print(entity.message or "Text", entity.x, entity.y)
     elseif entity.shape == "Image" then
 		love.graphics.print("?", entity.x , entity.y, 0, 4, 4)
 	end
 	 love.graphics.setColor(1, 1, 1)
+end
+
+function DebugRenderer.nodeSprite() end
+
+
+function DebugRenderer.nodeRectangle(room, entity, node, nodeIndex, viewport)
+    return utils.rectangle(node.x, node.y, entity.width, entity.height)
 end
 
 return DebugRenderer
