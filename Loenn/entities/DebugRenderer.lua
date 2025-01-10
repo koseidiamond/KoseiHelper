@@ -162,8 +162,10 @@ function DebugRenderer.draw(room, entity)
         love.graphics.rectangle("fill", entity.x, entity.y, 1, 1)
     elseif entity.shape == "Line" then
 			love.graphics.rectangle("fill", entity.x, entity.y, 4, 4)
-			love.graphics.rectangle("fill", nodes[1].x, nodes[1].y, 4, 4)
-			love.graphics.line(entity.x + 2, entity.y + 2, nodes[1].x + 2, nodes[1].y + 2)
+			if nodes and nodes[1] then
+				love.graphics.rectangle("fill", nodes[1].x, nodes[1].y, 4, 4)
+				love.graphics.line(entity.x + 2, entity.y + 2, nodes[1].x + 2, nodes[1].y + 2)
+			end
     elseif entity.shape == "Text" then
         love.graphics.print(entity.message or "Text", entity.x, entity.y)
     elseif entity.shape == "Image" then
