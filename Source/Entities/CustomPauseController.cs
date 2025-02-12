@@ -24,9 +24,6 @@ public class CustomPauseController : Entity
         timerHidden = data.Bool("timerHidden", false);
         pauseTimerWhilePauseMenu = data.Bool("pauseTimerWhilePauseMenu", false);
         dieOnUnpause = data.Bool("dieOnUnpause", false);
-        if (data.Bool("persistent", false))
-            Tag = Tags.Persistent;
-
     }
 
     public override void Awake(Scene scene)

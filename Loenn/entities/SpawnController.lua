@@ -27,6 +27,7 @@ SpawnController.placements = {
 		flag = "",
 		spawnCondition = "OnCustomButtonPress",
 		persistent = false,
+		absoluteCoords = false,
 		--Spawn conditions
 		spawnFlag = "koseiHelper_spawn",
 		spawnFlagValue = true,
@@ -389,6 +390,7 @@ SpawnController.fieldOrder =  {
 	"removeStamina",
 	"relativeToPlayerFacing",
 	"nodeRelativeToPlayerFacing",
+	"absoluteCoords",
 	"entityPath",
 	"dictKeys",
 	"dictValues"

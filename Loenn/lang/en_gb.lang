@@ -362,6 +362,7 @@ entities.KoseiHelper/SpawnController.attributes.description.spawnSpeed=The minim
 entities.KoseiHelper/SpawnController.attributes.description.everyXDashes=The entity will spawn only every certain number of dashes.\nLeave 1 for spawning whenever the player dashes.
 entities.KoseiHelper/SpawnController.attributes.description.spawnLimit=The maximum amount of entities that can be spawned per screen.\nLeave a negative value for no limit.
 entities.KoseiHelper/SpawnController.attributes.description.persistent=If the controller should persist across rooms.
+entities.KoseiHelper/SpawnController.attributes.description.absoluteCoords=If this option is enabled, the entity will spawn at the position of the controller,\ninstead of relative to the player's position.
 #Spawn Controller - specific entity attributes
 entities.KoseiHelper/SpawnController.attributes.description.blockWidth=Width of the block.
 entities.KoseiHelper/SpawnController.attributes.description.blockHeight=Height of the block.

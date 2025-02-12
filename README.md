@@ -32,6 +32,7 @@ The small plants (Black and Jumping) respond like normal Actors (which means the
 ### Trigger Spinner
 "Spinners" that appear only after the player touches them and leaves the hitbox.
 They have the vanilla colors and can be attached to solids.
+*Note: this entity is obsolete, but you can copy the plugin from the LoennPrivate folder into your Loenn folder to use it.
 ### Custom Hahaha
 A group of sprites that wave towards a direction while playing a sound when a flag is true.
 ### Mary Block
@@ -92,7 +93,7 @@ Multiple autoscrollers on the same room, inverted gravity or zoom out are not su
 A silly controller that makes the player to take short naps every certain intervals of time (random or fixed). While sleeping, the player will keep travelling in the same direction/speed they were moving before the nap.
 ### Entity Spawners
 The **Entity Spawner Controllers** allow you to spawn different types of entities on a certain position when a condition is met. They are highly customizable.
-- You can specify the position where the entity will spawn. This position can be relative to the player (always left/right) or adjust to the facing (in front of/behind). Noded entities (like swap blocks) also support these settings for the node.
+- You can specify the position where the entity will spawn. This position can be relative to the player (always left/right), adjusting to the facing or not (in front of/behind), or always in a fixed position. Noded entities (like swap blocks) also support these settings for the node.
 - The following **entities** can be spawned: Puffers, Clouds, Badeline orbs, Fake hearts, Dream blocks, Boosters, Bumpers, Ice/Lava barriers, Dash blocks, Core blocks, Falling blocks, Feathers, Ice/Fireballs, Moving blocks, Refills, Seekers, Swap blocks, Zip movers, Crumble platforms, Glass blocks, Starjump blocks, Jump throughs, Floaty blocks, Kevins and Decals.
 You can also "spawn" (set to true) new flags that follow the naming `koseiFlagN` where `N` is a number that increases each time it's "spawned" (koseiFlag9, koseiFlag10, and so on), starting at `koseiFlag1`. Same for Counters, which go by the name `koseiCounterN`.
 Advanced tip: You can use a Flag/Counter Spawner with a reasonable cycle as a main controller for cycling between multiple spawners.

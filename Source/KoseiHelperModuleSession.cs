@@ -17,4 +17,5 @@ public class KoseiHelperModuleSession : EverestModuleSession {
     // Counter Refill Controller options
     public bool counterRefillDecrease = false;
     public bool counterRefillWhenUsed = false;
+    public bool oobClimbFix { get; set; } = false;
 }

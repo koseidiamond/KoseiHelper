@@ -12,8 +12,7 @@ CustomPauseController.placements = {
 		canSaveAndQuit = true,
 		timerIsStopped = false,
 		timerHidden = false,
-		dieOnUnpause = false,
-		persistent = false
+		dieOnUnpause = false
 		}
 	}
 }

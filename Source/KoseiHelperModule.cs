@@ -51,8 +51,7 @@ public class KoseiHelperModule : EverestModule {
         PufferRefill.Load();
         FlagRefill.Load();
         CounterRefill.Load();
-        BoundRefill.Load();
-        OOBTrigger.Load();
+        On.Celeste.Player.ClimbBoundsCheck += KoseiHelperModule.ClimbCheck;
     }
 
     public override void Unload() {
@@ -62,7 +61,18 @@ public class KoseiHelperModule : EverestModule {
         PufferRefill.Unload();
         FlagRefill.Unload();
         CounterRefill.Unload();
-        BoundRefill.Unload();
-        OOBTrigger.Unload();
+        On.Celeste.Player.ClimbBoundsCheck -= KoseiHelperModule.ClimbCheck;
+    }
+
+    private static bool ClimbCheck(On.Celeste.Player.orig_ClimbBoundsCheck orig, Player self, int dir)
+    {
+        if (KoseiHelperModule.Session.oobClimbFix)
+            return true;
+        else
+        {
+            if (self.Left + (float)(dir * 2) >= (float)self.level.Bounds.Left)
+                return self.Right + (float)(dir * 2) < (float)self.level.Bounds.Right;
+        }
+        return false;
     }
 }

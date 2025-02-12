@@ -19,7 +19,6 @@ public class BoundRefill : Entity
     private readonly bool outBound;
     public bool outline;
     public float respawnTimer;
-    private static bool climbFix;
     private Wiggler wiggler;
     private bool oneUse;
 
@@ -30,7 +29,7 @@ public class BoundRefill : Entity
 
         //Read the custom properties from data
         outBound = data.Bool("outBound",true);
-        climbFix = data.Bool("climbFix", false);
+        KoseiHelperModule.Session.oobClimbFix = data.Bool("climbFix", false);
         oneUse = data.Bool("oneUse", true);
         Add(sprite = GFX.SpriteBank.Create("koseiHelper_boundRefill"));
         if (outBound)
@@ -154,27 +153,5 @@ public class BoundRefill : Entity
             //Ideally this should check if the refill is not on the level bounds, and set a new spawn, to make filler rooms possible to transition to
         }
         respawnTimer = 2.5f;
-    }
-
-    public static void Load()
-    {
-        On.Celeste.Player.ClimbBoundsCheck += ClimbCheck;
-    }
-
-    public static void Unload()
-    {
-        On.Celeste.Player.ClimbBoundsCheck -= ClimbCheck;
-    }
-
-    private static bool ClimbCheck(On.Celeste.Player.orig_ClimbBoundsCheck orig, Player self, int dir)
-    {
-        if (climbFix)
-            return true;
-        else
-        {
-            if (self.Left + (float)(dir * 2) >= (float)self.level.Bounds.Left)
-                return self.Right + (float)(dir * 2) < (float)self.level.Bounds.Right;
-        }
-        return false;
     }
 }

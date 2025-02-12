@@ -85,6 +85,7 @@ public class SpawnController : Entity
     public int flagCount = 1;
     public int flagCycleAt = 9999;
     public bool flagStop;
+    public bool absoluteCoords = false;
     //other important variables
     private int entityID = 7388544; // Very high value so it doesn't conflict with other ids (hopefully)
     private List<EntityWithTTL> spawnedEntitiesWithTTL = new List<EntityWithTTL>();
@@ -151,9 +152,11 @@ public class SpawnController : Entity
     public SpawnController(EntityData data, Vector2 offset) : base(data.Position + offset)
     {
         Add(new PostUpdateHook(() => { }));
+        Collider = new Hitbox(8, 8, -4, -4);
         // General attributes
         offsetX = data.Int("offsetX", 0);
         offsetY = data.Int("offsetY", 8);
+        absoluteCoords = data.Bool("absoluteCoords", false);
         entityToSpawn = data.Enum("entityToSpawn", EntityType.Puffer);
         if (entityToSpawn == EntityType.SwapBlock)
             entityToSpawn = EntityType.SwapBlockNoBg;
@@ -325,19 +328,25 @@ public class SpawnController : Entity
                 if (spawnLimit > 0)
                     spawnLimit -= 1;
                 //Calculate spawn position
-                var spawnPosition = new Vector2(player.Position.X + offsetX, player.Position.Y + offsetY);
-                if (relativeToPlayerFacing && player.Facing == Facings.Left)
-                    spawnPosition = new Vector2(player.Position.X - offsetX, player.Position.Y + offsetY);
-                if (relativeToPlayerFacing && player.Facing == Facings.Right && isBlock)
-                    spawnPosition = new Vector2(player.Position.X + offsetX - blockWidth, player.Position.Y + offsetY);
-
+                var spawnPosition = new Vector2(X + offsetX, Y + offsetY);
+                if (!absoluteCoords)
+                {
+                    spawnPosition = new Vector2(player.Position.X + offsetX, player.Position.Y + offsetY);
+                    if (relativeToPlayerFacing && player.Facing == Facings.Left)
+                        spawnPosition = new Vector2(player.Position.X - offsetX, player.Position.Y + offsetY);
+                    if (relativeToPlayerFacing && player.Facing == Facings.Right && isBlock)
+                        spawnPosition = new Vector2(player.Position.X + offsetX - blockWidth, player.Position.Y + offsetY);
+                }
                 //Calculate node position
-                var nodePosition = new Vector2(player.Position.X + nodeX, player.Position.Y + nodeY);
-                if (nodeRelativeToPlayerFacing && player.Facing == Facings.Left)
-                    nodePosition = new Vector2(player.Position.X - nodeX, player.Position.Y + nodeY);
-                if (relativeToPlayerFacing && player.Facing == Facings.Right && isBlock)
-                    nodePosition = new Vector2(player.Position.X + nodeX - blockWidth, player.Position.Y + nodeY);
-
+                var nodePosition = new Vector2(X + nodeX, Y + nodeY);
+                if (!absoluteCoords)
+                {
+                    nodePosition = new Vector2(player.Position.X + nodeX, player.Position.Y + nodeY);
+                    if (nodeRelativeToPlayerFacing && player.Facing == Facings.Left)
+                        nodePosition = new Vector2(player.Position.X - nodeX, player.Position.Y + nodeY);
+                    if (relativeToPlayerFacing && player.Facing == Facings.Right && isBlock)
+                        nodePosition = new Vector2(player.Position.X + nodeX - blockWidth, player.Position.Y + nodeY);
+                }
                 float entityTTL = timeToLive;
                 switch (entityToSpawn)
                 { // If relativeToPlayerFacing is true, a positive X value will spawn in front of the player, and a negative X value will spawn behind the player
