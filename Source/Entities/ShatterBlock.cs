@@ -23,6 +23,7 @@ public class ShatterDashBlock : Solid
     private float speedDec;
     private float shakeTime;
     private bool canDash = true;
+    private bool givesCoyote = false;
     public ShatterDashBlock(EntityData data, Vector2 offset, EntityID id) : base(data.Position + offset, data.Width, data.Height, true)
     {
         base.Depth = Depths.FakeWalls + 1;
@@ -33,6 +34,7 @@ public class ShatterDashBlock : Solid
         blendIn = data.Bool("blendin");
         tileType = data.Char("tiletype", '3');
         canDash = data.Bool("canDash", true);
+        givesCoyote = data.Bool("givesCoyote", false);
         delay = MathHelper.Clamp(data.Float("FreezeTime", 0.1f), 0, 0.5f);
         speedReq = Math.Max(0f, data.Float("SpeedRequirement", 0f));
         speedDec = Math.Max(0f, data.Float("SpeedDecrease", 0f));
@@ -106,7 +108,8 @@ public class ShatterDashBlock : Solid
         Collidable = false;
         SceneAs<Level>().DirectionalShake(direction * -1, shakeTime);
         player.Speed -= Vector2.UnitX.RotateTowards(direction.Angle(), 6.3f) * speedDec;
-
+        if (givesCoyote)
+            player.jumpGraceTimer = 0.084f;
         if (permanent)
         {
             RemoveAndFlagAsGone();

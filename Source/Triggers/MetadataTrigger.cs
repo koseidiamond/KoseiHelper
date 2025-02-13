@@ -9,40 +9,28 @@ namespace Celeste.Mod.KoseiHelper.Triggers;
 public class MetadataTrigger : Trigger
 {
     public bool onlyOnce;
-    public TriggerMode triggerMode;
-    public bool theoInBubble, seekerSlowdown, heartIsEnd; // Map metadata
+    public bool theoInBubble, seekerSlowdown, heartIsEnd, Dreaming; // Map metadata
     public bool isDark, isSpace, isUnderwater, disabledDownTransition; // Room metadata
 
     public MetadataTrigger(EntityData data, Vector2 offset) : base(data, offset)
     {
         onlyOnce = data.Bool("onlyOnce", false);
-        triggerMode = data.Enum("triggerMode", TriggerMode.OnEnter);
+
         theoInBubble = data.Bool("theoInBubble", false);
         seekerSlowdown = data.Bool("seekerSlowdown", true);
         heartIsEnd = data.Bool("heartIsEnd", false);
+        Dreaming = data.Bool("dreaming", false);
+
         isDark = data.Bool("isDark", false);
         isSpace = data.Bool("isSpace", false);
         isUnderwater = data.Bool("isUnderwater", false);
-    }
-
-    public override void OnStay(Player player)
-    {
-        base.OnStay(player);
-        if (player.Scene != null && triggerMode == TriggerMode.OnStay)
-            MetadataChanges();
+        disabledDownTransition = data.Bool("disableDownTransition", false);
     }
 
     public override void OnEnter(Player player)
     {
         base.OnEnter(player);
-        if (player.Scene != null && triggerMode == TriggerMode.OnEnter)
-            MetadataChanges();
-    }
-
-    public override void OnLeave(Player player)
-    {
-        base.OnLeave(player);
-        if (player.Scene != null && triggerMode == TriggerMode.OnLeave)
+        if (player.Scene != null)
             MetadataChanges();
     }
 
@@ -53,10 +41,13 @@ public class MetadataTrigger : Trigger
         meta.TheoInBubble = theoInBubble;
         meta.SeekerSlowdown = seekerSlowdown;
         meta.HeartIsEnd = heartIsEnd;
-        levelData.Dark = isDark;
-        levelData.Space = isSpace;
+        SceneAs<Level>().Session.Dreaming = Dreaming;
+
         levelData.Underwater = isUnderwater;
+        levelData.Space = isSpace;
         levelData.DisableDownTransition = disabledDownTransition;
+        levelData.Dark = isDark;
+
         if (onlyOnce)
             RemoveSelf();
     }

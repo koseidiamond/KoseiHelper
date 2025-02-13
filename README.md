@@ -13,6 +13,7 @@ Contributors:
   * [Refills](#refills)
   * [Controllers](#controllers)
 * [Triggers](#triggers)
+* [Obsolete](#obsolete)
 
 # Entities
 All entities that don't provide direct sprite/texture fields are customizable through Sprites.xml. Feel free to change the animations as you need. You can copy the sprite tags and paste them into your own Sprites.xml. Make sure your path is unique.
@@ -21,7 +22,6 @@ All entities that don't provide direct sprite/texture fields are customizable th
 
 ### Debug Renderer
 Allows you to display a custom shape/text/image on debug/hitboxes. Install CelesteTAS to be able to see debug/hitboxes.
-
 ### Flag Fake Berry
 Similar to Troll Berries, these can set a flag upon "collection" and can reappear instantly or on room reload.
 ### Goomba
@@ -29,10 +29,6 @@ This entity can follow the player horizontally or move in a fixed direction. Kil
 ### Plant
 This entity can move in a cycle, move when the player gets near, or jump when the player is above, and works in all 4 directions. Optionally, it can also shoot. The bullets can melt Defrostable Blocks.
 The small plants (Black and Jumping) respond like normal Actors (which means they can be pushed by blocks or fall down).
-### Trigger Spinner
-"Spinners" that appear only after the player touches them and leaves the hitbox.
-They have the vanilla colors and can be attached to solids.
-*Note: this entity is obsolete, but you can copy the plugin from the LoennPrivate folder into your Loenn folder to use it.
 ### Custom Hahaha
 A group of sprites that wave towards a direction while playing a sound when a flag is true.
 ### Mary Block
@@ -77,12 +73,15 @@ Refill that increases or decreases the counter `KoseiHelper_CounterRefill` when 
 
 # Controllers
 
+### Debug Map Controller
+Allows you to customize the Debug Map. It has color options for most things, the ability to hide keys/berries/spawns, remove the red blink, or prevent the players from using it based on a flag.
 ### Counter/Slider Bar Controller
 Displays a customizable UI bar that shows the value of a counter/slider (integer/float) between 0 and a max value. This bar can render with the chosen color or with a custom image.
 ### Flag/Counter Refill Controller
 Allows customization of the flags/counters and hair color that Flag/Counter Refills give.
 ### IRL Controller
-Sets flags depending on the time of the day, day and month. For example, if it's 17:01, November 18th, the flags `kosei_irlMinute01`, `kosei_irlHour17`, `kosei_irlDay18` and `kosei_irlMonth11` will be set. It also sets the flags `kosei_irlMorning`, `kosei_irlAfternoon` and `kosei_irlNight`. It also has an option to adapt the darkness of the room to the current hour.
+Sets flags depending on the time of the day, day and month. For example, if it's 17:01, November 18th, the flags `kosei_irlMinute01`, `kosei_irlHour17`, `kosei_irlDay18` and `kosei_irlMonth11` will be set. It also sets the flags `kosei_irlMorning`, `kosei_irlAfternoon` and `kosei_irlNight`.
+It also has an option to adapt the darkness of the room to the current hour. It also sets a flag with the OS name of the user and check if they have a GamePad connected. You can see the flags with Mapping Utils.
 ### Custom Pause Controller
 Allows customization of the Pause Menu, disabling Retry, Save&Quit, disable pausing, killing player after pausing, or preventing the timer from running on rooms with the controller.
 ### Autoscroller Controller
@@ -135,3 +134,14 @@ It forces the player to have a **hiccup** (like a minijump) when they enter/exit
 The trigger variant of Bounded Refills. Allows the player to explore the physical space of others without transitioning, or be bounded (transition) to a certain screen.
 ### Kill If Not Grounded Trigger
 If the player enters the trigger and they are not on the ground (or optionally, climbing), they will die.
+### Metadata Trigger
+Allows to change the Map/Room metadata. Most changes only have effect once the room reloads (read the tooltips).
+
+# Obsolete
+
+These mechanics have been made obsolete because they have been remade in a different helper. You can copy the plugins from the LoennPrivate folder into your Loenn folder to use them.
+
+### Trigger Spinner
+"Spinners" that appear only after the player touches them and leaves the hitbox.
+They have the vanilla colors and can be attached to solids.
+*Note: FrostHelper spinners have a similar feature.

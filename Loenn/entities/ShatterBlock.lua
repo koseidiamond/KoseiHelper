@@ -18,7 +18,9 @@ function ShatterDashBlock.placements()
 			SpeedDecrease = 0,
 			ShakeTime = 0.3,
             width = 8,
-            height = 8
+            height = 8,
+			dashRequired = true,
+			givesCoyote = false
         }
     }
 end

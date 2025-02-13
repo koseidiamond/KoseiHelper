@@ -177,13 +177,14 @@ entities.KoseiHelper/CustomTempleCrackedBlock.attributes.description.health=The 
 entities.KoseiHelper/ShatterDashBlock.placements.name.ShatterDashBlock=Shatter Dash Block
 entities.KoseiHelper/ShatterDashBlock.placements.description.ShatterDashBlock=A Dash block that can be broken with enough speed.
 entities.KoseiHelper/ShatterDashBlock.attributes.description.tiletype=The tileset id.
-entities.KoseiHelper/ShatterDashBlock.attributes.description.blendin=If the block should try to blend with other tiles of the same type.
-entities.KoseiHelper/ShatterDashBlock.attributes.description.canDash=If the block can be broken with a dash.
-entities.KoseiHelper/ShatterDashBlock.attributes.description.permanent=If the block should reappear upon death/transition/room reload or shatter for the entire session.
-entities.KoseiHelper/ShatterDashBlock.attributes.description.FreezeTime=How much time the game should freeze when shattering.\nVanilla dash blocks give 3f (0.05s). The SJ map used 0.03s.
+entities.KoseiHelper/ShatterDashBlock.attributes.description.blendin=Whether the block should try to blend with other tiles of the same type.
+entities.KoseiHelper/ShatterDashBlock.attributes.description.canDash=Whether the block can be broken with a dash.
+entities.KoseiHelper/ShatterDashBlock.attributes.description.permanent=Whether the block should reappear upon death/transition/room reload or shatter for the entire session.
+entities.KoseiHelper/ShatterDashBlock.attributes.description.FreezeTime=How much time the game should freeze when shattering.\nVanilla dash blocks give 3f (0.05s). Fractured Iridescence (SJ) used 0.03s.
 entities.KoseiHelper/ShatterDashBlock.attributes.description.SpeedRequirement=The minimum horizontal speed that the player should be moving in order to shatter the block.
 entities.KoseiHelper/ShatterDashBlock.attributes.description.SpeedDecrease=How much speed should be substracted when shattering the block.
 entities.KoseiHelper/ShatterDashBlock.attributes.description.ShakeTime=The time the screen should shake when shattering.
+entities.KoseiHelper/ShatterDashBlock.attributes.description.givesCoyote=Whether the block should give 5 coyote frames when shattering.
 
 #Oshiro Doors
 entities.KoseiHelper/CustomOshiroDoor.placements.name.CustomOshiroDoor= Custom Oshiro Door
@@ -443,3 +444,16 @@ triggers.KoseiHelper/OOBTrigger.attributes.description.climbFix=In vanilla, the 
 triggers.KoseiHelper/KillIfNotGroundedTrigger.placements.name.KillIfNotGroundedTrigger=Kill If Not Grounded Trigger
 triggers.KoseiHelper/KillIfNotGroundedTrigger.placements.description.KillIfNotGroundedTrigger=Kills the player if they are not on ground (or, optionally, not climbing either) while inside.
 triggers.KoseiHelper/KillIfNotGroundedTrigger.attributes.description.spareIfClimbing=Enable this option if you don't want to kill the player while they are climbing inside the trigger.
+
+# Metadata Trigger
+triggers.KoseiHelper/MetadataTrigger.placements.name.MetadataTrigger=Metadata Trigger
+triggers.KoseiHelper/MetadataTrigger.placements.description.MetadataTrigger=Changes the map/room metadata.\nImportant: Room metadata will have effect once the room reloads (reenter/F5/respawn).
+triggers.KoseiHelper/MetadataTrigger.attributes.description.onlyOnce=If the trigger should disappear upon being activated.
+triggers.KoseiHelper/MetadataTrigger.attributes.description.theoInBubble=Whether the player is allowed to hold Theo and other holdables while in a booster.
+triggers.KoseiHelper/MetadataTrigger.attributes.description.seekerSlowdown=Whether Seekers should be able to slow down time when attacking the player.\nDisables music layer 3 if enabled.
+triggers.KoseiHelper/MetadataTrigger.attributes.description.heartIsEnd=Whether collecting a heart counts as the end of the level.
+triggers.KoseiHelper/MetadataTrigger.attributes.description.dreaming=Whether the map is in the dreaming state.\nChanges the appearance of the Stars background (instant) and bonfires (reload).
+triggers.KoseiHelper/MetadataTrigger.attributes.description.isDark=Whether the room is dark (effect on room reload).
+triggers.KoseiHelper/MetadataTrigger.attributes.description.isSpace=Whether the room is in space (end of Core) (effect on room reload).
+triggers.KoseiHelper/MetadataTrigger.attributes.description.isUnderwater=Whether the room is submerged in water (effect on room reload).
+triggers.KoseiHelper/MetadataTrigger.attributes.description.disableDownTransition=Whether the player is allowed to transition downwards (effect is instant).

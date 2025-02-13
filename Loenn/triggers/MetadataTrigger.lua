@@ -8,12 +8,15 @@ MetadataTrigger.placements = {
 		name = "MetadataTrigger",
 		data = {
 		onlyOnce = false,
-		triggerMode = "OnEnter",
-		theoInBubble = false,
-		seekerSlowdown = true,
+		-- Map metadata
 		heartIsEnd = false,
-		isDark = false,
+		seekerSlowdown = true,
+		theoInBubble = false,
+		dreaming = false,
+		-- Room metadata
 		isSpace = false,
+		isDark = false,
+		disableDownTransition = false,
 		isUnderwater = false
 		}
 	}
@@ -30,5 +33,20 @@ MetadataTrigger.fieldInformation = function (entity) return {
 	}
 }
 end
+
+MetadataTrigger.fieldOrder= {
+	"x",
+	"y",
+	"width",
+	"height",
+	"heartIsEnd",
+	"seekerSlowdown",
+	"theoInBubble",
+	"dreaming",
+	"isUnderwater",
+	"isSpace",
+	"disableDownTransition",
+	"isDark"
+}
 
 return MetadataTrigger
