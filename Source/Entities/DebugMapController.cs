@@ -4,12 +4,7 @@ using Celeste.Editor;
 using Monocle;
 using System.Collections.Generic;
 using Celeste.Mod.Helpers;
-using System;
-using System.Runtime.CompilerServices;
 using MonoMod.Utils;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using System.Linq;
 
 namespace Celeste.Mod.KoseiHelper.Entities;
 
@@ -20,7 +15,7 @@ public class DebugMapController : Entity
     private static bool renderKeys, renderBerries, renderSpawns;
     private static bool redBlink;
     private static Color gridColor, jumpthruColor, berryColor, checkpointColor, spawnColor, bgTileColor, levelColor, keyColor;
-    private static bool debugMapModified, disallowDebugMap;
+    private static bool disallowDebugMap;
     private static string blockDebugMap;
 
     private static List<Vector2> keys;
@@ -72,7 +67,7 @@ public class DebugMapController : Entity
 
     private static void RenderKeys(On.Celeste.Editor.MapEditor.orig_RenderKeys orig, MapEditor self)
     {
-        if (renderKeys && !disallowDebugMap)
+        if (renderKeys && !disallowDebugMap && !KoseiHelperModule.Session.DebugMapModified)
         {
             orig(self); // Ideally they should have custom colors but they're annoying to work with
         }
@@ -80,7 +75,7 @@ public class DebugMapController : Entity
 
     private static void RenderLevels(On.Celeste.Editor.LevelTemplate.orig_RenderContents orig, LevelTemplate self, Camera camera, List<LevelTemplate> allLevels)
     {
-        if (debugMapModified)
+        if (KoseiHelperModule.Session.DebugMapModified)
         {
             if (!CullHelper.IsRectangleVisible(self.X, self.Y, self.Width, self.Height, 4f, camera))
             {
@@ -143,31 +138,31 @@ public class DebugMapController : Entity
 
     private static void MapEditorCtor(On.Celeste.Editor.MapEditor.orig_ctor orig, MapEditor self, AreaKey area, bool reloadMapData)
     {
-        orig(self, area, reloadMapData);
-        DynData<MapEditor> mapEditorData = new(self);
-        if (disallowDebugMap)
-        {
-            List<LevelTemplate> levels = mapEditorData.Get<List<LevelTemplate>>("levels");
-            MapData mapdata = mapEditorData.Get<MapData>("mapData");
-            List<LevelTemplate> levelsToHide = new();
-            foreach (LevelTemplate template in levels)
+            orig(self, area, reloadMapData);
+            DynData<MapEditor> mapEditorData = new(self);
+            if (disallowDebugMap && KoseiHelperModule.Session.DebugMapModified)
             {
-                foreach (LevelData levelData in mapdata.Levels)
+                List<LevelTemplate> levels = mapEditorData.Get<List<LevelTemplate>>("levels");
+                MapData mapdata = mapEditorData.Get<MapData>("mapData");
+                List<LevelTemplate> levelsToHide = new();
+                foreach (LevelTemplate template in levels)
                 {
-                    levelsToHide.Add(template);
+                    foreach (LevelData levelData in mapdata.Levels)
+                    {
+                        levelsToHide.Add(template);
+                    }
+                }
+                foreach (LevelTemplate template in levelsToHide)
+                {
+                    levels.Remove(template);
                 }
             }
-            foreach (LevelTemplate template in levelsToHide)
-            {
-                levels.Remove(template);
-            }
-        }
     }
 
     public override void Awake(Scene scene)
     {
         base.Awake(scene);
-        debugMapModified = true;
+        KoseiHelperModule.Session.DebugMapModified = true;
         MapEditor.gridColor = gridColor;
         camera = SceneAs<Level>().Camera;
     }
@@ -175,7 +170,7 @@ public class DebugMapController : Entity
     public override void Update()
     {
         base.Update();
-        if (!string.IsNullOrEmpty(blockDebugMap))
+        if (!string.IsNullOrEmpty(blockDebugMap) && KoseiHelperModule.Session.DebugMapModified)
             disallowDebugMap = SceneAs<Level>().Session.GetFlag(blockDebugMap);
     }
 }
