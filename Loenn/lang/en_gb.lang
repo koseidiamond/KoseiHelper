@@ -24,9 +24,11 @@ entities.KoseiHelper/DebugMapController.attributes.description.redBlink=Whether 
 entities.KoseiHelper/DebugMapController.attributes.description.gridColor=The color of the background grid.
 entities.KoseiHelper/DebugMapController.attributes.description.jumpthruColor=The color of the jump throughs.
 entities.KoseiHelper/DebugMapController.attributes.description.berryColor=The color of the strawberries.
+entities.KoseiHelper/DebugMapController.attributes.description.keyColor=The color of the keys.
 entities.KoseiHelper/DebugMapController.attributes.description.checkpointColor=The color of the checkpoints.
 entities.KoseiHelper/DebugMapController.attributes.description.spawnColor=The color of the respawns.
 entities.KoseiHelper/DebugMapController.attributes.description.bgTileColor=The color of the background tiles.
+entities.KoseiHelper/DebugMapController.attributes.description.blockDebugMap=If this flag is true, the debug map will be completely empty,\npreventing players to see the map or teleport to other rooms.\nLeave empty to always allow opening the debug map.
 
 # Counter Bar Controller
 entities.KoseiHelper/CounterBarController.placements.name.CounterBarController=Counter/Slider Bar Display

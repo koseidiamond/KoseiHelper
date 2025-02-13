@@ -6,6 +6,10 @@ using System.Collections.Generic;
 using Celeste.Mod.Helpers;
 using System;
 using System.Runtime.CompilerServices;
+using MonoMod.Utils;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using System.Linq;
 
 namespace Celeste.Mod.KoseiHelper.Entities;
 
@@ -15,8 +19,12 @@ public class DebugMapController : Entity
 {
     private static bool renderKeys, renderBerries, renderSpawns;
     private static bool redBlink;
-    private static Color gridColor, jumpthruColor, berryColor, checkpointColor, spawnColor, bgTileColor, levelColor;
-    private static bool debugMapModified;
+    private static Color gridColor, jumpthruColor, berryColor, checkpointColor, spawnColor, bgTileColor, levelColor, keyColor;
+    private static bool debugMapModified, disallowDebugMap;
+    private static string blockDebugMap;
+
+    private static List<Vector2> keys;
+    private static Camera camera;
 
     private static Color[] fgTilesColor = new Color[7] // TODO make these customizable too
     {
@@ -35,14 +43,15 @@ public class DebugMapController : Entity
         renderBerries = !data.Bool("hideBerries", false);
         renderSpawns = !data.Bool("hideSpawns", false);
         redBlink = data.Bool("redBlink", true);
+        blockDebugMap = data.String("blockDebugMap","");
         gridColor = data.HexColor("gridColor", new Color(0.1f, 0.1f, 0.1f));
         jumpthruColor = data.HexColor("jumpthruColor", Color.FromNonPremultiplied(255,255,0,255)); // Yellow
         berryColor = data.HexColor("berryColor", Color.FromNonPremultiplied(255, 182, 193, 255)); // LightPink
         checkpointColor = data.HexColor("checkpointColor", Color.FromNonPremultiplied(0, 255, 0, 255)); // Lime
         spawnColor = data.HexColor("spawnColor", Color.FromNonPremultiplied(255, 0, 0, 255)); // Red
         bgTileColor = data.HexColor("bgTileColor", Color.FromNonPremultiplied(47, 79, 79, 255)); // DarkSlateGray
-        levelColor = Color.LightGray;
-
+        keyColor = data.HexColor("keyColor", Color.FromNonPremultiplied(255, 215, 0, 255)); // Gold (not done)
+        levelColor = Color.LightGray; // I don't know where is this color used
     }
 
     public static int EditorColorIndex;
@@ -51,19 +60,21 @@ public class DebugMapController : Entity
     {
         On.Celeste.Editor.MapEditor.RenderKeys += RenderKeys;
         On.Celeste.Editor.LevelTemplate.RenderContents += RenderLevels;
+        On.Celeste.Editor.MapEditor.ctor += MapEditorCtor;
     }
 
     public static void Unload()
     {
         On.Celeste.Editor.MapEditor.RenderKeys -= RenderKeys;
         On.Celeste.Editor.LevelTemplate.RenderContents -= RenderLevels;
+        On.Celeste.Editor.MapEditor.ctor -= MapEditorCtor;
     }
 
     private static void RenderKeys(On.Celeste.Editor.MapEditor.orig_RenderKeys orig, MapEditor self)
     {
-        if (renderKeys)
+        if (renderKeys && !disallowDebugMap)
         {
-            orig(self);
+            orig(self); // Ideally they should have custom colors but they're annoying to work with
         }
     }
 
@@ -90,6 +101,7 @@ public class DebugMapController : Entity
                     }
                 }
                 Draw.Rect(self.X, self.Y, self.Width, self.Height, (flag ? Color.Red : Color.Black) * 0.5f);
+                // Actually render the content of the rooms
                 foreach (Rectangle back in self.backs)
                 {
                     Draw.Rect(self.X + back.X, self.Y + back.Y, back.Width, back.Height, self.Dummy ? bgTileColor * 0.5f : bgTileColor * 0.5f); // todo
@@ -116,13 +128,11 @@ public class DebugMapController : Entity
                 {
                     Draw.HollowRect((float)self.X + checkpoint.X - 1f, (float)self.Y + checkpoint.Y - 2f, 3f, 3f, checkpointColor);
                 }
+                foreach (Rectangle jumpthru in self.Jumpthrus)
                 {
-                    foreach (Rectangle jumpthru in self.Jumpthrus)
-                    {
-                        Draw.Rect(self.X + jumpthru.X, self.Y + jumpthru.Y, jumpthru.Width, 1f, jumpthruColor);
-                    }
-                    return;
+                    Draw.Rect(self.X + jumpthru.X, self.Y + jumpthru.Y, jumpthru.Width, 1f, jumpthruColor);
                 }
+                return;
             }
             Draw.Rect(self.X, self.Y, self.Width, self.Height, levelColor);
             Draw.Rect((float)(self.X + self.Width) - self.resizeHoldSize.X, (float)(self.Y + self.Height) - self.resizeHoldSize.Y, self.resizeHoldSize.X, self.resizeHoldSize.Y, Color.Orange);
@@ -131,15 +141,41 @@ public class DebugMapController : Entity
             orig(self, camera, allLevels);
     }
 
+    private static void MapEditorCtor(On.Celeste.Editor.MapEditor.orig_ctor orig, MapEditor self, AreaKey area, bool reloadMapData)
+    {
+        orig(self, area, reloadMapData);
+        DynData<MapEditor> mapEditorData = new(self);
+        if (disallowDebugMap)
+        {
+            List<LevelTemplate> levels = mapEditorData.Get<List<LevelTemplate>>("levels");
+            MapData mapdata = mapEditorData.Get<MapData>("mapData");
+            List<LevelTemplate> levelsToHide = new();
+            foreach (LevelTemplate template in levels)
+            {
+                foreach (LevelData levelData in mapdata.Levels)
+                {
+                    levelsToHide.Add(template);
+                }
+            }
+            foreach (LevelTemplate template in levelsToHide)
+            {
+                levels.Remove(template);
+            }
+        }
+    }
+
     public override void Awake(Scene scene)
     {
         base.Awake(scene);
         debugMapModified = true;
-        DebugMap();
+        MapEditor.gridColor = gridColor;
+        camera = SceneAs<Level>().Camera;
     }
 
-    public void DebugMap()
+    public override void Update()
     {
-        MapEditor.gridColor = gridColor;
+        base.Update();
+        if (!string.IsNullOrEmpty(blockDebugMap))
+            disallowDebugMap = SceneAs<Level>().Session.GetFlag(blockDebugMap);
     }
 }
