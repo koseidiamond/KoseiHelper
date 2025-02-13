@@ -26,7 +26,11 @@ public class ForceThrowTrigger : Trigger
     {
         base.OnStay(player);
         if (player.Scene != null && triggerMode == TriggerMode.OnStay)
+        {
             player.Throw();
+            if (onlyOnce)
+                RemoveSelf();
+        }
     }
     public override void OnEnter(Player player)
     {

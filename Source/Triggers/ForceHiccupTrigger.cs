@@ -64,7 +64,7 @@ public class ForceHiccupTrigger : Trigger
 
     public override void OnLeave(Player player)
     {
-        base.OnEnter(player);
+        base.OnLeave(player);
         if (player.Scene != null && triggerMode == TriggerMode.OnLeave)
             player.HiccupJump();
         if (onlyOnce)

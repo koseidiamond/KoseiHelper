@@ -14,6 +14,20 @@ entities.KoseiHelper/DebugRenderer.attributes.description.imagePath=The path to 
 entities.KoseiHelper/DebugRenderer.attributes.description.scaled=If the custom image should be scaled to fill the entire rectangle.\nOtherwise, the sprite will be rendered at the topleft corner.
 entities.KoseiHelper/DebugRenderer.attributes.description.nonDebug=If the shape should also be displayed while not using debug.
 
+# Debug Map Controller
+entities.KoseiHelper/DebugMapController.placements.name.DebugMapController=Debug Map Controller
+entities.KoseiHelper/DebugMapController.placements.description.DebugMapController=Modifies the way the Debug Map is rendered.
+entities.KoseiHelper/DebugMapController.attributes.description.hideKeys=Whether the keys should be hidden in the Debug Map.
+entities.KoseiHelper/DebugMapController.attributes.description.hideBerries=Whether the berries should be hidden in the Debug Map.\nPlayers can still know where they are if they hold the Q key.
+entities.KoseiHelper/DebugMapController.attributes.description.hideSpawns=Whether the spawns should be hidden in the Debug Map.
+entities.KoseiHelper/DebugMapController.attributes.description.redBlink=Whether the rooms that are overlapping should have a red blink each 0.1 seconds.
+entities.KoseiHelper/DebugMapController.attributes.description.gridColor=The color of the background grid.
+entities.KoseiHelper/DebugMapController.attributes.description.jumpthruColor=The color of the jump throughs.
+entities.KoseiHelper/DebugMapController.attributes.description.berryColor=The color of the strawberries.
+entities.KoseiHelper/DebugMapController.attributes.description.checkpointColor=The color of the checkpoints.
+entities.KoseiHelper/DebugMapController.attributes.description.spawnColor=The color of the respawns.
+entities.KoseiHelper/DebugMapController.attributes.description.bgTileColor=The color of the background tiles.
+
 # Counter Bar Controller
 entities.KoseiHelper/CounterBarController.placements.name.CounterBarController=Counter/Slider Bar Display
 entities.KoseiHelper/CounterBarController.placements.description.CounterBarController=Displays a custom HD bar that fills/empties according to the values specified.
