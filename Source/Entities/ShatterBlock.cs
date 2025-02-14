@@ -2,6 +2,8 @@ using System;
 using Celeste.Mod.Entities;
 using Monocle;
 using Microsoft.Xna.Framework;
+using static MonoMod.InlineRT.MonoModRule;
+using System.Security.Cryptography.X509Certificates;
 
 namespace Celeste.Mod.KoseiHelper.Entities;
 
@@ -20,10 +22,20 @@ public class ShatterDashBlock : Solid
     private float delay;
 
     //Temporary Debug Variables, these will be consts by the end of the workload
-    private float speedDec;
+    private float speedDecrease;
     private float shakeTime;
     private bool canDash = true;
     private bool givesCoyote = false;
+    private bool requireOnlySpeed = false;
+    private float previousHSpeed, previousVSpeed;
+    private string flagSet;
+    private enum SubstractSpeedMode
+    {
+        Substract,
+        Multiply,
+        Set
+    };
+    private SubstractSpeedMode speedAfterShatterMode;
     public ShatterDashBlock(EntityData data, Vector2 offset, EntityID id) : base(data.Position + offset, data.Width, data.Height, true)
     {
         base.Depth = Depths.FakeWalls + 1;
@@ -35,10 +47,13 @@ public class ShatterDashBlock : Solid
         tileType = data.Char("tiletype", '3');
         canDash = data.Bool("canDash", true);
         givesCoyote = data.Bool("givesCoyote", false);
+        requireOnlySpeed = data.Bool("requireOnlySpeed", false);
         delay = MathHelper.Clamp(data.Float("FreezeTime", 0.1f), 0, 0.5f);
         speedReq = Math.Max(0f, data.Float("SpeedRequirement", 0f));
-        speedDec = Math.Max(0f, data.Float("SpeedDecrease", 0f));
+        speedDecrease = Math.Max(0f, data.Float("SpeedDecrease", 0f));
         shakeTime = Math.Max(0f, data.Float("ShakeTime", 0.3f));
+        speedAfterShatterMode = data.Enum("substractSpeedMode", SubstractSpeedMode.Substract);
+        flagSet = data.Attr("flagSet", "");
         OnDashCollide = OnDashed;
         SurfaceSoundIndex = SurfaceIndex.TileToIndex[tileType];
     }
@@ -107,9 +122,26 @@ public class ShatterDashBlock : Solid
         Celeste.Freeze(delay);
         Collidable = false;
         SceneAs<Level>().DirectionalShake(direction * -1, shakeTime);
-        player.Speed -= Vector2.UnitX.RotateTowards(direction.Angle(), 6.3f) * speedDec;
+        switch (speedAfterShatterMode)
+        {
+            case SubstractSpeedMode.Set:
+                //player.Speed = Vector2.UnitX.RotateTowards(direction.Angle(), 6.3f) * speedDecrease;
+                player.Speed = new Vector2(Vector2.UnitX.RotateTowards(direction.Angle(), 6.3f).X * speedDecrease, player.Speed.Y);
+                break;
+            case SubstractSpeedMode.Multiply:
+                //player.Speed *= new Vector2(Math.Abs(Vector2.UnitX.RotateTowards(direction.Angle(), 6.3f).X), Math.Abs(Vector2.UnitX.RotateTowards(direction.Angle(), 6.3f).Y)) * speedDecrease;
+                player.Speed = new Vector2(player.Speed.X * Math.Abs(Vector2.UnitX.RotateTowards(direction.Angle(), 6.3f).X) * speedDecrease, player.Speed.Y);
+                break;
+            default: // Decrease
+                player.Speed -= Vector2.UnitX.RotateTowards(direction.Angle(), 6.3f) * speedDecrease;
+                break;
+        }
+
         if (givesCoyote)
             player.jumpGraceTimer = 0.084f;
+        if (!string.IsNullOrEmpty(flagSet))
+            SceneAs<Level>().Session.SetFlag(flagSet,true);
+
         if (permanent)
         {
             RemoveAndFlagAsGone();
@@ -137,6 +169,43 @@ public class ShatterDashBlock : Solid
         {
             return DashCollisionResults.NormalCollision;
         }
+    }
+
+    public override void Update()
+    {
+        Player player = Scene.Tracker.GetEntity<Player>();
+        base.Update();
+        if (PlayerIsTouching() != null && requireOnlySpeed)
+        {
+            Break(player, player.Center, true);
+        }
+
+        previousHSpeed = player.Speed.X;
+        previousVSpeed = player.Speed.Y;
+    }
+
+    public Player PlayerIsTouching()
+    {
+        foreach (Player entity in Scene.Tracker.GetEntities<Player>())
+        {
+            if (Math.Abs(previousHSpeed) > speedReq && CollideFirst<Player>(Position + Vector2.UnitX * 2f) != null)
+            {
+                return entity;
+            }
+            if (Math.Abs(previousHSpeed) > speedReq && CollideFirst<Player>(Position - Vector2.UnitX * 2f) != null)
+            {
+                return entity;
+            }
+            if (Math.Abs(previousHSpeed) > speedReq && previousVSpeed > 0 && CollideFirst<Player>(Position - Vector2.UnitY) != null)
+            {
+                return entity;
+            }
+            if (Math.Abs(previousHSpeed) > speedReq && previousVSpeed < 0 && CollideFirst<Player>(Position + Vector2.UnitY) != null)
+            {
+                return entity;
+            }
+        }
+        return null;
     }
 
     public void Break(Player player, Vector2 direction, bool playSound = true)

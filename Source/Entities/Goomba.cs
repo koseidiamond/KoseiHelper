@@ -4,7 +4,6 @@ using System;
 using Microsoft.Xna.Framework;
 using System.Collections;
 using Celeste.Mod.MaxHelpingHand.Entities;
-using System.Runtime.CompilerServices;
 
 namespace Celeste.Mod.KoseiHelper.Entities;
 public enum GoombaBehavior

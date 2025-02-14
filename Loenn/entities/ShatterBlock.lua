@@ -1,4 +1,5 @@
 local fakeTilesHelper = require("helpers.fake_tiles")
+local utils = require("utils")
 
 local ShatterDashBlock = {}
 
@@ -19,13 +20,57 @@ function ShatterDashBlock.placements()
 			ShakeTime = 0.3,
             width = 8,
             height = 8,
-			dashRequired = true,
-			givesCoyote = false
+			givesCoyote = false,
+			requireOnlySpeed = false,
+			flagSet = "",
+			substractSpeedMode = "Substract"
         }
     }
 end
 
+ShatterDashBlock.fieldInformation = function(entity)
+	local orig = fakeTilesHelper.getFieldInformation("tiletype")(entity)
+	orig.substractSpeedMode = {
+		options = {
+			"Substract",
+			"Multiply",
+			"Set"
+		},
+		editable = false
+	}
+	orig.FreezeTime = {
+		minimumValue = 0
+	}
+	orig.ShakeTime = {
+		minimumValue = 0
+	}
+	orig.SpeedDecrease = {
+		minimumValue = 0
+	}
+	return orig
+end
+
+-- ShatterDashBlock.fieldInformation = fakeTilesHelper.getFieldInformation("tiletype")
+
+ShatterDashBlock.fieldOrder= {
+	"x",
+	"y",
+	"width",
+	"height",
+	"tiletype",
+	"substractSpeedMode",
+	"flagSet",
+	"FreezeTime",
+	"ShakeTime",
+	"SpeedDecrease",
+	"SpeedRequirement",
+	"blendin",
+	"canDash",
+	"givesCoyote",
+	"requireOnlySpeed",
+	"permanent"
+}
+
 ShatterDashBlock.sprite = fakeTilesHelper.getEntitySpriteFunction("tiletype", "blendin")
-ShatterDashBlock.fieldInformation = fakeTilesHelper.getFieldInformation("tiletype")
 
 return ShatterDashBlock
