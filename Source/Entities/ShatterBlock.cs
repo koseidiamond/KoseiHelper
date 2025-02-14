@@ -175,13 +175,13 @@ public class ShatterDashBlock : Solid
     {
         Player player = Scene.Tracker.GetEntity<Player>();
         base.Update();
-        if (PlayerIsTouching() != null && requireOnlySpeed)
+        if (player != null)
         {
-            Break(player, player.Center, true);
+            if (PlayerIsTouching() != null && requireOnlySpeed)
+                Break(player, player.Center, true);
+            previousHSpeed = player.Speed.X;
+            previousVSpeed = player.Speed.Y;
         }
-
-        previousHSpeed = player.Speed.X;
-        previousVSpeed = player.Speed.Y;
     }
 
     public Player PlayerIsTouching()
