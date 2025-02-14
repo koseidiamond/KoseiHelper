@@ -53,6 +53,7 @@ public class KoseiHelperModule : EverestModule {
         CounterRefill.Load();
         On.Celeste.Player.ClimbBoundsCheck += KoseiHelperModule.ClimbCheck;
         DebugMapController.Load();
+        ClimbJumpController.Load();
     }
 
     public override void Unload() {
@@ -64,6 +65,7 @@ public class KoseiHelperModule : EverestModule {
         CounterRefill.Unload();
         On.Celeste.Player.ClimbBoundsCheck -= KoseiHelperModule.ClimbCheck;
         DebugMapController.Unload();
+        ClimbJumpController.Unload();
     }
 
     private static bool ClimbCheck(On.Celeste.Player.orig_ClimbBoundsCheck orig, Player self, int dir)

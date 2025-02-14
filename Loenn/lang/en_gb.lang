@@ -30,6 +30,18 @@ entities.KoseiHelper/DebugMapController.attributes.description.spawnColor=The co
 entities.KoseiHelper/DebugMapController.attributes.description.bgTileColor=The color of the background tiles.
 entities.KoseiHelper/DebugMapController.attributes.description.blockDebugMap=If this flag is true, the debug map will be completely empty,\npreventing players to see the map or teleport to other rooms.\nLeave empty to always allow opening the debug map.
 
+# ClimbJump Controller
+entities.KoseiHelper/ClimbJumpController.placements.name.ClimbJumpController=Climbjump Controller
+entities.KoseiHelper/ClimbJumpController.placements.description.ClimbJumpController=Allows customization of climbjumps and wallboosting behavior.\nThis is a persistent controller.
+entities.KoseiHelper/ClimbJumpController.attributes.description.staminaSpent=The stamina that a climbjump will spend.\nIn vanilla, the player has normally 110 max stamina, and each climbjump spends 27.5.\nThis field does not alter the stamina refunded by wallboosts (27.5).\nHaving a value <27.5 will allow players to "farm" stamina through wallboosts.
+entities.KoseiHelper/ClimbJumpController.attributes.description.wallBoostTimer=If the player looks away from the wall after a climbjump, they will recover 27.5 stamina.\nThis is known as a wallboost. In vanilla, they are possible during the first 0.2 seconds.\nHaving a timer less than 0.2 will result in "wall cobwobs".
+entities.KoseiHelper/ClimbJumpController.attributes.description.spendStaminaOnGround=Whether a climbjump should spend stamina even if it is performed from the ground.
+entities.KoseiHelper/ClimbJumpController.attributes.description.checkWallBoostDirection=wip
+entities.KoseiHelper/ClimbJumpController.attributes.description.dustType=The type of particles that should appear on the wall when climbjumping.\nNot to be confused with the player sweat.
+entities.KoseiHelper/ClimbJumpController.attributes.description.climbJumpSound=The sounds that a climbjump makes.\n"event:/char/madeline/jump_climb_left" and "event:/char/madeline/jump_climb_right" are the two vanilla events.\nThis field does not need the "left" and "right" suffixes.
+entities.KoseiHelper/ClimbJumpController.attributes.description.wallBoostStaminaRefund=How much stamina the player would get back after performing a wallboost.\nRead the wallboost timer tooltip for a wallboost explanation.
+entities.KoseiHelper/ClimbJumpController.attributes.description.horizontalSpeedMultiplier=Multiplies the horizontal speed that climbjumps give (while a direction is being held).
+
 # Counter Bar Controller
 entities.KoseiHelper/CounterBarController.placements.name.CounterBarController=Counter/Slider Bar Display
 entities.KoseiHelper/CounterBarController.placements.description.CounterBarController=Displays a custom HD bar that fills/empties according to the values specified.
