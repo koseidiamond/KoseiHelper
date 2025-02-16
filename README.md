@@ -43,6 +43,24 @@ Jumpthroughs (platforms) that fall/move in the chosen direction at a custom spee
 **Puffer balls** and **Spring balls** are a combination of Snowballs and Puffers/Springs. They are customizable, supporting all 4 directions, sine variations, flags, offsets, and multiple of them per screen.
 Additionally, spring balls have some visual options and can track Theo instead.
 *Note: Unlike controller entities, the position of these entities (or, well, "semi-controllers") determines where they will first appear on the chosen axis.*
+### Custom Player Seeker
+The Player Seeker, but more functional. Includes multiple customization options and a new game mode where you can swap between Madeline and the Seeker with a custom button press. It has multiple new interactions with vanilla entities, including:
+- **Touch Switches** (they are enabled).
+- Most **dangerous entities** kill the seeker on contact (spikes kill regardless of the direction).
+- **Seekers** can be attacked by the Player Seeker.
+- Being inside **water** disallows dashes.
+- **Flag triggers** can be enabled.
+- **Puffers**, **boosters** and **feathers** will disappear. On consumption, puffers explode, boosters light up the room a bit, and feathers give a slight speed bonus.
+- **Bumpers** behave as usual, but normal ones will push Madeline too!
+- **Core Mode** can be toggled with switches as normal.
+- Entities that react to player dashes, like **Swap blocks**, will react as normal.
+- **Dream blocks** break when dashed twice.
+- **Dash blocks** can be broken as normal. Same for **Temple Cracked Blocks** and **Bounce Blocks**.
+- **Kevins** can be enabled with a dash.
+- If the **Switch Characters** mode is enabled, the Player Seeker **can be bounced** when controlling Madeline.
+- If the Player Seeker gets stuck inside a **Seeker Barrier**, it will be **crushed**.
+- They are also vulnerable to Left/Right **Wind**.
+- The flag `kosei_PlayerSeeker` will be true while controlling the Player Seeker.
 
 ## Blocks
 
@@ -105,24 +123,8 @@ Advanced tip: You can use a Flag/Counter Spawner with a reasonable cycle as a ma
 - Each entity has its own **settings**, similar to vanilla. Since they were adjusted manually, a few of them may have slight differences (Badeline orbs are single use and will always fly upwards. Dash blocks don't give the usual 3 freeze frames. Boosters and swap blocks don't render their usual outlines/bg respectively).
 - You can combine multiple spawners with different settings each in the same room.
 - For Custom Entities: Only the ones with EntityData are supported. You can specify key-value pairs but if you leave some empty, the default values will be used instead (for example, not specifying a `winged`, `false` attribute for a `Celeste.Strawberry` will fall to the default value, `false`). You can use ILSpy or Mapping Utils to see the code (more specifically the constructor) of an entity, but when in doubt, you can try to input the names that you see on the Lönn plugin.
-### Custom Player Seeker
-The Player Seeker, but more functional. Includes multiple customization options and a new game mode where you can swap between Madeline and the Seeker with a custom button press. It has multiple new interactions with vanilla entities, including:
-- **Touch Switches** (they are enabled).
-- Most **dangerous entities** kill the seeker on contact (spikes kill regardless of the direction).
-- **Seekers** can be attacked by the Player Seeker.
-- Being inside **water** disallows dashes.
-- **Flag triggers** can be enabled.
-- **Puffers**, **boosters** and **feathers** will disappear. On consumption, puffers explode, boosters light up the room a bit, and feathers give a slight speed bonus.
-- **Bumpers** behave as usual, but normal ones will push Madeline too!
-- **Core Mode** can be toggled with switches as normal.
-- Entities that react to player dashes, like **Swap blocks**, will react as normal.
-- **Dream blocks** break when dashed twice.
-- **Dash blocks** can be broken as normal. Same for **Temple Cracked Blocks** and **Bounce Blocks**.
-- **Kevins** can be enabled with a dash.
-- If the **Switch Characters** mode is enabled, the Player Seeker **can be bounced** when controlling Madeline.
-- If the Player Seeker gets stuck inside a **Seeker Barrier**, it will be **crushed**.
-- They are also vulnerable to Left/Right **Wind**.
-- The flag `kosei_PlayerSeeker` will be true while controlling the Player Seeker.
+### Climbjump Controller
+Modifies the climbjump and wallboosting mechanics so they are more customizable, including stamina management, visuals, speed, and leniency.
 
 # Triggers
 

@@ -40,7 +40,8 @@ entities.KoseiHelper/ClimbJumpController.attributes.description.checkWallBoostDi
 entities.KoseiHelper/ClimbJumpController.attributes.description.dustType=The type of particles that should appear on the wall when climbjumping.\nNot to be confused with the player sweat.
 entities.KoseiHelper/ClimbJumpController.attributes.description.climbJumpSound=The sounds that a climbjump makes.\n"event:/char/madeline/jump_climb_left" and "event:/char/madeline/jump_climb_right" are the two vanilla events.\nThis field does not need the "left" and "right" suffixes.
 entities.KoseiHelper/ClimbJumpController.attributes.description.wallBoostStaminaRefund=How much stamina the player would get back after performing a wallboost.\nRead the wallboost timer tooltip for a wallboost explanation.
-entities.KoseiHelper/ClimbJumpController.attributes.description.horizontalSpeedMultiplier=Multiplies the horizontal speed that climbjumps give (while a direction is being held).
+entities.KoseiHelper/ClimbJumpController.attributes.description.horizontalSpeedMultiplier=Multiplies the horizontal speed that climbjumps give (while a direction is being held).\nIt also affects speed in techs derived from climbjumps, like cornerboosts.
+entities.KoseiHelper/ClimbJumpController.attributes.description.sweat=Whether the player should sweat when performing a climbjump.\nNot to be confused with the smaller sweat from climbing.
 
 # Counter Bar Controller
 entities.KoseiHelper/CounterBarController.placements.name.CounterBarController=Counter/Slider Bar Display

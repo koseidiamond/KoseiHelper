@@ -14,7 +14,8 @@ ClimbJumpController.placements = {
 		checkWallBoostDirection = true,
 		dustType = "Normal",
 		climbJumpSound = "event:/char/madeline/jump_climb_",
-		horizontalSpeedMultiplier = 1
+		horizontalSpeedMultiplier = 1,
+		sweat = true
 		}
 	}
 }

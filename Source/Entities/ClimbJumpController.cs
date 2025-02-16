@@ -12,7 +12,7 @@ namespace Celeste.Mod.KoseiHelper.Entities;
 public class ClimbJumpController : Entity
 {
     public static float staminaSpent, wallBoostTimer, wallBoostStaminaRefund, horizontalSpeedMultiplier;
-    public static bool spendStaminaOnGround, checkWallBoostDirection;
+    public static bool spendStaminaOnGround, checkWallBoostDirection, sweat;
     public static string climbJumpSound;
     public enum ClimbDustType
     {
@@ -35,6 +35,7 @@ public class ClimbJumpController : Entity
         checkWallBoostDirection = data.Bool("checkWallBoostDirection", true); // TODO idk how to do this one
         climbDustType = data.Enum("dustType", ClimbDustType.Normal);
         climbJumpSound = data.Attr("climbJumpSound", "event:/char/madeline/jump_climb_");
+        sweat = data.Bool("sweat", true);
     }
 
     public static void Load()
@@ -54,7 +55,8 @@ public class ClimbJumpController : Entity
             if (!self.onGround)
             {
                 self.Stamina -= staminaSpent;
-                self.sweatSprite.Play("jump", restart: true);
+                if (sweat)
+                    self.sweatSprite.Play("jump", restart: true);
                 Input.Rumble(RumbleStrength.Light, RumbleLength.Medium);
             }
             else
@@ -64,18 +66,18 @@ public class ClimbJumpController : Entity
             }
             self.dreamJump = false;
             self.Jump(particles: false, playSfx: false);
-            if (self.moveX == 0)
+            if (self.moveX == 0 || !checkWallBoostDirection)
             {
                 self.wallBoostDir = 0 - self.Facing;
                 self.wallBoostTimer = wallBoostTimer;
+                if (wallBoostTimer > 0f)
+                {
+                    self.Speed.X = Player.WallJumpHSpeed * (float)self.moveX * horizontalSpeedMultiplier;
+                    if (self.CheckStamina <= Player.ClimbMaxStamina - wallBoostStaminaRefund) // If current stamina <= 110 by default
+                        self.Stamina += wallBoostStaminaRefund; // Refunds 27.5 by default
+                }
             }
-            // This is in the original code, it is unused because I can't easily get the platforms on a static method, so the dust types are manual/custom:
-
-            /*Platform platformByPriority = SurfaceIndex.GetPlatformByPriority(CollideAll<Platform>(self.Position - Vector2.UnitX * (float)self.Facing * 4f, self.temp));
-            if (platformByPriority != null)
-            {
-                index = platformByPriority.GetWallSoundIndex(self, (int)self.Facing);
-            }*/
+            // Particles:
             if (self.Facing == Facings.Right)
             {
                 Audio.Play(climbJumpSound+"right");
@@ -124,14 +126,6 @@ public class ClimbJumpController : Entity
                         break;
                 }
             }
-            // test:
-            if (wallBoostTimer > 0f)
-            {
-                Logger.Debug(nameof(KoseiHelperModule), $"self.moveX={self.moveX}, self.wallBoostDir={self.wallBoostDir}");
-                    self.Speed.X = Player.WallJumpHSpeed * (float)self.moveX * horizontalSpeedMultiplier;
-                    if (self.Stamina <= Player.ClimbMaxStamina + wallBoostStaminaRefund)
-                        self.Stamina += wallBoostStaminaRefund;
-            }
         }
         else
             orig(self);
@@ -146,5 +140,8 @@ public class ClimbJumpController : Entity
     public override void Update()
     {
         base.Update();
+        Player p = SceneAs<Level>().Tracker.GetEntity<Player>();
+        if (p != null)
+            Logger.Debug(nameof(KoseiHelperModule), $"dreamJump={p.dreamJump}");
     }
 }
