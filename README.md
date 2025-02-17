@@ -31,6 +31,8 @@ This entity can move in a cycle, move when the player gets near, or jump when th
 The small plants (Black and Jumping) respond like normal Actors (which means they can be pushed by blocks or fall down).
 ### Custom Hahaha
 A group of sprites that wave towards a direction while playing a sound when a flag is true.
+### Custom Golden Block
+A customizable block that appears if the player enters the room while carrying a golden berry (or any berry, or a key).
 ### Mary Block
 Single-use flowers that launch the player with more or less strength depending on the mode. Compatible with Theo.
 ### Custom Trapdoor

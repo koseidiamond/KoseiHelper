@@ -28,6 +28,7 @@ FallingPlatform.fieldInformation = {
 FallingPlatform.placements = {
 	{
 		name = "FallingPlatform",
+		alternativeName = "FallingJumpThrough",
 		data = {
 			width = 16,
             texture = "wood",
