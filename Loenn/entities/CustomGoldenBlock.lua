@@ -13,24 +13,39 @@ CustomGoldenBlock.placements = {
         width = 16,
         height = 16,
 		sinkOffset = 12,
-		startSinkingTimer = 0.1,
+		goBackTimer = 0.1,
 		iconTexture = "collectables/goldberry/idle00",
 		blockTexture = "objects/goldblock",
 		surfaceSoundIndex = 32,
 		depth = -10000,
 		occludesLight = true,
-		allBerryTypes = false,
-		drawOutline = true
+		appearMode = "GoldenBerry",
+		drawOutline = true,
+		appearDistance = 80,
+		safe = false
     }
 }
 
 CustomGoldenBlock.fieldInformation = {
-	startSinkingTimer = { minimumValue = 0 },
+	goBackTimer = { minimumValue = 0 },
 	surfaceSoundIndex = {
         options = enums.tileset_sound_ids,
         fieldType = "integer"
     },
-	depth = { fieldType = "integer" }
+	depth = { fieldType = "integer" },
+	appearDistance = {
+		fieldType = "integer",
+		minimumValue = "1"
+	},
+	appearMode = {
+		options = {
+			"GoldenBerry",
+			"AllBerries",
+			"BerriesAndKeys",
+			"OnlyKeys"
+		},
+		editable = false
+	}
 }
 
 local ninePatchOptions = {
@@ -39,15 +54,30 @@ local ninePatchOptions = {
     fillMode = "repeat"
 }
 
-local blockTexture = "objects/goldblock"
-local middleTexture = "collectables/goldberry/idle00"
+CustomGoldenBlock.fieldOrder = {
+	"x",
+	"y",
+	"width",
+	"height",
+	"blockTexture",
+	"iconTexture",
+	"sinkOffset",
+	"goBackTimer",
+	"appearDistance",
+	"depth",
+	"surfaceSoundIndex",
+	"allBerryTypes",
+	"drawOutline",
+	"safe",
+	"occludesLight"
+}
 
 function CustomGoldenBlock.sprite(room, entity)
     local x, y = entity.x or 0, entity.y or 0
     local width, height = entity.width or 24, entity.height or 24
 
     local ninePatch = drawableNinePatch.fromTexture(entity.blockTexture, ninePatchOptions, x, y, width, height)
-    local middleSprite = drawableSprite.fromTexture(middleTexture, entity)
+    local middleSprite = drawableSprite.fromTexture(entity.iconTexture, entity)
     local sprites = ninePatch:getDrawableSprite()
 
     middleSprite:addPosition(math.floor(width / 2), math.floor(height / 2))

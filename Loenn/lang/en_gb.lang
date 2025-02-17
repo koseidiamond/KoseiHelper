@@ -100,16 +100,18 @@ entities.KoseiHelper/CustomTrapdoor.attributes.description.occludesLight=If the 
 
 # Custom Golden Block
 entities.KoseiHelper/CustomGoldenBlock.placements.name.CustomGoldenBlock=Custom Golden Block
-entities.KoseiHelper/CustomGoldenBlock.placements.description.CustomGoldenBlock=A block that appears while the player is carrying a golden (or any berry).
+entities.KoseiHelper/CustomGoldenBlock.placements.description.CustomGoldenBlock=A block that appears if the player is carrying a golden berry (or other items).\nThis check occurs when the player enters the screen.\nBlocks will not appear in the same room as the golden/item without transitioning first.
 entities.KoseiHelper/CustomGoldenBlock.attributes.description.sinkOffset=How much the block will sink when stepped on.
-entities.KoseiHelper/CustomGoldenBlock.attributes.description.startSinkingTimer=How much time the block should wait until it starts sinking while being stepped on.
-entities.KoseiHelper/CustomGoldenBlock.attributes.description.iconTexture=The path to the icon texture (golden berry), relative to the Atlases/Gameplay/ folder.
-entities.KoseiHelper/CustomGoldenBlock.attributes.description.blockTexture=The path to the block texture, relative to the Atlases/Gameplay/ folder.
+entities.KoseiHelper/CustomGoldenBlock.attributes.description.goBackTimer=How much time the block should wait until it goes back to its original position.
+entities.KoseiHelper/CustomGoldenBlock.attributes.description.iconTexture=The path to the icon texture that will appear in the center, relative to the Atlases/Gameplay/ folder.\nThis texture can be any size.
+entities.KoseiHelper/CustomGoldenBlock.attributes.description.blockTexture=The path to the block texture, relative to the Atlases/Gameplay/ folder.\nThis texture must be 24x24.
 entities.KoseiHelper/CustomGoldenBlock.attributes.description.surfaceSoundIndex=The sound that the block should do when grabbed/stepped on.
 entities.KoseiHelper/CustomGoldenBlock.attributes.description.depth=The depth of the block.
 entities.KoseiHelper/CustomGoldenBlock.attributes.description.occludesLight=Whether the light should be able to go through the block.
-entities.KoseiHelper/CustomGoldenBlock.attributes.description.allBerryTypes=Whether the block should appear if the player is carrying any kind of berry when they enter the screen.
+entities.KoseiHelper/CustomGoldenBlock.attributes.description.appearMode=Whether the block should appear if the player is carrying a golden, any berry, a key, or any.
 entities.KoseiHelper/CustomGoldenBlock.attributes.description.drawOutline=Whether the block should have a black outline.
+entities.KoseiHelper/CustomGoldenBlock.attributes.description.appearDistance=The block will appear when the player is a certain amount of pixels close to its center.\nNot recommended to lower the appear distance below the width of the blocks.
+entities.KoseiHelper/CustomGoldenBlock.attributes.description.safe=Whether the block is considered "safe ground" (the player can collect berries).
 
 # Flag Fake Berry
 entities.KoseiHelper/FlagFakeBerry.placements.name.FlagFakeBerry=Flag Fake Berry

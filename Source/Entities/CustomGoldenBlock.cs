@@ -15,26 +15,35 @@ public class CustomGoldenBlock : Solid
     private float yLerp;
     private float sinkTimer;
     private float renderLerp;
-    private bool flag2;
 
-    private float sinkOffset, startSinkingTimer;
+    private float sinkOffset, goBackTimer;
+    private float appearDistance = 80f;
     private string iconTexture, blockTexture;
     private int surfaceSoundIndex = 32;
     private new int depth = -10000;
     private bool occludesLight, drawOutline = true;
-    private bool allBerryTypes;
+    private enum AppearMode
+    {
+        GoldenBerry,
+        AllBerries,
+        BerriesAndKeys,
+        OnlyKeys
+    };
+    private AppearMode appearMode;
 
-    public CustomGoldenBlock(EntityData data, Vector2 offset) : base(data.Position + offset, data.Width, data.Height, data.Bool("isSafe",false))
+    public CustomGoldenBlock(EntityData data, Vector2 offset) : base(data.Position + offset, data.Width, data.Height, data.Bool("safe",false))
     {
         sinkOffset = data.Float("sinkOffset", 12f);
-        startSinkingTimer = data.Float("startSinkingTimer", 0.1f);
+        appearDistance = data.Float("appearDistance", 80f);
+        goBackTimer = data.Float("goBackTimer", 0.1f);
         iconTexture = data.Attr("iconTexture", "collectables/goldberry/idle00");
         blockTexture = data.Attr("blockTexture", "objects/goldblock");
         surfaceSoundIndex = data.Int("surfaceSoundIndex", 32);
         depth = data.Int("depth", -10000);
         occludesLight = data.Bool("occludesLight", true);
-        allBerryTypes = data.Bool("allBerryTypes", false);
+        appearMode = data.Enum("appearMode", AppearMode.GoldenBerry);
         drawOutline = data.Bool("drawOutline", true);
+
 
         startY = Y;
         berry = new Image(GFX.Game[iconTexture]);
@@ -64,20 +73,63 @@ public class CustomGoldenBlock : Solid
         Collidable = false;
         renderLerp = 1f;
         bool flag = false;
-        foreach (Strawberry item in scene.Entities.FindAll<Strawberry>())
+        switch (appearMode)
         {
-            if ((item.Golden && item.Follower.Leader != null) || (allBerryTypes && item.Follower.Leader != null))
-            {
-                flag = true;
+            case AppearMode.AllBerries:
+
+                foreach (Strawberry berry in scene.Entities.FindAll<Strawberry>())
+                {
+                    if (berry.Follower.Leader != null)
+                    {
+                        flag = true;
+                        break;
+                    }
+                }
                 break;
-            }
+            case AppearMode.BerriesAndKeys:
+                foreach (Key key in scene.Entities.FindAll<Key>())
+                {
+                    if (key.follower.Leader != null)
+                    {
+                        flag = true;
+                        break;
+                    }
+                }
+                foreach (Strawberry berry in scene.Entities.FindAll<Strawberry>())
+                {
+                    if (berry.Follower.Leader != null)
+                    {
+                        flag = true;
+                        break;
+                    }
+                }
+                break;
+            case AppearMode.OnlyKeys:
+                foreach (Key key in scene.Entities.FindAll<Key>())
+                {
+                    if (key.follower.Leader != null)
+                    {
+                        flag = true;
+                        break;
+                    }
+                }
+                break;
+            default: // Only when golden
+                foreach (Strawberry berry in scene.Entities.FindAll<Strawberry>())
+                {
+                    if (berry.Golden && berry.Follower.Leader != null)
+                    {
+                        flag = true;
+                        break;
+                    }
+                }
+                break;
         }
         if (!flag)
         {
             DestroyStaticMovers();
             RemoveSelf();
         }
-
     }
 
     public override void Update()
@@ -85,8 +137,9 @@ public class CustomGoldenBlock : Solid
         base.Update();
         if (!Visible)
         {
-            Player entity = base.Scene.Tracker.GetEntity<Player>();
-            if (entity != null && entity.X > base.X - 80f)
+            Player player = base.Scene.Tracker.GetEntity<Player>();
+            //if (player != null && player.X > base.X - 80f)
+            if (player != null && (Math.Abs(player.CenterX - CenterX) <= appearDistance))
             {
                 Visible = true;
                 Collidable = true;
@@ -99,7 +152,7 @@ public class CustomGoldenBlock : Solid
         }
         if (HasPlayerRider())
         {
-            sinkTimer = startSinkingTimer;
+            sinkTimer = goBackTimer;
         }
         else if (sinkTimer > 0f)
         {
