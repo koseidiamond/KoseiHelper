@@ -9,13 +9,14 @@ ClimbJumpController.placements = {
 		data = {
 		staminaSpent = 27.5,
 		wallBoostTimer = 0.2,
-		wallBoostStaminaRefund = 27.5,
+		--wallBoostStaminaRefund = 27.5,
 		spendStaminaOnGround = false,
 		checkWallBoostDirection = true,
 		dustType = "Normal",
 		climbJumpSound = "event:/char/madeline/jump_climb_",
 		horizontalSpeedMultiplier = 1,
-		sweat = true
+		sweat = true,
+		speedMultiplierCase = "AllCases"
 		}
 	}
 }
@@ -29,6 +30,14 @@ ClimbJumpController.fieldInformation = {
 			"Steam",
 			"VentDust",
 			"None"
+		},
+		editable = false
+	},
+	speedMultiplierCase = {
+		options = {
+			"AllCases",
+			"OnlyNeutrals",
+			"OnlyNonNeutrals"
 		},
 		editable = false
 	}

@@ -11,8 +11,10 @@ namespace Celeste.Mod.KoseiHelper.Entities;
 [Tracked]
 public class ClimbJumpController : Entity
 {
-    public static float staminaSpent, wallBoostTimer, wallBoostStaminaRefund, horizontalSpeedMultiplier;
-    public static bool spendStaminaOnGround, checkWallBoostDirection, sweat;
+    public static float staminaSpent, wallBoostTimer, wallBoostStaminaRefund;
+    public static float horizontalSpeedMultiplier = 1f;
+    public static bool spendStaminaOnGround;
+    public static bool checkWallBoostDirection, sweat = true;
     public static string climbJumpSound;
     public enum ClimbDustType
     {
@@ -23,7 +25,15 @@ public class ClimbJumpController : Entity
         VentDust,
         None
     };
-    public static ClimbDustType climbDustType;
+
+    public enum MultiplierCase
+    {
+        AllCases,
+        OnlyNeutrals,
+        OnlyNonNeutrals
+    };
+    public static ClimbDustType climbDustType = ClimbDustType.Normal;
+    public static MultiplierCase multiplierCase = MultiplierCase.AllCases;
     public ClimbJumpController(EntityData data, Vector2 offset) : base(data.Position + offset)
     {
         Add(new PostUpdateHook(() => { }));
@@ -32,8 +42,9 @@ public class ClimbJumpController : Entity
         horizontalSpeedMultiplier = data.Float("horizontalSpeedMultiplier", 1f);
         wallBoostTimer = data.Float("wallBoostTimer", 0.2f);
         spendStaminaOnGround = data.Bool("spendStaminaOnGround", false);
-        checkWallBoostDirection = data.Bool("checkWallBoostDirection", true); // TODO idk how to do this one
+        checkWallBoostDirection = data.Bool("checkWallBoostDirection", true);
         climbDustType = data.Enum("dustType", ClimbDustType.Normal);
+        multiplierCase = data.Enum("speedMultiplierCase", MultiplierCase.AllCases);
         climbJumpSound = data.Attr("climbJumpSound", "event:/char/madeline/jump_climb_");
         sweat = data.Bool("sweat", true);
     }
@@ -70,17 +81,37 @@ public class ClimbJumpController : Entity
             {
                 self.wallBoostDir = 0 - self.Facing;
                 self.wallBoostTimer = wallBoostTimer;
-                if (wallBoostTimer > 0f)
+                // I HAVE NO CLUE WHY IS THIS NOT WORKING
+                /*if (self.wallBoostTimer >= 0f && self.wallBoostDir != self.moveX)
                 {
-                    self.Speed.X = Player.WallJumpHSpeed * (float)self.moveX * horizontalSpeedMultiplier;
+                    //self.Speed.X = Player.WallJumpHSpeed * (float)self.moveX * horizontalSpeedMultiplier;
                     if (self.CheckStamina <= Player.ClimbMaxStamina - wallBoostStaminaRefund) // If current stamina <= 110 by default
+                    {
+
+                        Logger.Debug(nameof(KoseiHelperModule), $"Refunded");
                         self.Stamina += wallBoostStaminaRefund; // Refunds 27.5 by default
-                }
+                    }
+                }*/
             }
+            switch (multiplierCase)
+            {
+                case MultiplierCase.OnlyNeutrals:
+                    if (self.moveX == 0)
+                        self.Speed.X *= horizontalSpeedMultiplier;
+                    break;
+                case MultiplierCase.OnlyNonNeutrals:
+                    if (self.moveX != 0)
+                        self.Speed.X *= horizontalSpeedMultiplier;
+                    break;
+                default: // AllCases
+                    self.Speed.X *= horizontalSpeedMultiplier;
+                    break;
+            }
+
             // Particles:
             if (self.Facing == Facings.Right)
             {
-                Audio.Play(climbJumpSound+"right");
+                Audio.Play(climbJumpSound + "right");
                 switch (climbDustType)
                 {
                     case ClimbDustType.Sparkly:
@@ -104,7 +135,7 @@ public class ClimbJumpController : Entity
             }
             else
             {
-                Audio.Play(climbJumpSound+"left");
+                Audio.Play(climbJumpSound + "left");
                 switch (climbDustType)
                 {
                     case ClimbDustType.Sparkly:
@@ -140,8 +171,5 @@ public class ClimbJumpController : Entity
     public override void Update()
     {
         base.Update();
-        Player p = SceneAs<Level>().Tracker.GetEntity<Player>();
-        if (p != null)
-            Logger.Debug(nameof(KoseiHelperModule), $"dreamJump={p.dreamJump}");
     }
 }

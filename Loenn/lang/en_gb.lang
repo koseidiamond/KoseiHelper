@@ -33,15 +33,16 @@ entities.KoseiHelper/DebugMapController.attributes.description.blockDebugMap=If 
 # ClimbJump Controller
 entities.KoseiHelper/ClimbJumpController.placements.name.ClimbJumpController=Climbjump Controller
 entities.KoseiHelper/ClimbJumpController.placements.description.ClimbJumpController=Allows customization of climbjumps and wallboosting behavior.\nThis is a persistent controller.
-entities.KoseiHelper/ClimbJumpController.attributes.description.staminaSpent=The stamina that a climbjump will spend.\nIn vanilla, the player has normally 110 max stamina, and each climbjump spends 27.5.\nThis field does not alter the stamina refunded by wallboosts (27.5).\nHaving a value <27.5 will allow players to "farm" stamina through wallboosts.
+entities.KoseiHelper/ClimbJumpController.attributes.description.staminaSpent=The stamina that a climbjump will spend.\nIn vanilla, the player has normally 110 max stamina, and each climbjump spends 27.5.\nThis field does not alter the stamina refunded by wallboosts (27.5).\nValues <27.5 will allow players to "farm" stamina through wallboosts.
 entities.KoseiHelper/ClimbJumpController.attributes.description.wallBoostTimer=If the player looks away from the wall after a climbjump, they will recover 27.5 stamina.\nThis is known as a wallboost. In vanilla, they are possible during the first 0.2 seconds.\nHaving a timer less than 0.2 will result in "wall cobwobs".
 entities.KoseiHelper/ClimbJumpController.attributes.description.spendStaminaOnGround=Whether a climbjump should spend stamina even if it is performed from the ground.
 entities.KoseiHelper/ClimbJumpController.attributes.description.checkWallBoostDirection=wip
 entities.KoseiHelper/ClimbJumpController.attributes.description.dustType=The type of particles that should appear on the wall when climbjumping.\nNot to be confused with the player sweat.
 entities.KoseiHelper/ClimbJumpController.attributes.description.climbJumpSound=The sounds that a climbjump makes.\n"event:/char/madeline/jump_climb_left" and "event:/char/madeline/jump_climb_right" are the two vanilla events.\nThis field does not need the "left" and "right" suffixes.
-entities.KoseiHelper/ClimbJumpController.attributes.description.wallBoostStaminaRefund=How much stamina the player would get back after performing a wallboost.\nRead the wallboost timer tooltip for a wallboost explanation.
+entities.KoseiHelper/ClimbJumpController.attributes.description.wallBoostStaminaRefund=How much stamina the player would get back after performing a wallboost.\nRead the wallboost timer tooltip for a wallboost explanation.\nValues >27.5 will make the player unable to regain stamina if they have more than 110 minus this value.\nFor example, setting the refund to 50 means that stamina will be refunded from a wallboost if it is below 60.
 entities.KoseiHelper/ClimbJumpController.attributes.description.horizontalSpeedMultiplier=Multiplies the horizontal speed that climbjumps give (while a direction is being held).\nIt also affects speed in techs derived from climbjumps, like cornerboosts.
 entities.KoseiHelper/ClimbJumpController.attributes.description.sweat=Whether the player should sweat when performing a climbjump.\nNot to be confused with the smaller sweat from climbing.
+entities.KoseiHelper/ClimbJumpController.attributes.description.speedMultiplierCase=Whether the speed multiplier should affect climbjumps/cornerboosts while a horizontal input is being pressed/not pressed/always.\nE.g.: a multiplier of -1 with "OnlyNeutrals" will produce reverse cornerboosts if not holding left/right, and normal cornerboosts if holding left/right.
 
 # Counter Bar Controller
 entities.KoseiHelper/CounterBarController.placements.name.CounterBarController=Counter/Slider Bar Display
@@ -96,6 +97,19 @@ entities.KoseiHelper/CustomTrapdoor.attributes.description.sfxBottom=The sound t
 entities.KoseiHelper/CustomTrapdoor.attributes.description.depth=The visual depth of the trapdoor.
 entities.KoseiHelper/CustomTrapdoor.attributes.description.spriteID=The ID or tag of the sprite in your Sprites.xml.
 entities.KoseiHelper/CustomTrapdoor.attributes.description.occludesLight=If the light should be able to pass through the trapdoor.
+
+# Custom Golden Block
+entities.KoseiHelper/CustomGoldenBlock.placements.name.CustomGoldenBlock=Custom Golden Block
+entities.KoseiHelper/CustomGoldenBlock.placements.description.CustomGoldenBlock=A block that appears while the player is carrying a golden (or any berry).
+entities.KoseiHelper/CustomGoldenBlock.attributes.description.sinkOffset=How much the block will sink when stepped on.
+entities.KoseiHelper/CustomGoldenBlock.attributes.description.startSinkingTimer=How much time the block should wait until it starts sinking while being stepped on.
+entities.KoseiHelper/CustomGoldenBlock.attributes.description.iconTexture=The path to the icon texture (golden berry), relative to the Atlases/Gameplay/ folder.
+entities.KoseiHelper/CustomGoldenBlock.attributes.description.blockTexture=The path to the block texture, relative to the Atlases/Gameplay/ folder.
+entities.KoseiHelper/CustomGoldenBlock.attributes.description.surfaceSoundIndex=The sound that the block should do when grabbed/stepped on.
+entities.KoseiHelper/CustomGoldenBlock.attributes.description.depth=The depth of the block.
+entities.KoseiHelper/CustomGoldenBlock.attributes.description.occludesLight=Whether the light should be able to go through the block.
+entities.KoseiHelper/CustomGoldenBlock.attributes.description.allBerryTypes=Whether the block should appear if the player is carrying any kind of berry when they enter the screen.
+entities.KoseiHelper/CustomGoldenBlock.attributes.description.drawOutline=Whether the block should have a black outline.
 
 # Flag Fake Berry
 entities.KoseiHelper/FlagFakeBerry.placements.name.FlagFakeBerry=Flag Fake Berry

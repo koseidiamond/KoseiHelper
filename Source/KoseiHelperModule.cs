@@ -27,12 +27,6 @@ public class KoseiHelperModule : EverestModule {
         Logger.SetLogLevel(nameof(KoseiHelperModule), LogLevel.Info);
 #endif
     }
-    // I can do this to debug stuff:
-    //private static void ExampleMethod()
-    //{
-    //    Logger.Debug(nameof(KoseiHelperModule), "hello, world!");
-    //    Logger.Debug($"{nameof(KoseiHelperModule)}/{nameof(ExampleMethod)}", "hello, world, yet again!");
-    //}
 
     [ModImportName("ExtendedVariantMode")]
     public static class ExtendedVariantImports

@@ -1,28 +1,28 @@
 using Celeste.Mod.Entities;
 using Monocle;
 using Microsoft.Xna.Framework;
-using System;
 
 namespace Celeste.Mod.KoseiHelper.Entities;
 
-public enum CameraDirection
-{
-    Up,
-    Down,
-    Left,
-    Right
-}
 
-public enum AutoscrollerMode
-{
-    SafePush,
-    PushNCrush,
-    ImmediateDeath
-}
 
 [CustomEntity("KoseiHelper/AutoscrollerController")]
 public class AutoscrollerController : Entity
 {
+    public enum CameraDirection
+    {
+        Up,
+        Down,
+        Left,
+        Right
+    };
+
+    public enum AutoscrollerMode
+    {
+        SafePush,
+        PushNCrush,
+        ImmediateDeath
+    };
     public string flag;
     public float speed = 60;
     public AutoscrollerMode autoscrollerMode = AutoscrollerMode.SafePush;

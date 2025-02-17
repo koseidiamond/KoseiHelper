@@ -1,24 +1,21 @@
 using Celeste.Mod.Entities;
 using Monocle;
-using System;
 using Microsoft.Xna.Framework;
 using System.Collections;
-using Iced.Intel;
 using static Celeste.Session;
 
 namespace Celeste.Mod.KoseiHelper.Entities;
-
-public enum BrickType
-{
-    Normal,
-    Ice,
-    Fortress
-}
 
 [CustomEntity("KoseiHelper/Brick")]
 [Tracked]
 public class Brick : Solid
 {
+    public enum BrickType
+    {
+        Normal,
+        Ice,
+        Fortress
+    };
     private Sprite sprite;
     public BrickType brickType;
     private string spriteID;

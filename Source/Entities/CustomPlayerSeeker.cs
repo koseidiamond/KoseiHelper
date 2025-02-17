@@ -549,8 +549,8 @@ public class CustomPlayerSeeker : Actor
         if (data.Hit is SeekerBarrier)
         {
             (data.Hit as SeekerBarrier).OnReflectSeeker();
-            Logger.Debug(nameof(KoseiHelperModule), $"Seeker barrier hit. Barrier Right: {data.Hit.Right} Barrier Left: {data.Hit.Left}");
-            Logger.Debug(nameof(KoseiHelperModule), $"Seeker barrier hit. Seeker Right: {Right} Seeker Left: {Left}");
+            //Logger.Debug(nameof(KoseiHelperModule), $"Seeker barrier hit. Barrier Right: {data.Hit.Right} Barrier Left: {data.Hit.Left}");
+            //Logger.Debug(nameof(KoseiHelperModule), $"Seeker barrier hit. Seeker Right: {Right} Seeker Left: {Left}");
             Audio.Play("event:/game/05_mirror_temple/seeker_hit_lightwall", Position);
             if (data.Hit.Left > Left + 10 || data.Hit.Right < Right - 10 || data.Hit.Top > Top + 10 || data.Hit.Bottom < Bottom - 10)
                 PlayerSeekerDie();

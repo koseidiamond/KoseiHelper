@@ -6,27 +6,26 @@ using System.Collections;
 
 namespace Celeste.Mod.KoseiHelper.Entities;
 
-public enum PlantType
-{
-    Jumping,
-    Red,
-    Green,
-    Black,
-    Melon
-}
-
-public enum PlantDirection
-{
-    Up,
-    Left,
-    Right,
-    Down
-}
-
 [CustomEntity("KoseiHelper/Plant")]
 [Tracked]
 public class Plant : Actor
 {
+    public enum PlantType
+    {
+        Jumping,
+        Red,
+        Green,
+        Black,
+        Melon
+    };
+
+    public enum PlantDirection
+    {
+        Up,
+        Left,
+        Right,
+        Down
+    };
     public Sprite sprite;
     public PlantType plantType;
     public PlantDirection plantDirection;
