@@ -89,6 +89,18 @@ entities.KoseiHelper/CustomHahaha.attributes.description.left=If the Hahaha shou
 entities.KoseiHelper/CustomHahaha.attributes.description.synchronizedSfx=If the sound should play with each spawned Ha instead of on a fixed interval.
 entities.KoseiHelper/CustomHahaha.attributes.description.groupSize=How many Has should be in each group.
 
+# Custom Seeker Statue
+entities.KoseiHelper/CustomSeekerStatue.placements.name.CustomSeekerStatue=Custom Seeker Statue
+entities.KoseiHelper/CustomSeekerStatue.placements.description.CustomSeekerStatue=A statue that can hatch (spawn) a seeker when a condition is met.
+entities.KoseiHelper/CustomSeekerStatue.attributes.description.hatchMode=The condition for the statue to break and hatch a seeker.
+entities.KoseiHelper/CustomSeekerStatue.attributes.description.sound=The sound that the statue should make while breaking.
+entities.KoseiHelper/CustomSeekerStatue.attributes.description.flag=The flag that must be true for the statue to break if the hatch mode is set to flag.
+entities.KoseiHelper/CustomSeekerStatue.attributes.description.statueSprite=The sprite id that this statue should use while idling.\nLook into the Seeker tag in your Sprites.xml. You can add a new custom id.
+entities.KoseiHelper/CustomSeekerStatue.attributes.description.hatchSprite=The sprite id that this statue should use while breaking/hatching.\nLook into the Seeker tag in your Sprites.xml. You can add a new custom id.
+entities.KoseiHelper/CustomSeekerStatue.attributes.description.depth=The depth that the statue should be rendered.\nLower values appear on top of entities with higher values.
+entities.KoseiHelper/CustomSeekerStatue.attributes.description.distance=How close the player should get for the statue to break.\nVanilla uses 220 when the mode is "Distance" and 32 when the mode is "PlayerRightToX".
+entities.KoseiHelper/CustomSeekerStatue.attributes.description.particles=Whether the statue should emit particles while hatching.
+
 # Custom Trapdoor
 entities.KoseiHelper/CustomTrapdoor.placements.name.CustomTrapdoor=Custom Trapdoor
 entities.KoseiHelper/CustomTrapdoor.placements.description.CustomTrapdoor=A vertical door for deco. It can be resprited through Sprites.xml.

@@ -33,6 +33,8 @@ The small plants (Black and Jumping) respond like normal Actors (which means the
 A group of sprites that wave towards a direction while playing a sound when a flag is true.
 ### Mary Block
 Single-use flowers that launch the player with more or less strength depending on the mode. Compatible with Theo.
+### Custom Seeker Statue
+Statues that can spawn a seeker when a condition is met (player distance or flags), with a few other custom options.
 ### Custom Trapdoor
 Decorative entity. Vertical door that can be reskinned through Sprites.xml, change the sounds, or choose if the light can pass through it.
 ### Winged Key
