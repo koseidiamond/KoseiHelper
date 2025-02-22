@@ -99,7 +99,7 @@ public class DebugMapController : Entity
                 // Actually render the content of the rooms
                 foreach (Rectangle back in self.backs)
                 {
-                    Draw.Rect(self.X + back.X, self.Y + back.Y, back.Width, back.Height, self.Dummy ? bgTileColor * 0.5f : bgTileColor * 0.5f); // todo
+                    Draw.Rect(self.X + back.X, self.Y + back.Y, back.Width, back.Height, self.Dummy ? bgTileColor * 0.5f : bgTileColor * 0.5f); // todo. the color could change if the room is a dummy
                 }
                 foreach (Rectangle solid in self.solids)
                 {

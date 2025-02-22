@@ -142,6 +142,8 @@ The trigger variant of Bounded Refills. Allows the player to explore the physica
 If the player enters the trigger and they are not on the ground (or optionally, climbing), they will die.
 ### Metadata Trigger
 Allows to change the Map/Room metadata. Most changes only have effect once the room reloads (read the tooltips).
+### Detach Follower Trigger
+This trigger can detach followers like strawberries, keys or others.
 
 # Obsolete
 

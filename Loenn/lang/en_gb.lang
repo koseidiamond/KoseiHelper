@@ -501,3 +501,14 @@ triggers.KoseiHelper/MetadataTrigger.attributes.description.isDark=Whether the r
 triggers.KoseiHelper/MetadataTrigger.attributes.description.isSpace=Whether the room is in space (end of Core) (effect on room reload).
 triggers.KoseiHelper/MetadataTrigger.attributes.description.isUnderwater=Whether the room is submerged in water (effect on room reload).
 triggers.KoseiHelper/MetadataTrigger.attributes.description.disableDownTransition=Whether the player is allowed to transition downwards (effect is instant).
+
+# Detach Follower Trigger
+triggers.KoseiHelper/DetachFollowerTrigger.placements.name.DetachFollowerTrigger=Detach Follower Trigger
+triggers.KoseiHelper/DetachFollowerTrigger.placements.description.DetachFollowerTrigger=Detaches the specified type of follower (Berry, Key or Other).
+triggers.KoseiHelper/DetachFollowerTrigger.attributes.description.global=Whether the entities following you should get the 'global' tag instead of the 'persistent' tag.
+triggers.KoseiHelper/DetachFollowerTrigger.attributes.description.affectBerries=Whether following berries should be detached.
+triggers.KoseiHelper/DetachFollowerTrigger.attributes.description.affectKeys=Whether following keys should be detached.
+triggers.KoseiHelper/DetachFollowerTrigger.attributes.description.affectOthers=Whether other kinds of followers (like Following Torches from VivHelper) should be detached.
+triggers.KoseiHelper/DetachFollowerTrigger.attributes.description.sound=The sound that the followers should make when detached.
+triggers.KoseiHelper/DetachFollowerTrigger.attributes.description.triggerMode=Whether the trigger should activate when the player enters or exits it, or when the specified flag is true.
+triggers.KoseiHelper/DetachFollowerTrigger.attributes.description.flag=If a flag is specified, the trigger will be activated when the flag is true and the player is inside it.\nMake sure to set the trigger mode to Flag Enabled.
