@@ -35,10 +35,8 @@ public class DetachFollowerTrigger : Trigger
     public override void OnEnter(Player player)
     {
         base.OnEnter(player);
-        if (triggerMode == TriggerMode.OnStay)
+        if (triggerMode == TriggerMode.OnEnter)
             Detach(player);
-        if (onlyOnce)
-            RemoveSelf();
     }
 
     public override void OnLeave(Player player)
@@ -46,8 +44,13 @@ public class DetachFollowerTrigger : Trigger
         base.OnLeave(player);
         if (triggerMode == TriggerMode.OnLeave)
             Detach(player);
-        if (onlyOnce)
-            RemoveSelf();
+    }
+
+    public override void OnStay(Player player)
+    {
+        base.OnStay(player);
+        if (triggerMode == TriggerMode.OnFlagEnabled && !string.IsNullOrEmpty(flag) && SceneAs<Level>().Session.GetFlag(flag))
+            Detach(player);
     }
 
     private void Detach(Player player)
@@ -113,5 +116,7 @@ public class DetachFollowerTrigger : Trigger
         }
         entity.Active = true;
         entity.Collidable = true;
+        if (onlyOnce)
+            RemoveSelf();
     }
 }
