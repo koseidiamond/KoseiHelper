@@ -16,7 +16,7 @@ entities.KoseiHelper/DebugRenderer.attributes.description.nonDebug=If the shape 
 
 # Debug Map Controller
 entities.KoseiHelper/DebugMapController.placements.name.DebugMapController=Debug Map Controller
-entities.KoseiHelper/DebugMapController.placements.description.DebugMapController=Modifies the way the Debug Map is rendered.
+entities.KoseiHelper/DebugMapController.placements.description.DebugMapController=Modifies the way the Debug Map is rendered. Persistent controller.
 entities.KoseiHelper/DebugMapController.attributes.description.hideKeys=Whether the keys should be hidden in the Debug Map.
 entities.KoseiHelper/DebugMapController.attributes.description.hideBerries=Whether the berries should be hidden in the Debug Map.\nPlayers can still know where they are if they hold the Q key.
 entities.KoseiHelper/DebugMapController.attributes.description.hideSpawns=Whether the spawns should be hidden in the Debug Map.
@@ -512,3 +512,17 @@ triggers.KoseiHelper/DetachFollowerTrigger.attributes.description.affectOthers=W
 triggers.KoseiHelper/DetachFollowerTrigger.attributes.description.sound=The sound that the followers should make when detached.
 triggers.KoseiHelper/DetachFollowerTrigger.attributes.description.triggerMode=Whether the trigger should activate when the player enters or exits it, or when the specified flag is true.
 triggers.KoseiHelper/DetachFollowerTrigger.attributes.description.flag=If a flag is specified, the trigger will be activated when the flag is true and the player is inside it.\nMake sure to set the trigger mode to Flag Enabled.
+
+# Selfie Trigger
+triggers.KoseiHelper/SelfieTrigger.placements.name.SelfieTrigger=Selfie Trigger
+triggers.KoseiHelper/SelfieTrigger.placements.description.SelfieTrigger=Takes a selfie.
+triggers.KoseiHelper/SelfieTrigger.attributes.description.image=The path to the selfie texture, relative to Atlases/Portraits/.
+triggers.KoseiHelper/SelfieTrigger.attributes.description.photoInSound=The sound of the selfie when it appears.
+triggers.KoseiHelper/SelfieTrigger.attributes.description.photoOutSound=The sound of selfie when it goes away.
+triggers.KoseiHelper/SelfieTrigger.attributes.description.inputSound=The sound when the player confirms while the selfie is being displayed.
+triggers.KoseiHelper/SelfieTrigger.attributes.description.flash=Whether the selfie should emit a white flash.\nThis doesn't do anything on Photosensitive Mode.
+triggers.KoseiHelper/SelfieTrigger.attributes.description.timeToOpen=How long the selfie takes to appear. The player will be waiting during this time.
+triggers.KoseiHelper/SelfieTrigger.attributes.description.buttonTexture=The path to the button texture, relative to Atlases/Gui/.\nThis icon appears at the bottom right corner of the selfie.
+triggers.KoseiHelper/SelfieTrigger.attributes.description.flag=The flag required for this trigger to be activated.\nLeave empty for no flag required.
+triggers.KoseiHelper/SelfieTrigger.attributes.description.triggerMode=Whether the trigger should activate when the player enters or exits it.
+triggers.KoseiHelper/SelfieTrigger.attributes.description.oneUse=Whether the trigger should delete itself after the selfie is displayed.

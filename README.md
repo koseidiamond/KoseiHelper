@@ -143,7 +143,9 @@ If the player enters the trigger and they are not on the ground (or optionally, 
 ### Metadata Trigger
 Allows to change the Map/Room metadata. Most changes only have effect once the room reloads (read the tooltips).
 ### Detach Follower Trigger
-This trigger can detach followers like strawberries, keys or others.
+Detaches entities that follow the player like strawberries, keys, etc.
+### Selfie Trigger
+Displays an image. Pretty similar to Memos.
 
 # Obsolete
 

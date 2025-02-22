@@ -1,5 +1,5 @@
 - Name: KoseiHelper
-  Version: 1.10.2.1
+  Version: 1.11.0.0
   DLL: bin/KoseiHelper.dll
   Dependencies:
     - Name: EverestCore
