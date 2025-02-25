@@ -46,6 +46,11 @@ public class Goomba : Actor
     public bool isBaby;
     public int springDirection;
     public int minisAmount;
+    public bool slowdown;
+
+    private float number, number2 = -1f;
+    private float number3, randomAnxietyOffset;
+
     public Goomba(EntityData data, Vector2 offset) : base(data.Position + offset)
     {
         isBaby = false;
@@ -64,6 +69,7 @@ public class Goomba : Actor
         behavior = data.Enum("behavior", GoombaBehavior.Chaser);
         timeToSpawnMinis = data.Float("timeToSpawnMinis", 1);
         gravityMult = data.Float("gravityMultiplier", 1f);
+        slowdown = data.Bool("slowdown", false);
         canEnableTouchSwitches = data.Bool("canEnableTouchSwitches", false);
         deathSound = data.Attr("deathSound", "event:/KoseiHelper/goomba");
         minisAmount = data.Int("minisAmount", 10);
@@ -130,6 +136,35 @@ public class Goomba : Actor
     public override void Update()
     {
         Level level = SceneAs<Level>();
+        Player player = level.Tracker.GetEntity<Player>();
+        if (slowdown)
+        {
+            if (base.Scene.OnInterval(0.05f))
+            {
+                randomAnxietyOffset = Calc.Random.Range(-0.2f, 0.2f);
+            }
+            float target;
+            if (player != null && !player.Dead)
+            {
+                foreach (Goomba entity2 in base.Scene.Tracker.GetEntities<Goomba>())
+                {
+                    float num3 = Vector2.DistanceSquared(player.Center, entity2.Center);
+                    if (Vector2.Distance(player.Center, entity2.Center) < 40f) number2 = ((!(number2 < 0f)) ? Math.Min(number2, num3) : num3);
+                    else number2 = -1f;
+                }
+                target = ((!(number2 >= 0f)) ? 1f : Calc.ClampedMap(number2, 256f, 4096f, 0.5f));
+                Distort.AnxietyOrigin = new Vector2((player.Center.X - Position.X) / 320f, (player.Center.Y - Position.Y) / 180f);
+                number3 = ((!(number >= 0f)) ? 0f : Calc.ClampedMap(number, 256f, 16384f, 1f, 0f));
+            }
+            else
+            {
+                target = 1f;
+                number3 = 0f;
+            }
+            Engine.TimeRate = Calc.Approach(Engine.TimeRate, target, 4f * Engine.DeltaTime);
+            Distort.GameRate = Calc.Approach(Distort.GameRate, Calc.Map(Engine.TimeRate, 0.5f, 1f), Engine.DeltaTime * 2f);
+            Distort.Anxiety = Calc.Approach(Distort.Anxiety, (0.5f + randomAnxietyOffset) * number3, 8f * Engine.DeltaTime);
+        }
         if (Scene.OnInterval(timeToSpawnMinis) && canSpawnMinis && minisSpawned < minisAmount)
         {
             this.Scene.Add(new Goomba(new Vector2(this.Position.X, this.Position.Y + 4), originalSpeedX + originalSpeedX / 4, false, false, false, true));
@@ -181,7 +216,7 @@ public class Goomba : Actor
                 (walkDirection > 0 && !CollidingWithGround(Position + new Vector2(10, 2)) || walkDirection < 0 && !CollidingWithGround(Position + new Vector2(-10, 2))))
                 walkDirection = -walkDirection;
         }
-        if (SceneAs<Level>().Tracker.GetEntity<Player>() != null)
+        if (player != null)
         {
             if (behavior == GoombaBehavior.Chaser)
             {
@@ -201,7 +236,7 @@ public class Goomba : Actor
                 MoveVExact((int)(speedY * Engine.DeltaTime * gravityMult), onCollideV);
         }
 
-        foreach (Spring spring in SceneAs<Level>().Entities.FindAll<Spring>())
+        foreach (Spring spring in level.Entities.FindAll<Spring>())
         {
             if (CollideCheck(spring) && springTimer == 0)
             {
@@ -217,7 +252,15 @@ public class Goomba : Actor
             springTimer = 0;
 
         if (base.Bottom > (float)level.Bounds.Bottom + 16)
+        {
             this.RemoveSelf();
+            if (slowdown)
+            {
+                Engine.TimeRate = 1f;
+                Distort.GameRate = 1f;
+                Distort.Anxiety = 0f;
+            }
+        }
         base.Update();
 
         if (isWinged && flyAway) // flyAway behavior
@@ -227,7 +270,15 @@ public class Goomba : Actor
             {
                 MoveVExact((int)(flapSpeed * Engine.DeltaTime), onCollideV);
                 if (base.Y < (float)(SceneAs<Level>().Bounds.Top - 16))
+                {
                     RemoveSelf();
+                    if (slowdown)
+                    {
+                        Engine.TimeRate = 1f;
+                        Distort.GameRate = 1f;
+                        Distort.Anxiety = 0f;
+                    }
+                }
             }
             else
             {
@@ -246,8 +297,14 @@ public class Goomba : Actor
         {
             if (!TrySquishWiggle(d, 2, 2))
             {
-                Audio.Play("event:/game/05_mirror_temple/seeker_death", Center);
+                Audio.Play(deathSound, Center);
                 RemoveSelf();
+                if (slowdown)
+                {
+                    Engine.TimeRate = 1f;
+                    Distort.GameRate = 1f;
+                    Distort.Anxiety = 0f;
+                }
             }
         };
     }
@@ -268,6 +325,12 @@ public class Goomba : Actor
         if (!isBaby)
             Audio.Play(deathSound, Position);
         this.RemoveSelf();
+        if (slowdown)
+        {
+            Engine.TimeRate = 1f;
+            Distort.GameRate = 1f;
+            Distort.Anxiety = 0f;
+        }
         float angle = player.Speed.Angle();
         level.ParticlesFG.Emit(goombaParticle, 5, Position, Vector2.One * 4f, angle - (float)Math.PI / 2f);
     }
@@ -368,6 +431,12 @@ public class Goomba : Actor
         if (!isBaby)
             Audio.Play(deathSound, Position);
         this.RemoveSelf();
+        if (slowdown)
+        {
+            Engine.TimeRate = 1f;
+            Distort.GameRate = 1f;
+            Distort.Anxiety = 0f;
+        }
         float angle = player.Speed.Angle();
         level.ParticlesFG.Emit(goombaParticle, 5, Position, Vector2.One * 4f, angle - (float)Math.PI / 2f);
     }

@@ -18,7 +18,8 @@ Goomba.placements = {
 			behavior = "Chaser",
 			gravityMultiplier = 1,
 			canEnableTouchSwitches = false,
-			minisAmount = 10
+			minisAmount = 10,
+			slowdown = false
 		}
 	}
 }

@@ -154,6 +154,7 @@ entities.KoseiHelper/Goomba.attributes.description.behavior=Chaser: The goomba w
 entities.KoseiHelper/Goomba.attributes.description.gravityMultiplier=The vertical speed will be affected by this multiplier.
 entities.KoseiHelper/Goomba.attributes.description.canEnableTouchSwitches=If the Goomba can turn on vanilla touch switches.
 entities.KoseiHelper/Goomba.attributes.description.minisAmount=If the goomba can spawn minigoombas, this limits the max number of minis per goomba.\n(Number not reset if a mini is killed)
+entities.KoseiHelper/Goomba.attributes.description.slowdown=Whether the goomba should have a slowdown effect when the player is too close, like Oshiro or seekers.
 
 #Trigger Spinner
 entities.KoseiHelper/TriggerSpinner.placements.name.TriggerSpinner=Trigger Spinner
