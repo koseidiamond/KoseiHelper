@@ -75,6 +75,16 @@ entities.KoseiHelper/CounterBarController.attributes.description.outline=If the 
 #entities.KoseiHelper/FallDamageController.attributes.description.playerHealth=The amount of health that the player has.\n(This is a Session Slider called koseiHelper_health so you can display it with a Slider Bar if you want)
 #entities.KoseiHelper/FallDamageController.attributes.description.persistent=If the controller should persist across rooms.
 
+# Reskinnable Parallax Debris
+
+entities.KoseiHelper/ReskinnableParallaxDebris.placements.name.ReskinnableParallaxDebris=Reskinnable Parallax Debris
+entities.KoseiHelper/ReskinnableParallaxDebris.placements.description.ReskinnableParallaxDebris=The foreground debris but reskinnable.\nImage or group of images that move in a sine.
+entities.KoseiHelper/ReskinnableParallaxDebris.attributes.description.depth=The depth of the parallax debris.
+entities.KoseiHelper/ReskinnableParallaxDebris.attributes.description.texture=The path to the debris texture, relative to Gameplay/.\nYou can have multiple images grouped by adding 00, 01 and so on.
+entities.KoseiHelper/ReskinnableParallaxDebris.attributes.description.sine=How much the debris should float.
+entities.KoseiHelper/ReskinnableParallaxDebris.attributes.description.tint=The color of the debris.
+
+
 # Custom Hahaha
 entities.KoseiHelper/CustomHahaha.placements.name.CustomHahaha=Custom Hahaha
 entities.KoseiHelper/CustomHahaha.placements.description.CustomHahaha=Granny's laugh but the sprite and sound can be customized.
