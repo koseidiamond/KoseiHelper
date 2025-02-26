@@ -2,22 +2,22 @@ using Celeste.Mod.Entities;
 using Monocle;
 using System;
 using Microsoft.Xna.Framework;
-using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 
 namespace Celeste.Mod.KoseiHelper.Entities;
 
 [CustomEntity("KoseiHelper/ReskinnableParallaxDebris")]
 public class ReskinnableParallaxDebris : Entity
 {
-
     private Vector2 start;
     private float parallax;
     public string texture;
     public int Depth;
     public float sineMult, customParallax;
     public Color tint;
+    public float rotationSpeed;
+    public float fadeSpeed, alphaMin, alphaMax, scale;
+
     public enum Direction
     {
         Horizontal,
@@ -32,11 +32,16 @@ public class ReskinnableParallaxDebris : Entity
     {
         start = Position;
         base.Depth = data.Int("depth", -999900);
-        texture = data.Attr("texture","scenery/fgdebris/KoseiHelper/rockA");
+        texture = data.Attr("texture", "scenery/fgdebris/KoseiHelper/rock");
         sineMult = data.Float("sine", 2f);
+        scale = data.Float("scale", 1f);
         tint = data.HexColor("tint", Color.White);
         direction = data.Enum("direction", Direction.Vertical);
         customParallax = data.Float("parallax", 0.05f);
+        rotationSpeed = data.Float("rotationSpeed", 0f);
+        fadeSpeed = data.Float("fadeSpeed", 1f);
+        alphaMin = data.Float("alphaMin", 0.2f);
+        alphaMax = data.Float("alphaMax", 1f);
         List<MTexture> atlasSubtextures = GFX.Game.GetAtlasSubtextures(texture);
         atlasSubtextures.Reverse();
         foreach (MTexture item in atlasSubtextures)
@@ -45,6 +50,7 @@ public class ReskinnableParallaxDebris : Entity
             img.CenterOrigin();
             Add(img);
             img.Color = tint;
+            img.Scale = new Vector2(scale, scale);
             SineWave sine = new SineWave(0.4f, 0f);
             sine.Randomize();
             sine.OnUpdate = (float f) =>
@@ -68,11 +74,15 @@ public class ReskinnableParallaxDebris : Entity
                         img.Y = sine.Value * sineMult;
                         break;
                 }
+                img.Rotation += rotationSpeed * f;
+                    float alpha = alphaMin + (alphaMax - alphaMin) * (float)Math.Sin(f * fadeSpeed);
+                    img.Color.A = (byte)(MathHelper.Clamp(alpha, 0f, 1f) * 255);
             };
             Add(sine);
         }
         parallax = customParallax + Calc.Random.NextFloat(0.08f);
     }
+
     public override void Render()
     {
         Vector2 vector = SceneAs<Level>().Camera.Position + new Vector2(320f, 180f) / 2f - start;

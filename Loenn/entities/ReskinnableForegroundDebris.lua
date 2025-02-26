@@ -8,11 +8,16 @@ ReskinnableParallaxDebris.placements = {
 		name = "ReskinnableParallaxDebris",
 		data = {
 			depth = -999900,
-			texture = "scenery/fgdebris/KoseiHelper/rockA",
+			texture = "scenery/fgdebris/KoseiHelper/rockA00",
 			sine = 2,
 			tint = "42605d",
-			customParallax = 0.05,
-			direction = "Vertical"
+			parallax = 0.05,
+			direction = "Vertical",
+			rotationSpeed = 0,
+			scale = 1,
+			fadeSpeed = 1,
+			alphaMin = 1,
+			alphaMax = 1,
 		}
 	}
 }
@@ -40,7 +45,7 @@ ReskinnableParallaxDebris.fieldInformation = {
 }
 
 function ReskinnableParallaxDebris.texture(room, entity)
-        return "scenery/fgdebris/KoseiHelper/rock00"
+        return entity.texture
 end
 
 return ReskinnableParallaxDebris
