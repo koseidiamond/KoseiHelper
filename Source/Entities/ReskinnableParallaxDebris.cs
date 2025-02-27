@@ -27,12 +27,13 @@ public class ReskinnableParallaxDebris : Entity
         None
     };
     public Direction direction;
+    public float secondSineHeight, secondSineWidth, bounceSpeed, sineSpeed;
 
     public ReskinnableParallaxDebris(EntityData data, Vector2 offset) : base(data.Position + offset)
     {
         start = Position;
         base.Depth = data.Int("depth", -999900);
-        texture = data.Attr("texture", "scenery/fgdebris/KoseiHelper/rock");
+        texture = data.Attr("texture", "scenery/fgdebris/KoseiHelper/rockA");
         sineMult = data.Float("sine", 2f);
         scale = data.Float("scale", 1f);
         tint = data.HexColor("tint", Color.White);
@@ -42,6 +43,10 @@ public class ReskinnableParallaxDebris : Entity
         fadeSpeed = data.Float("fadeSpeed", 1f);
         alphaMin = data.Float("alphaMin", 0.2f);
         alphaMax = data.Float("alphaMax", 1f);
+        sineSpeed = data.Float("sineSpeed", 1f);
+        secondSineHeight = data.Float("bounceHeight", 0f);
+        secondSineWidth = data.Float("bounceWidth", 0f);
+        bounceSpeed = data.Float("bounceSpeed", 1f);
         List<MTexture> atlasSubtextures = GFX.Game.GetAtlasSubtextures(texture);
         atlasSubtextures.Reverse();
         foreach (MTexture item in atlasSubtextures)
@@ -51,10 +56,12 @@ public class ReskinnableParallaxDebris : Entity
             Add(img);
             img.Color = tint;
             img.Scale = new Vector2(scale, scale);
-            SineWave sine = new SineWave(0.4f, 0f);
+            SineWave sine = new SineWave(sineSpeed / 2.5f, 0f);
             sine.Randomize();
             sine.OnUpdate = (float f) =>
             {
+                img.Y += (float)Math.Sin(f * Math.PI * secondSineHeight * bounceSpeed);
+                img.X += (float)Math.Sin(f * Math.PI * secondSineWidth * bounceSpeed);
                 switch (direction)
                 {
                     case Direction.Horizontal:
@@ -74,9 +81,9 @@ public class ReskinnableParallaxDebris : Entity
                         img.Y = sine.Value * sineMult;
                         break;
                 }
-                img.Rotation += rotationSpeed * f;
-                    float alpha = alphaMin + (alphaMax - alphaMin) * (float)Math.Sin(f * fadeSpeed);
-                    img.Color.A = (byte)(MathHelper.Clamp(alpha, 0f, 1f) * 255);
+                img.Rotation += (rotationSpeed/10) * f;
+                float alpha = alphaMin + (alphaMax - alphaMin) * (float)Math.Sin(f * fadeSpeed);
+                img.Color.A = (byte)(MathHelper.Clamp(alpha, 0f, 1f) * 255);
             };
             Add(sine);
         }

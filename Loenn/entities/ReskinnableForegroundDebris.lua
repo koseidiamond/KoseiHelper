@@ -1,7 +1,10 @@
 local ReskinnableParallaxDebris = {}
 
 ReskinnableParallaxDebris.name = "KoseiHelper/ReskinnableParallaxDebris"
-ReskinnableParallaxDebris.depth = -9500
+
+function ReskinnableParallaxDebris.depth(room, entity)
+        return entity.depth
+end
 
 ReskinnableParallaxDebris.placements = {
 	{
@@ -18,6 +21,9 @@ ReskinnableParallaxDebris.placements = {
 			fadeSpeed = 1,
 			alphaMin = 1,
 			alphaMax = 1,
+			bounceHeight = 0,
+			bounceWidth = 0,
+			bounceSpeed = 1
 		}
 	}
 }
