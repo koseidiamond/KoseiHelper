@@ -12,7 +12,8 @@ namespace Celeste.Mod.KoseiHelper.Entities;
 [Tracked]
 public class DebugMapController : Entity
 {
-    private static bool renderKeys, renderBerries, renderSpawns;
+    private static bool renderBerries, renderSpawns;
+    private static bool renderKeys = true;
     private static bool redBlink;
     private static Color gridColor, jumpthruColor, berryColor, checkpointColor, spawnColor, bgTileColor, levelColor, keyColor;
     private static bool disallowDebugMap;

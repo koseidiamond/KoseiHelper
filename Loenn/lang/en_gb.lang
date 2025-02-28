@@ -83,12 +83,15 @@ entities.KoseiHelper/ReskinnableParallaxDebris.attributes.description.depth=The 
 entities.KoseiHelper/ReskinnableParallaxDebris.attributes.description.texture=The path to the debris texture, relative to Gameplay/.\nYou can have multiple images grouped by adding 00, 01 and so on.
 entities.KoseiHelper/ReskinnableParallaxDebris.attributes.description.sine=How much the debris should float.
 entities.KoseiHelper/ReskinnableParallaxDebris.attributes.description.tint=The color of the debris.
+entities.KoseiHelper/ReskinnableParallaxDebris.attributes.description.parallax=How much parallax the debris should have.
 entities.KoseiHelper/ReskinnableParallaxDebris.attributes.description.rotationSpeed=The speed at which the debris will rotate over itself.
 entities.KoseiHelper/ReskinnableParallaxDebris.attributes.description.scale=If the size of the debris should be altered.
 entities.KoseiHelper/ReskinnableParallaxDebris.attributes.description.fadeSpeed=The speed at which the debris will fade, between Alpha Min and Alpha Max.
-entities.KoseiHelper/ReskinnableParallaxDebris.attributes.description.alphaMax=The maximum transparency of the tint that the debris will have while fading.
 entities.KoseiHelper/ReskinnableParallaxDebris.attributes.description.alphaMin=The minimum transparency of the tint that the debris will have while fading.
-entities.KoseiHelper/ReskinnableParallaxDebris.attributes.description.parallax=How much parallax the debris should have.
+entities.KoseiHelper/ReskinnableParallaxDebris.attributes.description.alphaMax=The maximum transparency of the tint that the debris will have while fading.
+entities.KoseiHelper/ReskinnableParallaxDebris.attributes.description.bounceHeight=The height of the second sine.
+entities.KoseiHelper/ReskinnableParallaxDebris.attributes.description.bounceWidth=The width of the second sine.
+entities.KoseiHelper/ReskinnableParallaxDebris.attributes.description.bounceSpeed=The speed at which the debris will "bounce" or move along a second sine.
 
 # Custom Hahaha
 entities.KoseiHelper/CustomHahaha.placements.name.CustomHahaha=Custom Hahaha

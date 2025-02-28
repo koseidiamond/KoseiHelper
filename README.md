@@ -24,6 +24,8 @@ All entities that don't provide direct sprite/texture fields are customizable th
 Allows you to display a custom shape/text/image on debug/hitboxes. Install CelesteTAS to be able to see debug/hitboxes.
 ### Flag Fake Berry
 Similar to Troll Berries, these can set a flag upon "collection" and can reappear instantly or on room reload.
+### Reskinnable Parallax Debris
+The Foreground Debris from vanilla but as a more general and customizable image that can move in sines or rotate over itself.
 ### Goomba
 This entity can follow the player horizontally or move in a fixed direction. Kills on contact, and can optionally be bounced on. It has several customizable options, including spawning mini versions each x seconds, flying away like strawberries, or be winged. They can also interact with springs.
 ### Plant
