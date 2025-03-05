@@ -18,6 +18,7 @@ public class DebugMapController : Entity
     private static Color gridColor, jumpthruColor, berryColor, checkpointColor, spawnColor, bgTileColor, fgTileColor, levelColor, keyColor, roomBgColor;
     private static bool disallowDebugMap;
     private static string blockDebugMap;
+    private static string roomsToAffect;
 
     private static List<Vector2> keys;
     private static Camera camera;
@@ -36,6 +37,7 @@ public class DebugMapController : Entity
 
 public DebugMapController(EntityData data, Vector2 offset) : base(data.Position + offset)
     {
+        roomsToAffect = data.Attr("roomsToAffect", "");
         renderKeys = !data.Bool("hideKeys", false);
         ignoreDummy = data.Bool("ignoreDummy", false);
         renderBerries = !data.Bool("hideBerries", false);
@@ -80,7 +82,7 @@ public DebugMapController(EntityData data, Vector2 offset) : base(data.Position 
 
     private static void RenderLevels(On.Celeste.Editor.LevelTemplate.orig_RenderContents orig, LevelTemplate self, Camera camera, List<LevelTemplate> allLevels)
     {
-        if (KoseiHelperModule.Session.DebugMapModified)
+        if (KoseiHelperModule.Session.DebugMapModified && self.Name.StartsWith(roomsToAffect))
         {
             if (!CullHelper.IsRectangleVisible(self.X, self.Y, self.Width, self.Height, 4f, camera))
             {

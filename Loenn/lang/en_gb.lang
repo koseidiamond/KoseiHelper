@@ -21,7 +21,7 @@ entities.KoseiHelper/DebugMapController.attributes.description.hideKeys=Whether 
 entities.KoseiHelper/DebugMapController.attributes.description.hideBerries=Whether the berries should be hidden in the Debug Map.\nPlayers can still know where they are if they hold the Q key.
 entities.KoseiHelper/DebugMapController.attributes.description.hideSpawns=Whether the spawns should be hidden in the Debug Map.
 entities.KoseiHelper/DebugMapController.attributes.description.redBlink=Whether the rooms that are overlapping should have a red blink each 0.1 seconds.
-entities.KoseiHelper/DebugMapController.attributes.description.gridColor=The color of the background grid.
+entities.KoseiHelper/DebugMapController.attributes.description.gridColor=The color of the background grid. WARNING: This affects the entire Debug Map.
 entities.KoseiHelper/DebugMapController.attributes.description.jumpthruColor=The color of the jump throughs.
 entities.KoseiHelper/DebugMapController.attributes.description.berryColor=The color of the strawberries.
 entities.KoseiHelper/DebugMapController.attributes.description.keyColor=The color of the keys.
@@ -33,6 +33,7 @@ entities.KoseiHelper/DebugMapController.attributes.description.roomBgColor=The b
 entities.KoseiHelper/DebugMapController.attributes.description.dummyBorderColor=The color of the border of the dummy rooms (without spawns/fillers).
 entities.KoseiHelper/DebugMapController.attributes.description.ignoreDummy=Whether dummy rooms (without any spawns) should render as normal rooms (with colors).
 entities.KoseiHelper/DebugMapController.attributes.description.blockDebugMap=If this flag is true, the debug map will be completely empty,\npreventing players to see the map or teleport to other rooms.\nLeave empty to always allow opening the debug map.
+entities.KoseiHelper/DebugMapController.attributes.description.roomsToAffect=The rooms that start with this preffix will be affected. Case sensitive.
 
 # ClimbJump Controller
 entities.KoseiHelper/ClimbJumpController.placements.name.ClimbJumpController=Climbjump Controller

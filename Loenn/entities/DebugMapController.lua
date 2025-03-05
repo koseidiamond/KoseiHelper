@@ -21,7 +21,8 @@ DebugMapController.placements = {
 		bgTileColor = "2F4F4F", -- DarkSlateGray
 		fgTileColor = "FFFFFF",
 		roomBgColor = "000000",
-		ignoreDummy = false
+		ignoreDummy = false,
+		roomsToAffect = ""
 		}
 	}
 }
