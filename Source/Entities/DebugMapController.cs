@@ -14,15 +14,15 @@ public class DebugMapController : Entity
 {
     private static bool renderBerries, renderSpawns;
     private static bool renderKeys = true;
-    private static bool redBlink;
-    private static Color gridColor, jumpthruColor, berryColor, checkpointColor, spawnColor, bgTileColor, levelColor, keyColor;
+    private static bool redBlink, ignoreDummy;
+    private static Color gridColor, jumpthruColor, berryColor, checkpointColor, spawnColor, bgTileColor, levelColor, keyColor, roomBgColor;
     private static bool disallowDebugMap;
     private static string blockDebugMap;
 
     private static List<Vector2> keys;
     private static Camera camera;
 
-    private static Color[] fgTilesColor = new Color[7] // TODO make these customizable too
+    private static Color[] fgTilesColor = new Color[8] // TODO make these customizable too
     {
         Color.White,
         Calc.HexToColor("f6735e"),
@@ -30,17 +30,20 @@ public class DebugMapController : Entity
         Calc.HexToColor("37d7e3"),
         Calc.HexToColor("376be3"),
         Calc.HexToColor("c337e3"),
-        Calc.HexToColor("e33773")
+        Calc.HexToColor("e33773"),
+        Calc.HexToColor("ff0000")
     };
 
     public DebugMapController(EntityData data, Vector2 offset) : base(data.Position + offset)
     {
         renderKeys = !data.Bool("hideKeys", false);
+        ignoreDummy = data.Bool("ignoreDummy", false);
         renderBerries = !data.Bool("hideBerries", false);
         renderSpawns = !data.Bool("hideSpawns", false);
         redBlink = data.Bool("redBlink", true);
         blockDebugMap = data.String("blockDebugMap","");
         gridColor = data.HexColor("gridColor", new Color(0.1f, 0.1f, 0.1f));
+        roomBgColor = data.HexColor("roomBgColor", new Color(0f, 0f, 0f));
         jumpthruColor = data.HexColor("jumpthruColor", Color.FromNonPremultiplied(255,255,0,255)); // Yellow
         berryColor = data.HexColor("berryColor", Color.FromNonPremultiplied(255, 182, 193, 255)); // LightPink
         checkpointColor = data.HexColor("checkpointColor", Color.FromNonPremultiplied(0, 255, 0, 255)); // Lime
@@ -96,15 +99,17 @@ public class DebugMapController : Entity
                         }
                     }
                 }
-                Draw.Rect(self.X, self.Y, self.Width, self.Height, (flag ? Color.Red : Color.Black) * 0.5f);
+                Draw.Rect(self.X, self.Y, self.Width, self.Height, (flag ? Color.Red : roomBgColor) * 0.5f);
                 // Actually render the content of the rooms
                 foreach (Rectangle back in self.backs)
                 {
-                    Draw.Rect(self.X + back.X, self.Y + back.Y, back.Width, back.Height, self.Dummy ? bgTileColor * 0.5f : bgTileColor * 0.5f); // todo. the color could change if the room is a dummy
+                    Draw.Rect(self.X + back.X, self.Y + back.Y, back.Width, back.Height, ignoreDummy ? bgTileColor * 0.5f :
+                        self.Dummy ? bgTileColor * 0.5f : bgTileColor * 0.5f);
                 }
                 foreach (Rectangle solid in self.solids)
                 {
-                    Draw.Rect(self.X + solid.X, self.Y + solid.Y, solid.Width, solid.Height, self.Dummy ? Color.LightGray : fgTilesColor[EditorColorIndex]);
+                    Draw.Rect(self.X + solid.X, self.Y + solid.Y, solid.Width, solid.Height, ignoreDummy ? fgTilesColor[EditorColorIndex] :
+                        self.Dummy ? Color.LightGray : fgTilesColor[EditorColorIndex]);
                 }
                 if (renderSpawns)
                 {

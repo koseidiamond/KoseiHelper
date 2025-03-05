@@ -19,6 +19,9 @@ DebugMapController.placements = {
 		checkpointColor = "00FF00", -- Lime
 		spawnColor = "FF0000", -- Red
 		bgTileColor = "2F4F4F", -- DarkSlateGray
+		--fgTileColor = "",
+		roomBgColor = "000000",
+		ignoreDummy = false
 		}
 	}
 }
@@ -30,7 +33,9 @@ DebugMapController.fieldInformation = {
 	keyColor = { fieldType = "color" },
 	checkpointColor =  { fieldType = "color" },
 	spawnColor =  { fieldType = "color" },
-	bgTileColor = { fieldType = "color" }
+	bgTileColor = { fieldType = "color" },
+	fgTileColor = { fieldType = "color" },
+	roomBgColor = { fieldType = "color" }
 }
 
 DebugMapController.fieldOrder = {
@@ -43,8 +48,11 @@ DebugMapController.fieldOrder = {
 	"checkpointColor",
 	"jumpthruColor",
 	"bgTileColor",
+	"fgTileColor",
+	"roomBgColor",
 	"gridColor",
 	"redBlink",
+	"ignoreDummy",
 	"hideBerries",
 	"hideKeys",
 	"hideSpawns"
