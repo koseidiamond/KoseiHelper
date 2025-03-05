@@ -19,7 +19,7 @@ DebugMapController.placements = {
 		checkpointColor = "00FF00", -- Lime
 		spawnColor = "FF0000", -- Red
 		bgTileColor = "2F4F4F", -- DarkSlateGray
-		--fgTileColor = "",
+		fgTileColor = "FFFFFF",
 		roomBgColor = "000000",
 		ignoreDummy = false
 		}

@@ -15,7 +15,7 @@ public class DebugMapController : Entity
     private static bool renderBerries, renderSpawns;
     private static bool renderKeys = true;
     private static bool redBlink, ignoreDummy;
-    private static Color gridColor, jumpthruColor, berryColor, checkpointColor, spawnColor, bgTileColor, levelColor, keyColor, roomBgColor;
+    private static Color gridColor, jumpthruColor, berryColor, checkpointColor, spawnColor, bgTileColor, fgTileColor, levelColor, keyColor, roomBgColor;
     private static bool disallowDebugMap;
     private static string blockDebugMap;
 
@@ -31,10 +31,10 @@ public class DebugMapController : Entity
         Calc.HexToColor("376be3"),
         Calc.HexToColor("c337e3"),
         Calc.HexToColor("e33773"),
-        Calc.HexToColor("ff0000")
+        Calc.HexToColor("")
     };
 
-    public DebugMapController(EntityData data, Vector2 offset) : base(data.Position + offset)
+public DebugMapController(EntityData data, Vector2 offset) : base(data.Position + offset)
     {
         renderKeys = !data.Bool("hideKeys", false);
         ignoreDummy = data.Bool("ignoreDummy", false);
@@ -49,6 +49,7 @@ public class DebugMapController : Entity
         checkpointColor = data.HexColor("checkpointColor", Color.FromNonPremultiplied(0, 255, 0, 255)); // Lime
         spawnColor = data.HexColor("spawnColor", Color.FromNonPremultiplied(255, 0, 0, 255)); // Red
         bgTileColor = data.HexColor("bgTileColor", Color.FromNonPremultiplied(47, 79, 79, 255)); // DarkSlateGray
+        fgTileColor = data.HexColor("fgTileColor", Color.FromNonPremultiplied(255, 255, 255, 255)); // White
         keyColor = data.HexColor("keyColor", Color.FromNonPremultiplied(255, 215, 0, 255)); // Gold (not done)
         levelColor = Color.LightGray; // I don't know where is this color used
     }
@@ -101,6 +102,7 @@ public class DebugMapController : Entity
                 }
                 Draw.Rect(self.X, self.Y, self.Width, self.Height, (flag ? Color.Red : roomBgColor) * 0.5f);
                 // Actually render the content of the rooms
+                fgTilesColor[7] = fgTileColor;
                 foreach (Rectangle back in self.backs)
                 {
                     Draw.Rect(self.X + back.X, self.Y + back.Y, back.Width, back.Height, ignoreDummy ? bgTileColor * 0.5f :
@@ -108,8 +110,8 @@ public class DebugMapController : Entity
                 }
                 foreach (Rectangle solid in self.solids)
                 {
-                    Draw.Rect(self.X + solid.X, self.Y + solid.Y, solid.Width, solid.Height, ignoreDummy ? fgTilesColor[EditorColorIndex] :
-                        self.Dummy ? Color.LightGray : fgTilesColor[EditorColorIndex]);
+                    Draw.Rect(self.X + solid.X, self.Y + solid.Y, solid.Width, solid.Height, ignoreDummy ? fgTilesColor[7] :
+                        self.Dummy ? Color.LightGray : fgTilesColor[7]);
                 }
                 if (renderSpawns)
                 {
