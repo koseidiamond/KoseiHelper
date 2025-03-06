@@ -23,7 +23,7 @@ public class DebugMapController : Entity
     private static List<Vector2> keys;
     private static Camera camera;
 
-    private static Color[] fgTilesColor = new Color[8] // TODO make these customizable too
+    private static Color[] fgTilesColor = new Color[8]
     {
         Color.White,
         Calc.HexToColor("f6735e"),
@@ -32,7 +32,7 @@ public class DebugMapController : Entity
         Calc.HexToColor("376be3"),
         Calc.HexToColor("c337e3"),
         Calc.HexToColor("e33773"),
-        Calc.HexToColor("")
+        Calc.HexToColor("") // Custom color
     };
 
 public DebugMapController(EntityData data, Vector2 offset) : base(data.Position + offset)
@@ -63,6 +63,7 @@ public DebugMapController(EntityData data, Vector2 offset) : base(data.Position 
         On.Celeste.Editor.MapEditor.RenderKeys += RenderKeys;
         On.Celeste.Editor.LevelTemplate.RenderContents += RenderLevels;
         On.Celeste.Editor.MapEditor.ctor += MapEditorCtor;
+        //On.Celeste.Editor.LevelTemplate.ctor_LevelData += LevelTemplate_ctor;
     }
 
     public static void Unload()
@@ -70,7 +71,25 @@ public DebugMapController(EntityData data, Vector2 offset) : base(data.Position 
         On.Celeste.Editor.MapEditor.RenderKeys -= RenderKeys;
         On.Celeste.Editor.LevelTemplate.RenderContents -= RenderLevels;
         On.Celeste.Editor.MapEditor.ctor -= MapEditorCtor;
+        //On.Celeste.Editor.LevelTemplate.ctor_LevelData -= LevelTemplate_ctor;
     }
+
+    /*private static void LevelTemplate_ctor(On.Celeste.Editor.LevelTemplate.orig_ctor_LevelData orig, LevelTemplate self, LevelData data)
+    {
+        orig(self, data);
+        bool controllerFound = false;
+        foreach (EntityData entity in data.Entities)
+        {
+            if (entity.Name != "KoseiHelper/DebugMapController")
+                continue;
+
+            if (controllerFound)
+                throw new InvalidOperationException($"Found more than one Debug Map Controller in room {data.Name}.");
+
+            // "and just... do your magic" - Snip
+            controllerFound = true;
+        }
+    }*/
 
     private static void RenderKeys(On.Celeste.Editor.MapEditor.orig_RenderKeys orig, MapEditor self)
     {
@@ -104,7 +123,7 @@ public DebugMapController(EntityData data, Vector2 offset) : base(data.Position 
                 }
                 Draw.Rect(self.X, self.Y, self.Width, self.Height, (flag ? Color.Red : roomBgColor) * 0.5f);
                 // Actually render the content of the rooms
-                fgTilesColor[7] = fgTileColor;
+                fgTilesColor[7] = fgTileColor; // Assigns the custom color
                 foreach (Rectangle back in self.backs)
                 {
                     Draw.Rect(self.X + back.X, self.Y + back.Y, back.Width, back.Height, ignoreDummy ? bgTileColor * 0.5f :

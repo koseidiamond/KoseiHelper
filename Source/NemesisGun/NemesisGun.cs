@@ -1,0 +1,255 @@
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Monocle;
+using System;
+using System.Reflection;
+
+namespace Celeste.Mod.KoseiHelper.NemesisGun
+{
+    public class NemesisGun : EverestModule
+    {
+        public static NemesisGun Instance;
+
+        public NemesisGun()
+        {
+            Instance = this;
+        }
+
+        public static FieldInfo seekerDead;
+        public static FieldInfo oshiroStateMachine;
+        public static FieldInfo oshiroPreChargeSFX;
+        public static FieldInfo oshiroChargeSFX;
+        public static FieldInfo dashSwitchPressDirection;
+        public static FieldInfo bumperFireMode;
+        public static FieldInfo bumperRespawnTimer;
+        public static FieldInfo bumperSprite;
+        public static FieldInfo bumperSpriteEvil;
+        public static FieldInfo bumperLight;
+        public static FieldInfo bumperBloom;
+
+        public static MethodInfo seekerGotBouncedOn;
+        public static MethodInfo heartGemCollect;
+        public static MethodInfo strawberrySeedOnPlayer;
+        public static MethodInfo summitGemSmashRoutine;
+        public static MethodInfo pufferExplode;
+        public static MethodInfo pufferGotoGone;
+        public static MethodInfo birdGemCollect;
+
+        private static Vector2 CursorPos => GunInput.CursorPosition;
+        private bool GunWasShot => GunInput.GunShot;
+        private MTexture gunTexture;
+        private int shotCooldown;
+        public Level level;
+        private const float PiOver8 = MathHelper.PiOver4 / 2;
+
+        private static Vector2 GetEightDirectionalAim()
+        {
+            Vector2 value = Input.Aim.Value;
+            if (value == Vector2.Zero)
+            {
+                return Vector2.Zero;
+            }
+
+            float angle = value.Angle();
+            float angleThreshold = (float)Math.PI / 8f;
+            if (angle < 0)
+            {
+                angleThreshold -= Calc.ToRad(5f);
+            }
+
+            if (Calc.AbsAngleDiff(angle, 0f) < angleThreshold)
+            {
+                return new Vector2(1f, 0f);
+            }
+            else if (Calc.AbsAngleDiff(angle, (float)Math.PI) < angleThreshold)
+            {
+                return new Vector2(-1f, 0f);
+            }
+            else if (Calc.AbsAngleDiff(angle, -(float)Math.PI / 2f) < angleThreshold)
+            {
+                return new Vector2(0f, -1f);
+            }
+            else if (Calc.AbsAngleDiff(angle, (float)Math.PI / 2f) < angleThreshold)
+            {
+                return new Vector2(0f, 1f);
+            }
+            else
+            {
+                return new Vector2(Math.Sign(value.X), Math.Sign(value.Y)).SafeNormalize();
+            }
+        }
+
+        public override void LoadContent(bool firstLoad)
+        {
+            BindingFlags flags = BindingFlags.Instance | BindingFlags.NonPublic;
+
+            Type type = typeof(Seeker);
+
+            seekerDead = type.GetField("dead", flags);
+            seekerGotBouncedOn = type.GetMethod("GotBouncedOn", flags);
+
+            type = typeof(AngryOshiro);
+
+            oshiroStateMachine = type.GetField("state", flags);
+            oshiroPreChargeSFX = type.GetField("prechargeSfx", flags);
+            oshiroChargeSFX = type.GetField("chargeSfx", flags);
+
+            heartGemCollect = typeof(HeartGem).GetMethod("Collect", flags);
+
+            dashSwitchPressDirection = typeof(DashSwitch).GetField("pressDirection", flags);
+
+            strawberrySeedOnPlayer = typeof(StrawberrySeed).GetMethod("OnPlayer", flags);
+
+            type = typeof(Bumper);
+
+            bumperFireMode = type.GetField("fireMode", flags);
+            bumperRespawnTimer = type.GetField("respawnTimer", flags);
+            bumperSprite = type.GetField("sprite", flags);
+            bumperSpriteEvil = type.GetField("spriteEvil", flags);
+            bumperLight = type.GetField("light", flags);
+            bumperBloom = type.GetField("bloom", flags);
+
+            summitGemSmashRoutine = typeof(SummitGem).GetMethod("SmashRoutine", flags);
+
+            type = typeof(Puffer);
+            pufferExplode = type.GetMethod("Explode", flags);
+            pufferGotoGone = type.GetMethod("GotoGone", flags);
+            gunTexture = GFX.Game["nemesisgun/KoseiHelper/Gun"];
+        }
+
+        public override void OnInputInitialize() => GunInput.RegisterInputs();
+
+        public override void OnInputDeregister() => GunInput.DeregisterInputs();
+
+        public override void Load()
+        {
+            On.Celeste.Player.Update += PlayerUpdated;
+            On.Celeste.Player.Render += PlayerRendered;
+
+            Everest.Events.Level.OnLoadLevel += (level, playerIntro, isFromLoader) => {
+                this.level = level;
+
+                GunInput.CursorPosition = new Vector2(1920 / 2, 1080 / 2);
+            };
+        }
+
+        public override void Unload()
+        {
+            seekerDead = null;
+            seekerGotBouncedOn = null;
+            oshiroStateMachine = null;
+            oshiroPreChargeSFX = null;
+            oshiroChargeSFX = null;
+            heartGemCollect = null;
+            dashSwitchPressDirection = null;
+            strawberrySeedOnPlayer = null;
+            bumperFireMode = null;
+            bumperRespawnTimer = null;
+            bumperSprite = null;
+            bumperSpriteEvil = null;
+            bumperLight = null;
+            bumperBloom = null;
+            summitGemSmashRoutine = null;
+            pufferExplode = null;
+            pufferGotoGone = null;
+            birdGemCollect = null;
+
+            On.Celeste.Player.Update -= PlayerUpdated;
+            On.Celeste.Player.Render -= PlayerRendered;
+        }
+
+        private void PlayerUpdated(On.Celeste.Player.orig_Update orig, Player self)
+        {
+            Session session = self.SceneAs<Level>().Session;
+            if (self.JustRespawned) session.SetFlag("EnableNemesisGun", false);
+            if (KoseiHelperModule.Settings.GunEnabled || session.GetFlag("EnableNemesisGun"))
+            {
+                GunInput.UpdateInput(self);
+
+                if (shotCooldown > 0)
+                {
+                    shotCooldown--;
+                }
+
+                if (self.Scene?.TimeActive > 0 && GunWasShot && shotCooldown <= 0 && (TalkComponent.PlayerOver == null || !Input.Talk.Pressed))
+                {
+                    Gunshot(self, CursorPos);
+                    SpriteEffects effects = SpriteEffects.None; // Not needed but gotta give the method all its params
+                    (self.Scene as Level).DirectionalShake(GetGunVector(self, ref effects, CursorPos, self.Facing) / 5);
+                    shotCooldown = Extensions.cooldown;
+                }
+                Input.Dash.ConsumePress();
+                Input.CrouchDash.ConsumePress();
+            }
+
+            if (self.JustRespawned) session.SetFlag("EnableNemesisGun", false);
+            orig(self);
+        }
+
+        private void PlayerRendered(On.Celeste.Player.orig_Render orig, Player self)
+        {
+            orig(self);
+            Session session = self.SceneAs<Level>().Session;
+            if (KoseiHelperModule.Settings.GunEnabled || session.GetFlag("EnableNemesisGun"))
+            {
+                RenderGun(self, self.Facing);
+            }
+        }
+
+        private void RenderGun(Actor player, Facings facing, Vector2? overrideCursorPos = null)
+        {
+            SpriteEffects effects = SpriteEffects.None;
+            Vector2 gunVector = GetGunVector(player, ref effects, overrideCursorPos == null ? CursorPos : (Vector2)overrideCursorPos, facing);
+            gunTexture.DrawCentered(player.Center, Color.White, 1, gunVector.ToRotation(), effects);
+        }
+
+        private static Vector2 GetGunVector(Actor player, ref SpriteEffects effects, Vector2 cursorPos, Facings forceDir)
+        {
+            float rotation = 3 * MathHelper.Pi / 2;
+            Vector2 aim = GetEightDirectionalAim();
+            if (forceDir == Facings.Right)
+                rotation = 0;
+            else if (forceDir == Facings.Left)
+                rotation = MathHelper.Pi;
+
+            if (aim.X > 0.4)
+                rotation = 0;
+            if (aim.X < -0.4)
+                rotation = MathHelper.Pi;
+            if (!(player.OnGround()))
+            {
+                if (aim.Y > 0.4)
+                    rotation = MathHelper.Pi / 2;
+            }
+
+            if (aim.Y < -0.4)
+                rotation = 3 * MathHelper.Pi / 2;
+            return ToCursor(player, cursorPos).RotateTowards(rotation, MathHelper.TwoPi);
+        }
+
+        private static Vector2 PlayerPosScreenSpace(Actor self)
+            => self.Center - (self.Scene as Level).Camera.Position;
+
+        private static Vector2 ToCursor(Actor player, Vector2 cursorPos)
+            => Vector2.Normalize((cursorPos / 6) - PlayerPosScreenSpace(player));
+
+        public static void Gunshot(Actor actor, Vector2 cursorPos, Facings facing = Facings.Left)
+        {
+            if (actor == null || actor.Scene == null)
+            {
+                return;
+            }
+
+            Vector2 actualPlayerPos = actor.Center;
+            Vector2 ssPos = PlayerPosScreenSpace(actor);
+
+            if (actor is Player player)
+            {
+                facing = player.Facing;
+            }
+            SpriteEffects effects = SpriteEffects.None; // Not needed but gotta give the method all its params
+            new Bullet(actualPlayerPos, GetGunVector(actor, ref effects, cursorPos, facing), actor);
+            Audio.Play(Extensions.gunshotSound, actualPlayerPos);
+        }
+    }
+}

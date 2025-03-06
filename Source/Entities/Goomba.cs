@@ -427,9 +427,11 @@ public class Goomba : Actor
 
     public void Killed(Player player, Level level)
     {
-        Celeste.Freeze(0.05f);
         if (!isBaby)
+        {
             Audio.Play(deathSound, Position);
+        }
+        Celeste.Freeze(0.05f);
         this.RemoveSelf();
         if (slowdown)
         {

@@ -103,9 +103,7 @@ public class DetachFollowerTrigger : Trigger
             }));
         }
         else
-        {
             entity.AddTag(Tags.Persistent);
-        }
         Audio.Play(sound, entity.Position);
         Vector2 position = entity.Position;
         SimpleCurve curve = new SimpleCurve(position, Target, position + (Target - position) * 0.5f + new Vector2(0f, -64f));

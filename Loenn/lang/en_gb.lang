@@ -550,3 +550,13 @@ triggers.KoseiHelper/SelfieTrigger.attributes.description.buttonTexture=The path
 triggers.KoseiHelper/SelfieTrigger.attributes.description.flag=The flag required for this trigger to be activated.\nLeave empty for no flag required.
 triggers.KoseiHelper/SelfieTrigger.attributes.description.triggerMode=Whether the trigger should activate when the player enters or exits it.
 triggers.KoseiHelper/SelfieTrigger.attributes.description.oneUse=Whether the trigger should delete itself after the selfie is displayed.
+
+# Nemesis Gun Trigger
+
+triggers.KoseiHelper/NemesisGunTrigger.placements.name.NemesisGunTrigger=Nemesis Gun Settings
+triggers.KoseiHelper/NemesisGunTrigger.placements.description.NemesisGunTrigger=Configure or enable the Nemesis Gun.
+triggers.KoseiHelper/NemesisGunTrigger.attributes.description.enabled=Whether the Nemesis Gun should be usable or not.
+triggers.KoseiHelper/NemesisGunTrigger.attributes.description.gunshotSound=The sfx when the player shoots.
+triggers.KoseiHelper/NemesisGunTrigger.attributes.description.replacesDash=Whether the gun should use the dash/demo buttons or the custom keybind.\n(Configurable under Mod Options > Kosei Helper)
+triggers.KoseiHelper/NemesisGunTrigger.attributes.description.cooldown=How much time until the player can shoot again, in frames.
+triggers.KoseiHelper/NemesisGunTrigger.attributes.description.canKillPlayer=Whether bullets should be able to kill the player upon contact (e.g. if they bounce back from a bumper).\nBullets can also kill the player if they shoot their golden/silver berry.

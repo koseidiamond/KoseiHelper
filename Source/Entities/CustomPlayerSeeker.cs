@@ -1,11 +1,8 @@
 using System;
 using System.Collections;
-using System.Runtime.CompilerServices;
-using Celeste;
 using Microsoft.Xna.Framework;
 using Monocle;
 using Celeste.Mod.Entities;
-using On.Celeste;
 using System.Collections.Generic;
 using static Celeste.Session;
 
