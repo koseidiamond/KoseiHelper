@@ -590,3 +590,4 @@ triggers.KoseiHelper/NemesisGunInteractions.attributes.description.explodeFishes
 triggers.KoseiHelper/NemesisGunInteractions.attributes.description.pressDashSwitches=Whether bullets can enable dash switches.
 triggers.KoseiHelper/NemesisGunInteractions.attributes.description.canBounce=Whether bullets can bounce back on certain entities, like bumpers or springs.
 triggers.KoseiHelper/NemesisGunInteractions.attributes.description.useBoosters=The player will immediately teleport and use the booster when shooting it.
+triggers.KoseiHelper/NemesisGunInteractions.attributes.description.waterFriction=How much the water will slow down the bullets.\nIf you want a smooth friction, recommended values are between 0.990 and 0.998.

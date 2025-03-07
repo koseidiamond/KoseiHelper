@@ -39,6 +39,9 @@
       <Reference Include="FNA">
         <HintPath>..\lib\FNA.dll</HintPath>
       </Reference>
+      <Reference Include="FrostTempleHelper">
+        <HintPath>..\lib\FrostTempleHelper.dll</HintPath>
+      </Reference>
       <Reference Include="LuaCutscenes">
         <HintPath>..\lib\LuaCutscenes.dll</HintPath>
       </Reference>

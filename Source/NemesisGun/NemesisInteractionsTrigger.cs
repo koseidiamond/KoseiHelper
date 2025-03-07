@@ -13,6 +13,7 @@ public class NemesisGunInteractions : Trigger
     public bool canKillPlayer, canGoThroughDreamBlocks, breakBounceBlocks, activateFallingBlocks, harmEnemies, harmTheo,
         breakSpinners, breakMovingBlades, enableKevins, collectables, useRefills, explodeFishes, pressDashSwitches, canBounce = true;
     public bool useBoosters = false;
+    public float waterFriction;
 
     public Extensions.TheoInteraction theoInteraction;
 
@@ -35,6 +36,7 @@ public class NemesisGunInteractions : Trigger
         pressDashSwitches = data.Bool("pressDashSwitches", true);
         canBounce = data.Bool("canBounce", true);
         useBoosters = data.Bool("useBoosters", false);
+        waterFriction = data.Float("waterFriction", 0.995f);
     }
 
     public override void OnEnter(Player player)
@@ -76,5 +78,6 @@ public class NemesisGunInteractions : Trigger
         Extensions.pressDashSwitches = pressDashSwitches;
         Extensions.canBounce = canBounce;
         Extensions.useBoosters = useBoosters;
+        Extensions.waterFriction = waterFriction;
     }
 }

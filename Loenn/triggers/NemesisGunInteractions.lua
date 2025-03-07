@@ -22,7 +22,8 @@ NemesisGunInteractions.placements = {
 		explodeFishes = true,
 		pressDashSwitches = true,
 		canBounce = true,
-		useBoosters = false
+		useBoosters = false,
+		waterFriction = 0.995
 		}
 	}
 }

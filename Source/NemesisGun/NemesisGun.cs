@@ -129,7 +129,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
             return Vector2.Zero;
         }
 
-        private static Vector2 GetGunVector(Actor player, ref SpriteEffects effects, Vector2 cursorPos, Facings forceDir)
+        private static Vector2 GetGunVector(Actor player, Vector2 cursorPos, Facings forceDir)
         {
             float rotation = 3 * MathHelper.Pi / 2;
             Vector2 aim = GetEightDirectionalAim(Extensions.gunDirections);
@@ -264,7 +264,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 {
                     Gunshot(self, CursorPos);
                     SpriteEffects effects = SpriteEffects.None; // Not needed but gotta give the method all its params
-                    (self.Scene as Level).DirectionalShake(GetGunVector(self, ref effects, CursorPos, self.Facing) / 5);
+                    (self.Scene as Level).DirectionalShake(GetGunVector(self, CursorPos, self.Facing) / 5);
                     shotCooldown = Extensions.cooldown;
                 }
                 if (Extensions.replacesDash)
@@ -294,7 +294,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
         private void RenderGun(Actor player, Facings facing, Vector2? overrideCursorPos = null)
         {
             SpriteEffects effects = SpriteEffects.None;
-            Vector2 gunVector = GetGunVector(player, ref effects, overrideCursorPos == null ? CursorPos : (Vector2)overrideCursorPos, facing);
+            Vector2 gunVector = GetGunVector(player, overrideCursorPos == null ? CursorPos : (Vector2)overrideCursorPos, facing);
             gunTexture.DrawCentered(player.Center, Color.White, 1, gunVector.ToRotation(), effects);
         }
 
@@ -318,8 +318,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
             {
                 facing = player.Facing;
             }
-            SpriteEffects effects = SpriteEffects.None; // Not needed but gotta give the method all its params
-            new Bullet(actualPlayerPos, GetGunVector(actor, ref effects, cursorPos, facing), actor);
+            new Bullet(actualPlayerPos, GetGunVector(actor, cursorPos, facing), actor);
             Audio.Play(Extensions.gunshotSound, actualPlayerPos);
         }
     }

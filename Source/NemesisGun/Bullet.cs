@@ -6,6 +6,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
+using FrostHelper;
 
 namespace Celeste.Mod.KoseiHelper.NemesisGun
 {
@@ -136,9 +137,13 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
             if (owner.Scene.CollideFirst<AngryOshiro>(Hitbox) is AngryOshiro angryOshiro && Extensions.harmEnemies && !dead)
             {
                 BootlegOshiroBounce(angryOshiro);
-                if (Extensions.canBounce)
-                    velocity = (Center - angryOshiro.Center).SafeNormalize() / 4;
                 Kill();
+                return;
+            }
+
+            if (owner.Scene.CollideFirst<Water>(Hitbox) is Water water && !dead)
+            {
+                velocity *= Extensions.waterFriction;
                 return;
             }
 
@@ -208,6 +213,13 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
             if (owner.Scene.CollideFirst<CrystalStaticSpinner>(Hitbox) is CrystalStaticSpinner spinner && Extensions.breakSpinners && !dead)
             {
                 spinner.Destroy();
+                Kill();
+                return;
+            }
+
+            if (owner.Scene.CollideFirst<CustomSpinner>(Hitbox) is CustomSpinner customSpinner && Extensions.breakSpinners && !dead)
+            {
+                customSpinner.Destroy();
                 Kill();
                 return;
             }
