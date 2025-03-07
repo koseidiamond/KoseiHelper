@@ -34,7 +34,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
             Position = position;
             this.velocity = velocity;
             this.owner = owner;
-            lifetime = 600;
+            lifetime = Extensions.lifetime;
             alreadyBouncedOffOf = new List<Bumper>();
 
             if (CanDoShit(owner))
@@ -136,6 +136,8 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
             if (owner.Scene.CollideFirst<AngryOshiro>(Hitbox) is AngryOshiro angryOshiro && Extensions.harmEnemies && !dead)
             {
                 BootlegOshiroBounce(angryOshiro);
+                if (Extensions.canBounce)
+                    velocity = (Center - angryOshiro.Center).SafeNormalize() / 4;
                 Kill();
                 return;
             }
@@ -189,6 +191,20 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 return;
             }
 
+            if (owner.Scene.CollideFirst<CustomTempleCrackedBlock>(Hitbox) is CustomTempleCrackedBlock ccrackedblock && !dead)
+            {
+                ccrackedblock.health -= 1;
+                Kill();
+                return;
+            }
+
+            if (owner.Scene.CollideFirst<TempleCrackedBlock>(Hitbox) is TempleCrackedBlock crackedblock && !dead)
+            {
+                crackedblock.Break(Center);
+                Kill();
+                return;
+            }
+
             if (owner.Scene.CollideFirst<CrystalStaticSpinner>(Hitbox) is CrystalStaticSpinner spinner && Extensions.breakSpinners && !dead)
             {
                 spinner.Destroy();
@@ -204,7 +220,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 return;
             }
 
-            if (owner.Scene.CollideFirst<FinalBoss>(Hitbox) is FinalBoss boss && !dead)
+            if (owner.Scene.CollideFirst<FinalBoss>(Hitbox) is FinalBoss boss && Extensions.harmEnemies && !dead)
             {
                 if (!boss.Sitting && owner is Player p)
                     boss.OnPlayer(p);
@@ -212,7 +228,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 return;
             }
 
-            if (owner.Scene.CollideFirst<DustStaticSpinner>(Hitbox) is DustStaticSpinner dSSpinner && Extensions.canKillPlayer && !dead)
+            if (owner.Scene.CollideFirst<DustStaticSpinner>(Hitbox) is DustStaticSpinner dSSpinner && Extensions.breakSpinners && !dead)
             {
                 dSSpinner.RemoveSelf();
                 Kill();
@@ -242,36 +258,62 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                         Kill();
                         return;
                     }
-                    else
+                    else if (bumper.respawnTimer <= 0)
                         velocity = BootlegBumperHit(bumper);
 
                     alreadyBouncedOffOf.Add(bumper);
                 }
 
-                if (!dead && Extensions.canKillPlayer)
+                if (entity is Strawberry strawberry && strawberry.Collider.Bounds.Intersects(Hitbox) && !dead)
                 {
-                    if (entity is Strawberry strawberry && strawberry.Collider.Bounds.Intersects(Hitbox))
+                    if (owner is Player pl)
                     {
-                        if (owner is Player pl && strawberry.Golden)
+                        if (strawberry.Golden && Extensions.canKillPlayer)
                             pl.Die(Vector2.Zero, true);
-                        Kill();
-                        return;
+                        else if (Extensions.collectables)
+                            strawberry.OnPlayer(pl);
                     }
-                    if (entity is CollabUtils2.Entities.SilverBerry silverBerry && silverBerry.Collider.Bounds.Intersects(Hitbox))
-                    {
-                        if (owner is Player pl)
-                            pl.Die(Vector2.Zero, true);
-                        Kill();
-                        return;
-                    }
+                    return;
+                }
+                if (entity is CollabUtils2.Entities.SilverBerry silverBerry && silverBerry.Collider.Bounds.Intersects(Hitbox) && Extensions.canKillPlayer && !dead)
+                {
+                    if (owner is Player pl)
+                        pl.Die(Vector2.Zero, true);
+                    Kill();
+                    return;
+                }
+                if (entity is Key key && key.Collider.Bounds.Intersects(Hitbox) && Extensions.collectables && !dead && owner is Player p_key)
+                {
+                    key.OnPlayer(p_key);
+                    return;
                 }
 
-                if (entity is SummitGem sGem && sGem.Collider.Bounds.Intersects(Hitbox) && !dead && owner is Player p)
+                if (entity is Spring spring && spring.Collider.Bounds.Intersects(Hitbox) && Extensions.collectables && !dead && owner is Player p_spring && spring.Collidable)
+                {
+                    if (Extensions.canBounce)
+                        velocity = (Center - spring.Center).SafeNormalize();
+                    else
+                        Kill();
+                    return;
+                }
+
+                if (entity is Refill refill && refill.Collider.Bounds.Intersects(Hitbox) && Extensions.useRefills && !dead && owner is Player refill_player)
+                {
+                    if (refill.Collidable)
+                    {
+                        refill.OnPlayer(refill_player);
+                        if (refill.respawnTimer >0)
+                            Kill();
+                    }
+                    return;
+                }
+
+                if (entity is SummitGem sGem && sGem.Collider.Bounds.Intersects(Hitbox) && Extensions.collectables && !dead && owner is Player p)
                 {
                     sGem.Add(new Coroutine((IEnumerator)NemesisGun.summitGemSmashRoutine.Invoke(sGem, new object[] { p, p.Scene as Level })));
                 }
 
-                if (entity is Puffer puffer && puffer.Collider.Bounds.Intersects(Hitbox) && !dead)
+                if (entity is Puffer puffer && puffer.Collider.Bounds.Intersects(Hitbox) && Extensions.explodeFishes && !dead)
                 {
                     NemesisGun.pufferExplode.Invoke(puffer, null);
                     NemesisGun.pufferGotoGone.Invoke(puffer, null);
@@ -320,13 +362,15 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 }
             }
 
-            if (owner.Scene.CollideFirst<StrawberrySeed>(Hitbox) is StrawberrySeed seed && !dead)
+            if (owner.Scene.CollideFirst<StrawberrySeed>(Hitbox) is StrawberrySeed seed && Extensions.collectables && !dead)
             {
                 if (owner is Player p)
                     NemesisGun.strawberrySeedOnPlayer.Invoke(seed, new object[] { p });
                 Kill();
                 return;
             }
+
+
 
             // Solid interactions
             if (owner.Scene.CollideFirst<Solid>(Hitbox) is Solid solid && !dead)
@@ -337,7 +381,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                         return;
                 }
 
-                if (solid is CrushBlock cBlock && owner is Player p)
+                if (solid is CrushBlock cBlock && Extensions.enableKevins && owner is Player p)
                 {
                     if (Center.Y > cBlock.Center.Y + (cBlock.Height / 2))
                         cBlock.OnDashCollide(p, -Vector2.UnitY);
@@ -354,7 +398,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 if (solid is LightningBreakerBox lBBox && owner is Player pl)
                     lBBox.Dashed(pl, velocity);
 
-                if (solid is DashSwitch dSwitch)
+                if (solid is DashSwitch dSwitch && Extensions.pressDashSwitches)
                     dSwitch.OnDashCollide(null, (Vector2)NemesisGun.dashSwitchPressDirection.GetValue(dSwitch));
 
                 if (solid is FallingBlock fallingBlock && Extensions.activateFallingBlocks)
@@ -393,12 +437,10 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
         private Vector2 BootlegBumperHit(Bumper bumper)
         {
             Level level = bumper.Scene as Level;
-
             if (level.Session.Area.ID == 9)
                 Audio.Play("event:/game/09_core/pinballbumper_hit", bumper.Position);
             else
                 Audio.Play("event:/game/06_reflection/pinballbumper_hit", bumper.Position);
-
             NemesisGun.bumperRespawnTimer.SetValue(bumper, 0.6f);
             Vector2 vector = (Center - bumper.Center).SafeNormalize();
             ((Sprite)NemesisGun.bumperSprite.GetValue(bumper)).Play("hit", restart: true);
@@ -408,7 +450,10 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
             level.DirectionalShake(vector, 0.15f);
             level.Displacement.AddBurst(Center, 0.3f, 8, 32, 0.8f);
             level.Particles.Emit(Bumper.P_Launch, 12, Center + vector * 12, Vector2.One * 3, vector.Angle());
-            return vector;
+            if (Extensions.canBounce)
+                return vector;
+            else
+                return velocity;
         }
 
         // Removes bullets

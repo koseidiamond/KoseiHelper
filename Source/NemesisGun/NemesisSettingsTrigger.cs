@@ -9,9 +9,9 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun;
 [CustomEntity("KoseiHelper/NemesisGunSettings")]
 public class NemesisGunSettingsTrigger : Trigger
 {
-    private bool replacesDash, enabled, bulletExplosion = true;
+    private bool replacesDash, enabled, bulletExplosion, loseGunOnRespawn = true;
     private string gunshotSound, bulletSound;
-    private int cooldown;
+    private int cooldown, lifetime;
     private TriggerMode triggerMode;
     private Color color1, color2;
     private DustType shotDustType;
@@ -31,6 +31,8 @@ public class NemesisGunSettingsTrigger : Trigger
         color2 = data.HexColor("color2", Color.Yellow);
         shotDustType = data.Enum("dustType", DustType.Normal);
         gunDirections = data.Enum("directions", Extensions.GunDirections.FourDirections);
+        loseGunOnRespawn = data.Bool("loseGunOnRespawn", true);
+        lifetime = data.Int("lifetime", 60)*10;
     }
 
     public override void OnEnter(Player player)
@@ -65,6 +67,8 @@ public class NemesisGunSettingsTrigger : Trigger
         Extensions.gunDirections = gunDirections;
         Extensions.bulletSound = bulletSound;
         Extensions.bulletExplosion = bulletExplosion;
+        Extensions.loseGunOnRespawn = loseGunOnRespawn;
+        Extensions.lifetime = lifetime;
 
         if (enabled)
         {

@@ -16,7 +16,9 @@ NemesisGunSettings.placements = {
 		dustType = "Normal",
 		directions = "FourDirections",
 		bulletExplosion = true,
-		bulletSound = "event:/none"
+		--bulletSound = "event:/none",
+		loseGunOnRespawn = true,
+		lifetime = 60
 		}
 	}
 }
@@ -54,6 +56,27 @@ NemesisGunSettings.fieldInformation =
 		},
 		editable = false
 	}
+}
+
+NemesisGunSettings.fieldOrder =
+{
+	"x",
+	"y",
+	"width",
+	"height",
+	"triggerMode",
+	"directions",
+	"dustType",
+	"gunshotSound",
+	"cooldown",
+	"lifetime",
+	"color1",
+	"color2",
+	"enabled",
+	"replacesDash",
+	"loseGunOnRespawn",
+	"bulletExplosion"
+	
 }
 
 return NemesisGunSettings

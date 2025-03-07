@@ -88,7 +88,7 @@ public class TilesetOshiroDoor : Solid
             }
             Collidable = false;
             if (giveFreezeFrames)
-                global::Celeste.Celeste.Freeze(0.05f);
+                Celeste.Freeze(0.05f);
             DestroyStaticMovers();
             RemoveSelf();
         }

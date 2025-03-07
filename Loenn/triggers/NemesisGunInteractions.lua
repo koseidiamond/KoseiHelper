@@ -12,9 +12,16 @@ NemesisGunInteractions.placements = {
 		breakBounceBlocks = true,
 		activateFallingBlocks = true,
 		harmEnemies = true,
-		theoInteraction = "Kill",
+		theoInteraction = "HitSpring",
 		breakSpinners = true,
-		breakMovingBlades = true
+		breakMovingBlades = true,
+		enableKevins = true,
+		breakDashBlocks = true,
+		collectables = true,
+		useRefills = true,
+		explodeFishes = true,
+		pressDashSwitches = true,
+		canBounce = true
 		}
 	}
 }

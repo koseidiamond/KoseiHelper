@@ -249,7 +249,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
         private void PlayerUpdated(On.Celeste.Player.orig_Update orig, Player self)
         {
             Session session = self.SceneAs<Level>().Session;
-            if (self.JustRespawned)
+            if (self.JustRespawned && Extensions.loseGunOnRespawn)
             {
                 session.SetFlag("EnableNemesisGun", false);
             }
@@ -276,7 +276,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 }
             }
 
-            if (self.JustRespawned || self.IsIntroState)
+            if ((self.JustRespawned || self.IsIntroState) && Extensions.loseGunOnRespawn)
             {
                 session.SetFlag("EnableNemesisGun", false);
             }

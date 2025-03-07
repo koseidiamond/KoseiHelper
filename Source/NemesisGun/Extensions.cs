@@ -13,7 +13,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
         public static string gunshotSound = "event:/ashleybl/gunshot";
         public static string bulletSound = "event:/none";
         public static bool replacesDash, bulletExplosion = true;
-        public static int cooldown = 8;
+        public static int cooldown = 8, lifetime = 600;
         public static Color color1 = Color.SteelBlue;
         public static Color color2 = Color.Yellow;
         public static DustType shotDustType = DustType.Normal; // Aka Dust
@@ -29,7 +29,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
 
         // INTERACTIONS
         public static bool canKillPlayer, canGoThroughDreamBlocks, breakBounceBlocks, activateFallingBlocks, harmEnemies, harmTheo,
-            breakSpinners, breakMovingBlades = true;
+            breakSpinners, breakMovingBlades, enableKevins, loseGunOnRespawn, collectables, useRefills, explodeFishes, pressDashSwitches, canBounce = true;
         public enum TheoInteraction
         {
             None,

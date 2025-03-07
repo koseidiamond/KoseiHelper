@@ -565,7 +565,9 @@ triggers.KoseiHelper/NemesisGunSettings.attributes.description.color2=The second
 triggers.KoseiHelper/NemesisGunSettings.attributes.description.dustType=The type of particles that indicate the bullet trajectory.
 triggers.KoseiHelper/NemesisGunSettings.attributes.description.directions=Whether the player should be able to shoot cardinally, cardinally+diagonally, or only left and right.
 triggers.KoseiHelper/NemesisGunSettings.attributes.description.bulletExplosion=Whether the bullets should produce an explosion of particles when disappearing.
-triggers.KoseiHelper/NemesisGunSettings.attributes.description.bulletSound=The sound the bullets make when colliding/disappearing.
+triggers.KoseiHelper/NemesisGunSettings.attributes.description.bulletSound=The sound the bullets make when colliding/disappearing.\nWarning: Don't use with entities that don't "kill" the bullet, like bumpers.
+triggers.KoseiHelper/NemesisGunSettings.attributes.description.loseGunOnRespawn=Whether the player should lose the gun upon respawning.
+triggers.KoseiHelper/NemesisGunSettings.attributes.description.lifetime=How long it takes a bullet to expire if it doesn't collide with anything.\nFor reference, 60 is approximatedly one entire screen in length before expiring.
 
 triggers.KoseiHelper/NemesisGunInteractions.placements.name.NemesisGunInteractions=Nemesis Gun Interactions
 triggers.KoseiHelper/NemesisGunInteractions.placements.description.NemesisGunInteractions=Configure which entities the Nemesis Gun can affect.
@@ -574,7 +576,14 @@ triggers.KoseiHelper/NemesisGunInteractions.attributes.description.canKillPlayer
 triggers.KoseiHelper/NemesisGunInteractions.attributes.description.harmEnemies=Whether bullets should be able to harm/kill enemies (Oshiro, goombas, seekers and plants).
 triggers.KoseiHelper/NemesisGunInteractions.attributes.description.harmTheo=Whether bullets should be able to kill Theo.
 triggers.KoseiHelper/NemesisGunInteractions.attributes.description.breakBounceBlocks=Whether bounce blocks (core blocks) should break when shot.
-triggers.KoseiHelper/NemesisGunInteractions.attributes.description.activateFallingBlocks=Whether falling blocks should start falling when shot.
+triggers.KoseiHelper/NemesisGunInteractions.attributes.description.activateFallingBlocks=Whether falling blocks/falling platforms should start falling when shot.
 triggers.KoseiHelper/NemesisGunInteractions.attributes.description.goThroughDreamBlocks=Whether bullets should be able to pass through dream blocks.
 triggers.KoseiHelper/NemesisGunInteractions.attributes.description.breakSpinners=Whether bullets should be able to break spinners.
 triggers.KoseiHelper/NemesisGunInteractions.attributes.description.breakMovingBlades=Whether bullets should be able to break blades/stars/dust bunnies that move/rotate.
+triggers.KoseiHelper/NemesisGunInteractions.attributes.description.enableKevins=Whether bullets can hit Kevins like dashes.
+triggers.KoseiHelper/NemesisGunInteractions.attributes.description.breakDashBlocks=Whether bullets can destroy dash blocks. Also affects (Custom) Temple Cracked Blocks.
+triggers.KoseiHelper/NemesisGunInteractions.attributes.description.collectables=Whether the player can collect entities (berries, keys, gems) by shooting.
+triggers.KoseiHelper/NemesisGunInteractions.attributes.description.useRefills=Whether bullets can use refills for the player.
+triggers.KoseiHelper/NemesisGunInteractions.attributes.description.explodeFishes=Whether pufferfishes should explode when shot.
+triggers.KoseiHelper/NemesisGunInteractions.attributes.description.pressDashSwitches=Whether bullets can enable dash switches.
+triggers.KoseiHelper/NemesisGunInteractions.attributes.description.canBounce=Whether bullets can bounce back on certain entities, like bumpers or springs.

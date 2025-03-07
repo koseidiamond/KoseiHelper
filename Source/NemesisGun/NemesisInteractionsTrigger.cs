@@ -11,7 +11,7 @@ public class NemesisGunInteractions : Trigger
     private TriggerMode triggerMode;
 
     public bool canKillPlayer, canGoThroughDreamBlocks, breakBounceBlocks, activateFallingBlocks, harmEnemies, harmTheo,
-        breakSpinners, breakMovingBlades = true;
+        breakSpinners, breakMovingBlades, enableKevins, collectables, useRefills, explodeFishes, pressDashSwitches, canBounce = true;
 
     public Extensions.TheoInteraction theoInteraction;
 
@@ -26,7 +26,13 @@ public class NemesisGunInteractions : Trigger
         harmEnemies = data.Bool("harmEnemies", true);
         breakSpinners = data.Bool("breakSpinners", true);
         breakMovingBlades = data.Bool("breakMovingBlades", true);
-        theoInteraction = data.Enum("theoInteraction", Extensions.TheoInteraction.Kill);
+        theoInteraction = data.Enum("theoInteraction", Extensions.TheoInteraction.HitSpring);
+        enableKevins = data.Bool("enableKevins", true);
+        collectables = data.Bool("collectables", true);
+        useRefills = data.Bool("useRefills", true);
+        explodeFishes = data.Bool("explodeFishes", true);
+        pressDashSwitches = data.Bool("pressDashSwitches", true);
+        canBounce = data.Bool("canBounce", true);
     }
 
     public override void OnEnter(Player player)
@@ -61,5 +67,11 @@ public class NemesisGunInteractions : Trigger
         Extensions.breakSpinners = breakSpinners;
         Extensions.breakMovingBlades = breakMovingBlades;
         Extensions.theoInteraction = theoInteraction;
+        Extensions.enableKevins = enableKevins;
+        Extensions.collectables = collectables;
+        Extensions.useRefills = useRefills;
+        Extensions.explodeFishes = explodeFishes;
+        Extensions.pressDashSwitches = pressDashSwitches;
+        Extensions.canBounce = canBounce;
     }
 }
