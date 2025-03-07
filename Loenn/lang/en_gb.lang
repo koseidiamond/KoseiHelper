@@ -555,13 +555,21 @@ triggers.KoseiHelper/SelfieTrigger.attributes.description.oneUse=Whether the tri
 
 triggers.KoseiHelper/NemesisGunSettings.placements.name.NemesisGunSettings=Nemesis Gun Settings
 triggers.KoseiHelper/NemesisGunSettings.placements.description.NemesisGunSettings=Configure or enable the Nemesis Gun.
+triggers.KoseiHelper/NemesisGunSettings.attributes.description.triggerMode=Whether this trigger should have effect when the player enters/exits it, or while inside.
 triggers.KoseiHelper/NemesisGunSettings.attributes.description.enabled=Whether the Nemesis Gun should be usable, by setting the flag "EnableNemesisGun".
 triggers.KoseiHelper/NemesisGunSettings.attributes.description.gunshotSound=The sfx when the player shoots.
 triggers.KoseiHelper/NemesisGunSettings.attributes.description.replacesDash=Whether the gun should use the dash/demo buttons or the custom keybind.\n(Configurable under Mod Options > Kosei Helper)
 triggers.KoseiHelper/NemesisGunSettings.attributes.description.cooldown=How much time until the player can shoot again, in frames.
+triggers.KoseiHelper/NemesisGunSettings.attributes.description.color1=The main color the bullet produces during its trajectory.\nThis color is also used when bullets collide.
+triggers.KoseiHelper/NemesisGunSettings.attributes.description.color2=The secondary color the bullet produces during its trajectory.
+triggers.KoseiHelper/NemesisGunSettings.attributes.description.dustType=The type of particles that indicate the bullet trajectory.
+triggers.KoseiHelper/NemesisGunSettings.attributes.description.directions=Whether the player should be able to shoot cardinally, cardinally+diagonally, or only left and right.
+triggers.KoseiHelper/NemesisGunSettings.attributes.description.bulletExplosion=Whether the bullets should produce an explosion of particles when disappearing.
+triggers.KoseiHelper/NemesisGunSettings.attributes.description.bulletSound=The sound the bullets make when colliding/disappearing.
 
 triggers.KoseiHelper/NemesisGunInteractions.placements.name.NemesisGunInteractions=Nemesis Gun Interactions
 triggers.KoseiHelper/NemesisGunInteractions.placements.description.NemesisGunInteractions=Configure which entities the Nemesis Gun can affect.
+triggers.KoseiHelper/NemesisGunInteractions.attributes.description.triggerMode=Whether this trigger should have effect when the player enters/exits it, or while inside.
 triggers.KoseiHelper/NemesisGunInteractions.attributes.description.canKillPlayer=Whether bullets should be able to kill the player upon contact (e.g. if they bounce back from a bumper).\nBullets can also kill the player if they shoot their golden/silver berry.
 triggers.KoseiHelper/NemesisGunInteractions.attributes.description.harmEnemies=Whether bullets should be able to harm/kill enemies (Oshiro, goombas, seekers and plants).
 triggers.KoseiHelper/NemesisGunInteractions.attributes.description.harmTheo=Whether bullets should be able to kill Theo.

@@ -368,13 +368,6 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
             }
         }
 
-        // Removes bullets
-        private void Kill()
-        {
-            dead = true;
-            RemoveSelf();
-        }
-
         private bool BootlegStunSeeker(Seeker seeker)
         {
             if (Extensions.harmEnemies && !seeker.Regenerating)
@@ -416,6 +409,21 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
             level.Displacement.AddBurst(Center, 0.3f, 8, 32, 0.8f);
             level.Particles.Emit(Bumper.P_Launch, 12, Center + vector * 12, Vector2.One * 3, vector.Angle());
             return vector;
+        }
+
+        // Removes bullets
+        private void Kill()
+        {
+            if (CanDoShit(owner) && Extensions.bulletExplosion)
+            {
+                for (int i = 0; i < 8; i++)
+                {
+                    (owner.Scene as Level).Particles.Emit(ParticleTypes.Steam, Position + Calc.Random.ShakeVector(), Color.Lerp(Extensions.color1,Color.White,0.5f));
+                }
+            }
+            dead = true;
+            Audio.Play(Extensions.bulletSound, Center);
+            RemoveSelf();
         }
         public static bool CanDoShit(Actor owner)
             => owner != null && owner.Scene != null && owner.Scene.Tracker != null;

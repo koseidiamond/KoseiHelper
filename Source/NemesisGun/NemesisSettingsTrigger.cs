@@ -9,19 +9,21 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun;
 [CustomEntity("KoseiHelper/NemesisGunSettings")]
 public class NemesisGunSettingsTrigger : Trigger
 {
-    private bool replacesDash, enabled = true;
-    private string gunshotSound;
+    private bool replacesDash, enabled, bulletExplosion = true;
+    private string gunshotSound, bulletSound;
     private int cooldown;
     private TriggerMode triggerMode;
     private Color color1, color2;
     private DustType shotDustType;
-
+    
     public Extensions.GunDirections gunDirections;
 
     public NemesisGunSettingsTrigger(EntityData data, Vector2 offset) : base(data, offset)
     {
         triggerMode = data.Enum("triggerMode", TriggerMode.OnEnter);
         enabled = data.Bool("enabled", true);
+        bulletExplosion = data.Bool("bulletExplosion", true);
+        bulletSound = data.Attr("bulletSound", "event:/none");
         gunshotSound = data.Attr("gunshotSound", "event:/ashleybl/gunshot");
         replacesDash = data.Bool("replacesDash", true);
         cooldown = data.Int("cooldown", 8);
@@ -61,6 +63,8 @@ public class NemesisGunSettingsTrigger : Trigger
         Extensions.color2 = color2;
         Extensions.shotDustType = shotDustType;
         Extensions.gunDirections = gunDirections;
+        Extensions.bulletSound = bulletSound;
+        Extensions.bulletExplosion = bulletExplosion;
 
         if (enabled)
         {

@@ -14,7 +14,9 @@ NemesisGunSettings.placements = {
 		color1 = "4682B4",
 		color2 = "FFFF00",
 		dustType = "Normal",
-		directions = "FourDirections"
+		directions = "FourDirections",
+		bulletExplosion = true,
+		bulletSound = "event:/none"
 		}
 	}
 }

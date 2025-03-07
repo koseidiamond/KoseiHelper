@@ -11,8 +11,8 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
             => new Vector2(texture.Width / 2, texture.Height / 2);
         public static float ToRotation(this Vector2 vector) => (float)Math.Atan2(vector.Y, vector.X);
         public static string gunshotSound = "event:/ashleybl/gunshot";
-
-        public static bool replacesDash = true;
+        public static string bulletSound = "event:/none";
+        public static bool replacesDash, bulletExplosion = true;
         public static int cooldown = 8;
         public static Color color1 = Color.SteelBlue;
         public static Color color2 = Color.Yellow;
