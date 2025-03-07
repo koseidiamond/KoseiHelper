@@ -551,21 +551,22 @@ triggers.KoseiHelper/SelfieTrigger.attributes.description.flag=The flag required
 triggers.KoseiHelper/SelfieTrigger.attributes.description.triggerMode=Whether the trigger should activate when the player enters or exits it.
 triggers.KoseiHelper/SelfieTrigger.attributes.description.oneUse=Whether the trigger should delete itself after the selfie is displayed.
 
-# Nemesis Gun Trigger
+# Nemesis Gun Triggers
 
-triggers.KoseiHelper/NemesisGunTrigger.placements.name.NemesisGunSettings=Nemesis Gun Settings
-triggers.KoseiHelper/NemesisGunTrigger.placements.description.NemesisGunSettings=Configure or enable the Nemesis Gun.
-triggers.KoseiHelper/NemesisGunTrigger.placements.name.NemesisGunInteractions=Nemesis Gun Interactions
-triggers.KoseiHelper/NemesisGunTrigger.placements.description.NemesisGunInteractions=Configure which entities the Nemesis Gun can affect.
-triggers.KoseiHelper/NemesisGunTrigger.attributes.description.enabled=Whether the Nemesis Gun should be usable, by setting the flag "EnableNemesisGun".\nIf this flag is true, the Nemesis will be usable for the map even if players have it disabled under Mod Options.
-triggers.KoseiHelper/NemesisGunTrigger.attributes.description.gunshotSound=The sfx when the player shoots.
-triggers.KoseiHelper/NemesisGunTrigger.attributes.description.replacesDash=Whether the gun should use the dash/demo buttons or the custom keybind.\n(Configurable under Mod Options > Kosei Helper)
-triggers.KoseiHelper/NemesisGunTrigger.attributes.description.cooldown=How much time until the player can shoot again, in frames.
-triggers.KoseiHelper/NemesisGunTrigger.attributes.description.canKillPlayer=Whether bullets should be able to kill the player upon contact (e.g. if they bounce back from a bumper).\nBullets can also kill the player if they shoot their golden/silver berry.
-triggers.KoseiHelper/NemesisGunTrigger.attributes.description.harmEnemies=Whether bullets should be able to harm/kill enemies (Oshiro, goombas, seekers and plants).
-triggers.KoseiHelper/NemesisGunTrigger.attributes.description.harmTheo=Whether bullets should be able to kill Theo.
-triggers.KoseiHelper/NemesisGunTrigger.attributes.description.breakBounceBlocks=Whether bounce blocks (core blocks) should break when shot.
-triggers.KoseiHelper/NemesisGunTrigger.attributes.description.activateFallingBlocks=Whether falling blocks should start falling when shot.
-triggers.KoseiHelper/NemesisGunTrigger.attributes.description.goThroughDreamBlocks=Whether bullets should be able to pass through dream blocks.
-triggers.KoseiHelper/NemesisGunTrigger.attributes.description.breakSpinners=Whether bullets should be able to break spinners.
-triggers.KoseiHelper/NemesisGunTrigger.attributes.description.breakMovingBlades=Whether bullets should be able to break blades/stars/dust bunnies that move/rotate.
+triggers.KoseiHelper/NemesisGunSettings.placements.name.NemesisGunSettings=Nemesis Gun Settings
+triggers.KoseiHelper/NemesisGunSettings.placements.description.NemesisGunSettings=Configure or enable the Nemesis Gun.
+triggers.KoseiHelper/NemesisGunSettings.attributes.description.enabled=Whether the Nemesis Gun should be usable, by setting the flag "EnableNemesisGun".
+triggers.KoseiHelper/NemesisGunSettings.attributes.description.gunshotSound=The sfx when the player shoots.
+triggers.KoseiHelper/NemesisGunSettings.attributes.description.replacesDash=Whether the gun should use the dash/demo buttons or the custom keybind.\n(Configurable under Mod Options > Kosei Helper)
+triggers.KoseiHelper/NemesisGunSettings.attributes.description.cooldown=How much time until the player can shoot again, in frames.
+
+triggers.KoseiHelper/NemesisGunInteractions.placements.name.NemesisGunInteractions=Nemesis Gun Interactions
+triggers.KoseiHelper/NemesisGunInteractions.placements.description.NemesisGunInteractions=Configure which entities the Nemesis Gun can affect.
+triggers.KoseiHelper/NemesisGunInteractions.attributes.description.canKillPlayer=Whether bullets should be able to kill the player upon contact (e.g. if they bounce back from a bumper).\nBullets can also kill the player if they shoot their golden/silver berry.
+triggers.KoseiHelper/NemesisGunInteractions.attributes.description.harmEnemies=Whether bullets should be able to harm/kill enemies (Oshiro, goombas, seekers and plants).
+triggers.KoseiHelper/NemesisGunInteractions.attributes.description.harmTheo=Whether bullets should be able to kill Theo.
+triggers.KoseiHelper/NemesisGunInteractions.attributes.description.breakBounceBlocks=Whether bounce blocks (core blocks) should break when shot.
+triggers.KoseiHelper/NemesisGunInteractions.attributes.description.activateFallingBlocks=Whether falling blocks should start falling when shot.
+triggers.KoseiHelper/NemesisGunInteractions.attributes.description.goThroughDreamBlocks=Whether bullets should be able to pass through dream blocks.
+triggers.KoseiHelper/NemesisGunInteractions.attributes.description.breakSpinners=Whether bullets should be able to break spinners.
+triggers.KoseiHelper/NemesisGunInteractions.attributes.description.breakMovingBlades=Whether bullets should be able to break blades/stars/dust bunnies that move/rotate.

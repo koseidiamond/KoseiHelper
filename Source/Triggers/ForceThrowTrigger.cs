@@ -2,14 +2,6 @@ using Celeste.Mod.Entities;
 using Microsoft.Xna.Framework;
 
 namespace Celeste.Mod.KoseiHelper.Triggers;
-public enum TriggerMode
-{
-    OnStay,
-    OnEnter,
-    OnLeave,
-    OnCassetteBeat,
-    OnFlagEnabled
-}
 
 [CustomEntity("KoseiHelper/ForceThrowTrigger")]
 public class ForceThrowTrigger : Trigger

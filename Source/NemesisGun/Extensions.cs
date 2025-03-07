@@ -1,3 +1,4 @@
+using Celeste.Mod.KoseiHelper.Entities;
 using Microsoft.Xna.Framework;
 using Monocle;
 using System;
@@ -13,6 +14,9 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
 
         public static bool replacesDash = true;
         public static int cooldown = 8;
+        public static Color color1 = Color.SteelBlue;
+        public static Color color2 = Color.Yellow;
+        public static DustType shotDustType = DustType.Normal; // Aka Dust
         public static bool shotInput => replacesDash ? Input.Dash.Pressed || Input.CrouchDash.Pressed : KoseiHelperModule.Settings.NemesisShot.Pressed;
 
         // INTERACTIONS
@@ -22,9 +26,9 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
         {
             None,
             Kill,
-            HitSpinner
+            HitSpinner,
+            HitSpring
         }
-        public static TheoInteraction theoInteraction;
-
+        public static TheoInteraction theoInteraction = TheoInteraction.Kill;
     }
 }

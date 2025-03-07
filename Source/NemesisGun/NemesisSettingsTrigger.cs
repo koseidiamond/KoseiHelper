@@ -2,39 +2,30 @@ using Celeste.Mod.Entities;
 using Monocle;
 using Microsoft.Xna.Framework;
 using Celeste.Mod.KoseiHelper.Triggers;
+using Celeste.Mod.KoseiHelper.Entities;
 
 namespace Celeste.Mod.KoseiHelper.NemesisGun;
 
-[CustomEntity("KoseiHelper/NemesisGunTrigger")]
-public class NemesisGunTrigger : Trigger
+[CustomEntity("KoseiHelper/NemesisGunSettings")]
+public class NemesisGunSettingsTrigger : Trigger
 {
     private bool replacesDash, enabled = true;
     private string gunshotSound;
     private int cooldown;
     private TriggerMode triggerMode;
-    // INTERACTIONS
-    public bool canKillPlayer, canGoThroughDreamBlocks, breakBounceBlocks, activateFallingBlocks, harmEnemies, harmTheo,
-        breakSpinners, breakMovingBlades = true;
+    private Color color1, color2;
+    private DustType shotDustType;
 
-    public Extensions.TheoInteraction theoInteraction;
-
-    public NemesisGunTrigger(EntityData data, Vector2 offset) : base(data, offset)
+    public NemesisGunSettingsTrigger(EntityData data, Vector2 offset) : base(data, offset)
     {
         triggerMode = data.Enum("triggerMode", TriggerMode.OnEnter);
         enabled = data.Bool("enabled", true);
         gunshotSound = data.Attr("gunshotSound", "event:/ashleybl/gunshot");
         replacesDash = data.Bool("replacesDash", true);
         cooldown = data.Int("cooldown", 8);
-
-        canKillPlayer = data.Bool("canKillPlayer", true);
-        canGoThroughDreamBlocks = data.Bool("goThroughDreamBlocks", true);
-        breakBounceBlocks = data.Bool("breakBounceBlocks", true);
-        activateFallingBlocks = data.Bool("activateFallingBlocks", true);
-        harmEnemies = data.Bool("harmEnemies", true);
-        breakSpinners = data.Bool("breakSpinners", true);
-        breakMovingBlades = data.Bool("breakMovingBlades", true);
-        theoInteraction = data.Enum("theoInteraction", Extensions.TheoInteraction.Kill);
-
+        color1 = data.HexColor("color1", Color.SteelBlue);
+        color2 = data.HexColor("color2", Color.Yellow);
+        shotDustType = data.Enum("dustType", DustType.Normal);
     }
 
     public override void OnEnter(Player player)
@@ -63,17 +54,9 @@ public class NemesisGunTrigger : Trigger
         Extensions.gunshotSound = gunshotSound;
         Extensions.replacesDash = replacesDash;
         Extensions.cooldown = cooldown;
-        Extensions.canKillPlayer = canKillPlayer;
-
-        Extensions.canGoThroughDreamBlocks = canGoThroughDreamBlocks;
-        Extensions.breakBounceBlocks = breakBounceBlocks;
-        Extensions.activateFallingBlocks = activateFallingBlocks;
-        Extensions.harmEnemies = harmEnemies;
-        Extensions.harmTheo = harmTheo;
-        Extensions.breakSpinners = breakSpinners;
-        Extensions.breakMovingBlades = breakMovingBlades;
-        Extensions.theoInteraction = theoInteraction;
-
+        Extensions.color1 = color1;
+        Extensions.color2 = color2;
+        Extensions.shotDustType = shotDustType;
 
         if (enabled)
         {

@@ -40,7 +40,6 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
         private MTexture gunTexture;
         private int shotCooldown;
         public Level level;
-        private const float PiOver8 = MathHelper.PiOver4 / 2;
 
         private static Vector2 GetEightDirectionalAim()
         {
@@ -78,6 +77,11 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 return new Vector2(Math.Sign(value.X), Math.Sign(value.Y)).SafeNormalize();
             }
         }
+
+        /*private static Vector2 GetEightDirectionalAim()
+        {
+            return new Vector2(0f, 1f);
+        }*/
 
         public override void LoadContent(bool firstLoad)
         {
@@ -165,7 +169,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
             {
                 session.SetFlag("EnableNemesisGun", false);
             }
-            if (KoseiHelperModule.Settings.GunEnabled || session.GetFlag("EnableNemesisGun"))
+            if (session.GetFlag("EnableNemesisGun"))
             {
                 GunInput.UpdateInput(self);
 
@@ -199,7 +203,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
         {
             orig(self);
             Session session = self.SceneAs<Level>().Session;
-            if (KoseiHelperModule.Settings.GunEnabled || session.GetFlag("EnableNemesisGun"))
+            if (session.GetFlag("EnableNemesisGun"))
             {
                 RenderGun(self, self.Facing);
             }

@@ -16,24 +16,15 @@ public class ClimbJumpController : Entity
     public static bool spendStaminaOnGround;
     public static bool checkWallBoostDirection, sweat = true;
     public static string climbJumpSound;
-    public enum ClimbDustType
-    {
-        Normal,
-        Sparkly,
-        Chimney,
-        Steam,
-        VentDust,
-        None
-    };
 
-    public enum MultiplierCase
+    private enum MultiplierCase
     {
         AllCases,
         OnlyNeutrals,
         OnlyNonNeutrals
     };
-    public static ClimbDustType climbDustType = ClimbDustType.Normal;
-    public static MultiplierCase multiplierCase = MultiplierCase.AllCases;
+    public static DustType climbDustType = DustType.Normal;
+    private static MultiplierCase multiplierCase = MultiplierCase.AllCases;
     public ClimbJumpController(EntityData data, Vector2 offset) : base(data.Position + offset)
     {
         Add(new PostUpdateHook(() => { }));
@@ -43,7 +34,7 @@ public class ClimbJumpController : Entity
         wallBoostTimer = data.Float("wallBoostTimer", 0.2f);
         spendStaminaOnGround = data.Bool("spendStaminaOnGround", false);
         checkWallBoostDirection = data.Bool("checkWallBoostDirection", true);
-        climbDustType = data.Enum("dustType", ClimbDustType.Normal);
+        climbDustType = data.Enum("dustType", DustType.Normal);
         multiplierCase = data.Enum("speedMultiplierCase", MultiplierCase.AllCases);
         climbJumpSound = data.Attr("climbJumpSound", "event:/char/madeline/jump_climb_");
         sweat = data.Bool("sweat", true);
@@ -114,19 +105,19 @@ public class ClimbJumpController : Entity
                 Audio.Play(climbJumpSound + "right");
                 switch (climbDustType)
                 {
-                    case ClimbDustType.Sparkly:
+                    case DustType.Sparkly:
                         Dust.Burst(self.Center + Vector2.UnitX * 2f, MathF.PI * -3f / 4f, 4, ParticleTypes.SparkyDust);
                         break;
-                    case ClimbDustType.Chimney:
+                    case DustType.Chimney:
                         Dust.Burst(self.Center + Vector2.UnitX * 2f, MathF.PI * -3f / 4f, 4, ParticleTypes.Chimney);
                         break;
-                    case ClimbDustType.Steam:
+                    case DustType.Steam:
                         Dust.Burst(self.Center + Vector2.UnitX * 2f, MathF.PI * -3f / 4f, 4, ParticleTypes.Steam);
                         break;
-                    case ClimbDustType.VentDust:
+                    case DustType.VentDust:
                         Dust.Burst(self.Center + Vector2.UnitX * 2f, MathF.PI * -3f / 4f, 4, ParticleTypes.VentDust);
                         break;
-                    case ClimbDustType.None:
+                    case DustType.None:
                         break;
                     default:
                         Dust.Burst(self.Center + Vector2.UnitX * 2f, MathF.PI * -3f / 4f, 4, ParticleTypes.Dust);
@@ -138,19 +129,19 @@ public class ClimbJumpController : Entity
                 Audio.Play(climbJumpSound + "left");
                 switch (climbDustType)
                 {
-                    case ClimbDustType.Sparkly:
+                    case DustType.Sparkly:
                         Dust.Burst(self.Center + Vector2.UnitX * -2f, -MathF.PI / 4f, 4, ParticleTypes.SparkyDust);
                         break;
-                    case ClimbDustType.Chimney:
+                    case DustType.Chimney:
                         Dust.Burst(self.Center + Vector2.UnitX * -2f, -MathF.PI / 4f, 4, ParticleTypes.Chimney);
                         break;
-                    case ClimbDustType.Steam:
+                    case DustType.Steam:
                         Dust.Burst(self.Center + Vector2.UnitX * -2f, -MathF.PI / 4f, 4, ParticleTypes.Steam);
                         break;
-                    case ClimbDustType.VentDust:
+                    case DustType.VentDust:
                         Dust.Burst(self.Center + Vector2.UnitX * -2f, -MathF.PI / 4f, 4, ParticleTypes.VentDust);
                         break;
-                    case ClimbDustType.None:
+                    case DustType.None:
                         break;
                     default:
                         Dust.Burst(self.Center + Vector2.UnitX * -2f, -MathF.PI / 4f, 4, ParticleTypes.Dust);

@@ -1,21 +1,12 @@
-local NemesisGunTrigger = {}
+local NemesisGunInteractions = {}
 
-NemesisGunTrigger.name = "KoseiHelper/NemesisGunTrigger"
-NemesisGunTrigger.depth = -10500
-NemesisGunTrigger.placements = {
-	{
-		name = "NemesisGunSettings",
-		data = {
-		triggerMode = "OnStay",
-		enabled = true,
-		gunshotSound = "event:/ashleybl/gunshot",
-		replacesDash = true,
-		cooldown = 8
-		}
-	},
+NemesisGunInteractions.name = "KoseiHelper/NemesisGunInteractions"
+NemesisGunInteractions.depth = -10500
+NemesisGunInteractions.placements = {
 	{
 		name = "NemesisGunInteractions",
 		data = {
+		triggerMode = "OnStay",
 		canKillPlayer = true,
 		goThroughDreamBlocks = true,
 		breakBounceBlocks = true,
@@ -28,12 +19,8 @@ NemesisGunTrigger.placements = {
 	}
 }
 
-NemesisGunTrigger.fieldInformation = 
+NemesisGunInteractions.fieldInformation = 
 {
-	cooldown =
-	{
-	fieldType = "integer"
-	},
 	triggerMode =
 	{
 		options =
@@ -50,10 +37,11 @@ NemesisGunTrigger.fieldInformation =
 		{
 		"Kill",
 		"None",
-		"HitSpinner"
+		"HitSpinner",
+		"HitSpring"
 		},
 		editable = false
 	}
 }
 
-return NemesisGunTrigger
+return NemesisGunInteractions

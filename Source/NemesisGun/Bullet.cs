@@ -60,7 +60,26 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 CollisionCheck();
                 if (Calc.Random.Next(6) == 0)
                 {
-                    (owner.Scene as Level).Particles.Emit(ParticleTypes.Dust, Position, Color.Lerp(Color.SteelBlue, Color.Yellow, Calc.Random.NextFloat()));
+                    switch (Extensions.shotDustType)
+                    {
+                        case DustType.Sparkly:
+                            (owner.Scene as Level).Particles.Emit(ParticleTypes.SparkyDust, Position, Color.Lerp(Extensions.color1, Extensions.color2, Calc.Random.NextFloat()));
+                            break;
+                        case DustType.Chimney:
+                            (owner.Scene as Level).Particles.Emit(ParticleTypes.Chimney, Position, Color.Lerp(Extensions.color1, Extensions.color2, Calc.Random.NextFloat()));
+                            break;
+                        case DustType.Steam:
+                            (owner.Scene as Level).Particles.Emit(ParticleTypes.Steam, Position, Color.Lerp(Extensions.color1, Extensions.color2, Calc.Random.NextFloat()));
+                            break;
+                        case DustType.VentDust:
+                            (owner.Scene as Level).Particles.Emit(ParticleTypes.VentDust, Position, Color.Lerp(Extensions.color1, Extensions.color2, Calc.Random.NextFloat()));
+                            break;
+                        case DustType.None:
+                            break;
+                        default:
+                            (owner.Scene as Level).Particles.Emit(ParticleTypes.Dust, Position, Color.Lerp(Extensions.color1, Extensions.color2, Calc.Random.NextFloat()));
+                            break;
+                    }
                 }
             }
             if (--lifetime <= 0)
@@ -72,7 +91,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
         public override void Render()
         {
             if (CanDoShit(owner))
-                (owner.Scene as Level).Particles.Emit(ParticleTypes.Dust, Position, Color.Lerp(Color.SteelBlue, Color.Yellow, Calc.Random.NextFloat()));
+                (owner.Scene as Level).Particles.Emit(ParticleTypes.Dust, Position, Color.Lerp(Extensions.color1, Extensions.color2, Calc.Random.NextFloat()));
         }
 
         // This is where all interactions with entities occur
@@ -129,6 +148,31 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                         break;
                     case Extensions.TheoInteraction.HitSpinner:
                         theo.HitSpinner(this);
+                        break;
+                    case Extensions.TheoInteraction.HitSpring:
+                        if (theo.Left > Left)
+                        {
+                            theo.MoveTowardsY(CenterY + 5f, 4f);
+                            theo.Speed.X = 220f;
+                            theo.Speed.Y = -80f;
+                            theo.noGravityTimer = 0.1f;
+                        }
+                        else if (Math.Round(theo.Right) < Right)
+                        {
+                            theo.MoveTowardsY(CenterY + 5f, 4f);
+                            theo.Speed.X = -220f;
+                            theo.Speed.Y = -80f;
+                            theo.noGravityTimer = 0.1f;
+                        }
+                        else
+                        {
+                            if (theo.CenterY <= theo.CenterY)
+                            {
+                                theo.Speed.X *= 0.5f;
+                                theo.Speed.Y = -160f;
+                                theo.noGravityTimer = 0.15f;
+                            }
+                        }
                         break;
                     default:
                         theo.Die();
@@ -267,6 +311,13 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                     Kill();
                     return;
                 }
+
+                if (entity is FallingPlatform fallingPlatform && Extensions.activateFallingBlocks && !dead)
+                {
+                    fallingPlatform.StartFalling();
+                    Kill();
+                    return;
+                }
             }
 
             if (owner.Scene.CollideFirst<StrawberrySeed>(Hitbox) is StrawberrySeed seed && !dead)
@@ -306,10 +357,10 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 if (solid is DashSwitch dSwitch)
                     dSwitch.OnDashCollide(null, (Vector2)NemesisGun.dashSwitchPressDirection.GetValue(dSwitch));
 
-                if (solid is FallingBlock fallingBlock)
+                if (solid is FallingBlock fallingBlock && Extensions.activateFallingBlocks)
                     fallingBlock.Triggered = true;
 
-                if (solid is BounceBlock bounceBlock)
+                if (solid is BounceBlock bounceBlock && Extensions.breakBounceBlocks)
                     bounceBlock.Break();
 
                 Kill();

@@ -88,7 +88,7 @@ public class FallingPlatform : JumpthruPlatform
             }
         }
     }
-    private void StartFalling()
+    public void StartFalling()
     {
         triggered = true;
         Audio.Play(sound, Center);
