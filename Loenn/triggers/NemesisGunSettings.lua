@@ -19,7 +19,8 @@ NemesisGunSettings.placements = {
 		--bulletSound = "event:/none",
 		loseGunOnRespawn = true,
 		lifetime = 60,
-		gunTexture = "objects/KoseiHelper/NemesisGun/Gun"
+		gunTexture = "objects/KoseiHelper/NemesisGun/Gun",
+		speedMultiplier = 1
 		}
 	}
 }
@@ -71,6 +72,7 @@ NemesisGunSettings.fieldOrder =
 	"gunshotSound",
 	"cooldown",
 	"lifetime",
+	"speedMultiplier",
 	"gunTexture",
 	"color1",
 	"color2",

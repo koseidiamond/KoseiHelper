@@ -21,7 +21,8 @@ NemesisGunInteractions.placements = {
 		useRefills = true,
 		explodeFishes = true,
 		pressDashSwitches = true,
-		canBounce = true
+		canBounce = true,
+		useBoosters = false
 		}
 	}
 }

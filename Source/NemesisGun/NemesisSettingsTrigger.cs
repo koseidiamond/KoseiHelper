@@ -15,6 +15,7 @@ public class NemesisGunSettingsTrigger : Trigger
     private TriggerMode triggerMode;
     private Color color1, color2;
     private DustType shotDustType;
+    private float speedMultiplier;
     
     public Extensions.GunDirections gunDirections;
 
@@ -33,6 +34,7 @@ public class NemesisGunSettingsTrigger : Trigger
         loseGunOnRespawn = data.Bool("loseGunOnRespawn", true);
         lifetime = data.Int("lifetime", 60)*10;
         gunTexture = data.Attr("gunTexture", "objects/KoseiHelper/NemesisGun/Gun");
+        speedMultiplier = data.Float("speedMultiplier", 1f);
     }
 
     public override void OnEnter(Player player)
@@ -69,6 +71,7 @@ public class NemesisGunSettingsTrigger : Trigger
         Extensions.loseGunOnRespawn = loseGunOnRespawn;
         Extensions.lifetime = lifetime;
         Extensions.gunTexture = gunTexture;
+        Extensions.speedMultiplier = speedMultiplier;
 
         if (enabled)
         {

@@ -16,6 +16,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
         public static Color color1 = Color.SteelBlue;
         public static Color color2 = Color.Yellow;
         public static DustType shotDustType = DustType.Normal; // Aka Dust
+        public static float speedMultiplier;
         public enum GunDirections
         {
             Horizontal,
@@ -29,6 +30,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
         // INTERACTIONS
         public static bool canKillPlayer, canGoThroughDreamBlocks, breakBounceBlocks, activateFallingBlocks, harmEnemies, harmTheo,
             breakSpinners, breakMovingBlades, enableKevins, loseGunOnRespawn, collectables, useRefills, explodeFishes, pressDashSwitches, canBounce = true;
+        public static bool useBoosters = false;
         public static string gunTexture = "objects/KoseiHelper/NemesisGun/Gun";
         public enum TheoInteraction
         {

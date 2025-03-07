@@ -66,7 +66,6 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                     {
                         return new Vector2(-1f, 0f);
                     }
-                    break;
                 case Extensions.GunDirections.EightDirections:
                     if (Calc.AbsAngleDiff(angle, 0f) < angleThreshold)
                     {
@@ -163,7 +162,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                     rotation = (float)-Math.PI / 4 - (float)Math.PI;
 
             }
-            return ToCursor(player, cursorPos).RotateTowards(rotation, MathHelper.TwoPi);
+            return ToCursor(player, cursorPos).RotateTowards(rotation, MathHelper.TwoPi) * Extensions.speedMultiplier;
         }
 
         public override void LoadContent(bool firstLoad)

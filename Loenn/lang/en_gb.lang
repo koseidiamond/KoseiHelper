@@ -568,7 +568,8 @@ triggers.KoseiHelper/NemesisGunSettings.attributes.description.directions=Whethe
 triggers.KoseiHelper/NemesisGunSettings.attributes.description.bulletExplosion=Whether the bullets should produce an explosion of particles when disappearing.
 triggers.KoseiHelper/NemesisGunSettings.attributes.description.bulletSound=The sound the bullets make when colliding/disappearing.\nWarning: Don't use with entities that don't "kill" the bullet, like bumpers.
 triggers.KoseiHelper/NemesisGunSettings.attributes.description.loseGunOnRespawn=Whether the player should lose the gun upon respawning.
-triggers.KoseiHelper/NemesisGunSettings.attributes.description.lifetime=How long it takes a bullet to expire if it doesn't collide with anything.\nFor reference, 60 is approximatedly one entire screen in length before expiring.
+triggers.KoseiHelper/NemesisGunSettings.attributes.description.lifetime=How long it takes a bullet to expire if it doesn't collide with anything.\nFor reference, 60 is approximatedly one entire screen in length before expiring (at normal speed).
+triggers.KoseiHelper/NemesisGunSettings.attributes.description.speedMultiplier=The default speed will be multiplier by this factor.
 
 triggers.KoseiHelper/NemesisGunInteractions.placements.name.NemesisGunInteractions=Nemesis Gun Interactions
 triggers.KoseiHelper/NemesisGunInteractions.placements.description.NemesisGunInteractions=Configure which entities the Nemesis Gun can affect.
@@ -588,3 +589,4 @@ triggers.KoseiHelper/NemesisGunInteractions.attributes.description.useRefills=Wh
 triggers.KoseiHelper/NemesisGunInteractions.attributes.description.explodeFishes=Whether pufferfishes should explode when shot.
 triggers.KoseiHelper/NemesisGunInteractions.attributes.description.pressDashSwitches=Whether bullets can enable dash switches.
 triggers.KoseiHelper/NemesisGunInteractions.attributes.description.canBounce=Whether bullets can bounce back on certain entities, like bumpers or springs.
+triggers.KoseiHelper/NemesisGunInteractions.attributes.description.useBoosters=The player will immediately teleport and use the booster when shooting it.

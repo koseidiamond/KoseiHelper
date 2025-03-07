@@ -288,6 +288,17 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                     return;
                 }
 
+                if (entity is Booster booster && booster.Collider.Bounds.Intersects(Hitbox) && Extensions.collectables && Extensions.useBoosters && !dead && owner is Player p_booster)
+                {
+                    if (booster.respawnTimer <= 0 && booster.cannotUseTimer <= 0 && !booster.BoostingPlayer)
+                    {
+                        booster.OnPlayer(p_booster);
+                        p_booster.Position = booster.Position;
+                        Kill();
+                    }
+                    return;
+                }
+
                 if (entity is Spring spring && spring.Collider.Bounds.Intersects(Hitbox) && Extensions.collectables && !dead && owner is Player p_spring && spring.Collidable)
                 {
                     if (Extensions.canBounce)
