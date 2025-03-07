@@ -1,4 +1,3 @@
-using Celeste;
 using Celeste.Mod.KoseiHelper.Entities;
 using Microsoft.Xna.Framework;
 using Monocle;
@@ -7,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using FrostHelper;
+using Celeste.Mod.MaxHelpingHand.Entities;
 
 namespace Celeste.Mod.KoseiHelper.NemesisGun
 {
@@ -234,6 +234,44 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 return;
             }
 
+            if (owner.Scene.CollideFirst<FlingBird>(Hitbox) is FlingBird flingBird && Extensions.scareBirds && !dead)
+            {
+                if (owner is Player p_bird && flingBird.state == FlingBird.States.Wait)
+                {
+                    flingBird.Skip();
+                    DestroyBullet();
+                }
+                return;
+            }
+
+            if (owner.Scene.Tracker.GetEntity<FlutterBird>() != null && Extensions.scareBirds && !dead)
+            {
+                FlutterBird flutter = owner.Scene.Tracker.GetEntity<FlutterBird>();
+                if (Math.Abs(X - flutter.X) < 48f && Y > flutter.Y -  40f && Y < flutter.Y + 8f)
+                {
+                    flutter.FlyAway(Math.Sign(flutter.X - X), Calc.Random.NextFloat(0.2f));
+                }
+                return;
+            }
+
+            if (owner.Scene.CollideFirst<TouchSwitch>(Hitbox) is TouchSwitch touchSwitch && Extensions.collectTouchSwitches && !dead)
+            {
+                if (owner is Player p_tswitch)
+                {
+                    touchSwitch.TurnOn();
+                }
+                return;
+            }
+
+            if (owner.Scene.CollideFirst<FlagTouchSwitch>(Hitbox) is FlagTouchSwitch flagTouchSwitch && Extensions.collectTouchSwitches && !dead)
+            {
+                if (owner is Player p_tswitch)
+                {
+                    flagTouchSwitch.TurnOn();
+                }
+                return;
+            }
+
             if (owner.Scene.CollideFirst<FinalBoss>(Hitbox) is FinalBoss boss && Extensions.harmEnemies && !dead)
             {
                 if (!boss.Sitting && owner is Player p)
@@ -410,6 +448,16 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 {
                     if ((owner.Scene as Level).Session.Inventory.DreamDash)
                         return;
+                }
+
+                if (solid is CustomOshiroDoor customOshiroDoor && !dead)
+                {
+                    if (owner is Player p_oshirodoor)
+                    {
+                            customOshiroDoor.OnDashCollide(p_oshirodoor, customOshiroDoor.Center);
+                        DestroyBullet();
+                    }
+                    return;
                 }
 
                 if (solid is CrushBlock cBlock && Extensions.enableKevins && owner is Player p)

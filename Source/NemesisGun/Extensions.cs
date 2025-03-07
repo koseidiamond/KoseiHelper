@@ -37,7 +37,8 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
 
         // INTERACTIONS
         public static bool canKillPlayer, canGoThroughDreamBlocks, breakBounceBlocks, activateFallingBlocks, harmEnemies, harmTheo,
-            breakSpinners, breakMovingBlades, enableKevins, loseGunOnRespawn, collectables, useRefills, explodeFishes, pressDashSwitches, canBounce = true;
+            breakSpinners, breakMovingBlades, enableKevins, loseGunOnRespawn, collectables, useRefills, explodeFishes, pressDashSwitches, canBounce,
+            scareBirds, collectTouchSwitches = true;
         public static bool useBoosters = false;
         public static float waterFriction = 0.995f;
         public static string gunTexture = "objects/KoseiHelper/NemesisGun/Gun";

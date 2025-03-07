@@ -23,7 +23,9 @@ NemesisGunInteractions.placements = {
 		pressDashSwitches = true,
 		canBounce = true,
 		useBoosters = false,
-		waterFriction = 0.995
+		waterFriction = 0.995,
+		scareBirds = true,
+		collectTouchSwitches = true
 		}
 	}
 }
