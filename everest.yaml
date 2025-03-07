@@ -1,5 +1,5 @@
 - Name: KoseiHelper
-  Version: 1.11.0.1
+  Version: 1.11.1.0
   DLL: bin/KoseiHelper.dll
   Dependencies:
     - Name: EverestCore
@@ -9,3 +9,5 @@
       Version: 0.39.2
     - Name: MaxHelpingHand
       Version: 1.33.6
+    - Name: FrostHelper
+      Version: 1.66.0

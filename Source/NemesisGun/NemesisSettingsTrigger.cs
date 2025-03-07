@@ -16,6 +16,8 @@ public class NemesisGunSettingsTrigger : Trigger
     private Color color1, color2;
     private DustType shotDustType;
     private float speedMultiplier;
+    private float recoil;
+    private Extensions.DashBehavior dashBehavior;
     
     public Extensions.GunDirections gunDirections;
 
@@ -35,6 +37,8 @@ public class NemesisGunSettingsTrigger : Trigger
         lifetime = data.Int("lifetime", 60)*10;
         gunTexture = data.Attr("gunTexture", "objects/KoseiHelper/NemesisGun/Gun");
         speedMultiplier = data.Float("speedMultiplier", 1f);
+        recoil = data.Float("recoil", 80f);
+        dashBehavior = data.Enum("dashBehavior", Extensions.DashBehavior.ReplacesDash);
     }
 
     public override void OnEnter(Player player)
@@ -61,7 +65,7 @@ public class NemesisGunSettingsTrigger : Trigger
     public void ChangeSettings()
     {
         Extensions.gunshotSound = gunshotSound;
-        Extensions.replacesDash = replacesDash;
+        Extensions.dashBehavior = dashBehavior;
         Extensions.cooldown = cooldown;
         Extensions.color1 = color1;
         Extensions.color2 = color2;
@@ -72,6 +76,7 @@ public class NemesisGunSettingsTrigger : Trigger
         Extensions.lifetime = lifetime;
         Extensions.gunTexture = gunTexture;
         Extensions.speedMultiplier = speedMultiplier;
+        Extensions.recoil = recoil;
 
         if (enabled)
         {

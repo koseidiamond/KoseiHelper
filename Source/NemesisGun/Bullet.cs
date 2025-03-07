@@ -84,7 +84,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 }
             }
             if (--lifetime <= 0)
-                Kill();
+                DestroyBullet();
             updateCount++;
             Update();
         }
@@ -103,7 +103,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 if (owner is Player p && Extensions.canKillPlayer)
                     p.Die(velocity, true);
 
-                Kill();
+                DestroyBullet();
                 return;
             }
 
@@ -111,7 +111,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 && !dead && !SaveData.Instance.Assists.Invincible)
             {
                 player.Die(velocity, true);
-                Kill();
+                DestroyBullet();
                 return;
             }
 
@@ -119,7 +119,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
             {
                 if (BootlegStunSeeker(seeker))
                 {
-                    Kill();
+                    DestroyBullet();
                     return;
                 }
             }
@@ -129,7 +129,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 if ((bool)feather_shielded.GetValue(feather) == true)
                 {
                     feather_shielded.SetValue(feather, false);
-                    Kill();
+                    DestroyBullet();
                 }
                 return;
             }
@@ -137,7 +137,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
             if (owner.Scene.CollideFirst<AngryOshiro>(Hitbox) is AngryOshiro angryOshiro && Extensions.harmEnemies && !dead)
             {
                 BootlegOshiroBounce(angryOshiro);
-                Kill();
+                DestroyBullet();
                 return;
             }
 
@@ -185,50 +185,52 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                         theo.Die();
                         break;
                 }
-                Kill();
+                DestroyBullet();
                 return;
             }
 
             if (owner.Scene.CollideFirst<DashBlock>(Hitbox) is DashBlock dBlock && !dead)
             {
                 dBlock.Break(Position, velocity, true, true);
-                Kill();
+                DestroyBullet();
                 return;
             }
 
             if (owner.Scene.CollideFirst<CustomTempleCrackedBlock>(Hitbox) is CustomTempleCrackedBlock ccrackedblock && !dead)
             {
                 ccrackedblock.health -= 1;
-                Kill();
+                DestroyBullet();
                 return;
             }
 
             if (owner.Scene.CollideFirst<TempleCrackedBlock>(Hitbox) is TempleCrackedBlock crackedblock && !dead)
             {
                 crackedblock.Break(Center);
-                Kill();
+                DestroyBullet();
                 return;
             }
 
             if (owner.Scene.CollideFirst<CrystalStaticSpinner>(Hitbox) is CrystalStaticSpinner spinner && Extensions.breakSpinners && !dead)
             {
                 spinner.Destroy();
-                Kill();
+                DestroyBullet();
                 return;
             }
 
             if (owner.Scene.CollideFirst<CustomSpinner>(Hitbox) is CustomSpinner customSpinner && Extensions.breakSpinners && !dead)
             {
                 customSpinner.Destroy();
-                Kill();
+                DestroyBullet();
                 return;
             }
 
             if (owner.Scene.CollideFirst<HeartGem>(Hitbox) is HeartGem heartGem && !dead)
             {
-                if (owner is Player p)
+                if (owner is Player p && !heartGem.collected)
+                {
                     NemesisGun.heartGemCollect.Invoke(heartGem, new object[] { p });
-                Kill();
+                    DestroyBullet();
+                }
                 return;
             }
 
@@ -236,14 +238,14 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
             {
                 if (!boss.Sitting && owner is Player p)
                     boss.OnPlayer(p);
-                Kill();
+                DestroyBullet();
                 return;
             }
 
             if (owner.Scene.CollideFirst<DustStaticSpinner>(Hitbox) is DustStaticSpinner dSSpinner && Extensions.breakSpinners && !dead)
             {
                 dSSpinner.RemoveSelf();
-                Kill();
+                DestroyBullet();
                 return;
             }
 
@@ -252,14 +254,14 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 if (entity is TrackSpinner tSpinner && Extensions.breakMovingBlades && tSpinner.Collider.Bounds.Intersects(Hitbox) && !dead)
                 {
                     tSpinner.RemoveSelf();
-                    Kill();
+                    DestroyBullet();
                     return;
                 }
 
                 if (entity is RotateSpinner rSpinner && Extensions.breakMovingBlades && rSpinner.Collider.Bounds.Intersects(Hitbox) && !dead)
                 {
                     rSpinner.RemoveSelf();
-                    Kill();
+                    DestroyBullet();
                     return;
                 }
 
@@ -267,7 +269,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 {
                     if ((bool)NemesisGun.bumperFireMode.GetValue(bumper))
                     {
-                        Kill();
+                        DestroyBullet();
                         return;
                     }
                     else if (bumper.respawnTimer <= 0)
@@ -291,14 +293,20 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 {
                     if (owner is Player pl)
                         pl.Die(Vector2.Zero, true);
-                    Kill();
+                    DestroyBullet();
                     return;
                 }
-                if (entity is Key key && key.Collider.Bounds.Intersects(Hitbox) && Extensions.collectables && !dead && owner is Player p_key)
+
+                if (entity is Key key && key.Collider.Bounds.Intersects(Hitbox) && Extensions.collectables && !dead)
                 {
-                    key.OnPlayer(p_key);
+                    if (owner is Player p_key && !key.follower.HasLeader)
+                    {
+                        key.OnPlayer(p_key);
+                        DestroyBullet();
+                    }
                     return;
                 }
+
 
                 if (entity is Booster booster && booster.Collider.Bounds.Intersects(Hitbox) && Extensions.collectables && Extensions.useBoosters && !dead && owner is Player p_booster)
                 {
@@ -306,7 +314,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                     {
                         booster.OnPlayer(p_booster);
                         p_booster.Position = booster.Position;
-                        Kill();
+                        DestroyBullet();
                     }
                     return;
                 }
@@ -316,7 +324,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                     if (Extensions.canBounce)
                         velocity = (Center - spring.Center).SafeNormalize();
                     else
-                        Kill();
+                        DestroyBullet();
                     return;
                 }
 
@@ -326,7 +334,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                     {
                         refill.OnPlayer(refill_player);
                         if (refill.respawnTimer >0)
-                            Kill();
+                            DestroyBullet();
                     }
                     return;
                 }
@@ -340,7 +348,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 {
                     NemesisGun.pufferExplode.Invoke(puffer, null);
                     NemesisGun.pufferGotoGone.Invoke(puffer, null);
-                    Kill();
+                    DestroyBullet();
                     return;
                 }
 
@@ -349,14 +357,14 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 if (entity is Goomba goomba && Extensions.harmEnemies && goomba.Collider.Bounds.Intersects(Hitbox) && !dead)
                 {
                     goomba.Killed((owner as Player), (owner as Player).SceneAs<Level>());
-                    Kill();
+                    DestroyBullet();
                     return;
                 }
 
                 if (entity is DefrostableBlock defrostableBlock && defrostableBlock.Collider.Bounds.Intersects(Hitbox) && !dead)
                 {
                     defrostableBlock.defrosting = true;
-                    Kill();
+                    DestroyBullet();
                     return;
                 }
 
@@ -364,7 +372,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 {
                     plant.RemoveSelf();
                     Audio.Play("event:/KoseiHelper/goomba", plant.Center);
-                    Kill();
+                    DestroyBullet();
                     return;
                 }
 
@@ -373,14 +381,14 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                     Audio.Play("event:/KoseiHelper/mary", Position);
                     SceneAs<Level>().ParticlesFG.Emit(SwitchGate.P_Behind, 5, Center + new Vector2(0, -2), Vector2.One * 4f, CenterX - (float)Math.PI / 2f);
                     mary.RemoveSelf();
-                    Kill();
+                    DestroyBullet();
                     return;
                 }
 
                 if (entity is FallingPlatform fallingPlatform && Extensions.activateFallingBlocks && !dead)
                 {
                     fallingPlatform.StartFalling();
-                    Kill();
+                    DestroyBullet();
                     return;
                 }
             }
@@ -389,7 +397,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
             {
                 if (owner is Player p)
                     NemesisGun.strawberrySeedOnPlayer.Invoke(seed, new object[] { p });
-                Kill();
+                DestroyBullet();
                 return;
             }
 
@@ -430,7 +438,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 if (solid is BounceBlock bounceBlock && Extensions.breakBounceBlocks)
                     bounceBlock.Break();
 
-                Kill();
+                DestroyBullet();
                 return;
             }
         }
@@ -480,7 +488,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
         }
 
         // Removes bullets
-        private void Kill()
+        private void DestroyBullet()
         {
             if (CanDoShit(owner) && Extensions.bulletExplosion)
             {

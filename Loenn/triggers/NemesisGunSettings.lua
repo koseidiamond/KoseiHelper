@@ -9,7 +9,7 @@ NemesisGunSettings.placements = {
 		triggerMode = "OnStay",
 		enabled = true,
 		gunshotSound = "event:/ashleybl/gunshot",
-		replacesDash = true,
+		dashBehavior = "ReplacesDash",
 		cooldown = 8,
 		color1 = "4682B4",
 		color2 = "FFFF00",
@@ -20,7 +20,8 @@ NemesisGunSettings.placements = {
 		loseGunOnRespawn = true,
 		lifetime = 60,
 		gunTexture = "objects/KoseiHelper/NemesisGun/Gun",
-		speedMultiplier = 1
+		speedMultiplier = 1,
+		recoil = 80
 		}
 	}
 }
@@ -34,6 +35,15 @@ NemesisGunSettings.fieldInformation =
 		"OnEnter",
 		"OnLeave",
 		"OnStay"
+		},
+		editable = false
+	},
+	dashBehavior = {
+		options =
+		{
+		"ReplacesDash",
+		"ConsumesDash",
+		"None"
 		},
 		editable = false
 	},
@@ -69,15 +79,16 @@ NemesisGunSettings.fieldOrder =
 	"triggerMode",
 	"directions",
 	"dustType",
+	"dashBehavior",
 	"gunshotSound",
 	"cooldown",
 	"lifetime",
 	"speedMultiplier",
+	"recoil",
 	"gunTexture",
 	"color1",
 	"color2",
 	"enabled",
-	"replacesDash",
 	"loseGunOnRespawn",
 	"bulletExplosion"
 	

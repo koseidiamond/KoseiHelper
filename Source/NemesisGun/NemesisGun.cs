@@ -260,17 +260,34 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                     shotCooldown--;
                 }
 
-                if (self.Scene?.TimeActive > 0 && GunWasShot && shotCooldown <= 0 && (TalkComponent.PlayerOver == null || !Input.Talk.Pressed))
+                if (self.Scene?.TimeActive > 0 && GunWasShot && (TalkComponent.PlayerOver == null || !Input.Talk.Pressed))
                 {
-                    Gunshot(self, CursorPos);
-                    SpriteEffects effects = SpriteEffects.None; // Not needed but gotta give the method all its params
-                    (self.Scene as Level).DirectionalShake(GetGunVector(self, CursorPos, self.Facing) / 5);
-                    shotCooldown = Extensions.cooldown;
-                }
-                if (Extensions.replacesDash)
-                {
-                    Input.Dash.ConsumePress();
-                    Input.CrouchDash.ConsumePress();
+                    if (shotCooldown <= 0 && (self.Dashes > 0 || Extensions.dashBehavior != Extensions.DashBehavior.ConsumesDash))
+                    {
+                        Gunshot(self, CursorPos);
+                        if (GetEightDirectionalAim(Extensions.gunDirections).Y < Math.Sqrt(2) / 2 && GetEightDirectionalAim(Extensions.gunDirections).Y > -Math.Sqrt(2) / 2)
+                            self.Speed.X += Extensions.recoil * (float)(0 - self.Facing); // Horizontal recoil, by default 80f, same as vanilla backboosts
+                        (self.Scene as Level).DirectionalShake(GetGunVector(self, CursorPos, self.Facing) / 5);
+                        shotCooldown = Extensions.cooldown;
+                        switch (Extensions.dashBehavior)
+                        {
+                            case Extensions.DashBehavior.ConsumesDash:
+                                if (self.Dashes > 0)
+                                    self.Dashes -= 1;
+                                break;
+                            case Extensions.DashBehavior.None:
+                                break;
+                            default:
+                                Input.Dash.ConsumePress();
+                                Input.CrouchDash.ConsumePress();
+                                break;
+                        }
+                    }
+                    if (Extensions.dashBehavior == Extensions.DashBehavior.ReplacesDash)
+                    {
+                        Input.Dash.ConsumePress();
+                        Input.CrouchDash.ConsumePress();
+                    }
                 }
             }
 
