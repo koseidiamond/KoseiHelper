@@ -4,21 +4,26 @@ NemesisGunTrigger.name = "KoseiHelper/NemesisGunTrigger"
 NemesisGunTrigger.depth = -10500
 NemesisGunTrigger.placements = {
 	{
-		name = "NemesisGunTrigger",
+		name = "NemesisGunSettings",
 		data = {
 		triggerMode = "OnStay",
 		enabled = true,
 		gunshotSound = "event:/ashleybl/gunshot",
 		replacesDash = true,
-		cooldown = 8,
+		cooldown = 8
+		}
+	},
+	{
+		name = "NemesisGunInteractions",
+		data = {
 		canKillPlayer = true,
-		-- INTERACTIONS
 		goThroughDreamBlocks = true,
 		breakBounceBlocks = true,
 		activateFallingBlocks = true,
 		harmEnemies = true,
-		harmTheo = true,
-		breakSpinners = true
+		theoInteraction = "Kill",
+		breakSpinners = true,
+		breakMovingBlades = true
 		}
 	}
 }
@@ -29,13 +34,23 @@ NemesisGunTrigger.fieldInformation =
 	{
 	fieldType = "integer"
 	},
-		triggerMode =
+	triggerMode =
 	{
 		options =
 		{
 		"OnEnter",
 		"OnLeave",
 		"OnStay"
+		},
+		editable = false
+	},
+	theoInteraction =
+	{
+		options =
+		{
+		"Kill",
+		"None",
+		"HitSpinner"
 		},
 		editable = false
 	}

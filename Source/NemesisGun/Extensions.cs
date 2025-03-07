@@ -16,7 +16,15 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
         public static bool shotInput => replacesDash ? Input.Dash.Pressed || Input.CrouchDash.Pressed : KoseiHelperModule.Settings.NemesisShot.Pressed;
 
         // INTERACTIONS
-        public static bool canKillPlayer, canGoThroughDreamBlocks, breakBounceBlocks, activateFallingBlocks, harmEnemies, harmTheo, breakSpinners = true;
+        public static bool canKillPlayer, canGoThroughDreamBlocks, breakBounceBlocks, activateFallingBlocks, harmEnemies, harmTheo,
+            breakSpinners, breakMovingBlades = true;
+        public enum TheoInteraction
+        {
+            None,
+            Kill,
+            HitSpinner
+        }
+        public static TheoInteraction theoInteraction;
 
     }
 }

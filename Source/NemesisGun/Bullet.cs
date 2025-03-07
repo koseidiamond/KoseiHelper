@@ -121,9 +121,19 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 return;
             }
 
-            if (owner.Scene.CollideFirst<TheoCrystal>(Hitbox) is TheoCrystal theo && Extensions.harmTheo && !dead)
+            if (owner.Scene.CollideFirst<TheoCrystal>(Hitbox) is TheoCrystal theo && !dead)
             {
-                theo.Die();
+                switch (Extensions.theoInteraction)
+                {
+                    case Extensions.TheoInteraction.None:
+                        break;
+                    case Extensions.TheoInteraction.HitSpinner:
+                        theo.HitSpinner(this);
+                        break;
+                    default:
+                        theo.Die();
+                        break;
+                }
                 Kill();
                 return;
             }
@@ -158,7 +168,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 return;
             }
 
-            if (owner.Scene.CollideFirst<DustStaticSpinner>(Hitbox) is DustStaticSpinner dSSpinner && !dead)
+            if (owner.Scene.CollideFirst<DustStaticSpinner>(Hitbox) is DustStaticSpinner dSSpinner && Extensions.canKillPlayer && !dead)
             {
                 dSSpinner.RemoveSelf();
                 Kill();
@@ -167,14 +177,14 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
 
             foreach (Entity entity in (owner.Scene as Level).Entities)
             {
-                if (entity is TrackSpinner tSpinner && tSpinner.Collider.Bounds.Intersects(Hitbox) && !dead)
+                if (entity is TrackSpinner tSpinner && Extensions.breakMovingBlades && tSpinner.Collider.Bounds.Intersects(Hitbox) && !dead)
                 {
                     tSpinner.RemoveSelf();
                     Kill();
                     return;
                 }
 
-                if (entity is RotateSpinner rSpinner && rSpinner.Collider.Bounds.Intersects(Hitbox) && !dead)
+                if (entity is RotateSpinner rSpinner && Extensions.breakMovingBlades && rSpinner.Collider.Bounds.Intersects(Hitbox) && !dead)
                 {
                     rSpinner.RemoveSelf();
                     Kill();

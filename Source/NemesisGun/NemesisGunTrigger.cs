@@ -13,7 +13,11 @@ public class NemesisGunTrigger : Trigger
     private int cooldown;
     private TriggerMode triggerMode;
     // INTERACTIONS
-    public bool canKillPlayer, canGoThroughDreamBlocks, breakBounceBlocks, activateFallingBlocks, harmEnemies, harmTheo, breakSpinners = true;
+    public bool canKillPlayer, canGoThroughDreamBlocks, breakBounceBlocks, activateFallingBlocks, harmEnemies, harmTheo,
+        breakSpinners, breakMovingBlades = true;
+
+    public Extensions.TheoInteraction theoInteraction;
+
     public NemesisGunTrigger(EntityData data, Vector2 offset) : base(data, offset)
     {
         triggerMode = data.Enum("triggerMode", TriggerMode.OnEnter);
@@ -24,6 +28,13 @@ public class NemesisGunTrigger : Trigger
 
         canKillPlayer = data.Bool("canKillPlayer", true);
         canGoThroughDreamBlocks = data.Bool("goThroughDreamBlocks", true);
+        breakBounceBlocks = data.Bool("breakBounceBlocks", true);
+        activateFallingBlocks = data.Bool("activateFallingBlocks", true);
+        harmEnemies = data.Bool("harmEnemies", true);
+        breakSpinners = data.Bool("breakSpinners", true);
+        breakMovingBlades = data.Bool("breakMovingBlades", true);
+        theoInteraction = data.Enum("theoInteraction", Extensions.TheoInteraction.Kill);
+
     }
 
     public override void OnEnter(Player player)
@@ -58,8 +69,10 @@ public class NemesisGunTrigger : Trigger
         Extensions.breakBounceBlocks = breakBounceBlocks;
         Extensions.activateFallingBlocks = activateFallingBlocks;
         Extensions.harmEnemies = harmEnemies;
-        Extensions.breakSpinners = breakSpinners;
         Extensions.harmTheo = harmTheo;
+        Extensions.breakSpinners = breakSpinners;
+        Extensions.breakMovingBlades = breakMovingBlades;
+        Extensions.theoInteraction = theoInteraction;
 
 
         if (enabled)

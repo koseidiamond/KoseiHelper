@@ -553,8 +553,10 @@ triggers.KoseiHelper/SelfieTrigger.attributes.description.oneUse=Whether the tri
 
 # Nemesis Gun Trigger
 
-triggers.KoseiHelper/NemesisGunTrigger.placements.name.NemesisGunTrigger=Nemesis Gun Settings
-triggers.KoseiHelper/NemesisGunTrigger.placements.description.NemesisGunTrigger=Configure or enable the Nemesis Gun.
+triggers.KoseiHelper/NemesisGunTrigger.placements.name.NemesisGunSettings=Nemesis Gun Settings
+triggers.KoseiHelper/NemesisGunTrigger.placements.description.NemesisGunSettings=Configure or enable the Nemesis Gun.
+triggers.KoseiHelper/NemesisGunTrigger.placements.name.NemesisGunInteractions=Nemesis Gun Interactions
+triggers.KoseiHelper/NemesisGunTrigger.placements.description.NemesisGunInteractions=Configure which entities the Nemesis Gun can affect.
 triggers.KoseiHelper/NemesisGunTrigger.attributes.description.enabled=Whether the Nemesis Gun should be usable, by setting the flag "EnableNemesisGun".\nIf this flag is true, the Nemesis will be usable for the map even if players have it disabled under Mod Options.
 triggers.KoseiHelper/NemesisGunTrigger.attributes.description.gunshotSound=The sfx when the player shoots.
 triggers.KoseiHelper/NemesisGunTrigger.attributes.description.replacesDash=Whether the gun should use the dash/demo buttons or the custom keybind.\n(Configurable under Mod Options > Kosei Helper)
@@ -566,3 +568,4 @@ triggers.KoseiHelper/NemesisGunTrigger.attributes.description.breakBounceBlocks=
 triggers.KoseiHelper/NemesisGunTrigger.attributes.description.activateFallingBlocks=Whether falling blocks should start falling when shot.
 triggers.KoseiHelper/NemesisGunTrigger.attributes.description.goThroughDreamBlocks=Whether bullets should be able to pass through dream blocks.
 triggers.KoseiHelper/NemesisGunTrigger.attributes.description.breakSpinners=Whether bullets should be able to break spinners.
+triggers.KoseiHelper/NemesisGunTrigger.attributes.description.breakMovingBlades=Whether bullets should be able to break blades/stars/dust bunnies that move/rotate.
