@@ -13,7 +13,10 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
 
         public static bool replacesDash = true;
         public static int cooldown = 8;
-        public static bool canKillPlayer = true;
         public static bool shotInput => replacesDash ? Input.Dash.Pressed || Input.CrouchDash.Pressed : KoseiHelperModule.Settings.NemesisShot.Pressed;
+
+        // INTERACTIONS
+        public static bool canKillPlayer, canGoThroughDreamBlocks, breakBounceBlocks, activateFallingBlocks, harmEnemies, harmTheo, breakSpinners = true;
+
     }
 }

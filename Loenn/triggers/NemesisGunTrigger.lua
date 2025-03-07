@@ -6,17 +6,22 @@ NemesisGunTrigger.placements = {
 	{
 		name = "NemesisGunTrigger",
 		data = {
+		triggerMode = "OnStay",
 		enabled = true,
 		gunshotSound = "event:/ashleybl/gunshot",
 		replacesDash = true,
 		cooldown = 8,
 		canKillPlayer = true,
-		triggerMode = "OnStay"
+		-- INTERACTIONS
+		goThroughDreamBlocks = true,
+		breakBounceBlocks = true,
+		activateFallingBlocks = true,
+		harmEnemies = true,
+		harmTheo = true,
+		breakSpinners = true
 		}
 	}
 }
-
--- TODO look into BossesHelper/HealthBar as an example of how to add a list field, for the interactions
 
 NemesisGunTrigger.fieldInformation = 
 {

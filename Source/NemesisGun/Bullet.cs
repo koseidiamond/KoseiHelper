@@ -114,14 +114,14 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 return;
             }
 
-            if (owner.Scene.CollideFirst<AngryOshiro>(Hitbox) is AngryOshiro angryOshiro && !dead)
+            if (owner.Scene.CollideFirst<AngryOshiro>(Hitbox) is AngryOshiro angryOshiro && Extensions.harmEnemies && !dead)
             {
                 BootlegOshiroBounce(angryOshiro);
                 Kill();
                 return;
             }
 
-            if (owner.Scene.CollideFirst<TheoCrystal>(Hitbox) is TheoCrystal theo && !dead)
+            if (owner.Scene.CollideFirst<TheoCrystal>(Hitbox) is TheoCrystal theo && Extensions.harmTheo && !dead)
             {
                 theo.Die();
                 Kill();
@@ -135,7 +135,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 return;
             }
 
-            if (owner.Scene.CollideFirst<CrystalStaticSpinner>(Hitbox) is CrystalStaticSpinner spinner && !dead)
+            if (owner.Scene.CollideFirst<CrystalStaticSpinner>(Hitbox) is CrystalStaticSpinner spinner && Extensions.breakSpinners && !dead)
             {
                 spinner.Destroy();
                 Kill();
@@ -227,7 +227,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
 
                 // KoseiHelper interactions
 
-                if (entity is Goomba goomba && goomba.Collider.Bounds.Intersects(Hitbox) && !dead)
+                if (entity is Goomba goomba && Extensions.harmEnemies && goomba.Collider.Bounds.Intersects(Hitbox) && !dead)
                 {
                     goomba.Killed((owner as Player), (owner as Player).SceneAs<Level>());
                     Kill();
@@ -241,7 +241,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                     return;
                 }
 
-                if (entity is Plant plant && plant.Collider.Bounds.Intersects(Hitbox) && !dead)
+                if (entity is Plant plant && Extensions.harmEnemies && plant.Collider.Bounds.Intersects(Hitbox) && !dead)
                 {
                     plant.RemoveSelf();
                     Audio.Play("event:/KoseiHelper/goomba", plant.Center);
@@ -270,7 +270,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
             // Solid interactions
             if (owner.Scene.CollideFirst<Solid>(Hitbox) is Solid solid && !dead)
             {
-                if (solid is DreamBlock dreamBlock)
+                if (solid is DreamBlock dreamBlock && Extensions.canGoThroughDreamBlocks)
                 {
                     if ((owner.Scene as Level).Session.Inventory.DreamDash)
                         return;
@@ -292,11 +292,15 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
 
                 if (solid is LightningBreakerBox lBBox && owner is Player pl)
                     lBBox.Dashed(pl, velocity);
+
                 if (solid is DashSwitch dSwitch)
                     dSwitch.OnDashCollide(null, (Vector2)NemesisGun.dashSwitchPressDirection.GetValue(dSwitch));
 
                 if (solid is FallingBlock fallingBlock)
                     fallingBlock.Triggered = true;
+
+                if (solid is BounceBlock bounceBlock)
+                    bounceBlock.Break();
 
                 Kill();
                 return;
@@ -319,7 +323,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
 
         private bool BootlegStunSeeker(Seeker seeker)
         {
-            if (!seeker.Regenerating)
+            if (Extensions.harmEnemies && !seeker.Regenerating)
             {
                 Audio.Play("event:/game/05_mirror_temple/seeker_booped", seeker.Position);
                 NemesisGun.seekerDead.SetValue(seeker, true);
