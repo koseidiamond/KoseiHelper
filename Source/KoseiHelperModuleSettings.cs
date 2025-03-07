@@ -11,7 +11,7 @@ public class KoseiHelperModuleSettings : EverestModuleSettings {
     [SettingName("SwapCharacter")]
     public ButtonBinding SwapCharacter { get; set; }
 
-    [SettingSubText("Enables the Nemesis always. Maps that use the Nemesis can override this setting if it's off.")]
+    [SettingSubText("Enables the Nemesis always, even for maps that don't use it.")]
     [SettingName("Nemesis Settings")]
     public bool GunEnabled { get; set; } = false;
 

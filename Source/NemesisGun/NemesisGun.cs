@@ -161,7 +161,10 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
         private void PlayerUpdated(On.Celeste.Player.orig_Update orig, Player self)
         {
             Session session = self.SceneAs<Level>().Session;
-            if (self.JustRespawned) session.SetFlag("EnableNemesisGun", false);
+            if (self.JustRespawned)
+            {
+                session.SetFlag("EnableNemesisGun", false);
+            }
             if (KoseiHelperModule.Settings.GunEnabled || session.GetFlag("EnableNemesisGun"))
             {
                 GunInput.UpdateInput(self);
@@ -178,11 +181,17 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                     (self.Scene as Level).DirectionalShake(GetGunVector(self, ref effects, CursorPos, self.Facing) / 5);
                     shotCooldown = Extensions.cooldown;
                 }
-                Input.Dash.ConsumePress();
-                Input.CrouchDash.ConsumePress();
+                if (Extensions.replacesDash)
+                {
+                    Input.Dash.ConsumePress();
+                    Input.CrouchDash.ConsumePress();
+                }
             }
 
-            if (self.JustRespawned) session.SetFlag("EnableNemesisGun", false);
+            if (self.JustRespawned || self.IsIntroState)
+            {
+                session.SetFlag("EnableNemesisGun", false);
+            }
             orig(self);
         }
 

@@ -2,6 +2,7 @@ using Celeste;
 using Celeste.Mod.KoseiHelper.Entities;
 using Microsoft.Xna.Framework;
 using Monocle;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
@@ -18,8 +19,9 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
         private bool dead;
         private int updateCount;
         private const int extraUpdates = 30;
-        private readonly List<Bumper> alreadyBouncedOffOf;
         private bool updateFrame;
+
+        private readonly List<Bumper> alreadyBouncedOffOf;
         private static FieldInfo feather_shielded = typeof(FlyFeather).GetField("shielded", BindingFlags.NonPublic | BindingFlags.Instance);
 
         public Bullet(Vector2 position, Vector2 velocity, Actor owner)
@@ -73,6 +75,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 (owner.Scene as Level).Particles.Emit(ParticleTypes.Dust, Position, Color.Lerp(Color.SteelBlue, Color.Yellow, Calc.Random.NextFloat()));
         }
 
+        // This is where all interactions with entities occur
         private void CollisionCheck()
         {
             if (owner.Collider.Bounds.Intersects(Hitbox) && alreadyBouncedOffOf.Count > 0)
@@ -101,7 +104,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 }
             }
 
-            if (owner.Scene.CollideFirst<FlyFeather>(Hitbox) is FlyFeather feather && !dead) //behavior by ashley_bl :)
+            if (owner.Scene.CollideFirst<FlyFeather>(Hitbox) is FlyFeather feather && !dead) //behavior by ashley_bl
             {
                 if ((bool)feather_shielded.GetValue(feather) == true)
                 {
@@ -209,9 +212,24 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                     }
                 }
 
+                if (entity is SummitGem sGem && sGem.Collider.Bounds.Intersects(Hitbox) && !dead && owner is Player p)
+                {
+                    sGem.Add(new Coroutine((IEnumerator)NemesisGun.summitGemSmashRoutine.Invoke(sGem, new object[] { p, p.Scene as Level })));
+                }
+
+                if (entity is Puffer puffer && puffer.Collider.Bounds.Intersects(Hitbox) && !dead)
+                {
+                    NemesisGun.pufferExplode.Invoke(puffer, null);
+                    NemesisGun.pufferGotoGone.Invoke(puffer, null);
+                    Kill();
+                    return;
+                }
+
+                // KoseiHelper interactions
+
                 if (entity is Goomba goomba && goomba.Collider.Bounds.Intersects(Hitbox) && !dead)
                 {
-                    goomba.Killed((owner as Player),(owner as Player).SceneAs<Level>());
+                    goomba.Killed((owner as Player), (owner as Player).SceneAs<Level>());
                     Kill();
                     return;
                 }
@@ -231,15 +249,11 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                     return;
                 }
 
-                if (entity is SummitGem sGem && sGem.Collider.Bounds.Intersects(Hitbox) && !dead && owner is Player p)
+                if (entity is MaryBlock mary && mary.Collider.Bounds.Intersects(Hitbox) && !dead)
                 {
-                    sGem.Add(new Coroutine((IEnumerator)NemesisGun.summitGemSmashRoutine.Invoke(sGem, new object[] { p, p.Scene as Level })));
-                }
-
-                if (entity is Puffer puffer && puffer.Collider.Bounds.Intersects(Hitbox) && !dead)
-                {
-                    NemesisGun.pufferExplode.Invoke(puffer, null);
-                    NemesisGun.pufferGotoGone.Invoke(puffer, null);
+                    Audio.Play("event:/KoseiHelper/mary", Position);
+                    SceneAs<Level>().ParticlesFG.Emit(SwitchGate.P_Behind, 5, Center + new Vector2(0, -2), Vector2.One * 4f, CenterX - (float)Math.PI / 2f);
+                    mary.RemoveSelf();
                     Kill();
                     return;
                 }
@@ -253,6 +267,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 return;
             }
 
+            // Solid interactions
             if (owner.Scene.CollideFirst<Solid>(Hitbox) is Solid solid && !dead)
             {
                 if (solid is DreamBlock dreamBlock)
@@ -288,6 +303,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
             }
         }
 
+        // Removes bullets
         private void Kill()
         {
             if (CanDoShit(owner))

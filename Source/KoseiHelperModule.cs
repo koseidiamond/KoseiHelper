@@ -2,6 +2,7 @@
 using System;
 using Celeste.Mod.KoseiHelper.Entities;
 using Celeste.Mod.KoseiHelper.Triggers;
+using IL.Monocle;
 
 namespace Celeste.Mod.KoseiHelper;
 

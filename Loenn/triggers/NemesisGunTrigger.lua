@@ -6,11 +6,12 @@ NemesisGunTrigger.placements = {
 	{
 		name = "NemesisGunTrigger",
 		data = {
-		enabled = false,
+		enabled = true,
 		gunshotSound = "event:/ashleybl/gunshot",
 		replacesDash = true,
 		cooldown = 8,
-		canKillPlayer = true
+		canKillPlayer = true,
+		triggerMode = "OnStay"
 		}
 	}
 }
@@ -19,7 +20,20 @@ NemesisGunTrigger.placements = {
 
 NemesisGunTrigger.fieldInformation = 
 {
-	cooldown = { fieldType = "integer" }
+	cooldown =
+	{
+	fieldType = "integer"
+	},
+		triggerMode =
+	{
+		options =
+		{
+		"OnEnter",
+		"OnLeave",
+		"OnStay"
+		},
+		editable = false
+	}
 }
 
 return NemesisGunTrigger
