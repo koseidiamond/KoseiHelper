@@ -11,7 +11,6 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
             => new Vector2(texture.Width / 2, texture.Height / 2);
         public static float ToRotation(this Vector2 vector) => (float)Math.Atan2(vector.Y, vector.X);
         public static string gunshotSound = "event:/ashleybl/gunshot";
-        public static string bulletSound = "event:/none";
         public static bool replacesDash, bulletExplosion = true;
         public static int cooldown = 8, lifetime = 600;
         public static Color color1 = Color.SteelBlue;
@@ -30,6 +29,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
         // INTERACTIONS
         public static bool canKillPlayer, canGoThroughDreamBlocks, breakBounceBlocks, activateFallingBlocks, harmEnemies, harmTheo,
             breakSpinners, breakMovingBlades, enableKevins, loseGunOnRespawn, collectables, useRefills, explodeFishes, pressDashSwitches, canBounce = true;
+        public static string gunTexture = "objects/KoseiHelper/NemesisGun/Gun";
         public enum TheoInteraction
         {
             None,

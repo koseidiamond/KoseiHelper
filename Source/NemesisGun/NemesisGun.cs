@@ -40,7 +40,6 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
         private MTexture gunTexture;
         private int shotCooldown;
         public Level level;
-        private static bool diagonalShooting;
 
         private static Vector2 GetEightDirectionalAim(Extensions.GunDirections gunDirections)
         {
@@ -202,7 +201,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
             type = typeof(Puffer);
             pufferExplode = type.GetMethod("Explode", flags);
             pufferGotoGone = type.GetMethod("GotoGone", flags);
-            gunTexture = GFX.Game["nemesisgun/KoseiHelper/Gun"];
+            gunTexture = GFX.Game[Extensions.gunTexture];
         }
 
         public override void OnInputInitialize() => GunInput.RegisterInputs();

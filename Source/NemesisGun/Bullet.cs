@@ -313,7 +313,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                     sGem.Add(new Coroutine((IEnumerator)NemesisGun.summitGemSmashRoutine.Invoke(sGem, new object[] { p, p.Scene as Level })));
                 }
 
-                if (entity is Puffer puffer && puffer.Collider.Bounds.Intersects(Hitbox) && Extensions.explodeFishes && !dead)
+                if (entity is Puffer puffer && puffer.Collider.Bounds.Intersects(Hitbox) && Extensions.explodeFishes && !dead && puffer.Collidable)
                 {
                     NemesisGun.pufferExplode.Invoke(puffer, null);
                     NemesisGun.pufferGotoGone.Invoke(puffer, null);
@@ -467,7 +467,6 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 }
             }
             dead = true;
-            Audio.Play(Extensions.bulletSound, Center);
             RemoveSelf();
         }
         public static bool CanDoShit(Actor owner)

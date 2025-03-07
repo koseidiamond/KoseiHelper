@@ -560,6 +560,7 @@ triggers.KoseiHelper/NemesisGunSettings.attributes.description.enabled=Whether t
 triggers.KoseiHelper/NemesisGunSettings.attributes.description.gunshotSound=The sfx when the player shoots.
 triggers.KoseiHelper/NemesisGunSettings.attributes.description.replacesDash=Whether the gun should use the dash/demo buttons or the custom keybind.\n(Configurable under Mod Options > Kosei Helper)
 triggers.KoseiHelper/NemesisGunSettings.attributes.description.cooldown=How much time until the player can shoot again, in frames.
+triggers.KoseiHelper/NemesisGunSettings.attributes.description.gunTexture=The path to your custom weapon texture, relative to Atlases/Gameplay/.
 triggers.KoseiHelper/NemesisGunSettings.attributes.description.color1=The main color the bullet produces during its trajectory.\nThis color is also used when bullets collide.
 triggers.KoseiHelper/NemesisGunSettings.attributes.description.color2=The secondary color the bullet produces during its trajectory.
 triggers.KoseiHelper/NemesisGunSettings.attributes.description.dustType=The type of particles that indicate the bullet trajectory.

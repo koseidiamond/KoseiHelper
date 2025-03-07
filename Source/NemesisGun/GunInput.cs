@@ -1,12 +1,10 @@
-using Celeste;
-using Celeste.Mod;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Monocle;
 
 namespace Celeste.Mod.KoseiHelper.NemesisGun
 {
-
+    // I think there's a lot of useless code here from Guneline and I'm not bothering to delete it. It just works as is
     public static class GunInput
     {
         public static VirtualJoystick joystickAim;
