@@ -371,13 +371,6 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
         // Removes bullets
         private void Kill()
         {
-            if (CanDoShit(owner))
-            {
-                for (int i = 0; i < 10; i++)
-                {
-                    (owner.Scene as Level).Particles.Emit(ParticleTypes.Steam, Position + Calc.Random.ShakeVector(), Color.White);
-                }
-            }
             dead = true;
             RemoveSelf();
         }

@@ -40,8 +40,9 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
         private MTexture gunTexture;
         private int shotCooldown;
         public Level level;
+        private static bool diagonalShooting;
 
-        private static Vector2 GetEightDirectionalAim()
+        private static Vector2 GetEightDirectionalAim(Extensions.GunDirections gunDirections)
         {
             Vector2 value = Input.Aim.Value;
             if (value == Vector2.Zero)
@@ -55,33 +56,116 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
             {
                 angleThreshold -= Calc.ToRad(5f);
             }
-
-            if (Calc.AbsAngleDiff(angle, 0f) < angleThreshold)
+            switch (gunDirections)
             {
-                return new Vector2(1f, 0f);
+                case Extensions.GunDirections.Horizontal: // TODO
+                    if (Calc.AbsAngleDiff(angle, 0f) < angleThreshold)
+                    {
+                        return new Vector2(1f, 0f);
+                    }
+                    else
+                    {
+                        return new Vector2(-1f, 0f);
+                    }
+                    break;
+                case Extensions.GunDirections.EightDirections:
+                    if (Calc.AbsAngleDiff(angle, 0f) < angleThreshold)
+                    {
+                        return new Vector2(1f, 0f);
+                    }
+                    else if (Calc.AbsAngleDiff(angle, (float)Math.PI) < angleThreshold)
+                    {
+                        return new Vector2(-1f, 0f);
+                    }
+                    else if (Calc.AbsAngleDiff(angle, -(float)Math.PI / 2f) < angleThreshold)
+                    {
+                        return new Vector2(0f, -1f);
+                    }
+                    else if (Calc.AbsAngleDiff(angle, (float)Math.PI / 2f) < angleThreshold)
+                    {
+                        return new Vector2(0f, 1f);
+                    }
+                    // Diagonal directions
+                    else
+                    {
+                        if (Calc.AbsAngleDiff(angle, (float)Math.PI / 4) < angleThreshold)
+                        {
+                            return new Vector2(-1f, -1f);
+                        }
+                        else if (Calc.AbsAngleDiff(angle, 3 * (float)Math.PI / 4) < angleThreshold)
+                        {
+                            return new Vector2(1f, -1f);
+                        }
+                        else if (Calc.AbsAngleDiff(angle, -3 * (float)Math.PI / 4) < angleThreshold)
+                        {
+                            return new Vector2(1f, 1f);
+                        }
+                        else if (Calc.AbsAngleDiff(angle, (float)-Math.PI / 4) < angleThreshold)
+                        {
+                            return new Vector2(-1f, 1f);
+                        }
+                        else
+                        {
+                            return new Vector2(Math.Sign(value.X), Math.Sign(value.Y)).SafeNormalize();
+                        }
+                    }
+                default: // Four directions
+                    if (Calc.AbsAngleDiff(angle, 0f) < angleThreshold)
+                    {
+                        return new Vector2(1f, 0f);
+                    }
+                    else if (Calc.AbsAngleDiff(angle, (float)Math.PI) < angleThreshold)
+                    {
+                        return new Vector2(-1f, 0f);
+                    }
+                    else if (Calc.AbsAngleDiff(angle, -(float)Math.PI / 2f) < angleThreshold)
+                    {
+                        return new Vector2(0f, -1f);
+                    }
+                    else if (Calc.AbsAngleDiff(angle, (float)Math.PI / 2f) < angleThreshold)
+                    {
+                        return new Vector2(0f, 1f);
+                    }
+                    break;
             }
-            else if (Calc.AbsAngleDiff(angle, (float)Math.PI) < angleThreshold)
-            {
-                return new Vector2(-1f, 0f);
-            }
-            else if (Calc.AbsAngleDiff(angle, -(float)Math.PI / 2f) < angleThreshold)
-            {
-                return new Vector2(0f, -1f);
-            }
-            else if (Calc.AbsAngleDiff(angle, (float)Math.PI / 2f) < angleThreshold)
-            {
-                return new Vector2(0f, 1f);
-            }
-            else
-            {
-                return new Vector2(Math.Sign(value.X), Math.Sign(value.Y)).SafeNormalize();
-            }
+            return Vector2.Zero;
         }
 
-        /*private static Vector2 GetEightDirectionalAim()
+        private static Vector2 GetGunVector(Actor player, ref SpriteEffects effects, Vector2 cursorPos, Facings forceDir)
         {
-            return new Vector2(0f, 1f);
-        }*/
+            float rotation = 3 * MathHelper.Pi / 2;
+            Vector2 aim = GetEightDirectionalAim(Extensions.gunDirections);
+            if (forceDir == Facings.Right)
+                rotation = 0;
+            else if (forceDir == Facings.Left)
+                rotation = MathHelper.Pi;
+
+            if (aim.X > 0.4)
+                rotation = 0;
+            if (aim.X < -0.4)
+                rotation = MathHelper.Pi;
+            if (!(player.OnGround()))
+            {
+                if (aim.Y > 0.4)
+                    rotation = MathHelper.Pi / 2;
+            }
+
+            if (aim.Y < -0.4)
+                rotation = 3 * MathHelper.Pi / 2;
+            if (Extensions.gunDirections == Extensions.GunDirections.EightDirections)
+            {
+                if (Calc.AbsAngleDiff(aim.Angle(), (float)Math.PI / 4) < MathHelper.Pi / 8)
+                    rotation = (float)Math.PI / 4 - (float)Math.PI;
+                else if (Calc.AbsAngleDiff(aim.Angle(), 3 * (float)Math.PI / 4) < MathHelper.Pi / 8)
+                    rotation = 3 * (float)Math.PI / 4 - (float)Math.PI;
+                else if (Calc.AbsAngleDiff(aim.Angle(), -3 * (float)Math.PI / 4) < MathHelper.Pi / 8)
+                    rotation = -3 * (float)Math.PI / 4 - (float)Math.PI;
+                else if (Calc.AbsAngleDiff(aim.Angle(), (float)-Math.PI / 4) < MathHelper.Pi / 8)
+                    rotation = (float)-Math.PI / 4 - (float)Math.PI;
+
+            }
+            return ToCursor(player, cursorPos).RotateTowards(rotation, MathHelper.TwoPi);
+        }
 
         public override void LoadContent(bool firstLoad)
         {
@@ -214,30 +298,6 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
             SpriteEffects effects = SpriteEffects.None;
             Vector2 gunVector = GetGunVector(player, ref effects, overrideCursorPos == null ? CursorPos : (Vector2)overrideCursorPos, facing);
             gunTexture.DrawCentered(player.Center, Color.White, 1, gunVector.ToRotation(), effects);
-        }
-
-        private static Vector2 GetGunVector(Actor player, ref SpriteEffects effects, Vector2 cursorPos, Facings forceDir)
-        {
-            float rotation = 3 * MathHelper.Pi / 2;
-            Vector2 aim = GetEightDirectionalAim();
-            if (forceDir == Facings.Right)
-                rotation = 0;
-            else if (forceDir == Facings.Left)
-                rotation = MathHelper.Pi;
-
-            if (aim.X > 0.4)
-                rotation = 0;
-            if (aim.X < -0.4)
-                rotation = MathHelper.Pi;
-            if (!(player.OnGround()))
-            {
-                if (aim.Y > 0.4)
-                    rotation = MathHelper.Pi / 2;
-            }
-
-            if (aim.Y < -0.4)
-                rotation = 3 * MathHelper.Pi / 2;
-            return ToCursor(player, cursorPos).RotateTowards(rotation, MathHelper.TwoPi);
         }
 
         private static Vector2 PlayerPosScreenSpace(Actor self)

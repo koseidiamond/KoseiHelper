@@ -16,6 +16,8 @@ public class NemesisGunSettingsTrigger : Trigger
     private Color color1, color2;
     private DustType shotDustType;
 
+    public Extensions.GunDirections gunDirections;
+
     public NemesisGunSettingsTrigger(EntityData data, Vector2 offset) : base(data, offset)
     {
         triggerMode = data.Enum("triggerMode", TriggerMode.OnEnter);
@@ -26,6 +28,7 @@ public class NemesisGunSettingsTrigger : Trigger
         color1 = data.HexColor("color1", Color.SteelBlue);
         color2 = data.HexColor("color2", Color.Yellow);
         shotDustType = data.Enum("dustType", DustType.Normal);
+        gunDirections = data.Enum("directions", Extensions.GunDirections.FourDirections);
     }
 
     public override void OnEnter(Player player)
@@ -57,6 +60,7 @@ public class NemesisGunSettingsTrigger : Trigger
         Extensions.color1 = color1;
         Extensions.color2 = color2;
         Extensions.shotDustType = shotDustType;
+        Extensions.gunDirections = gunDirections;
 
         if (enabled)
         {

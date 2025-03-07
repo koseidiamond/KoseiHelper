@@ -13,7 +13,8 @@ NemesisGunSettings.placements = {
 		cooldown = 8,
 		color1 = "4682B4",
 		color2 = "FFFF00",
-		dustType = "Normal"
+		dustType = "Normal",
+		directions = "FourDirections"
 		}
 	}
 }
@@ -43,6 +44,14 @@ NemesisGunSettings.fieldInformation =
 		},
 		editable = false
 	},
+	directions = {
+		options = {
+			"FourDirections",
+			"EightDirections",
+			"Horizontal"
+		},
+		editable = false
+	}
 }
 
 return NemesisGunSettings

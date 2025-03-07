@@ -17,6 +17,14 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
         public static Color color1 = Color.SteelBlue;
         public static Color color2 = Color.Yellow;
         public static DustType shotDustType = DustType.Normal; // Aka Dust
+        public enum GunDirections
+        {
+            Horizontal,
+            FourDirections,
+            EightDirections
+        };
+        public static GunDirections gunDirections;
+
         public static bool shotInput => replacesDash ? Input.Dash.Pressed || Input.CrouchDash.Pressed : KoseiHelperModule.Settings.NemesisShot.Pressed;
 
         // INTERACTIONS
