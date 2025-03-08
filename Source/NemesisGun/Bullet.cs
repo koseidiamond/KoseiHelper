@@ -288,6 +288,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
 
             if (owner.Scene.CollideFirst<FinalBoss>(Hitbox) is FinalBoss boss && Extensions.harmEnemies && !dead)
             {
+                Level level = SceneAs<Level>();
                 if (!boss.Sitting && owner is Player p)
                     boss.OnPlayer(p);
                 DestroyBullet();
@@ -437,7 +438,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                     return;
                 }
 
-                if (entity is FallingPlatform fallingPlatform && Extensions.activateFallingBlocks && !dead)
+                if (entity is FallingPlatform fallingPlatform && fallingPlatform.Collider.Bounds.Intersects(Hitbox) && Extensions.activateFallingBlocks && !dead && !fallingPlatform.triggered)
                 {
                     fallingPlatform.StartFalling();
                     DestroyBullet();
@@ -486,6 +487,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                         cBlock.OnDashCollide(p, Vector2.UnitX);
                     else
                         cBlock.OnDashCollide(p, velocity);
+                    DestroyBullet();
                 }
 
                 if (solid is LightningBreakerBox lBBox && owner is Player pl)
@@ -500,7 +502,8 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 if (solid is BounceBlock bounceBlock && Extensions.breakBounceBlocks)
                     bounceBlock.Break();
 
-                DestroyBullet();
+                velocity = new Vector2(-60,0);
+                //DestroyBullet();
                 return;
             }
         }

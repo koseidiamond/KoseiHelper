@@ -55,8 +55,8 @@ entities.KoseiHelper/CounterBarController.placements.description.CounterBarContr
 entities.KoseiHelper/CounterBarController.attributes.description.color=The filler color inside the bar.
 entities.KoseiHelper/CounterBarController.attributes.description.xPosition=Where on the screen (from 0 to 1920) the left side of the bar should be.
 entities.KoseiHelper/CounterBarController.attributes.description.yPosition=Where on the screen (from 0 to 1080) the top side of the bar should be.
-entities.KoseiHelper/CounterBarController.attributes.description.width=How long in pixels the bar should be.
-entities.KoseiHelper/CounterBarController.attributes.description.height=How tall in pixels the bar should be.
+entities.KoseiHelper/CounterBarController.attributes.description.width=How long in pixels the bar should be.\nThis is HD so you might want to multiply it by 6.
+entities.KoseiHelper/CounterBarController.attributes.description.height=How tall in pixels the bar should be.\nThis is HD so you might want to multiply it by 6.
 entities.KoseiHelper/CounterBarController.attributes.description.maxValue=The maximum value of the counter/slider where the bar would be completely filled.
 entities.KoseiHelper/CounterBarController.attributes.name.countName=Counter/Slider Name
 entities.KoseiHelper/CounterBarController.attributes.description.countName=The name of the counter/slider.

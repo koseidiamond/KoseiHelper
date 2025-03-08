@@ -12,7 +12,7 @@ public class FallingPlatform : JumpthruPlatform
 {
     private bool hasFallen;
     private float fallDelay, originalFallTime;
-    private bool triggered;
+    public bool triggered;
     public float customFallSpeed;
     public bool blockImage;
     public string sound;
