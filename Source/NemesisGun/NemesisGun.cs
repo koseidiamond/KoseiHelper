@@ -38,7 +38,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
         private static Vector2 CursorPos => GunInput.CursorPosition;
         private bool GunWasShot => GunInput.GunShot;
         private MTexture gunTexture;
-        private int shotCooldown;
+        private int shotCooldown, recoilCooldown;
         public Level level;
 
         private static Vector2 GetEightDirectionalAim(Extensions.GunDirections gunDirections)
@@ -256,17 +256,20 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 GunInput.UpdateInput(self);
 
                 if (shotCooldown > 0)
-                {
                     shotCooldown--;
-                }
+                if (recoilCooldown > 0)
+                    recoilCooldown--;
 
                 if (self.Scene?.TimeActive > 0 && GunWasShot && (TalkComponent.PlayerOver == null || !Input.Talk.Pressed))
                 {
                     if (shotCooldown <= 0 && (self.Dashes > 0 || Extensions.dashBehavior != Extensions.DashBehavior.ConsumesDash))
                     {
                         Gunshot(self, CursorPos);
-                        if (GetEightDirectionalAim(Extensions.gunDirections).Y < Math.Sqrt(2) / 2 && GetEightDirectionalAim(Extensions.gunDirections).Y > -Math.Sqrt(2) / 2)
+                        if (GetEightDirectionalAim(Extensions.gunDirections).Y < Math.Sqrt(2) / 2 && GetEightDirectionalAim(Extensions.gunDirections).Y > -Math.Sqrt(2) / 2 && recoilCooldown <= 0)
+                        {
                             self.Speed.X += Extensions.recoil * (float)(0 - self.Facing); // Horizontal recoil, by default 80f, same as vanilla backboosts
+                            recoilCooldown = Extensions.recoilCooldown;
+                        }
                         (self.Scene as Level).DirectionalShake(GetGunVector(self, CursorPos, self.Facing) / 5);
                         shotCooldown = Extensions.cooldown;
                         switch (Extensions.dashBehavior)

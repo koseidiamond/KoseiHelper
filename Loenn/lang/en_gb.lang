@@ -570,7 +570,8 @@ triggers.KoseiHelper/NemesisGunSettings.attributes.description.bulletSound=The s
 triggers.KoseiHelper/NemesisGunSettings.attributes.description.loseGunOnRespawn=Whether the player should lose the gun upon respawning.
 triggers.KoseiHelper/NemesisGunSettings.attributes.description.lifetime=How long it takes a bullet to expire if it doesn't collide with anything.\nFor reference, 60 is approximatedly one entire screen in length before expiring (at normal speed).
 triggers.KoseiHelper/NemesisGunSettings.attributes.description.speedMultiplier=The default speed will be multiplier by this factor.
-triggers.KoseiHelper/NemesisGunSettings.attributes.description.recoil=How much shooting should push the player backwards.\nThe default value is the same speed that vanilla backboosts give. Leave as 0 for no recoil.
+triggers.KoseiHelper/NemesisGunSettings.attributes.description.recoilStrength=How much shooting should push the player backwards.\nThe default value is the same speed that vanilla backboosts give. Leave as 0 for no recoil.
+triggers.KoseiHelper/NemesisGunSettings.attributes.description.recoilCooldown=How much time needs to pass until the player can be pushed backwards again from shooting.
 
 triggers.KoseiHelper/NemesisGunInteractions.placements.name.NemesisGunInteractions=Nemesis Gun Interactions
 triggers.KoseiHelper/NemesisGunInteractions.placements.description.NemesisGunInteractions=Configure which entities the Nemesis Gun can affect.

@@ -1,2 +1,0 @@
-{378d6476-bc18-4c57-95c0-86ae7de7a9ec} event:/ashleybl/gunshot
-{852923c7-f99f-4fcd-b9f1-0ac876f1bb69} bank:/ashleybl-gun

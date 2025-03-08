@@ -11,7 +11,7 @@ public class NemesisGunSettingsTrigger : Trigger
 {
     private bool enabled, bulletExplosion, loseGunOnRespawn = true;
     private string gunshotSound, gunTexture, bulletTexture;
-    private int cooldown, lifetime;
+    private int cooldown, recoilCooldown, lifetime;
     private TriggerMode triggerMode;
     private Color color1, color2;
     private DustType shotDustType;
@@ -27,8 +27,9 @@ public class NemesisGunSettingsTrigger : Trigger
         triggerMode = data.Enum("triggerMode", TriggerMode.OnEnter);
         enabled = data.Bool("enabled", true);
         bulletExplosion = data.Bool("bulletExplosion", true);
-        gunshotSound = data.Attr("gunshotSound", "event:/ashleybl/gunshot");
+        gunshotSound = data.Attr("gunshotSound", "event:/KoseiHelper/Guns/shotDefault");
         cooldown = data.Int("cooldown", 8);
+        recoilCooldown = data.Int("recoilCooldown", 16);
         color1 = data.HexColor("color1", Color.SteelBlue);
         color2 = data.HexColor("color2", Color.Yellow);
         shotDustType = data.Enum("particleType", DustType.Normal);
@@ -38,7 +39,7 @@ public class NemesisGunSettingsTrigger : Trigger
         gunTexture = data.Attr("gunTexture", "objects/KoseiHelper/Guns/NemesisGun");
         bulletTexture = data.Attr("bulletTexture", "objects/KoseiHelper/Guns/Bullets/Invisible");
         speedMultiplier = data.Float("speedMultiplier", 1f);
-        recoil = data.Float("recoil", 80f);
+        recoil = data.Float("recoilStrength", 80f);
         dashBehavior = data.Enum("dashBehavior", Extensions.DashBehavior.ReplacesDash);
         particleAlpha = data.Float("particleAlpha", 1f);
     }
@@ -81,6 +82,7 @@ public class NemesisGunSettingsTrigger : Trigger
         Extensions.speedMultiplier = speedMultiplier;
         Extensions.recoil = recoil;
         Extensions.particleAlpha = particleAlpha;
+        Extensions.recoilCooldown = recoilCooldown;
 
         if (enabled)
         {
