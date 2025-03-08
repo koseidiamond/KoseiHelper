@@ -42,6 +42,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
             bulletTexture = GFX.Game[Extensions.bulletTexture];
             if (CanDoShit(owner))
                 (owner.Scene as Level).Add(this);
+            (owner.Scene as Level).Session.SetFlag("KoseiHelper_playerIsShooting", true);
         }
 
         public override void Update()
@@ -315,8 +316,40 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 return;
             }
 
+            if (owner.Scene.CollideFirst<StrawberrySeed>(Hitbox) is StrawberrySeed seed && Extensions.collectables && !dead)
+            {
+                if (owner is Player p)
+                    NemesisGun.strawberrySeedOnPlayer.Invoke(seed, new object[] { p });
+                DestroyBullet();
+                return;
+            }
+
             foreach (Entity entity in (owner.Scene as Level).Entities)
             {
+
+                if (entity is FakeHeart fakeHeart && fakeHeart.Collider.Bounds.Intersects(Hitbox) && !dead && fakeHeart.Visible)
+                {
+                    if (fakeHeart.bounceSfxDelay <= 0f)
+                    {
+                        Audio.Play("event:/game/general/crystalheart_bounce", fakeHeart.Position);
+                        fakeHeart.bounceSfxDelay = 0.1f;
+                    }
+
+                    if (owner is Player playerFakeHeart && Extensions.collectables)
+                        fakeHeart.Collect(playerFakeHeart, velocity.Angle());
+
+                    if (Extensions.canBounce)
+                    {
+                        velocity = (Center - fakeHeart.Center).SafeNormalize();
+                        velocity.X *= 1.5f;
+                    }
+                    fakeHeart.moveWiggler.Start();
+                    fakeHeart.ScaleWiggler.Start();
+                    fakeHeart.moveWiggleDir = (fakeHeart.Center - Center).SafeNormalize(Vector2.UnitY);
+                    Input.Rumble(RumbleStrength.Medium, RumbleLength.Medium);
+                    return;
+                }
+
                 if (entity is TrackSpinner tSpinner && Extensions.breakMovingBlades && tSpinner.Collider.Bounds.Intersects(Hitbox) && !dead)
                 {
                     tSpinner.RemoveSelf();
@@ -357,8 +390,8 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 }
                 if (entity is CollabUtils2.Entities.SilverBerry silverBerry && silverBerry.Collider.Bounds.Intersects(Hitbox) && Extensions.canKillPlayer && !dead)
                 {
-                    if (owner is Player pl)
-                        pl.Die(Vector2.Zero, true);
+                    if (owner is Player plSilver)
+                        plSilver.Die(Vector2.Zero, true);
                     DestroyBullet();
                     return;
                 }
@@ -405,9 +438,34 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                     return;
                 }
 
-                if (entity is SummitGem sGem && sGem.Collider.Bounds.Intersects(Hitbox) && Extensions.collectables && !dead && owner is Player p)
+                if (entity is SummitGem sGem && sGem.Collider.Bounds.Intersects(Hitbox) && !dead && owner is Player p)
                 {
-                    sGem.Add(new Coroutine((IEnumerator)NemesisGun.summitGemSmashRoutine.Invoke(sGem, new object[] { p, p.Scene as Level })));
+                    if (sGem.Collidable)
+                    {
+                        if (Extensions.collectables)
+                        {
+                            sGem.Add(new Coroutine((IEnumerator)NemesisGun.summitGemSmashRoutine.Invoke(sGem, new object[] { p, p.Scene as Level })));
+                            DestroyBullet();
+                        }
+                        else
+                        {
+                            sGem.moveWiggler.Start();
+                            sGem.scaleWiggler.Start();
+                            sGem.moveWiggleDir = (sGem.Center - Center).SafeNormalize(Vector2.UnitY);
+                            Input.Rumble(RumbleStrength.Medium, RumbleLength.Medium);
+                            if (sGem.bounceSfxDelay <= 0f)
+                            {
+                                Audio.Play("event:/game/general/crystalheart_bounce", Position);
+                                sGem.bounceSfxDelay = 0.1f;
+                            }
+                        }
+                        if (Extensions.canBounce)
+                        {
+                            velocity = (Center - sGem.Center).SafeNormalize();
+                            velocity.X *= 1.5f;
+                        }
+                    }
+                    return;
                 }
 
                 if (entity is Puffer puffer && puffer.Collider.Bounds.Intersects(Hitbox) && !dead && puffer.Collidable)
@@ -507,16 +565,6 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                     return;
                 }
             }
-
-            if (owner.Scene.CollideFirst<StrawberrySeed>(Hitbox) is StrawberrySeed seed && Extensions.collectables && !dead)
-            {
-                if (owner is Player p)
-                    NemesisGun.strawberrySeedOnPlayer.Invoke(seed, new object[] { p });
-                DestroyBullet();
-                return;
-            }
-
-
 
             // Solid interactions
             if (owner.Scene.CollideFirst<Solid>(Hitbox) is Solid solid && !dead)
@@ -623,6 +671,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 }
             }
             dead = true;
+            (owner.Scene as Level).Session.SetFlag("KoseiHelper_playerIsShooting", false);
             RemoveSelf();
         }
         public static bool CanDoShit(Actor owner)
