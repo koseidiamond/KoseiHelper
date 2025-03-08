@@ -21,6 +21,8 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
         private int updateCount;
         private const int extraUpdates = 30;
         private bool updateFrame;
+        private MTexture bulletTexture;
+        private ParticleType p_fire = FireBall.P_FireTrail, p_ice = FireBall.P_IceTrail, p_feather = BirdNPC.P_Feather;
 
         private readonly List<Bumper> alreadyBouncedOffOf;
         private static FieldInfo feather_shielded = typeof(FlyFeather).GetField("shielded", BindingFlags.NonPublic | BindingFlags.Instance);
@@ -37,7 +39,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
             this.owner = owner;
             lifetime = Extensions.lifetime;
             alreadyBouncedOffOf = new List<Bumper>();
-
+            bulletTexture = GFX.Game[Extensions.bulletTexture];
             if (CanDoShit(owner))
                 (owner.Scene as Level).Add(this);
         }
@@ -64,21 +66,30 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                     switch (Extensions.shotDustType)
                     {
                         case DustType.Sparkly:
-                            (owner.Scene as Level).Particles.Emit(ParticleTypes.SparkyDust, Position, Color.Lerp(Extensions.color1, Extensions.color2, Calc.Random.NextFloat()));
+                            (owner.Scene as Level).Particles.Emit(ParticleTypes.SparkyDust, Position, Color.Lerp(Extensions.color1, Extensions.color2, Calc.Random.NextFloat()) * Extensions.particleAlpha);
                             break;
                         case DustType.Chimney:
-                            (owner.Scene as Level).Particles.Emit(ParticleTypes.Chimney, Position, Color.Lerp(Extensions.color1, Extensions.color2, Calc.Random.NextFloat()));
+                            (owner.Scene as Level).Particles.Emit(ParticleTypes.Chimney, Position, Color.Lerp(Extensions.color1, Extensions.color2, Calc.Random.NextFloat()) * Extensions.particleAlpha);
                             break;
                         case DustType.Steam:
-                            (owner.Scene as Level).Particles.Emit(ParticleTypes.Steam, Position, Color.Lerp(Extensions.color1, Extensions.color2, Calc.Random.NextFloat()));
+                            (owner.Scene as Level).Particles.Emit(ParticleTypes.Steam, Position, Color.Lerp(Extensions.color1, Extensions.color2, Calc.Random.NextFloat()) * Extensions.particleAlpha);
                             break;
                         case DustType.VentDust:
-                            (owner.Scene as Level).Particles.Emit(ParticleTypes.VentDust, Position, Color.Lerp(Extensions.color1, Extensions.color2, Calc.Random.NextFloat()));
+                            (owner.Scene as Level).Particles.Emit(ParticleTypes.VentDust, Position, Color.Lerp(Extensions.color1, Extensions.color2, Calc.Random.NextFloat()) * Extensions.particleAlpha);
                             break;
                         case DustType.None:
                             break;
-                        default:
-                            (owner.Scene as Level).Particles.Emit(ParticleTypes.Dust, Position, Color.Lerp(Extensions.color1, Extensions.color2, Calc.Random.NextFloat()));
+                        case DustType.Fire:
+                            (owner.Scene as Level).Particles.Emit(p_fire, Position, Color.Lerp(Extensions.color1, Extensions.color2, Calc.Random.NextFloat()) * Extensions.particleAlpha);
+                            break;
+                        case DustType.Ice:
+                            (owner.Scene as Level).Particles.Emit(p_ice, Position, Color.Lerp(Extensions.color1, Extensions.color2, Calc.Random.NextFloat()) * Extensions.particleAlpha);
+                            break;
+                        case DustType.Feather:
+                            (owner.Scene as Level).Particles.Emit(p_feather, Position, Color.Lerp(Extensions.color1, Extensions.color2, Calc.Random.NextFloat()) * Extensions.particleAlpha);
+                            break;
+                        default: // Normal (Dust)
+                            (owner.Scene as Level).Particles.Emit(ParticleTypes.Dust, Position, Color.Lerp(Extensions.color1, Extensions.color2, Calc.Random.NextFloat()) * Extensions.particleAlpha);
                             break;
                     }
                 }
@@ -92,7 +103,10 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
         public override void Render()
         {
             if (CanDoShit(owner))
-                (owner.Scene as Level).Particles.Emit(ParticleTypes.Dust, Position, Color.Lerp(Extensions.color1, Extensions.color2, Calc.Random.NextFloat()));
+            {
+                (owner.Scene as Level).Particles.Emit(ParticleTypes.Dust, Position, Color.Lerp(Extensions.color1, Extensions.color2, Calc.Random.NextFloat()) * Extensions.particleAlpha);
+                bulletTexture.DrawCentered(Position, Color.White, 1, 1f);
+            }
         }
 
         // This is where all interactions with entities occur

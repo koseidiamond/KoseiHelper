@@ -210,7 +210,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
         public override void Load()
         {
             On.Celeste.Player.Update += PlayerUpdated;
-            On.Celeste.Player.Render += PlayerRendered;
+            On.Celeste.Player.Render += PlayerRendered; 
 
             Everest.Events.Level.OnLoadLevel += (level, playerIntro, isFromLoader) => {
                 this.level = level;
@@ -310,6 +310,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
 
         private void RenderGun(Actor player, Facings facing, Vector2? overrideCursorPos = null)
         {
+            gunTexture = GFX.Game[Extensions.gunTexture];
             SpriteEffects effects = SpriteEffects.None;
             Vector2 gunVector = GetGunVector(player, overrideCursorPos == null ? CursorPos : (Vector2)overrideCursorPos, facing);
             gunTexture.DrawCentered(player.Center, Color.White, 1, gunVector.ToRotation(), effects);
@@ -329,7 +330,6 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
             }
 
             Vector2 actualPlayerPos = actor.Center;
-            Vector2 ssPos = PlayerPosScreenSpace(actor);
 
             if (actor is Player player)
             {

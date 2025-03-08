@@ -16,6 +16,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
         public static int cooldown = 8, lifetime = 600;
         public static Color color1 = Color.SteelBlue;
         public static Color color2 = Color.Yellow;
+        public static float particleAlpha;
         public static DustType shotDustType = DustType.Normal; // Aka Dust
         public static float speedMultiplier = 1f, recoil = 80f;
         public enum DashBehavior
@@ -41,7 +42,8 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
             scareBirds, collectTouchSwitches = true;
         public static bool useBoosters = false;
         public static float waterFriction = 0.995f;
-        public static string gunTexture = "objects/KoseiHelper/NemesisGun/NemesisGun";
+        public static string gunTexture = "objects/KoseiHelper/Guns/NemesisGun";
+        public static string bulletTexture = "objects/KoseiHelper/Guns/Bullets/Invisible";
         public enum TheoInteraction
         {
             None,

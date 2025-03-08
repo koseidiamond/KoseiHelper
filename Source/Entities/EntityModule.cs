@@ -6,5 +6,8 @@ public enum DustType
     Chimney,
     Steam,
     VentDust,
-    None
+    None,
+    Fire, // FireBall.P_FireTrail,
+    Ice, // FireBall.P_IceTrail
+    Feather // BirdNPC.P_Feather
 };

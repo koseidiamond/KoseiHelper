@@ -13,13 +13,14 @@ NemesisGunSettings.placements = {
 		cooldown = 8,
 		color1 = "4682B4",
 		color2 = "FFFF00",
-		dustType = "Normal",
+		particleType = "Normal",
 		directions = "FourDirections",
 		bulletExplosion = true,
 		--bulletSound = "event:/none",
 		loseGunOnRespawn = true,
 		lifetime = 60,
-		gunTexture = "objects/KoseiHelper/NemesisGun/NemesisGun",
+		gunTexture = "objects/KoseiHelper/Guns/NemesisGun",
+		bulletTexture = "objects/KoseiHelper/Guns/Bullets/Invisible",
 		speedMultiplier = 1,
 		recoil = 80
 		}
@@ -38,6 +39,16 @@ NemesisGunSettings.fieldInformation =
 		},
 		editable = false
 	},
+	gunTexture = {
+		{ fieldType = "string" },
+		options =
+		{
+		"objects/KoseiHelper/Guns/NemesisGun",
+		"objects/KoseiHelper/Guns/Handgun",
+		"util/glove"
+		},
+		editable = true
+	},
 	dashBehavior = {
 		options =
 		{
@@ -49,13 +60,16 @@ NemesisGunSettings.fieldInformation =
 	},
 	color1 = { fieldType = "color" },
 	color2 = { fieldType = "color" },
-	dustType = {
+	particleType = {
 		options = {
 			"Normal",
 			"Sparkly",
 			"Chimney",
 			"Steam",
 			"VentDust",
+			"Fire",
+			"Ice",
+			"Feather",
 			"None"
 		},
 		editable = false
@@ -78,7 +92,7 @@ NemesisGunSettings.fieldOrder =
 	"height",
 	"triggerMode",
 	"directions",
-	"dustType",
+	"particleType",
 	"dashBehavior",
 	"gunshotSound",
 	"cooldown",
@@ -86,6 +100,7 @@ NemesisGunSettings.fieldOrder =
 	"speedMultiplier",
 	"recoil",
 	"gunTexture",
+	"bulletTexture",
 	"color1",
 	"color2",
 	"enabled",
