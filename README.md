@@ -9,3 +9,5 @@ Contributors:
 - ashley_bl (Started the Nemesis Gun, a modification of Guneline)
 
 DOCUMENTATION: https://github.com/koseidiamond/KoseiHelper/wiki
+
+Please contact me on Discord (@Kosei (They/Them)) or open an issue if you have any requests or difficulty understanding the helper. Contributions are appreciated!
