@@ -38,8 +38,8 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
 
         // INTERACTIONS
         public static bool canKillPlayer, canGoThroughDreamBlocks, breakBounceBlocks, activateFallingBlocks, harmEnemies, harmTheo,
-            breakSpinners, breakMovingBlades, enableKevins, loseGunOnRespawn, collectables, useRefills, explodeFishes, pressDashSwitches, canBounce,
-            scareBirds, collectTouchSwitches = true;
+            breakSpinners, breakMovingBlades, enableKevins, loseGunOnRespawn, collectables, useRefills, pressDashSwitches, canBounce,
+            scareBirds, collectTouchSwitches, collectBadelineOrbs = true;
         public static bool useBoosters = false;
         public static float waterFriction = 0.995f;
         public static string gunTexture = "objects/KoseiHelper/Guns/NemesisGun";
@@ -51,6 +51,13 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
             HitSpinner,
             HitSpring
         }
-        public static TheoInteraction theoInteraction = TheoInteraction.Kill;
+        public static TheoInteraction theoInteraction = TheoInteraction.HitSpring;
+        public enum PufferInteraction
+        {
+            None,
+            Explode,
+            HitSpring
+        }
+        public static PufferInteraction pufferInteraction = PufferInteraction.Explode;
     }
 }

@@ -19,13 +19,14 @@ NemesisGunInteractions.placements = {
 		breakDashBlocks = true,
 		collectables = true,
 		useRefills = true,
-		explodeFishes = true,
+		pufferInteraction = "Explode",
 		pressDashSwitches = true,
 		canBounce = true,
 		useBoosters = false,
 		waterFriction = 0.995,
 		scareBirds = true,
-		collectTouchSwitches = true
+		collectTouchSwitches = true,
+		collectBadelineOrbs = true
 		}
 	}
 }
@@ -50,6 +51,16 @@ NemesisGunInteractions.fieldInformation =
 		"None",
 		"HitSpinner",
 		"HitSpring"
+		},
+		editable = false
+	},
+	pufferInteraction =
+	{
+		options =
+		{
+		"Explode",
+		"HitSpring",
+		"None"
 		},
 		editable = false
 	}

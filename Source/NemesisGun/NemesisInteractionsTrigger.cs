@@ -2,6 +2,7 @@ using Celeste.Mod.Entities;
 using Monocle;
 using Microsoft.Xna.Framework;
 using Celeste.Mod.KoseiHelper.Triggers;
+using static Celeste.Mod.KoseiHelper.NemesisGun.Extensions;
 
 namespace Celeste.Mod.KoseiHelper.NemesisGun;
 
@@ -11,12 +12,13 @@ public class NemesisGunInteractions : Trigger
     private TriggerMode triggerMode;
 
     public bool canKillPlayer, canGoThroughDreamBlocks, breakBounceBlocks, activateFallingBlocks, harmEnemies, harmTheo,
-        breakSpinners, breakMovingBlades, enableKevins, collectables, useRefills, explodeFishes, pressDashSwitches, canBounce,
-        scareBirds, collectTouchSwitches = true;
+        breakSpinners, breakMovingBlades, enableKevins, collectables, useRefills, pressDashSwitches, canBounce,
+        scareBirds, collectTouchSwitches, collectBadelineOrbs = true;
     public bool useBoosters = false;
     public float waterFriction;
 
     public Extensions.TheoInteraction theoInteraction;
+    public Extensions.PufferInteraction pufferInteraction;
 
     public NemesisGunInteractions(EntityData data, Vector2 offset) : base(data, offset)
     {
@@ -33,13 +35,14 @@ public class NemesisGunInteractions : Trigger
         enableKevins = data.Bool("enableKevins", true);
         collectables = data.Bool("collectables", true);
         useRefills = data.Bool("useRefills", true);
-        explodeFishes = data.Bool("explodeFishes", true);
+        pufferInteraction = data.Enum("pufferInteraction", Extensions.PufferInteraction.Explode);
         pressDashSwitches = data.Bool("pressDashSwitches", true);
         canBounce = data.Bool("canBounce", true);
         useBoosters = data.Bool("useBoosters", false);
         waterFriction = data.Float("waterFriction", 0.995f);
         scareBirds = data.Bool("scareBirds", true);
         collectTouchSwitches = data.Bool("collectTouchSwitches", true);
+        collectBadelineOrbs = data.Bool("collectBadelineOrbs", true);
     }
 
     public override void OnEnter(Player player)
@@ -77,12 +80,13 @@ public class NemesisGunInteractions : Trigger
         Extensions.enableKevins = enableKevins;
         Extensions.collectables = collectables;
         Extensions.useRefills = useRefills;
-        Extensions.explodeFishes = explodeFishes;
+        Extensions.pufferInteraction = pufferInteraction;
         Extensions.pressDashSwitches = pressDashSwitches;
         Extensions.canBounce = canBounce;
         Extensions.useBoosters = useBoosters;
         Extensions.waterFriction = waterFriction;
         Extensions.scareBirds = scareBirds;
         Extensions.collectTouchSwitches = collectTouchSwitches;
+        Extensions.collectBadelineOrbs = collectBadelineOrbs;
     }
 }

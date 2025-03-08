@@ -577,7 +577,7 @@ triggers.KoseiHelper/NemesisGunInteractions.placements.name.NemesisGunInteractio
 triggers.KoseiHelper/NemesisGunInteractions.placements.description.NemesisGunInteractions=Configure which entities the Nemesis Gun can affect.
 triggers.KoseiHelper/NemesisGunInteractions.attributes.description.triggerMode=Whether this trigger should have effect when the player enters/exits it, or while inside.
 triggers.KoseiHelper/NemesisGunInteractions.attributes.description.canKillPlayer=Whether bullets should be able to kill the player upon contact (e.g. if they bounce back from a bumper).\nBullets can also kill the player if they shoot their golden/silver berry.
-triggers.KoseiHelper/NemesisGunInteractions.attributes.description.harmEnemies=Whether bullets should be able to harm/kill enemies (Oshiro, goombas, seekers and plants).
+triggers.KoseiHelper/NemesisGunInteractions.attributes.description.harmEnemies=Whether bullets should be able to harm/kill enemies (Oshiro, goombas, seekers and plants).\nIf the enemy is a Badeline Boss, the player will be teleported to it in order to hit it.
 triggers.KoseiHelper/NemesisGunInteractions.attributes.description.harmTheo=Whether bullets should be able to kill Theo.
 triggers.KoseiHelper/NemesisGunInteractions.attributes.description.breakBounceBlocks=Whether bounce blocks (core blocks) should break when shot.
 triggers.KoseiHelper/NemesisGunInteractions.attributes.description.activateFallingBlocks=Whether falling blocks/falling platforms should start falling when shot.
@@ -595,3 +595,4 @@ triggers.KoseiHelper/NemesisGunInteractions.attributes.description.useBoosters=T
 triggers.KoseiHelper/NemesisGunInteractions.attributes.description.waterFriction=How much the water will slow down the bullets.\nIf you want a smooth friction, recommended values are between 0.990 and 0.998.
 triggers.KoseiHelper/NemesisGunInteractions.attributes.description.scareBirds=Whether shooting a bird will make it fling away.\nFlutterbirds are affected too.
 triggers.KoseiHelper/NemesisGunInteractions.attributes.description.collectTouchSwitches=Whether bullets should be able to collect touch switches (vanilla or Flag Touch Switches from Helping Hand).
+triggers.KoseiHelper/NemesisGunInteractions.attributes.description.collectBadelineOrbs=Whether bullets should make badeline orbs to absorb the player upon contact.

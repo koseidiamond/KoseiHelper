@@ -187,7 +187,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                         }
                         else
                         {
-                            if (theo.CenterY <= theo.CenterY)
+                            if (theo.Top <= Bottom)
                             {
                                 theo.Speed.X *= 0.5f;
                                 theo.Speed.Y = -160f;
@@ -238,7 +238,14 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 return;
             }
 
-            if (owner.Scene.CollideFirst<HeartGem>(Hitbox) is HeartGem heartGem && !dead)
+            if (owner.Scene.CollideFirst<BadelineBoost>(Hitbox) is BadelineBoost badelineBoost && !dead && owner is Player playerBadelineBoost)
+            {
+                badelineBoost.OnPlayer(playerBadelineBoost);
+                DestroyBullet();
+                return;
+            }
+
+            if (owner.Scene.CollideFirst<HeartGem>(Hitbox) is HeartGem heartGem && Extensions.collectBadelineOrbs && !dead)
             {
                 if (owner is Player p && !heartGem.collected)
                 {
@@ -299,6 +306,12 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
             {
                 dSSpinner.RemoveSelf();
                 DestroyBullet();
+                return;
+            }
+
+            if (owner.Scene.CollideFirst<Door>(Hitbox) is Door door && !dead && !door.disabled)
+            {
+                door.Open(X);
                 return;
             }
 
@@ -397,10 +410,59 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                     sGem.Add(new Coroutine((IEnumerator)NemesisGun.summitGemSmashRoutine.Invoke(sGem, new object[] { p, p.Scene as Level })));
                 }
 
-                if (entity is Puffer puffer && puffer.Collider.Bounds.Intersects(Hitbox) && Extensions.explodeFishes && !dead && puffer.Collidable)
+                if (entity is Puffer puffer && puffer.Collider.Bounds.Intersects(Hitbox) && !dead && puffer.Collidable)
                 {
-                    NemesisGun.pufferExplode.Invoke(puffer, null);
-                    NemesisGun.pufferGotoGone.Invoke(puffer, null);
+                    switch (Extensions.pufferInteraction)
+                    {
+                        case Extensions.PufferInteraction.Explode:
+                            NemesisGun.pufferExplode.Invoke(puffer, null);
+                            NemesisGun.pufferGotoGone.Invoke(puffer, null);
+                            break;
+                        case Extensions.PufferInteraction.HitSpring:
+                            if (puffer.Left > Left)
+                            {
+                                puffer.facing.X = 1f;
+                                puffer.GotoHitSpeed(280f * Vector2.UnitX);
+                                Audio.Play("event:/new_content/game/10_farewell/puffer_boop", puffer.Position);
+                                puffer.MoveTowardsY(CenterY, 4f);
+                                puffer.bounceWiggler.Start();
+                                puffer.Alert(restart: true, playSfx: false);
+                            }
+                            else if (Math.Round(puffer.Right) < Right)
+                            {
+                                puffer.facing.X = -1f;
+                                puffer.GotoHitSpeed(280f * -Vector2.UnitX);
+                                Audio.Play("event:/new_content/game/10_farewell/puffer_boop", puffer.Position);
+                                puffer.MoveTowardsY(CenterY, 4f);
+                                puffer.bounceWiggler.Start();
+                                puffer.Alert(restart: true, playSfx: false);
+                            }
+                            else
+                            {
+                                if (puffer.Top <= Bottom)
+                                {
+                                    puffer.GotoHitSpeed(224f * -Vector2.UnitY);
+                                    Audio.Play("event:/new_content/game/10_farewell/puffer_boop", puffer.Position);
+                                    puffer.MoveTowardsX(CenterX, 4f);
+                                    puffer.bounceWiggler.Start();
+                                    puffer.Alert(restart: true, playSfx: false);
+                                }
+                                else
+                                {
+                                    puffer.GotoHit(Center);
+                                    puffer.MoveToX(puffer.anchorPosition.X);
+                                    puffer.idleSine.Reset();
+                                    puffer.anchorPosition = (puffer.lastSinePosition = puffer.Position);
+                                    puffer.eyeSpin = 1f;
+                                    puffer.cannotHitTimer = 0.1f;
+                                }
+                            }
+                            break;
+                        case Extensions.PufferInteraction.None:
+                            break;
+                        default:
+                            break;
+                    }
                     DestroyBullet();
                     return;
                 }
@@ -501,9 +563,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
 
                 if (solid is BounceBlock bounceBlock && Extensions.breakBounceBlocks)
                     bounceBlock.Break();
-
-                velocity = new Vector2(-60,0);
-                //DestroyBullet();
+                DestroyBullet();
                 return;
             }
         }
