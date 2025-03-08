@@ -592,5 +592,5 @@ triggers.KoseiHelper/NemesisGunInteractions.attributes.description.pressDashSwit
 triggers.KoseiHelper/NemesisGunInteractions.attributes.description.canBounce=Whether bullets can bounce back on certain entities, like bumpers or springs.
 triggers.KoseiHelper/NemesisGunInteractions.attributes.description.useBoosters=The player will immediately teleport and use the booster when shooting it.
 triggers.KoseiHelper/NemesisGunInteractions.attributes.description.waterFriction=How much the water will slow down the bullets.\nIf you want a smooth friction, recommended values are between 0.990 and 0.998.
-triggers.KoseiHelper/NemesisGunInteractions.attributes.description.scareBirds=Whether shooting a bird will make it fling away.
+triggers.KoseiHelper/NemesisGunInteractions.attributes.description.scareBirds=Whether shooting a bird will make it fling away.\nFlutterbirds are affected too.
 triggers.KoseiHelper/NemesisGunInteractions.attributes.description.collectTouchSwitches=Whether bullets should be able to collect touch switches (vanilla or Flag Touch Switches from Helping Hand).

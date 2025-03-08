@@ -41,7 +41,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
             scareBirds, collectTouchSwitches = true;
         public static bool useBoosters = false;
         public static float waterFriction = 0.995f;
-        public static string gunTexture = "objects/KoseiHelper/NemesisGun/Gun";
+        public static string gunTexture = "objects/KoseiHelper/NemesisGun/NemesisGun";
         public enum TheoInteraction
         {
             None,

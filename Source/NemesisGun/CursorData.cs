@@ -1,7 +1,7 @@
 using Microsoft.Xna.Framework;
 
 namespace Celeste.Mod.KoseiHelper.NemesisGun
-{
+{ // I don't even know what is this for but it's from Guneline
     public struct CursorData
     {
         public uint ID;

@@ -35,7 +35,7 @@ public class NemesisGunSettingsTrigger : Trigger
         gunDirections = data.Enum("directions", Extensions.GunDirections.FourDirections);
         loseGunOnRespawn = data.Bool("loseGunOnRespawn", true);
         lifetime = data.Int("lifetime", 60)*10;
-        gunTexture = data.Attr("gunTexture", "objects/KoseiHelper/NemesisGun/Gun");
+        gunTexture = data.Attr("gunTexture", "objects/KoseiHelper/NemesisGun/NemesisGun");
         speedMultiplier = data.Float("speedMultiplier", 1f);
         recoil = data.Float("recoil", 80f);
         dashBehavior = data.Enum("dashBehavior", Extensions.DashBehavior.ReplacesDash);

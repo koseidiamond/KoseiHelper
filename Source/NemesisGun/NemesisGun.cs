@@ -57,7 +57,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
             }
             switch (gunDirections)
             {
-                case Extensions.GunDirections.Horizontal: // TODO
+                case Extensions.GunDirections.Horizontal:
                     if (Calc.AbsAngleDiff(angle, 0f) < angleThreshold)
                     {
                         return new Vector2(1f, 0f);

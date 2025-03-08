@@ -310,9 +310,9 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                         DestroyBullet();
                         return;
                     }
-                    else if (bumper.respawnTimer <= 0)
+                    else if (bumper.respawnTimer <= 0 && Extensions.canBounce)
                         velocity = BootlegBumperHit(bumper);
-
+                    if (Extensions.canBounce)
                     alreadyBouncedOffOf.Add(bumper);
                 }
 

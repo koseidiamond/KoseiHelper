@@ -19,7 +19,7 @@ NemesisGunSettings.placements = {
 		--bulletSound = "event:/none",
 		loseGunOnRespawn = true,
 		lifetime = 60,
-		gunTexture = "objects/KoseiHelper/NemesisGun/Gun",
+		gunTexture = "objects/KoseiHelper/NemesisGun/NemesisGun",
 		speedMultiplier = 1,
 		recoil = 80
 		}
