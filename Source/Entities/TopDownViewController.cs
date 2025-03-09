@@ -1,4 +1,4 @@
-using Celeste.Mod.Entities;
+/*using Celeste.Mod.Entities;
 using Monocle;
 using Microsoft.Xna.Framework;
 using MonoMod.Cil;
@@ -147,4 +147,4 @@ public class TopDownViewController : Entity
             count++;
         }
     }
-}
+}*/

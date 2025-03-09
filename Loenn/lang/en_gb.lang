@@ -35,6 +35,17 @@ entities.KoseiHelper/DebugMapController.attributes.description.ignoreDummy=Wheth
 entities.KoseiHelper/DebugMapController.attributes.description.blockDebugMap=If this flag is true, the debug map will be completely empty,\npreventing players to see the map or teleport to other rooms.\nLeave empty to always allow opening the debug map.
 entities.KoseiHelper/DebugMapController.attributes.description.roomsToAffect=The rooms that start with this preffix will be affected. Case sensitive.
 
+# Dash Limiter Controller
+entities.KoseiHelper/DashLimiterController.placements.name.DashLimiterController=Dash Limiter Controller
+entities.KoseiHelper/DashLimiterController.placements.description.DashLimiterController=Limits the amount of dashes that the player can do per screen.
+entities.KoseiHelper/DashLimiterController.attributes.description.count=How many dashes the player can perform.
+entities.KoseiHelper/DashLimiterController.attributes.description.demoDashOnly=Whether the controller should only check for dashes performed with the demo button.
+entities.KoseiHelper/DashLimiterController.attributes.description.sound=The audio that should play each time the player spends a dash.
+entities.KoseiHelper/DashLimiterController.attributes.description.indicatorsPerRow=If indicators are used, how many should appear on each row above the player.\nMods like Extended Variants generally use 5 for things like extra jumps.
+entities.KoseiHelper/DashLimiterController.attributes.description.indicatorColor=The color of the indicator that displays how many dashes are left.
+entities.KoseiHelper/DashLimiterController.attributes.description.indicatorShape=The shape of the indicators.\nIf Number is selected, it will appear in the topleft corner instead.
+entities.KoseiHelper/DashLimiterController.attributes.description.persistent=If the controller is persistent, it will keep track of the dashes even after the player transitions to a different screen.\nThe dashes left will be saved upon transition.\nThe controller won't load in rooms where it was not placed.\nIf you want to keep track of dashes in the entire map, you will want to make it global.
+
 # ClimbJump Controller
 entities.KoseiHelper/ClimbJumpController.placements.name.ClimbJumpController=Climbjump Controller
 entities.KoseiHelper/ClimbJumpController.placements.description.ClimbJumpController=Allows customization of climbjumps and wallboosting behavior.\nThis is a persistent controller.

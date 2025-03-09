@@ -9,10 +9,15 @@ DashLimiterController.depth = -10500
 DashLimiterController.texture = "objects/KoseiHelper/Controllers/DashLimiterController"
 DashLimiterController.placements = {
 	{
-		name = "Dash Limiter Controller",
+		name = "DashLimiterController",
 		data = {
 			count = 3,
-			demoDashOnly = false
+			demoDashOnly = false,
+			sound = "event:/none",
+			indicatorsPerRow = 5,
+			indicatorColor = "778899",
+			indicatorShape = "FilledCircle",
+			persistent = false
 		}
 	}
 }
@@ -21,7 +26,26 @@ DashLimiterController.fieldInformation = {
     count = {
         fieldType = "integer",
 		minimumValue = 1
-    }
+    },
+	indicatorsPerRow = {
+        fieldType = "integer",
+		minimumValue = 1
+    },
+	indicatorColor = {
+		fieldType = "color"
+	},
+	indicatorShape = {
+		options = {
+			"Circle",
+			"FilledCircle",
+			"Pixel",
+			"FilledSquare",
+			"HollowSquare",
+			"Number",
+			"None"
+		},
+		editable = false
+	}
 }
 
 function DashLimiterController.sprite(room, entity)
@@ -40,4 +64,4 @@ function DashLimiterController.sprite(room, entity)
     return sprites
 end
 
---return DashLimiterController
+return DashLimiterController
