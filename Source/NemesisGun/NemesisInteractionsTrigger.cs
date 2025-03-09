@@ -2,7 +2,6 @@ using Celeste.Mod.Entities;
 using Monocle;
 using Microsoft.Xna.Framework;
 using Celeste.Mod.KoseiHelper.Triggers;
-using static Celeste.Mod.KoseiHelper.NemesisGun.Extensions;
 
 namespace Celeste.Mod.KoseiHelper.NemesisGun;
 
@@ -11,9 +10,9 @@ public class NemesisGunInteractions : Trigger
 {
     private TriggerMode triggerMode;
 
-    public bool canKillPlayer, canGoThroughDreamBlocks, breakBounceBlocks, activateFallingBlocks, harmEnemies, harmTheo,
-        breakSpinners, breakMovingBlades, enableKevins, collectables, useRefills, pressDashSwitches, canBounce,
-        scareBirds, collectTouchSwitches, collectBadelineOrbs = true;
+    public bool canKillPlayer = true, canGoThroughDreamBlocks = true, breakBounceBlocks = true, activateFallingBlocks = true, harmEnemies = true, harmTheo = true,
+        breakSpinners = true, breakMovingBlades = true, enableKevins = true, collectables = true, useRefills = true, pressDashSwitches = true, canBounce = true,
+        scareBirds = true, collectTouchSwitches = true, collectBadelineOrbs = true;
     public bool useBoosters = false;
     public float waterFriction;
 

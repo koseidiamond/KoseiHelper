@@ -9,15 +9,16 @@ NemesisGunSettings.placements = {
 		triggerMode = "OnStay",
 		enabled = true,
 		gunshotSound = "event:/KoseiHelper/Guns/shotDefault",
-		dashBehavior = "ReplacesDash",
+		dashBehavior = "None",
 		cooldown = 8,
 		color1 = "4682B4",
 		color2 = "FFFF00",
 		particleType = "Normal",
+		particleAlpha = 1,
 		directions = "FourDirections",
 		bulletExplosion = true,
 		--bulletSound = "event:/none",
-		loseGunOnRespawn = true,
+		loseGunOnRespawn = false,
 		lifetime = 60,
 		gunTexture = "objects/KoseiHelper/Guns/NemesisGun",
 		bulletTexture = "objects/KoseiHelper/Guns/Bullets/Invisible",
@@ -32,6 +33,7 @@ NemesisGunSettings.fieldInformation =
 {
 	cooldown = { fieldType = "integer" },
 	recoilCooldown = { fieldType = "integer" },
+	particleAlpha = { minimumValue = 0, maximumValue = 1 },
 	triggerMode = {
 		options =
 		{
@@ -105,6 +107,9 @@ NemesisGunSettings.fieldOrder =
 	"triggerMode",
 	"directions",
 	"particleType",
+	"particleAlpha",
+	"color1",
+	"color2",
 	"dashBehavior",
 	"gunshotSound",
 	"cooldown",
@@ -114,8 +119,6 @@ NemesisGunSettings.fieldOrder =
 	"recoilStrength",
 	"gunTexture",
 	"bulletTexture",
-	"color1",
-	"color2",
 	"enabled",
 	"loseGunOnRespawn",
 	"bulletExplosion"

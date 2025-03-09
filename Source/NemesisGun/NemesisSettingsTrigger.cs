@@ -9,7 +9,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun;
 [CustomEntity("KoseiHelper/NemesisGunSettings")]
 public class NemesisGunSettingsTrigger : Trigger
 {
-    private bool enabled, bulletExplosion, loseGunOnRespawn = true;
+    private bool enabled = true, bulletExplosion = true, loseGunOnRespawn = true;
     private string gunshotSound, gunTexture, bulletTexture;
     private int cooldown, recoilCooldown, lifetime;
     private TriggerMode triggerMode;
@@ -40,7 +40,7 @@ public class NemesisGunSettingsTrigger : Trigger
         bulletTexture = data.Attr("bulletTexture", "objects/KoseiHelper/Guns/Bullets/Invisible");
         speedMultiplier = data.Float("speedMultiplier", 1f);
         recoil = data.Float("recoilStrength", 80f);
-        dashBehavior = data.Enum("dashBehavior", Extensions.DashBehavior.ReplacesDash);
+        dashBehavior = data.Enum("dashBehavior", Extensions.DashBehavior.None);
         particleAlpha = data.Float("particleAlpha", 1f);
     }
 

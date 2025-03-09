@@ -95,7 +95,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                     }
                 }
             }
-            if (--lifetime <= 0)
+            if (--lifetime <= 0 && owner != null)
                 DestroyBullet();
             updateCount++;
             Update();
@@ -671,8 +671,9 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 }
             }
             dead = true;
-            (owner.Scene as Level).Session.SetFlag("KoseiHelper_playerIsShooting", false);
-            RemoveSelf();
+            (Scene as Level).Session.SetFlag("KoseiHelper_playerIsShooting", false);
+            if (owner != null && this != null)
+                RemoveSelf();
         }
         public static bool CanDoShit(Actor owner)
             => owner != null && owner.Scene != null && owner.Scene.Tracker != null;
