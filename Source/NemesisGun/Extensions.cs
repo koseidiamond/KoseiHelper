@@ -37,7 +37,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
 
         // INTERACTIONS
         public static bool canKillPlayer = true, canGoThroughDreamBlocks = true, breakBounceBlocks = true, activateFallingBlocks = true,
-    harmEnemies = true, harmTheo = true, breakSpinners = true, breakMovingBlades = true, enableKevins = true,
+    harmEnemies = true, harmTheo = true, breakSpinners = true, breakMovingBlades = true, enableKevins = true, useFeathers = true,
     collectables = true, useRefills = true, pressDashSwitches = true, canBounce = true, scareBirds = true, collectTouchSwitches = true,
     collectBadelineOrbs = false;
         public static bool useBoosters = false;

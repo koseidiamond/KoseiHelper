@@ -226,7 +226,7 @@ entities.KoseiHelper/Plant.placements.description.Plant=Mario Bros plants, comin
 entities.KoseiHelper/Plant.attributes.description.plantType=Black plants are small and are functionally similar to a spinner but they are affected by gravity and collisions.\nJumping plants are small and jump if you're above them.\nGreen plants move up and down in a cycle.\nRed plants move up only when the player is close.
 entities.KoseiHelper/Plant.attributes.description.canShoot=If the plant can shoot. This also determines their sprite variant.
 entities.KoseiHelper/Plant.attributes.description.shootSpeed=A bullet will be shot every x seconds.
-entities.KoseiHelper/Plant.attributes.description.distance=How close in pixels the player needs to be so the Red plants can go up.
+entities.KoseiHelper/Plant.attributes.description.distance=How close in pixels the player needs to be so the plants react (Reds or Jumping ones).
 entities.KoseiHelper/Plant.attributes.description.direction=If the plant should be affected by a different type of gravity or coming from a different direction.
 entities.KoseiHelper/Plant.attributes.description.movingSpeed=A multiplier for the speed at which the plant will move.
 entities.KoseiHelper/Plant.attributes.description.cycleOffset=If the plant is green, this determines whether the plant should wait 2 seconds before moving for the first time.
@@ -394,7 +394,7 @@ entities.KoseiHelper/IRLController.attributes.description.changesDarknessLevel=I
 
 # Theo Pet Controller
 entities.KoseiHelper/TheoPetController.placements.name.TheoPetController=Theo Pet Controller
-entities.KoseiHelper/TheoPetController.placements.description.TheoPetController=Theo Crystals will try to follow the player.
+entities.KoseiHelper/TheoPetController.placements.description.TheoPetController=Theo Crystals will try to follow the player.\nIf there are multiple Theos, only the closest to the player will follow.
 entities.KoseiHelper/TheoPetController.attributes.description.speed=A multiplier that affects the horizontal speed when Theo tries to follow the player.
 entities.KoseiHelper/TheoPetController.attributes.description.jumpStrength=How much Theo can jump when he is on the ground.\nThe minimum height (if set to 0) is 11 pixels.
 
@@ -607,3 +607,4 @@ triggers.KoseiHelper/NemesisGunInteractions.attributes.description.waterFriction
 triggers.KoseiHelper/NemesisGunInteractions.attributes.description.scareBirds=Whether shooting a bird will make it fling away.\nFlutterbirds are affected too.
 triggers.KoseiHelper/NemesisGunInteractions.attributes.description.collectTouchSwitches=Whether bullets should be able to collect touch switches (vanilla or Flag Touch Switches from Helping Hand).
 triggers.KoseiHelper/NemesisGunInteractions.attributes.description.collectBadelineOrbs=Whether bullets should make badeline orbs to absorb the player upon contact.
+triggers.KoseiHelper/NemesisGunInteractions.attributes.description.useFeathers=Whether bullets should be able to use feathers (or destroy their bubbles if shielded).

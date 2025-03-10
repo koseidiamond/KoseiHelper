@@ -139,12 +139,24 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 }
             }
 
-            if (owner.Scene.CollideFirst<FlyFeather>(Hitbox) is FlyFeather feather && !dead) //behavior by ashley_bl
+            if (owner.Scene.CollideFirst<CoreModeToggle>(Hitbox) is CoreModeToggle coreModeToggle && !dead)
+            {
+                if (owner is Player playerCoreModeToggle)
+                    coreModeToggle.OnPlayer(playerCoreModeToggle);
+                    DestroyBullet();
+                    return;
+            }
+
+            if (owner.Scene.CollideFirst<FlyFeather>(Hitbox) is FlyFeather feather && Extensions.useFeathers && !dead)
             {
                 if ((bool)feather_shielded.GetValue(feather) == true)
                 {
                     feather_shielded.SetValue(feather, false);
                     DestroyBullet();
+                }
+                else if (owner is Player featherPlayer)
+                {
+                    feather.OnPlayer(featherPlayer);
                 }
                 return;
             }
@@ -544,6 +556,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 if (entity is Plant plant && Extensions.harmEnemies && plant.Collider.Bounds.Intersects(Hitbox) && !dead)
                 {
                     plant.RemoveSelf();
+                    SceneAs<Level>().ParticlesFG.Emit(Player.P_Split, 5, Position, Vector2.One * 4f, velocity.Angle() - (float)Math.PI / 2f);
                     Audio.Play("event:/KoseiHelper/goomba", plant.Center);
                     DestroyBullet();
                     return;

@@ -48,6 +48,7 @@ NemesisGunSettings.fieldInformation =
 		options =
 		{
 		"event:/KoseiHelper/Guns/shotDefault",
+		"event:/KoseiHelper/Guns/shotMarioFireball",
 		"event:/KoseiHelper/bullet",
 		"event:/KoseiHelper/bulletB",
 		},

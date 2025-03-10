@@ -316,6 +316,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
             gunTexture = GFX.Game[Extensions.gunTexture];
             SpriteEffects effects = SpriteEffects.None;
             Vector2 gunVector = GetGunVector(player, overrideCursorPos == null ? CursorPos : (Vector2)overrideCursorPos, facing);
+            Logger.Debug(nameof(KoseiHelperModule), $"gunVector: {gunVector}");
             gunTexture.DrawCentered(player.Center, Color.White, 1, gunVector.ToRotation(), effects);
         }
 
@@ -329,6 +330,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
         {
             if (actor == null || actor.Scene == null)
             {
+                float? a = 4f;
                 return;
             }
 

@@ -26,7 +26,8 @@ NemesisGunInteractions.placements = {
 		waterFriction = 0.995,
 		scareBirds = true,
 		collectTouchSwitches = true,
-		collectBadelineOrbs = true
+		collectBadelineOrbs = true,
+		useFeathers = true
 		}
 	}
 }
