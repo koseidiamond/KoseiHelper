@@ -8,7 +8,7 @@ NemesisGunInteractions.placements = {
 		data = {
 		triggerMode = "OnStay",
 		canKillPlayer = false,
-		goThroughDreamBlocks = true,
+		dreamBlockBehavior = "GoThrough",
 		breakBounceBlocks = true,
 		activateFallingBlocks = true,
 		harmEnemies = true,
@@ -62,6 +62,16 @@ NemesisGunInteractions.fieldInformation =
 		{
 		"Explode",
 		"HitSpring",
+		"None"
+		},
+		editable = false
+	},
+	dreamBlockBehavior =
+	{
+		options =
+		{
+		"GoThrough",
+		"Destroy",
 		"None"
 		},
 		editable = false

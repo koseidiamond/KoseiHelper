@@ -264,6 +264,8 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 {
                     if (shotCooldown <= 0 && (self.Dashes > 0 || Extensions.dashBehavior != Extensions.DashBehavior.ConsumesDash))
                     {
+                        // if TODO player states 11 dummy 
+                        if (self.StateMachine.state != 11 && self.StateMachine.state != 17 && (self.StateMachine.state != 19 || Extensions.canShootInFeather))
                         Gunshot(self, CursorPos);
                         if (GetEightDirectionalAim(Extensions.gunDirections).Y < Math.Sqrt(2) / 2 && GetEightDirectionalAim(Extensions.gunDirections).Y > -Math.Sqrt(2) / 2 && recoilCooldown <= 0)
                         {
@@ -324,7 +326,8 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
             else
                 gunVector = new Vector2((float)Math.Cos(lastGunRotation), (float)Math.Sin(lastGunRotation));
             SpriteEffects effects = gunVector.X < 0 ? SpriteEffects.FlipVertically : SpriteEffects.None;
-            gunTexture.DrawCentered(player.Center, Color.White, 1, lastGunRotation, effects);
+            if (Extensions.canShootInFeather || (player as Player).StateMachine.state != 19) // make it invisible if the feather can't use it
+                gunTexture.DrawCentered(player.Center, Color.White, 1, lastGunRotation, effects);
         }
 
         private static Vector2 PlayerPosScreenSpace(Actor self)

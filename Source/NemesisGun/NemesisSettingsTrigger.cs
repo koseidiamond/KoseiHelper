@@ -19,6 +19,7 @@ public class NemesisGunSettingsTrigger : Trigger
     private float recoil;
     private Extensions.DashBehavior dashBehavior;
     private float particleAlpha;
+    public bool canShootInFeather = true;
 
     public Extensions.GunDirections gunDirections;
 
@@ -42,6 +43,7 @@ public class NemesisGunSettingsTrigger : Trigger
         recoil = data.Float("recoilStrength", 80f);
         dashBehavior = data.Enum("dashBehavior", Extensions.DashBehavior.None);
         particleAlpha = data.Float("particleAlpha", 1f);
+        canShootInFeather = data.Bool("canShootInFeather", true);
     }
 
     public override void OnEnter(Player player)
@@ -83,6 +85,7 @@ public class NemesisGunSettingsTrigger : Trigger
         Extensions.recoil = recoil;
         Extensions.particleAlpha = particleAlpha;
         Extensions.recoilCooldown = recoilCooldown;
+        Extensions.canShootInFeather = canShootInFeather;
 
         if (enabled)
         {

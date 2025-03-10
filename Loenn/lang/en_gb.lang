@@ -583,6 +583,7 @@ triggers.KoseiHelper/NemesisGunSettings.attributes.description.lifetime=How long
 triggers.KoseiHelper/NemesisGunSettings.attributes.description.speedMultiplier=The default speed will be multiplier by this factor.
 triggers.KoseiHelper/NemesisGunSettings.attributes.description.recoilStrength=How much shooting should push the player backwards.\nThe default value is the same speed that vanilla backboosts give. Leave as 0 for no recoil.
 triggers.KoseiHelper/NemesisGunSettings.attributes.description.recoilCooldown=How much time needs to pass until the player can be pushed backwards again from shooting.\nLow values can allow infinite speedbuilding with the default strength.
+triggers.KoseiHelper/NemesisGunSettings.attributes.description.canShootInFeather=Whether the player should have the gun available while in the feather state.
 
 triggers.KoseiHelper/NemesisGunInteractions.placements.name.NemesisGunInteractions=Nemesis Gun Interactions
 triggers.KoseiHelper/NemesisGunInteractions.placements.description.NemesisGunInteractions=Configure which entities the Nemesis Gun can affect.
@@ -592,7 +593,7 @@ triggers.KoseiHelper/NemesisGunInteractions.attributes.description.harmEnemies=W
 triggers.KoseiHelper/NemesisGunInteractions.attributes.description.harmTheo=Whether bullets should be able to kill Theo.
 triggers.KoseiHelper/NemesisGunInteractions.attributes.description.breakBounceBlocks=Whether bounce blocks (core blocks) should break when shot.
 triggers.KoseiHelper/NemesisGunInteractions.attributes.description.activateFallingBlocks=Whether falling blocks/falling platforms should start falling when shot.
-triggers.KoseiHelper/NemesisGunInteractions.attributes.description.goThroughDreamBlocks=Whether bullets should be able to pass through dream blocks.
+triggers.KoseiHelper/NemesisGunInteractions.attributes.description.dreamBlockBehavior=Whether bullets should be able to pass through dream blocks or destroy them.
 triggers.KoseiHelper/NemesisGunInteractions.attributes.description.breakSpinners=Whether bullets should be able to break spinners.
 triggers.KoseiHelper/NemesisGunInteractions.attributes.description.breakMovingBlades=Whether bullets should be able to break blades/stars/dust bunnies that move/rotate.
 triggers.KoseiHelper/NemesisGunInteractions.attributes.description.enableKevins=Whether bullets can hit Kevins like dashes.

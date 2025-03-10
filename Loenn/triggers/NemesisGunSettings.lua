@@ -17,14 +17,14 @@ NemesisGunSettings.placements = {
 		particleAlpha = 1,
 		directions = "FourDirections",
 		bulletExplosion = true,
-		--bulletSound = "event:/none",
 		loseGunOnRespawn = false,
 		lifetime = 60,
 		gunTexture = "objects/KoseiHelper/Guns/NemesisGun",
 		bulletTexture = "objects/KoseiHelper/Guns/Bullets/Invisible",
 		speedMultiplier = 1,
 		recoilStrength = 80,
-		recoilCooldown = 16
+		recoilCooldown = 16,
+		canShootInFeather = true
 		}
 	}
 }
@@ -32,6 +32,7 @@ NemesisGunSettings.placements = {
 NemesisGunSettings.fieldInformation = 
 {
 	cooldown = { fieldType = "integer" },
+	lifetime = { minimumValue = 0, maximumValue = 1 },
 	recoilCooldown = { fieldType = "integer" },
 	particleAlpha = { minimumValue = 0, maximumValue = 1 },
 	triggerMode = {
@@ -115,13 +116,14 @@ NemesisGunSettings.fieldOrder =
 	"gunshotSound",
 	"cooldown",
 	"recoilCooldown",
+	"recoilStrength",
 	"lifetime",
 	"speedMultiplier",
-	"recoilStrength",
 	"gunTexture",
 	"bulletTexture",
 	"enabled",
 	"loseGunOnRespawn",
+	"canShootInFeather",
 	"bulletExplosion"
 	
 }

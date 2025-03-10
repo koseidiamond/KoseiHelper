@@ -2,6 +2,7 @@ using Celeste.Mod.Entities;
 using Monocle;
 using Microsoft.Xna.Framework;
 using Celeste.Mod.KoseiHelper.Triggers;
+using static Celeste.Mod.KoseiHelper.NemesisGun.Extensions;
 
 namespace Celeste.Mod.KoseiHelper.NemesisGun;
 
@@ -10,7 +11,7 @@ public class NemesisGunInteractions : Trigger
 {
     private TriggerMode triggerMode;
 
-    public bool canKillPlayer = true, canGoThroughDreamBlocks = true, breakBounceBlocks = true, activateFallingBlocks = true, harmEnemies = true, harmTheo = true,
+    public bool canKillPlayer = true, breakBounceBlocks = true, activateFallingBlocks = true, harmEnemies = true, harmTheo = true,
         breakSpinners = true, breakMovingBlades = true, enableKevins = true, collectables = true, useRefills = true, pressDashSwitches = true, canBounce = true,
         scareBirds = true, collectTouchSwitches = true, collectBadelineOrbs = true, useFeathers = true, coreModeToggles = true;
     public bool useBoosters = false;
@@ -18,13 +19,14 @@ public class NemesisGunInteractions : Trigger
 
     public Extensions.TheoInteraction theoInteraction;
     public Extensions.PufferInteraction pufferInteraction;
+    public Extensions.DreamBlockBehavior dreamBlockBehavior;
 
     public NemesisGunInteractions(EntityData data, Vector2 offset) : base(data, offset)
     {
         triggerMode = data.Enum("triggerMode", TriggerMode.OnEnter);
 
         canKillPlayer = data.Bool("canKillPlayer", true);
-        canGoThroughDreamBlocks = data.Bool("goThroughDreamBlocks", true);
+        dreamBlockBehavior = data.Enum("dreamBlockBehavior", Extensions.DreamBlockBehavior.GoThrough);
         breakBounceBlocks = data.Bool("breakBounceBlocks", true);
         activateFallingBlocks = data.Bool("activateFallingBlocks", true);
         harmEnemies = data.Bool("harmEnemies", true);
@@ -70,7 +72,7 @@ public class NemesisGunInteractions : Trigger
     public void ChangeSettings()
     {
         Extensions.canKillPlayer = canKillPlayer;
-        Extensions.canGoThroughDreamBlocks = canGoThroughDreamBlocks;
+        Extensions.dreamBlockBehavior = dreamBlockBehavior;
         Extensions.breakBounceBlocks = breakBounceBlocks;
         Extensions.activateFallingBlocks = activateFallingBlocks;
         Extensions.harmEnemies = harmEnemies;

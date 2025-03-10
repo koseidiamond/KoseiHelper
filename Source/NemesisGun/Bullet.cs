@@ -585,10 +585,24 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
             // Solid interactions
             if (owner.Scene.CollideFirst<Solid>(Hitbox) is Solid solid && !dead)
             {
-                if (solid is DreamBlock dreamBlock && Extensions.canGoThroughDreamBlocks)
+                if (solid is DreamBlock dreamBlock)
                 {
-                    if ((owner.Scene as Level).Session.Inventory.DreamDash)
-                        return;
+                    switch (Extensions.dreamBlockBehavior)
+                    {
+                        case Extensions.DreamBlockBehavior.Destroy:
+                            dreamBlock.OneUseDestroy();
+                            break;
+                        case Extensions.DreamBlockBehavior.GoThrough:
+                            if ((owner.Scene as Level).Session.Inventory.DreamDash)
+                                return;
+                            else
+                                DestroyBullet();
+                            break;
+                        default: // None
+                            DestroyBullet();
+                            break;
+                    }
+                    return;
                 }
 
                 if (solid is CustomOshiroDoor customOshiroDoor && !dead)
