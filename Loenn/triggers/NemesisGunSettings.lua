@@ -32,7 +32,7 @@ NemesisGunSettings.placements = {
 NemesisGunSettings.fieldInformation = 
 {
 	cooldown = { fieldType = "integer" },
-	lifetime = { minimumValue = 0, maximumValue = 1 },
+	lifetime = { minimumValue = 0},
 	recoilCooldown = { fieldType = "integer" },
 	particleAlpha = { minimumValue = 0, maximumValue = 1 },
 	triggerMode = {
@@ -50,6 +50,7 @@ NemesisGunSettings.fieldInformation =
 		{
 		"event:/KoseiHelper/Guns/shotDefault",
 		"event:/KoseiHelper/Guns/shotMarioFireball",
+		"event:/KoseiHelper/Guns/shotMeow",
 		"event:/KoseiHelper/bullet",
 		"event:/KoseiHelper/bulletB",
 		},

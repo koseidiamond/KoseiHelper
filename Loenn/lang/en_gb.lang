@@ -572,6 +572,7 @@ triggers.KoseiHelper/NemesisGunSettings.attributes.description.gunshotSound=The 
 triggers.KoseiHelper/NemesisGunSettings.attributes.description.dashBehavior=Whether the gun should use the dash/demo buttons (replaces dashes) or the custom keybind, spending (or not) a dash upon shooting.\n(Configurable under Mod Options > Kosei Helper)
 triggers.KoseiHelper/NemesisGunSettings.attributes.description.cooldown=How much time until the player can shoot again, in frames.
 triggers.KoseiHelper/NemesisGunSettings.attributes.description.gunTexture=The path to your custom weapon texture, relative to Atlases/Gameplay/.
+triggers.KoseiHelper/NemesisGunSettings.attributes.description.bulletTexture=The path to your bullet texture, relative to Atlases/Gameplay/.\nThe bullet hitbox is 6x6 pixels, for reference.
 triggers.KoseiHelper/NemesisGunSettings.attributes.description.color1=The main color the bullet produces during its trajectory.\nThis color is also used when bullets collide.
 triggers.KoseiHelper/NemesisGunSettings.attributes.description.color2=The secondary color the bullet produces during its trajectory.
 triggers.KoseiHelper/NemesisGunSettings.attributes.description.particleType=The type of particles that indicate the bullet trajectory.
@@ -588,7 +589,7 @@ triggers.KoseiHelper/NemesisGunSettings.attributes.description.canShootInFeather
 triggers.KoseiHelper/NemesisGunInteractions.placements.name.NemesisGunInteractions=Nemesis Gun Interactions
 triggers.KoseiHelper/NemesisGunInteractions.placements.description.NemesisGunInteractions=Configure which entities the Nemesis Gun can affect.
 triggers.KoseiHelper/NemesisGunInteractions.attributes.description.triggerMode=Whether this trigger should have effect when the player enters/exits it, or while inside.
-triggers.KoseiHelper/NemesisGunInteractions.attributes.description.canKillPlayer=Whether bullets should be able to kill the player upon contact (e.g. if they bounce back from a bumper).\nBullets can also kill the player if they shoot their golden/silver berry.
+triggers.KoseiHelper/NemesisGunInteractions.attributes.description.canKillPlayer=Whether bullets should be able to kill the player upon contact if they bounce back from a bumper/spring,\nor if they shoot at their golden/silver berry.
 triggers.KoseiHelper/NemesisGunInteractions.attributes.description.harmEnemies=Whether bullets should be able to harm/kill enemies (Oshiro, goombas, seekers and plants).\nIf the enemy is a Badeline Boss, the player will be teleported to it in order to hit it.
 triggers.KoseiHelper/NemesisGunInteractions.attributes.description.harmTheo=Whether bullets should be able to kill Theo.
 triggers.KoseiHelper/NemesisGunInteractions.attributes.description.breakBounceBlocks=Whether bounce blocks (core blocks) should break when shot.

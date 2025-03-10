@@ -24,7 +24,8 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
         private MTexture bulletTexture;
         private ParticleType p_fire = FireBall.P_FireTrail, p_ice = FireBall.P_IceTrail, p_feather = BirdNPC.P_Feather;
 
-        private readonly List<Bumper> alreadyBouncedOffOf;
+        private readonly List<Bumper> BouncedOffBumper;
+        private readonly List<Spring> BouncedOffSpring;
         private static FieldInfo feather_shielded = typeof(FlyFeather).GetField("shielded", BindingFlags.NonPublic | BindingFlags.Instance);
 
         public Bullet(Vector2 position, Vector2 velocity, Actor owner)
@@ -38,7 +39,8 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
             this.velocity = velocity;
             this.owner = owner;
             lifetime = Extensions.lifetime;
-            alreadyBouncedOffOf = new List<Bumper>();
+            BouncedOffBumper = new List<Bumper>();
+            BouncedOffSpring = new List<Spring>();
             bulletTexture = GFX.Game[Extensions.bulletTexture];
             if (CanDoShit(owner))
                 (owner.Scene as Level).Add(this);
@@ -101,24 +103,35 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
             Update();
         }
 
+        /*public override void Render()
+        {
+            if (CanDoShit(owner))
+            {
+                (owner.Scene as Level).Particles.Emit(ParticleTypes.Dust, Position, Color.Lerp(Extensions.color1, Extensions.color2, Calc.Random.NextFloat()) * Extensions.particleAlpha);
+                bulletTexture.DrawCentered(Position, Color.White, 1, 0f); // In radians
+            }
+        }*/
+
         public override void Render()
         {
             if (CanDoShit(owner))
             {
                 (owner.Scene as Level).Particles.Emit(ParticleTypes.Dust, Position, Color.Lerp(Extensions.color1, Extensions.color2, Calc.Random.NextFloat()) * Extensions.particleAlpha);
-                bulletTexture.DrawCentered(Position, Color.White, 1, 1f);
+                float angle = (float)Math.Atan2(-velocity.Y, velocity.X);
+                bulletTexture.DrawCentered(Position, Color.White, 1, angle);
             }
         }
 
         // This is where all interactions with entities occur
         private void CollisionCheck()
         {
-            if (owner.Collider.Bounds.Intersects(Hitbox) && alreadyBouncedOffOf.Count > 0)
+            if (owner.Collider.Bounds.Intersects(Hitbox) && (BouncedOffBumper.Count > 0 || BouncedOffSpring.Count > 0))
             {
                 if (owner is Player p && Extensions.canKillPlayer)
+                {
                     p.Die(velocity, true);
-
-                DestroyBullet();
+                    DestroyBullet();
+                }
                 return;
             }
 
@@ -379,7 +392,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                     return;
                 }
 
-                if (entity is Bumper bumper && bumper.Collider.Bounds.Intersects(Hitbox) && !dead && !alreadyBouncedOffOf.Contains(bumper))
+                if (entity is Bumper bumper && bumper.Collider.Bounds.Intersects(Hitbox) && !dead && !BouncedOffBumper.Contains(bumper))
                 {
                     if ((bool)NemesisGun.bumperFireMode.GetValue(bumper))
                     {
@@ -389,7 +402,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                     else if (bumper.respawnTimer <= 0 && Extensions.canBounce)
                         velocity = BootlegBumperHit(bumper);
                     if (Extensions.canBounce)
-                    alreadyBouncedOffOf.Add(bumper);
+                        BouncedOffBumper.Add(bumper);
                 }
 
                 if (entity is Strawberry strawberry && strawberry.Collider.Bounds.Intersects(Hitbox) && !dead)
@@ -433,10 +446,14 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                     return;
                 }
 
-                if (entity is Spring spring && spring.Collider.Bounds.Intersects(Hitbox) && Extensions.collectables && !dead && owner is Player p_spring && spring.Collidable)
+                if (entity is Spring spring && spring.Collider.Bounds.Intersects(Hitbox) && !BouncedOffSpring.Contains(spring) && Extensions.canBounce &&
+                    !dead && owner is Player p_spring && spring.Collidable)
                 {
                     if (Extensions.canBounce)
+                    {
                         velocity = (Center - spring.Center).SafeNormalize();
+                        BouncedOffSpring.Add(spring);
+                    }
                     else
                         DestroyBullet();
                     return;
@@ -590,6 +607,8 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                     switch (Extensions.dreamBlockBehavior)
                     {
                         case Extensions.DreamBlockBehavior.Destroy:
+                            Audio.Play("event:/KoseiHelper/shatter_dream_block", dreamBlock.Center);
+                            Audio.Play("event:/new_content/game/10_farewell/glider_emancipate", dreamBlock.Center);
                             dreamBlock.OneUseDestroy();
                             break;
                         case Extensions.DreamBlockBehavior.GoThrough:

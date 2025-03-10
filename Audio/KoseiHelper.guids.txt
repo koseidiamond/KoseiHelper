@@ -11,4 +11,6 @@
 {600cf596-96ec-43e9-9afb-4d4e1b8cf021} event:/KoseiHelper/laugh_oneho
 {6ca0e496-373b-4b76-a240-4448b532ab37} event:/KoseiHelper/Guns/shotDefault
 {82443c2a-e9b0-4137-8878-287059188a95} event:/KoseiHelper/Guns/shotMarioFireball
+{9ff6c4a9-0d0e-4d13-bfb6-ef251a58de57} event:/KoseiHelper/Guns/shotMeow
+{20a4b661-d8c4-44a4-98bd-8d842d211b28} event:/KoseiHelper/shatter_dream_block
 {ba8e885e-d7ef-474b-9ea8-20ba14e4943e} bank:/KoseiHelper
