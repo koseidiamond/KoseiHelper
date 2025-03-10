@@ -16,8 +16,6 @@ public class DashLimiterController : Entity
     public int indicatorsPerRow = 5;
     public string sound = "event:/none";
     public Color indicatorColor = Color.LightSlateGray;
-    public bool persistent = false;
-    private EntityID eid;
     private enum IndicatorShape
         {
         Circle,
@@ -30,19 +28,15 @@ public class DashLimiterController : Entity
         };
     private IndicatorShape indicatorShape;
 
-    public DashLimiterController(EntityData data, Vector2 offset, EntityID eid) : base(data.Position + offset)
+    public DashLimiterController(EntityData data, Vector2 offset) : base(data.Position + offset)
     {
-        this.eid = eid;
         count = data.Int("count", 3);
         demoDashOnly = data.Bool("demoDashOnly", false);
         indicatorsPerRow = data.Int("indicatorsPerRow", 5);
         sound = data.Attr("sound", "event:/none");
         indicatorColor = data.HexColor("indicatorColor", Color.LightSlateGray);
         indicatorShape = data.Enum("indicatorShape", IndicatorShape.FilledCircle);
-        persistent = data.Bool("persistent", false);
         Depth = -9999999;
-        if (persistent)
-            base.Tag = Tags.Global;
     }
     public override void Added(Scene scene)
     {
@@ -51,8 +45,6 @@ public class DashLimiterController : Entity
             this.RemoveSelf();
         base.Added(scene);
         level.Session.SetCounter("KoseiHelper_RemainingDashes", count);
-        if (persistent)
-            level.Session.DoNotLoad.Add(eid);
     }
 
     public override void Update()
@@ -60,7 +52,6 @@ public class DashLimiterController : Entity
         base.Update();
         if (Scene.Tracker.GetEntity<Player>() is not { } player)
         {
-            SceneAs<Level>().Session.DoNotLoad.Remove(eid);
             return;
         }
         if ((!demoDashOnly && player.dashCooldownTimer > 0) || (demoDashOnly && player.demoDashed))
@@ -101,7 +92,10 @@ public class DashLimiterController : Entity
     public override void Render()
     {
         base.Render();
-        Player player = SceneAs<Level>().Tracker.GetEntity<Player>();
+        if (Scene.Tracker.GetEntity<Player>() is not { } player)
+        {
+            return;
+        }
         if (player != null)
         {
             indicatorsPerRow = 5;

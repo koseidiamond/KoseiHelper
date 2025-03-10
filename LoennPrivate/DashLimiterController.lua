@@ -16,8 +16,8 @@ DashLimiterController.placements = {
 			sound = "event:/none",
 			indicatorsPerRow = 5,
 			indicatorColor = "778899",
-			indicatorShape = "FilledCircle",
-			persistent = false
+			indicatorShape = "FilledCircle"
+			--persistent = false
 		}
 	}
 }
