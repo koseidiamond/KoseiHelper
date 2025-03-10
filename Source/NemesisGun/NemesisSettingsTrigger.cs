@@ -30,7 +30,7 @@ public class NemesisGunSettingsTrigger : Trigger
         gunshotSound = data.Attr("gunshotSound", "event:/KoseiHelper/Guns/shotDefault");
         cooldown = data.Int("cooldown", 8);
         recoilCooldown = data.Int("recoilCooldown", 16);
-        color1 = data.HexColor("color1", Color.SteelBlue);
+        color1 = data.HexColor("color1", Color.Orange);
         color2 = data.HexColor("color2", Color.Yellow);
         shotDustType = data.Enum("particleType", DustType.Normal);
         gunDirections = data.Enum("directions", Extensions.GunDirections.FourDirections);

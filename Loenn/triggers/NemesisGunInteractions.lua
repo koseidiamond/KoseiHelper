@@ -7,7 +7,7 @@ NemesisGunInteractions.placements = {
 		name = "NemesisGunInteractions",
 		data = {
 		triggerMode = "OnStay",
-		canKillPlayer = true,
+		canKillPlayer = false,
 		goThroughDreamBlocks = true,
 		breakBounceBlocks = true,
 		activateFallingBlocks = true,
@@ -27,7 +27,8 @@ NemesisGunInteractions.placements = {
 		scareBirds = true,
 		collectTouchSwitches = true,
 		collectBadelineOrbs = true,
-		useFeathers = true
+		useFeathers = true,
+		coreModeToggles = true
 		}
 	}
 }

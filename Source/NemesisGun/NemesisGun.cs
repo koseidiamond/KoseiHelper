@@ -311,13 +311,20 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
             }
         }
 
+        private float lastGunRotation = 0f;
         private void RenderGun(Actor player, Facings facing, Vector2? overrideCursorPos = null)
         {
             gunTexture = GFX.Game[Extensions.gunTexture];
-            SpriteEffects effects = SpriteEffects.None;
-            Vector2 gunVector = GetGunVector(player, overrideCursorPos == null ? CursorPos : (Vector2)overrideCursorPos, facing);
-            Logger.Debug(nameof(KoseiHelperModule), $"gunVector: {gunVector}");
-            gunTexture.DrawCentered(player.Center, Color.White, 1, gunVector.ToRotation(), effects);
+            Vector2 gunVector = Vector2.Zero;
+            if (!player.SceneAs<Level>().Paused)
+            {
+                gunVector = GetGunVector(player, overrideCursorPos == null ? CursorPos : (Vector2)overrideCursorPos, facing);
+                lastGunRotation = gunVector.ToRotation();
+            }
+            else
+                gunVector = new Vector2((float)Math.Cos(lastGunRotation), (float)Math.Sin(lastGunRotation));
+            SpriteEffects effects = gunVector.X < 0 ? SpriteEffects.FlipVertically : SpriteEffects.None;
+            gunTexture.DrawCentered(player.Center, Color.White, 1, lastGunRotation, effects);
         }
 
         private static Vector2 PlayerPosScreenSpace(Actor self)
@@ -333,13 +340,9 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 float? a = 4f;
                 return;
             }
-
-            Vector2 actualPlayerPos = actor.Center;
-
+            Vector2 actualPlayerPos = actor.Center + new Vector2(-3,-1);
             if (actor is Player player)
-            {
                 facing = player.Facing;
-            }
             new Bullet(actualPlayerPos, GetGunVector(actor, cursorPos, facing), actor);
             Audio.Play(Extensions.gunshotSound, actualPlayerPos);
         }

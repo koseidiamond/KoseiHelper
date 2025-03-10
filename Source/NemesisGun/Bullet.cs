@@ -13,7 +13,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
     [Tracked]
     public class Bullet : Entity
     {
-        public Rectangle Hitbox => new Rectangle((int)Position.X - 3, (int)Position.Y - 4, 6, 8);
+        public Rectangle Hitbox => new Rectangle((int)Position.X, (int)Position.Y, 6, 6);
         private Vector2 velocity;
         private readonly Actor owner;
         private int lifetime;
@@ -139,20 +139,15 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 }
             }
 
-            if (owner.Scene.CollideFirst<CoreModeToggle>(Hitbox) is CoreModeToggle coreModeToggle && !dead)
-            {
-                if (owner is Player playerCoreModeToggle)
-                    coreModeToggle.OnPlayer(playerCoreModeToggle);
-                    DestroyBullet();
-                    return;
-            }
-
             if (owner.Scene.CollideFirst<FlyFeather>(Hitbox) is FlyFeather feather && Extensions.useFeathers && !dead)
             {
                 if ((bool)feather_shielded.GetValue(feather) == true)
                 {
                     feather_shielded.SetValue(feather, false);
-                    DestroyBullet();
+                    if (Extensions.canBounce)
+                        velocity = (Center - feather.Center).SafeNormalize();
+                    else
+                        DestroyBullet();
                 }
                 else if (owner is Player featherPlayer)
                 {
@@ -338,6 +333,14 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
 
             foreach (Entity entity in (owner.Scene as Level).Entities)
             {
+
+                if (entity is CoreModeToggle coreModeToggle && coreModeToggle.Collider.Bounds.Intersects(Hitbox) && Extensions.coreModeToggles &&!dead)
+                {
+                    if (owner is Player playerCoreModeToggle)
+                        coreModeToggle.OnPlayer(playerCoreModeToggle);
+                    //DestroyBullet();
+                    return;
+                }
 
                 if (entity is FakeHeart fakeHeart && fakeHeart.Collider.Bounds.Intersects(Hitbox) && !dead && fakeHeart.Visible)
                 {
@@ -678,7 +681,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
         {
             if (CanDoShit(owner) && Extensions.bulletExplosion)
             {
-                for (int i = 0; i < 8; i++)
+                for (int i = 0; i < 6; i++)
                 {
                     (owner.Scene as Level).Particles.Emit(ParticleTypes.Steam, Position + Calc.Random.ShakeVector(), Color.Lerp(Extensions.color1,Color.White,0.5f));
                 }
@@ -687,6 +690,13 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
             (Scene as Level).Session.SetFlag("KoseiHelper_playerIsShooting", false);
             if (owner != null && this != null)
                 RemoveSelf();
+        }
+
+        public override void DebugRender(Camera camera)
+        {
+            base.DebugRender(camera);
+            Draw.HollowRect(Hitbox, Color.Red);
+
         }
         public static bool CanDoShit(Actor owner)
             => owner != null && owner.Scene != null && owner.Scene.Tracker != null;

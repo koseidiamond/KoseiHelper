@@ -12,7 +12,7 @@ public class NemesisGunInteractions : Trigger
 
     public bool canKillPlayer = true, canGoThroughDreamBlocks = true, breakBounceBlocks = true, activateFallingBlocks = true, harmEnemies = true, harmTheo = true,
         breakSpinners = true, breakMovingBlades = true, enableKevins = true, collectables = true, useRefills = true, pressDashSwitches = true, canBounce = true,
-        scareBirds = true, collectTouchSwitches = true, collectBadelineOrbs = true, useFeathers = true;
+        scareBirds = true, collectTouchSwitches = true, collectBadelineOrbs = true, useFeathers = true, coreModeToggles = true;
     public bool useBoosters = false;
     public float waterFriction;
 
@@ -43,6 +43,7 @@ public class NemesisGunInteractions : Trigger
         collectTouchSwitches = data.Bool("collectTouchSwitches", true);
         collectBadelineOrbs = data.Bool("collectBadelineOrbs", true);
         useFeathers = data.Bool("useFeathers", true);
+        coreModeToggles = data.Bool("coreModeToggles", true);
     }
 
     public override void OnEnter(Player player)
@@ -89,5 +90,6 @@ public class NemesisGunInteractions : Trigger
         Extensions.collectTouchSwitches = collectTouchSwitches;
         Extensions.collectBadelineOrbs = collectBadelineOrbs;
         Extensions.useFeathers = useFeathers;
+        Extensions.coreModeToggles = coreModeToggles;
     }
 }

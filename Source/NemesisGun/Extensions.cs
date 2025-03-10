@@ -15,7 +15,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
         public static bool bulletExplosion = true;
         public static bool loseGunOnRespawn = false;
         public static int cooldown = 8, lifetime = 600, recoilCooldown = 16;
-        public static Color color1 = Color.SteelBlue;
+        public static Color color1 = Color.Orange;
         public static Color color2 = Color.Yellow;
         public static float particleAlpha = 1f;
         public static DustType shotDustType = DustType.Normal; // Aka Dust
@@ -39,7 +39,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
         public static bool canKillPlayer = true, canGoThroughDreamBlocks = true, breakBounceBlocks = true, activateFallingBlocks = true,
     harmEnemies = true, harmTheo = true, breakSpinners = true, breakMovingBlades = true, enableKevins = true, useFeathers = true,
     collectables = true, useRefills = true, pressDashSwitches = true, canBounce = true, scareBirds = true, collectTouchSwitches = true,
-    collectBadelineOrbs = false;
+    collectBadelineOrbs = true, coreModeToggles = true;
         public static bool useBoosters = false;
         public static float waterFriction = 0.995f;
         public static string gunTexture = "objects/KoseiHelper/Guns/NemesisGun";
