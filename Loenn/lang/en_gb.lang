@@ -459,6 +459,8 @@ entities.KoseiHelper/SpawnController.attributes.description.everyXDashes=The ent
 entities.KoseiHelper/SpawnController.attributes.description.spawnLimit=The maximum amount of entities that can be spawned per screen.\nLeave a negative value for no limit.
 entities.KoseiHelper/SpawnController.attributes.description.persistent=If the controller should persist across rooms.
 entities.KoseiHelper/SpawnController.attributes.description.absoluteCoords=If this option is enabled, the entity will spawn at the position of the controller,\ninstead of relative to the player's position.
+entities.KoseiHelper/SpawnController.attributes.description.poofWhenDisappearing=If the entity has a TTL (time to live), this determines whether a poof particle should appear.
+
 #Spawn Controller - specific entity attributes
 entities.KoseiHelper/SpawnController.attributes.description.blockWidth=Width of the block.
 entities.KoseiHelper/SpawnController.attributes.description.blockHeight=Height of the block.
@@ -492,7 +494,7 @@ entities.KoseiHelper/SpawnController.attributes.description.decreaseCounter=If t
 
 #Spawn Controller - custom entity attributes
 entities.KoseiHelper/SpawnController.attributes.description.entityPath=The full path to the entity class to be spawned.\nSpawning will only work for entities that accept an EntityData and Vector2 parameterized constructor.\n For example, Celeste.Strawberry.
-entities.KoseiHelper/SpawnController.attributes.description.dictKeys=The names of the keys the Values dictionary of the EntityData used to spawn the entity will use.\nMust match the ones expected by the entity in its constructor for the Entity to find them.\n In simple words, the parameters separated by commas. For example, winged,moon.
+entities.KoseiHelper/SpawnController.attributes.description.dictKeys=The names of the keys the Values dictionary of the EntityData used to spawn the entity will use.\nMust match the ones expected by the entity in its constructor for the Entity to find them.\nIn simple words, the parameters separated by commas. For example, winged,moon.
 entities.KoseiHelper/SpawnController.attributes.description.dictValues=The values of the Values dictionary of the EntityData used to spawn the entity.\nEach value will be associated with the corresponding key as the values are organized, first key with first value and so forth.\nAny values that exceed the amount of keys will be ignored, and any keys with no corresponding value will have no value.\In simple words, the values of the parameters (in the same order, separated by commas). For example, true,false.
 entities.KoseiHelper/SpawnController.attributes.name.dictKeys=Attributes
 entities.KoseiHelper/SpawnController.attributes.name.dictValues=Attribute values

@@ -28,6 +28,7 @@ SpawnController.placements = {
 		spawnCondition = "OnCustomButtonPress",
 		persistent = false,
 		absoluteCoords = false,
+		poofWhenDisappearing = true,
 		--Spawn conditions
 		spawnFlag = "koseiHelper_spawn",
 		spawnFlagValue = true,
@@ -393,7 +394,8 @@ SpawnController.fieldOrder =  {
 	"absoluteCoords",
 	"entityPath",
 	"dictKeys",
-	"dictValues"
+	"dictValues",
+	"poofWhenDisappearing"
 }
 
 function SpawnController.texture(room, entity)

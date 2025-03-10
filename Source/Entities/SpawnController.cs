@@ -85,6 +85,7 @@ public class SpawnController : Entity
     public int flagCount = 1;
     public int flagCycleAt = 9999;
     public bool flagStop;
+    public bool poofWhenDisappearing;
     public bool absoluteCoords = false;
     //other important variables
     private int entityID = 7388544; // Very high value so it doesn't conflict with other ids (hopefully)
@@ -179,6 +180,7 @@ public class SpawnController : Entity
         spawnLimit = data.Int("spawnLimit", 3);
         persistency = data.Bool("persistent", false);
         everyXDashes = data.Int("everyXDashes", 1);
+        poofWhenDisappearing = data.Bool("poofWhenDisappearing", true);
         dashCount = 0;
         if (persistency)
             base.Tag = Tags.Persistent;
@@ -505,11 +507,11 @@ public class SpawnController : Entity
             if (wrapper.TimeToLive <= 0) // The instance of the entity will (literally) make poof
             {
                 Audio.Play(disappearSound, wrapper.Entity.Position);
-                if (timeToLive > 0)
+                if (timeToLive > 0 && poofWhenDisappearing)
                     level.ParticlesFG.Emit(poofParticle, 5, wrapper.Entity.Center, Vector2.One * 4f, 0 - (float)Math.PI / 2f);
-                if (wrapper.Entity is BadelineBoost && player.StateMachine.State == 11) //FIX: being stuck in StDummy if the player touches Badeline as she's poofing
+                if (wrapper.Entity is BadelineBoost && player.StateMachine.State == 11) //Fixes being stuck in StDummy if the player touches Badeline as she's poofing
                     player.StateMachine.State = 0;
-                if (wrapper.Entity is IceBlock iceBlock) // FIX: Remove solids from iceBlocks
+                if (wrapper.Entity is IceBlock iceBlock) // Removes solids from iceBlocks
                 {
                     var solidToRemove = iceBlock.solid;
                     if (solidToRemove != null)
