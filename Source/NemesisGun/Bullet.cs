@@ -21,8 +21,8 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
         private int updateCount;
         private const int extraUpdates = 30;
         private bool updateFrame;
-        private MTexture bulletTexture;
-        private ParticleType p_fire = FireBall.P_FireTrail, p_ice = FireBall.P_IceTrail, p_feather = BirdNPC.P_Feather;
+        private MTexture bulletTexture, customParticleTexture;
+        private ParticleType p_fire = FireBall.P_FireTrail, p_ice = FireBall.P_IceTrail, p_feather = BirdNPC.P_Feather, p_custom = Water.P_Splash;
 
         private readonly List<Bumper> BouncedOffBumper;
         private readonly List<Spring> BouncedOffSpring;
@@ -42,6 +42,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
             BouncedOffBumper = new List<Bumper>();
             BouncedOffSpring = new List<Spring>();
             bulletTexture = GFX.Game[Extensions.bulletTexture];
+            customParticleTexture = GFX.Game[Extensions.customParticleTexture];
             if (CanDoShit(owner))
                 (owner.Scene as Level).Add(this);
             (owner.Scene as Level).Session.SetFlag("KoseiHelper_playerIsShooting", true);
@@ -64,7 +65,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
             if (CanDoShit(owner))
             {
                 CollisionCheck();
-                if (Calc.Random.Next(6) == 0)
+                if (Calc.Random.Next(10) == 1)
                 {
                     switch (Extensions.shotDustType)
                     {
@@ -80,7 +81,8 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                         case DustType.VentDust:
                             (owner.Scene as Level).Particles.Emit(ParticleTypes.VentDust, Position, Color.Lerp(Extensions.color1, Extensions.color2, Calc.Random.NextFloat()) * Extensions.particleAlpha);
                             break;
-                        case DustType.None:
+                        case DustType.Bubble: // Player.P_CassetteFly
+                            (owner.Scene as Level).Particles.Emit(Player.P_CassetteFly, Position, Color.Lerp(Extensions.color1, Extensions.color2, Calc.Random.NextFloat()) * Extensions.particleAlpha);
                             break;
                         case DustType.Fire:
                             (owner.Scene as Level).Particles.Emit(p_fire, Position, Color.Lerp(Extensions.color1, Extensions.color2, Calc.Random.NextFloat()) * Extensions.particleAlpha);
@@ -90,6 +92,12 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                             break;
                         case DustType.Feather:
                             (owner.Scene as Level).Particles.Emit(p_feather, Position, Color.Lerp(Extensions.color1, Extensions.color2, Calc.Random.NextFloat()) * Extensions.particleAlpha);
+                            break;
+                        case DustType.Custom:
+                            p_custom.Source = customParticleTexture;
+                            (owner.Scene as Level).Particles.Emit(p_custom, Position, Color.Lerp(Extensions.color1, Extensions.color2, Calc.Random.NextFloat()) * Extensions.particleAlpha);
+                            break;
+                        case DustType.None:
                             break;
                         default: // Normal (Dust)
                             (owner.Scene as Level).Particles.Emit(ParticleTypes.Dust, Position, Color.Lerp(Extensions.color1, Extensions.color2, Calc.Random.NextFloat()) * Extensions.particleAlpha);
@@ -103,20 +111,10 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
             Update();
         }
 
-        /*public override void Render()
-        {
-            if (CanDoShit(owner))
-            {
-                (owner.Scene as Level).Particles.Emit(ParticleTypes.Dust, Position, Color.Lerp(Extensions.color1, Extensions.color2, Calc.Random.NextFloat()) * Extensions.particleAlpha);
-                bulletTexture.DrawCentered(Position, Color.White, 1, 0f); // In radians
-            }
-        }*/
-
         public override void Render()
         {
             if (CanDoShit(owner))
             {
-                (owner.Scene as Level).Particles.Emit(ParticleTypes.Dust, Position, Color.Lerp(Extensions.color1, Extensions.color2, Calc.Random.NextFloat()) * Extensions.particleAlpha);
                 float angle = (float)Math.Atan2(-velocity.Y, velocity.X);
                 bulletTexture.DrawCentered(Position, Color.White, 1, angle);
             }

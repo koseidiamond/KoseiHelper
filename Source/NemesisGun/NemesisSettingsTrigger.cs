@@ -10,7 +10,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun;
 public class NemesisGunSettingsTrigger : Trigger
 {
     private bool enabled = true, bulletExplosion = true, loseGunOnRespawn = true;
-    private string gunshotSound, gunTexture, bulletTexture;
+    private string gunshotSound, gunTexture, bulletTexture, customParticleTexture;
     private int cooldown, recoilCooldown, lifetime;
     private TriggerMode triggerMode;
     private Color color1, color2;
@@ -20,6 +20,7 @@ public class NemesisGunSettingsTrigger : Trigger
     private Extensions.DashBehavior dashBehavior;
     private float particleAlpha;
     public bool canShootInFeather = true;
+    private int freezeFrames;
 
     public Extensions.GunDirections gunDirections;
 
@@ -39,11 +40,13 @@ public class NemesisGunSettingsTrigger : Trigger
         lifetime = data.Int("lifetime", 60)*10;
         gunTexture = data.Attr("gunTexture", "objects/KoseiHelper/Guns/NemesisGun");
         bulletTexture = data.Attr("bulletTexture", "objects/KoseiHelper/Guns/Bullets/Invisible");
+        customParticleTexture = data.Attr("customParticleTexture", "particles/KoseiHelper/star");
         speedMultiplier = data.Float("speedMultiplier", 1f);
         recoil = data.Float("recoilStrength", 80f);
         dashBehavior = data.Enum("dashBehavior", Extensions.DashBehavior.None);
         particleAlpha = data.Float("particleAlpha", 1f);
         canShootInFeather = data.Bool("canShootInFeather", true);
+        freezeFrames = data.Int("freezeFrames", 0);
     }
 
     public override void OnEnter(Player player)
@@ -86,6 +89,8 @@ public class NemesisGunSettingsTrigger : Trigger
         Extensions.particleAlpha = particleAlpha;
         Extensions.recoilCooldown = recoilCooldown;
         Extensions.canShootInFeather = canShootInFeather;
+        Extensions.freezeFrames = freezeFrames;
+        Extensions.customParticleTexture = customParticleTexture;
 
         if (enabled)
         {

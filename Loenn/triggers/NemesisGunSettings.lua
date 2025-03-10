@@ -15,6 +15,7 @@ NemesisGunSettings.placements = {
 		color2 = "FFFF00", -- yellow
 		particleType = "Normal",
 		particleAlpha = 1,
+		customParticleTexture = "particles/KoseiHelper/star",
 		directions = "FourDirections",
 		bulletExplosion = true,
 		loseGunOnRespawn = false,
@@ -24,16 +25,42 @@ NemesisGunSettings.placements = {
 		speedMultiplier = 1,
 		recoilStrength = 80,
 		recoilCooldown = 16,
-		canShootInFeather = true
+		canShootInFeather = true,
+		freezeFrames = 0
 		}
 	}
 }
+
+function NemesisGunSettings.ignoredFields(entity)
+	local ignored = {
+	"_name",
+	"_id",
+	"customParticleTexture"
+	}
+    local function doNotIgnore(value)
+        for i = #ignored, 1, -1 do
+            if ignored[i] == value then
+                table.remove(ignored, i)
+                return
+            end
+        end
+    end
+
+	if entity.particleType == "Custom" then
+		doNotIgnore("customParticleTexture")
+	end
+	return ignored
+end
 
 NemesisGunSettings.fieldInformation = 
 {
 	cooldown = { fieldType = "integer" },
 	lifetime = { minimumValue = 0},
 	recoilCooldown = { fieldType = "integer" },
+	freezeFrames = {
+		fieldType = "integer",
+		minimumValue = 0
+		},
 	particleAlpha = { minimumValue = 0, maximumValue = 1 },
 	triggerMode = {
 		options =
@@ -51,6 +78,7 @@ NemesisGunSettings.fieldInformation =
 		"event:/KoseiHelper/Guns/shotDefault",
 		"event:/KoseiHelper/Guns/shotMarioFireball",
 		"event:/KoseiHelper/Guns/shotMeow",
+		"event:/KoseiHelper/Guns/shotArrow",
 		"event:/KoseiHelper/bullet",
 		"event:/KoseiHelper/bulletB",
 		},
@@ -62,7 +90,21 @@ NemesisGunSettings.fieldInformation =
 		{
 		"objects/KoseiHelper/Guns/NemesisGun",
 		"objects/KoseiHelper/Guns/Handgun",
-		"util/glove"
+		"objects/KoseiHelper/Guns/TowerFallCrossbow"
+		},
+		editable = true
+	},
+	bulletTexture = {
+		{ fieldType = "string" },
+		options =
+		{
+		"objects/KoseiHelper/Guns/Bullets/Ball",
+		"objects/KoseiHelper/Guns/Bullets/BigBall",
+		"objects/KoseiHelper/Guns/Bullets/Heart",
+		"objects/KoseiHelper/Guns/Bullets/Invisible",
+		"objects/KoseiHelper/Guns/Bullets/TerrariaMeow",
+		"objects/KoseiHelper/Guns/Bullets/TowerFallArrow",
+		"objects/KoseiHelper/Guns/Bullets/Trans"
 		},
 		editable = true
 	},
@@ -87,6 +129,8 @@ NemesisGunSettings.fieldInformation =
 			"Fire",
 			"Ice",
 			"Feather",
+			"Bubble",
+			"Custom",
 			"None"
 		},
 		editable = false
@@ -111,6 +155,7 @@ NemesisGunSettings.fieldOrder =
 	"directions",
 	"particleType",
 	"particleAlpha",
+	"customParticleTexture",
 	"color1",
 	"color2",
 	"dashBehavior",
@@ -120,6 +165,7 @@ NemesisGunSettings.fieldOrder =
 	"recoilStrength",
 	"lifetime",
 	"speedMultiplier",
+	"freezeFrames",
 	"gunTexture",
 	"bulletTexture",
 	"enabled",

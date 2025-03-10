@@ -9,5 +9,7 @@ public enum DustType
     None,
     Fire, // FireBall.P_FireTrail,
     Ice, // FireBall.P_IceTrail
-    Feather // BirdNPC.P_Feather
+    Feather, // BirdNPC.P_Feather
+    Bubble,
+    Custom
 };

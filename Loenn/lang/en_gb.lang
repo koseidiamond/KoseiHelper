@@ -575,7 +575,8 @@ triggers.KoseiHelper/NemesisGunSettings.attributes.description.gunTexture=The pa
 triggers.KoseiHelper/NemesisGunSettings.attributes.description.bulletTexture=The path to your bullet texture, relative to Atlases/Gameplay/.\nThe bullet hitbox is 6x6 pixels, for reference.
 triggers.KoseiHelper/NemesisGunSettings.attributes.description.color1=The main color the bullet produces during its trajectory.\nThis color is also used when bullets collide.
 triggers.KoseiHelper/NemesisGunSettings.attributes.description.color2=The secondary color the bullet produces during its trajectory.
-triggers.KoseiHelper/NemesisGunSettings.attributes.description.particleType=The type of particles that indicate the bullet trajectory.
+triggers.KoseiHelper/NemesisGunSettings.attributes.description.particleType=The type of particles that indicate the bullet trajectory.\nFire and Ice have a third color (red/cyan). A new field will appear if you chose the Custom type.
+triggers.KoseiHelper/NemesisGunSettings.attributes.description.customParticleTexture=The path to your particle texture is the Type chosen is Custom.\nRelative to Atlases/Gameplay/.
 triggers.KoseiHelper/NemesisGunSettings.attributes.description.directions=Whether the player should be able to shoot cardinally, cardinally+diagonally, or only left and right.
 triggers.KoseiHelper/NemesisGunSettings.attributes.description.bulletExplosion=Whether the bullets should produce an explosion of particles when disappearing.
 triggers.KoseiHelper/NemesisGunSettings.attributes.description.bulletSound=The sound the bullets make when colliding/disappearing.\nWarning: Don't use with entities that don't "kill" the bullet, like bumpers.
@@ -585,6 +586,7 @@ triggers.KoseiHelper/NemesisGunSettings.attributes.description.speedMultiplier=T
 triggers.KoseiHelper/NemesisGunSettings.attributes.description.recoilStrength=How much shooting should push the player backwards.\nThe default value is the same speed that vanilla backboosts give. Leave as 0 for no recoil.
 triggers.KoseiHelper/NemesisGunSettings.attributes.description.recoilCooldown=How much time needs to pass until the player can be pushed backwards again from shooting.\nLow values can allow infinite speedbuilding with the default strength.
 triggers.KoseiHelper/NemesisGunSettings.attributes.description.canShootInFeather=Whether the player should have the gun available while in the feather state.
+triggers.KoseiHelper/NemesisGunSettings.attributes.description.freezeFrames=How many freeze frames should give each shot.
 
 triggers.KoseiHelper/NemesisGunInteractions.placements.name.NemesisGunInteractions=Nemesis Gun Interactions
 triggers.KoseiHelper/NemesisGunInteractions.placements.description.NemesisGunInteractions=Configure which entities the Nemesis Gun can affect.

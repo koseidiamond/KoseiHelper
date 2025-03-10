@@ -13,4 +13,5 @@
 {82443c2a-e9b0-4137-8878-287059188a95} event:/KoseiHelper/Guns/shotMarioFireball
 {9ff6c4a9-0d0e-4d13-bfb6-ef251a58de57} event:/KoseiHelper/Guns/shotMeow
 {20a4b661-d8c4-44a4-98bd-8d842d211b28} event:/KoseiHelper/shatter_dream_block
+{a87b7a52-17b5-4626-90dd-b92c98389273} event:/KoseiHelper/Guns/shotArrow
 {ba8e885e-d7ef-474b-9ea8-20ba14e4943e} bank:/KoseiHelper

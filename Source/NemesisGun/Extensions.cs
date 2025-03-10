@@ -21,6 +21,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
         public static float particleAlpha = 1f;
         public static DustType shotDustType = DustType.Normal; // Aka Dust
         public static float speedMultiplier = 1f, recoil = 80f;
+        public static int freezeFrames;
         public enum DashBehavior
         {
             ReplacesDash,
@@ -52,6 +53,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
         public static float waterFriction = 0.995f;
         public static string gunTexture = "objects/KoseiHelper/Guns/NemesisGun";
         public static string bulletTexture = "objects/KoseiHelper/Guns/Bullets/Invisible";
+        public static string customParticleTexture = "particles/KoseiHelper/star";
         public enum TheoInteraction
         {
             None,

@@ -264,7 +264,6 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 {
                     if (shotCooldown <= 0 && (self.Dashes > 0 || Extensions.dashBehavior != Extensions.DashBehavior.ConsumesDash))
                     {
-                        // if TODO player states 11 dummy 
                         if (self.StateMachine.state != 11 && self.StateMachine.state != 17 && (self.StateMachine.state != 19 || Extensions.canShootInFeather))
                         Gunshot(self, CursorPos);
                         if (GetEightDirectionalAim(Extensions.gunDirections).Y < Math.Sqrt(2) / 2 && GetEightDirectionalAim(Extensions.gunDirections).Y > -Math.Sqrt(2) / 2 && recoilCooldown <= 0)
@@ -272,6 +271,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                             self.Speed.X += Extensions.recoil * (float)(0 - self.Facing); // Horizontal recoil, by default 80f, same as vanilla backboosts
                             recoilCooldown = Extensions.recoilCooldown;
                         }
+                        Celeste.Freeze(Engine.DeltaTime * Extensions.freezeFrames);
                         (self.Scene as Level).DirectionalShake(GetGunVector(self, CursorPos, self.Facing) / 5);
                         shotCooldown = Extensions.cooldown;
                         switch (Extensions.dashBehavior)
