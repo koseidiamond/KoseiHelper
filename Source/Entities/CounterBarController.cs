@@ -2,8 +2,6 @@ using Celeste.Mod.Entities;
 using Monocle;
 using System;
 using Microsoft.Xna.Framework;
-using System.Collections.Generic;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace Celeste.Mod.KoseiHelper.Entities
 {
@@ -21,6 +19,7 @@ namespace Celeste.Mod.KoseiHelper.Entities
         private MTexture texture, innerTexture;
         private bool persistent, flagTrue, outline;
         private string flag;
+        private bool reverse;
 
         public CounterBarController(EntityData data, Vector2 offset) : base(data.Position + offset)
         {
@@ -49,6 +48,7 @@ namespace Celeste.Mod.KoseiHelper.Entities
             Collider = new Hitbox(width, height);
             texture = GFX.Gui[framePath];
             innerTexture = GFX.Gui[innerTexturePath];
+            reverse = data.Bool("reverse", false);
         }
 
         public override void Added(Scene scene)
@@ -97,19 +97,39 @@ namespace Celeste.Mod.KoseiHelper.Entities
                     if (!string.IsNullOrEmpty(framePath))
                     {
                         if (!vertical)
+                        {
                             texture.DrawJustified(new Vector2(xPosition + width / 2, yPosition + height / 2), new Vector2(0.5f, 0.5f));
+                        }
                         else
+                        {
                             texture.DrawJustified(new Vector2(xPosition + width / 2, yPosition + height / 2), new Vector2(0.5f, 0.5f));
+                        }
                     }
+
                     if (!vertical)
                     {
-                        Draw.Rect(new Vector2(xPosition, yPosition), filled, Collider.Height, color);
+                        if (reverse)
+                        {
+                            Draw.Rect(new Vector2(xPosition + width - filled, yPosition), filled, Collider.Height, color);
+                        }
+                        else
+                        {
+                            Draw.Rect(new Vector2(xPosition, yPosition), filled, Collider.Height, color);
+                        }
+
                         if (outline)
                             Draw.HollowRect(new Vector2(xPosition, yPosition), Collider.Width, Collider.Height, Color.Black);
                     }
                     else
                     {
-                        Draw.Rect(new Vector2(xPosition, yPosition + height - filled), Collider.Width, filled, color);
+                        if (reverse)
+                        {
+                            Draw.Rect(new Vector2(xPosition, yPosition), Collider.Width, filled, color);
+                        }
+                        else
+                        {
+                            Draw.Rect(new Vector2(xPosition, yPosition + height - filled), Collider.Width, filled, color);
+                        }
                         if (outline)
                             Draw.HollowRect(new Vector2(xPosition, yPosition), Collider.Width, Collider.Height, Color.Black);
                     }
@@ -120,17 +140,33 @@ namespace Celeste.Mod.KoseiHelper.Entities
                     {
                         int textureWidth = (int)filled;
                         MTexture subtexture = innerTexture.GetSubtexture(0, 0, textureWidth, innerTexture.Height);
-                        subtexture.Draw(new Vector2(xPosition, yPosition));
+                        if (reverse)
+                        {
+                            subtexture.Draw(new Vector2(xPosition + width - textureWidth, yPosition));
+                        }
+                        else
+                        {
+                            subtexture.Draw(new Vector2(xPosition, yPosition));
+                        }
                     }
                     else
                     {
                         int textureHeight = (int)filled;
                         MTexture subtexture = innerTexture.GetSubtexture(0, 0, innerTexture.Width, textureHeight);
-                        subtexture.Draw(new Vector2(xPosition, yPosition + height - textureHeight));
+                        if (reverse)
+                        {
+                            subtexture.Draw(new Vector2(xPosition, yPosition + height - textureHeight));
+                        }
+                        else
+                        {
+                            subtexture.Draw(new Vector2(xPosition, yPosition + height - textureHeight));
+                        }
                     }
                 }
+
                 base.Render();
             }
         }
+
     }
 }

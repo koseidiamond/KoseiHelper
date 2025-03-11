@@ -571,19 +571,19 @@ public class CustomPlayerSeeker : Actor
 
         if (data.Hit is TempleCrackedBlock)
         {
-            global::Celeste.Celeste.Freeze(0.15f);
+            Celeste.Freeze(0.15f);
             Input.Rumble(RumbleStrength.Strong, RumbleLength.Long);
             (data.Hit as TempleCrackedBlock).Break(Position);
         }
         if (data.Hit is DashBlock)
         {
-            global::Celeste.Celeste.Freeze(0.03f);
+            Celeste.Freeze(0.03f);
             Input.Rumble(RumbleStrength.Strong, RumbleLength.Long);
             (data.Hit as DashBlock).Break(Position, Position, true);
         }
         if (data.Hit is CrushBlock)
         {
-            global::Celeste.Celeste.Freeze(0.03f);
+            Celeste.Freeze(0.03f);
             (data.Hit as CrushBlock).Attack(-data.Direction.FourWayNormal());
         }
         if (data.Hit is BounceBlock)

@@ -73,13 +73,14 @@ entities.KoseiHelper/CounterBarController.attributes.name.countName=Counter/Slid
 entities.KoseiHelper/CounterBarController.attributes.description.countName=The name of the counter/slider.
 entities.KoseiHelper/CounterBarController.attributes.description.framePath=The path to the frame, an image that renders on top of the bar, relative to Graphics/Atlases/Gui/.
 entities.KoseiHelper/CounterBarController.attributes.description.innerTexturePath=The path to the custom texture that fills the bar, relative to Graphics/Atlases/Gui/.\nIf no texture is specified, the bar will render with the chosen color instead.
-entities.KoseiHelper/CounterBarController.attributes.description.vertical=If the bar should empty/fill vertically instead of horizontally.
-entities.KoseiHelper/CounterBarController.attributes.description.canOverflow=If the value of the counter/slider is bigger than the Max Value, the bar will overflow besides that point.
-entities.KoseiHelper/CounterBarController.attributes.description.slider=If the counting number should be a slider (float/decimal) or a counter (integer).
+entities.KoseiHelper/CounterBarController.attributes.description.vertical=Whether the bar should empty/fill vertically instead of horizontally.
+entities.KoseiHelper/CounterBarController.attributes.description.canOverflow=Whether the value of the counter/slider is bigger than the Max Value, the bar will overflow besides that point.
+entities.KoseiHelper/CounterBarController.attributes.description.slider=Whether the counting number should be a slider (float/decimal) or a counter (integer).
 entities.KoseiHelper/CounterBarController.attributes.description.initialValue=The initial value of the counter/slider before it is changed for the first time.
-entities.KoseiHelper/CounterBarController.attributes.description.persistent=If this controller should persist after transitioning to a different room.
+entities.KoseiHelper/CounterBarController.attributes.description.persistent=Whether this controller should persist after transitioning to a different room.
 entities.KoseiHelper/CounterBarController.attributes.description.flag=The bar will only display while the flag specified is set to true.\nLeave empty for no flag required.
-entities.KoseiHelper/CounterBarController.attributes.description.outline=If the bar should render a black outline or not.
+entities.KoseiHelper/CounterBarController.attributes.description.outline=Whether the bar should render a black outline or not.
+entities.KoseiHelper/CounterBarController.attributes.description.reverse=Whether the bar should render backwards (from right to left).
 
 # Fall Damage Controller
 #entities.KoseiHelper/FallDamageController.placements.name.FallDamageController=Fall Damage Controller

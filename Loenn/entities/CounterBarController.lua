@@ -22,7 +22,8 @@ CounterBarController.placements = {
 		initialValue = 1,
 		persistent = false,
 		flag = "",
-		outline = true
+		outline = true,
+		reverse = false
 		}
 	}
 }
@@ -68,7 +69,8 @@ CounterBarController.fieldOrder = {
 	"vertical",
 	"canOverflow",
 	"slider",
-	"persistent"
+	"persistent",
+	"reverse"
 }
 
 function CounterBarController.texture(room, entity)

@@ -284,16 +284,6 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 return;
             }
 
-            if (owner.Scene.Tracker.GetEntity<FlutterBird>() != null && Extensions.scareBirds && !dead)
-            {
-                FlutterBird flutter = owner.Scene.Tracker.GetEntity<FlutterBird>();
-                if (Math.Abs(X - flutter.X) < 48f && Y > flutter.Y -  40f && Y < flutter.Y + 8f)
-                {
-                    flutter.FlyAway(Math.Sign(flutter.X - X), Calc.Random.NextFloat(0.2f));
-                }
-                return;
-            }
-
             if (owner.Scene.CollideFirst<TouchSwitch>(Hitbox) is TouchSwitch touchSwitch && Extensions.collectTouchSwitches && !dead)
             {
                 if (owner is Player p_tswitch)
@@ -373,6 +363,13 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                     fakeHeart.ScaleWiggler.Start();
                     fakeHeart.moveWiggleDir = (fakeHeart.Center - Center).SafeNormalize(Vector2.UnitY);
                     Input.Rumble(RumbleStrength.Medium, RumbleLength.Medium);
+                    return;
+                }
+
+                if (entity is Cassette cassette && Extensions.collectables && cassette.Collider.Bounds.Intersects(Hitbox) && !dead && owner is Player playercassette)
+                {
+                    cassette.OnPlayer(playercassette);
+                    DestroyBullet();
                     return;
                 }
 
