@@ -222,7 +222,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 return;
             }
 
-            if (owner.Scene.CollideFirst<DashBlock>(Hitbox) is DashBlock dBlock && !dead && dBlock.canDash)
+            if (owner.Scene.CollideFirst<DashBlock>(Hitbox) is DashBlock dBlock && !dead)
             {
                 switch (KoseiHelperModule.Settings.GunInteractions.dashBlockBehavior)
                 {
@@ -664,7 +664,17 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 {
                     if (cBlock.canMoveHorizontally && cBlock.canMoveHorizontally)
                     {
-                        // todo
+                        Vector2 diff = new Vector2(cBlock.X - CenterX, cBlock.Y - CenterY);
+                        diff.X /= cBlock.Width;
+                        diff.Y /= cBlock.Height;
+                        if (Math.Abs(diff.X) >= Math.Abs(diff.Y))
+                        {
+                            // Horizontal hit, check sign of diff.X
+                        }
+                        else
+                        {
+                            // Vertical hit, check sign of diff.Y
+                        }
                     }
                     else
                     {

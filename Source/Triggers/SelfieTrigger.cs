@@ -50,15 +50,18 @@ public class SelfieTrigger : Trigger
     {
         Level level = SceneAs<Level>();
         Player player = level.Tracker.GetEntity<Player>();
-        player.DummyAutoAnimate = true;
-        player.StateMachine.State = 11;
-        player.StateMachine.Locked = true;
-        selfie = new Entities.Selfie(SceneAs<Level>());
-        Scene.Add(selfie);
-        yield return selfie.PictureRoutine(image, buttonTexture, photoInSound, photoOutSound, inputSound, timeToOpen, flash);
-        selfie = null;
-        player.StateMachine.Locked = false;
-        player.StateMachine.State = 0;
+        if (player != null)
+        {
+            player.DummyAutoAnimate = true;
+            player.StateMachine.State = 11;
+            player.StateMachine.Locked = true;
+            selfie = new Entities.Selfie(SceneAs<Level>());
+            Scene.Add(selfie);
+            yield return selfie.PictureRoutine(image, buttonTexture, photoInSound, photoOutSound, inputSound, timeToOpen, flash);
+            selfie = null;
+            player.StateMachine.Locked = false;
+            player.StateMachine.State = 0;
+        }
         yield return 0.2f;
         if (oneUse)
             RemoveSelf();
