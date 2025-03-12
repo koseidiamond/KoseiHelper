@@ -16,7 +16,7 @@ NemesisGunInteractions.placements = {
 		breakSpinners = true,
 		breakMovingBlades = true,
 		enableKevins = true,
-		breakDashBlocks = true,
+		dashBlockBehavior = "BreakAll",
 		collectables = true,
 		useRefills = true,
 		pufferInteraction = "Explode",
@@ -73,6 +73,16 @@ NemesisGunInteractions.fieldInformation =
 		"GoThrough",
 		"Destroy",
 		"None"
+		},
+		editable = false
+	},
+		dashBlockBehavior =
+	{
+		options =
+		{
+		"BreakAll",
+		"BreakSome",
+		"NoBreak"
 		},
 		editable = false
 	}

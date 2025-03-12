@@ -41,7 +41,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
         private int shotCooldown, recoilCooldown;
         public Level level;
 
-        private static Vector2 GetEightDirectionalAim(Extensions.GunDirections gunDirections)
+        private static Vector2 GetEightDirectionalAim(KoseiHelperModuleSettings.NemesisSettings.GunDirections gunDirections)
         {
             Vector2 value = Input.Aim.Value;
             if (value == Vector2.Zero)
@@ -57,7 +57,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
             }
             switch (gunDirections)
             {
-                case Extensions.GunDirections.Horizontal:
+                case KoseiHelperModuleSettings.NemesisSettings.GunDirections.Horizontal:
                     if (Calc.AbsAngleDiff(angle, 0f) < angleThreshold)
                     {
                         return new Vector2(1f, 0f);
@@ -66,7 +66,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                     {
                         return new Vector2(-1f, 0f);
                     }
-                case Extensions.GunDirections.EightDirections:
+                case KoseiHelperModuleSettings.NemesisSettings.GunDirections.EightDirections:
                     if (Calc.AbsAngleDiff(angle, 0f) < angleThreshold)
                     {
                         return new Vector2(1f, 0f);
@@ -132,7 +132,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
         private static Vector2 GetGunVector(Actor player, Vector2 cursorPos, Facings forceDir)
         {
             float rotation = 3 * MathHelper.Pi / 2;
-            Vector2 aim = GetEightDirectionalAim(Extensions.gunDirections);
+            Vector2 aim = GetEightDirectionalAim(KoseiHelperModule.Settings.GunSettings.gunDirections);
             if (forceDir == Facings.Right)
                 rotation = 0;
             else if (forceDir == Facings.Left)
@@ -150,7 +150,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
 
             if (aim.Y < -0.4)
                 rotation = 3 * MathHelper.Pi / 2;
-            if (Extensions.gunDirections == Extensions.GunDirections.EightDirections)
+            if (KoseiHelperModule.Settings.GunSettings.gunDirections == KoseiHelperModuleSettings.NemesisSettings.GunDirections.EightDirections)
             {
                 if (Calc.AbsAngleDiff(aim.Angle(), (float)Math.PI / 4) < MathHelper.Pi / 8)
                     rotation = (float)Math.PI / 4 - (float)Math.PI;
@@ -162,7 +162,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                     rotation = (float)-Math.PI / 4 - (float)Math.PI;
 
             }
-            return ToCursor(player, cursorPos).RotateTowards(rotation, MathHelper.TwoPi) * Extensions.speedMultiplier;
+            return ToCursor(player, cursorPos).RotateTowards(rotation, MathHelper.TwoPi) * KoseiHelperModule.Settings.GunSettings.SpeedMultiplier;
         }
 
         public override void LoadContent(bool firstLoad)
@@ -250,8 +250,9 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
             if (self.JustRespawned && Extensions.loseGunOnRespawn)
             {
                 session.SetFlag("EnableNemesisGun", false);
+                KoseiHelperModule.Settings.GunSettings.GunEnabled = false;
             }
-            if (session.GetFlag("EnableNemesisGun"))
+            if (session.GetFlag("EnableNemesisGun") || KoseiHelperModule.Settings.GunSettings.GunEnabled)
             {
                 GunInput.UpdateInput(self);
 
@@ -262,25 +263,26 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
 
                 if (self.Scene?.TimeActive > 0 && GunWasShot && (TalkComponent.PlayerOver == null || !Input.Talk.Pressed))
                 {
-                    if (shotCooldown <= 0 && (self.Dashes > 0 || Extensions.dashBehavior != Extensions.DashBehavior.ConsumesDash))
+                    if (shotCooldown <= 0 && (self.Dashes > 0 || KoseiHelperModule.Settings.GunSettings.dashBehavior != KoseiHelperModuleSettings.NemesisSettings.DashBehavior.ConsumesDash))
                     {
-                        if (self.StateMachine.state != 11 && self.StateMachine.state != 17 && (self.StateMachine.state != 19 || Extensions.canShootInFeather))
+                        if (self.StateMachine.state != 11 && self.StateMachine.state != 17 && (self.StateMachine.state != 19 || KoseiHelperModule.Settings.GunSettings.CanShootInFeather))
                         Gunshot(self, CursorPos);
-                        if (GetEightDirectionalAim(Extensions.gunDirections).Y < Math.Sqrt(2) / 2 && GetEightDirectionalAim(Extensions.gunDirections).Y > -Math.Sqrt(2) / 2 && recoilCooldown <= 0)
+                        if (GetEightDirectionalAim(KoseiHelperModule.Settings.GunSettings.gunDirections).Y < Math.Sqrt(2) / 2 &&
+                            GetEightDirectionalAim(KoseiHelperModule.Settings.GunSettings.gunDirections).Y > -Math.Sqrt(2) / 2 && recoilCooldown <= 0)
                         {
-                            self.Speed.X += Extensions.recoil * (float)(0 - self.Facing); // Horizontal recoil, by default 80f, same as vanilla backboosts
-                            recoilCooldown = Extensions.recoilCooldown;
+                            self.Speed.X += KoseiHelperModule.Settings.GunSettings.Recoil * (float)(0 - self.Facing); // Horizontal recoil, by default 80f, same as vanilla backboosts
+                            recoilCooldown = KoseiHelperModule.Settings.GunSettings.RecoilCooldown;
                         }
-                        Celeste.Freeze(Engine.DeltaTime * Extensions.freezeFrames);
+                        Celeste.Freeze(Engine.DeltaTime * KoseiHelperModule.Settings.GunSettings.FreezeFrames);
                         (self.Scene as Level).DirectionalShake(GetGunVector(self, CursorPos, self.Facing) / 5);
-                        shotCooldown = Extensions.cooldown;
-                        switch (Extensions.dashBehavior)
+                        shotCooldown = KoseiHelperModule.Settings.GunSettings.Cooldown;
+                        switch (KoseiHelperModule.Settings.GunSettings.dashBehavior)
                         {
-                            case Extensions.DashBehavior.ConsumesDash:
+                            case KoseiHelperModuleSettings.NemesisSettings.DashBehavior.ConsumesDash:
                                 if (self.Dashes > 0)
                                     self.Dashes -= 1;
                                 break;
-                            case Extensions.DashBehavior.None:
+                            case KoseiHelperModuleSettings.NemesisSettings.DashBehavior.None:
                                 break;
                             default:
                                 Input.Dash.ConsumePress();
@@ -288,7 +290,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                                 break;
                         }
                     }
-                    if (Extensions.dashBehavior == Extensions.DashBehavior.ReplacesDash)
+                    if (KoseiHelperModule.Settings.GunSettings.dashBehavior == KoseiHelperModuleSettings.NemesisSettings.DashBehavior.ReplacesDash)
                     {
                         Input.Dash.ConsumePress();
                         Input.CrouchDash.ConsumePress();
@@ -307,7 +309,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
         {
             orig(self);
             Session session = self.SceneAs<Level>().Session;
-            if (session.GetFlag("EnableNemesisGun"))
+            if (session.GetFlag("EnableNemesisGun") || KoseiHelperModule.Settings.GunSettings.GunEnabled)
             {
                 RenderGun(self, self.Facing);
             }
@@ -326,7 +328,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
             else
                 gunVector = new Vector2((float)Math.Cos(lastGunRotation), (float)Math.Sin(lastGunRotation));
             SpriteEffects effects = gunVector.X < 0 ? SpriteEffects.FlipVertically : SpriteEffects.None;
-            if (Extensions.canShootInFeather || (player as Player).StateMachine.state != 19) // make it invisible if the feather can't use it
+            if (KoseiHelperModule.Settings.GunSettings.CanShootInFeather || (player as Player).StateMachine.state != 19) // make it invisible if the feather can't use it
                 gunTexture.DrawCentered(player.Center, Color.White, 1, lastGunRotation, effects);
         }
 
@@ -340,7 +342,6 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
         {
             if (actor == null || actor.Scene == null)
             {
-                float? a = 4f;
                 return;
             }
             Vector2 actualPlayerPos = actor.Center + new Vector2(-3,-1);

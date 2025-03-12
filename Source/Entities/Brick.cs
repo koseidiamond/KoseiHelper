@@ -20,7 +20,6 @@ public class Brick : Solid
     public BrickType brickType;
     private string spriteID;
     private bool tryingToBreak, breaking;
-    private CoreModes coreMode;
     private bool fireMode;
     public Brick(EntityData data, Vector2 offset) : base(data.Position + offset, 16, 16, true)
     {

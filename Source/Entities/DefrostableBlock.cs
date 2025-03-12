@@ -18,7 +18,6 @@ public class DefrostableBlock : Solid
     public string sound;
     public Sprite sprite;
     public string spriteID;
-    private CoreModes coreMode;
     private bool fireMode;
     public DefrostableBlock(EntityData data, Vector2 offset) : base(data.Position + offset - new Vector2(data.Bool("big")? 16 : 8),
         data.Bool("big", false) ? 32 : 16, data.Bool("big", false) ? 32 : 16, false)

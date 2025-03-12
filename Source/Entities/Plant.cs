@@ -38,8 +38,6 @@ public class Plant : Actor
     public float movingSpeed = 1f;
     private bool isShooting, isJumping = false;
     private bool isWaitingAtTop = false;
-    private bool isGreenMovingUp = false;
-    private bool isRedMovingUp = false;
     public int distance = 64;
     public bool cycleOffset = false;
 
@@ -462,7 +460,6 @@ public class Plant : Actor
     private IEnumerator MovingCycle()
     {
         moving = true;
-        isGreenMovingUp = true;
         if (cycleOffset)
         {
             yield return 2f;
@@ -475,7 +472,6 @@ public class Plant : Actor
                 Y -= 1;
                 yield return 0.01f * 1 / movingSpeed;
             }
-            isGreenMovingUp = false;
             isWaitingAtTop = true;
             yield return 1f;
             isWaitingAtTop = false;
@@ -492,7 +488,6 @@ public class Plant : Actor
                 X -= 1;
                 yield return 0.01f * 1 / movingSpeed;
             }
-            isGreenMovingUp = false;
             isWaitingAtTop = true;
             yield return 1f;
             isWaitingAtTop = false;
@@ -511,7 +506,6 @@ public class Plant : Actor
         if (isMoving) yield break;
         isMoving = true;
         moving = true;
-        isRedMovingUp = true;
         Player p = SceneAs<Level>().Tracker.GetEntity<Player>();
         switch (plantDirection)
         {
@@ -521,8 +515,6 @@ public class Plant : Actor
                     X -= 1;
                     yield return 0.01f * 1 / movingSpeed;
                 }
-
-                isRedMovingUp = false;
                 isWaitingAtTop = true;
                 if (p != null)
                 {
@@ -542,8 +534,6 @@ public class Plant : Actor
                     X += 1;
                     yield return 0.01f * 1 / movingSpeed;
                 }
-
-                isRedMovingUp = false;
                 isWaitingAtTop = true;
                 if (p != null)
                 {
@@ -563,8 +553,6 @@ public class Plant : Actor
                     Y += 1;
                     yield return 0.01f * 1 / movingSpeed;
                 }
-
-                isRedMovingUp = false;
                 isWaitingAtTop = true;
                 if (p != null)
                 {
@@ -584,8 +572,6 @@ public class Plant : Actor
                     Y -= 1;
                     yield return 0.01f * 1 / movingSpeed;
                 }
-
-                isRedMovingUp = false;
                 isWaitingAtTop = true;
                 if (p != null)
                 {
@@ -611,7 +597,6 @@ public class Plant : Actor
 
         isMoving = true;
         moving = false;
-        isRedMovingUp = false;
         isWaitingAtTop = false;
         Player p = SceneAs<Level>().Tracker.GetEntity<Player>();
         switch (plantDirection)

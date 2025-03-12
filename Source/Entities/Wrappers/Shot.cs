@@ -28,7 +28,6 @@ public class Shot : Entity
     private float cantKillTimer;
     private float appearTimer;
     private bool hasBeenInCamera;
-    private bool fireType = false;
     private SineWave sine;
     private float sineMult;
     private Sprite sprite;
@@ -53,7 +52,6 @@ public class Shot : Entity
         sine.Reset();
         sineMult = 0f;
         sprite.Play("bulletRed", restart: true);
-        fireType = true;
         InitSpeed();
         return this;
     }
@@ -71,7 +69,6 @@ public class Shot : Entity
         sineMult = 0f;
         sprite.Play(bulletType, restart: true);
         sprite.Rotation = rot;
-        fireType = false;
         InitSpeed();
         return this;
     }

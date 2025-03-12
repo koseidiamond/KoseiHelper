@@ -12,7 +12,7 @@ public class ReskinnableParallaxDebris : Entity
     private Vector2 start;
     private float parallax;
     public string texture;
-    public int Depth;
+    public new int Depth;
     public float sineMult, customParallax;
     public Color tint;
     public float rotationSpeed;

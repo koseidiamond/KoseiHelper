@@ -271,41 +271,35 @@ public class SwapBlockNoBg : Solid
     {
         Vector2 position;
         Vector2 positionRange;
-        float direction;
         float num;
         if (normal.X > 0f)
         {
             position = base.CenterLeft;
             positionRange = Vector2.UnitY * (base.Height - 6f);
-            direction = MathF.PI;
             num = Math.Max(2f, base.Height / 14f);
         }
         else if (normal.X < 0f)
         {
             position = base.CenterRight;
             positionRange = Vector2.UnitY * (base.Height - 6f);
-            direction = 0f;
             num = Math.Max(2f, base.Height / 14f);
         }
         else if (normal.Y > 0f)
         {
             position = base.TopCenter;
             positionRange = Vector2.UnitX * (base.Width - 6f);
-            direction = -MathF.PI / 2f;
             num = Math.Max(2f, base.Width / 14f);
         }
         else
         {
             position = base.BottomCenter;
             positionRange = Vector2.UnitX * (base.Width - 6f);
-            direction = MathF.PI / 2f;
             num = Math.Max(2f, base.Width / 14f);
         }
         particlesRemainder += num;
         int num2 = (int)particlesRemainder;
         particlesRemainder -= num2;
         positionRange *= 0.5f;
-        //SceneAs<Level>().Particles.Emit(P_Move, num2, position, positionRange, direction);
     }
 
     public override void Render()

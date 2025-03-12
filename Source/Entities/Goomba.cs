@@ -48,7 +48,7 @@ public class Goomba : Actor
     public int minisAmount;
     public bool slowdown;
 
-    private float number, number2 = -1f;
+    private float number2 = -1f;
     private float number3, randomAnxietyOffset;
 
     public Goomba(EntityData data, Vector2 offset) : base(data.Position + offset)
@@ -154,7 +154,7 @@ public class Goomba : Actor
                 }
                 target = ((!(number2 >= 0f)) ? 1f : Calc.ClampedMap(number2, 256f, 4096f, 0.5f));
                 Distort.AnxietyOrigin = new Vector2((player.Center.X - Position.X) / 320f, (player.Center.Y - Position.Y) / 180f);
-                number3 = ((!(number >= 0f)) ? 0f : Calc.ClampedMap(number, 256f, 16384f, 1f, 0f));
+                number3 = ((!(-1 >= 0f)) ? 0f : Calc.ClampedMap(-1, 256f, 16384f, 1f, 0f));
             }
             else
             {

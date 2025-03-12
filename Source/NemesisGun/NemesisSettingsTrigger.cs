@@ -17,12 +17,12 @@ public class NemesisGunSettingsTrigger : Trigger
     private DustType shotDustType;
     private float speedMultiplier;
     private float recoil;
-    private Extensions.DashBehavior dashBehavior;
+    private KoseiHelperModuleSettings.NemesisSettings.DashBehavior dashBehavior;
     private float particleAlpha;
     public bool canShootInFeather = true;
     private int freezeFrames;
 
-    public Extensions.GunDirections gunDirections;
+    public KoseiHelperModuleSettings.NemesisSettings.GunDirections gunDirections;
 
     public NemesisGunSettingsTrigger(EntityData data, Vector2 offset) : base(data, offset)
     {
@@ -31,19 +31,19 @@ public class NemesisGunSettingsTrigger : Trigger
         bulletExplosion = data.Bool("bulletExplosion", true);
         gunshotSound = data.Attr("gunshotSound", "event:/KoseiHelper/Guns/shotDefault");
         cooldown = data.Int("cooldown", 8);
-        recoilCooldown = data.Int("recoilCooldown", 16);
         color1 = data.HexColor("color1", Color.Orange);
         color2 = data.HexColor("color2", Color.Yellow);
         shotDustType = data.Enum("particleType", DustType.Normal);
-        gunDirections = data.Enum("directions", Extensions.GunDirections.FourDirections);
+        gunDirections = data.Enum("directions", KoseiHelperModuleSettings.NemesisSettings.GunDirections.EightDirections);
         loseGunOnRespawn = data.Bool("loseGunOnRespawn", true);
-        lifetime = data.Int("lifetime", 60)*10;
         gunTexture = data.Attr("gunTexture", "objects/KoseiHelper/Guns/NemesisGun");
         bulletTexture = data.Attr("bulletTexture", "objects/KoseiHelper/Guns/Bullets/Invisible");
         customParticleTexture = data.Attr("customParticleTexture", "particles/KoseiHelper/star");
+        lifetime = data.Int("lifetime", 600);
         speedMultiplier = data.Float("speedMultiplier", 1f);
         recoil = data.Float("recoilStrength", 80f);
-        dashBehavior = data.Enum("dashBehavior", Extensions.DashBehavior.None);
+        recoilCooldown = data.Int("recoilCooldown", 16);
+        dashBehavior = data.Enum("dashBehavior", KoseiHelperModuleSettings.NemesisSettings.DashBehavior.None);
         particleAlpha = data.Float("particleAlpha", 1f);
         canShootInFeather = data.Bool("canShootInFeather", true);
         freezeFrames = data.Int("freezeFrames", 0);
@@ -72,24 +72,24 @@ public class NemesisGunSettingsTrigger : Trigger
 
     public void ChangeSettings()
     {
+        KoseiHelperModule.Settings.GunSettings.dashBehavior = dashBehavior;
+        KoseiHelperModule.Settings.GunSettings.Cooldown = cooldown;
+        KoseiHelperModule.Settings.GunSettings.gunDirections = gunDirections;
         Extensions.gunshotSound = gunshotSound;
-        Extensions.dashBehavior = dashBehavior;
-        Extensions.cooldown = cooldown;
+        KoseiHelperModule.Settings.GunSettings.Lifetime = lifetime;
+        KoseiHelperModule.Settings.GunSettings.SpeedMultiplier = speedMultiplier;
+        KoseiHelperModule.Settings.GunSettings.Recoil = recoil;
+        KoseiHelperModule.Settings.GunSettings.RecoilCooldown = recoilCooldown;
+        KoseiHelperModule.Settings.GunSettings.CanShootInFeather = canShootInFeather;
+        KoseiHelperModule.Settings.GunSettings.FreezeFrames = freezeFrames;
         Extensions.color1 = color1;
         Extensions.color2 = color2;
         Extensions.shotDustType = shotDustType;
-        Extensions.gunDirections = gunDirections;
         Extensions.bulletExplosion = bulletExplosion;
         Extensions.loseGunOnRespawn = loseGunOnRespawn;
-        Extensions.lifetime = lifetime;
         Extensions.gunTexture = gunTexture;
         Extensions.bulletTexture = bulletTexture;
-        Extensions.speedMultiplier = speedMultiplier;
-        Extensions.recoil = recoil;
         Extensions.particleAlpha = particleAlpha;
-        Extensions.recoilCooldown = recoilCooldown;
-        Extensions.canShootInFeather = canShootInFeather;
-        Extensions.freezeFrames = freezeFrames;
         Extensions.customParticleTexture = customParticleTexture;
 
         if (enabled)

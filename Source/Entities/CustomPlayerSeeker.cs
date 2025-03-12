@@ -30,12 +30,8 @@ public class CustomPlayerSeeker : Actor
 
     public bool canDash = true;
     private bool hasDied, isDying = false;
-    private CoreModes coreMode;
     private bool fireMode;
     public float explodeLaunchBoostTimer, explodeLaunchBoostSpeed;
-
-    private float windTimeout;
-    private bool windMovedUp;
     private Vector2 windDirection;
     private bool justRespawned;
     public bool canSwitchCharacters, isMadeline;
@@ -736,7 +732,6 @@ public class CustomPlayerSeeker : Actor
         {
             if (move.X != 0f)
             {
-                windTimeout = 0.2f;
                 windDirection.X = Math.Sign(move.X);
                 if (!CollideCheck<Solid>(Position + Vector2.UnitX * -Math.Sign(move.X) * 3f))
                 {
@@ -755,7 +750,6 @@ public class CustomPlayerSeeker : Actor
             {
                 return;
             }
-            windTimeout = 0.2f;
             windDirection.Y = Math.Sign(move.Y);
             if (!(base.Bottom > (float)level.Bounds.Top) || (!(speed.Y < 0f)))
             {
@@ -766,10 +760,6 @@ public class CustomPlayerSeeker : Actor
                 return;
             }
             move.Y *= 0.4f;
-            if (move.Y < 0f)
-            {
-                windMovedUp = true;
-            }
             MoveV(move.Y);
         }
     }

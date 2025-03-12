@@ -2,7 +2,7 @@ using Celeste.Mod.Entities;
 using Monocle;
 using Microsoft.Xna.Framework;
 using Celeste.Mod.KoseiHelper.Triggers;
-using static Celeste.Mod.KoseiHelper.NemesisGun.Extensions;
+using static Celeste.Mod.KoseiHelper.KoseiHelperModuleSettings.NemesisInteractions;
 
 namespace Celeste.Mod.KoseiHelper.NemesisGun;
 
@@ -11,32 +11,33 @@ public class NemesisGunInteractions : Trigger
 {
     private TriggerMode triggerMode;
 
-    public bool canKillPlayer = true, breakBounceBlocks = true, activateFallingBlocks = true, harmEnemies = true, harmTheo = true,
+    public bool canKillPlayer = false, breakBounceBlocks = true, activateFallingBlocks = true, harmEnemies = true,
         breakSpinners = true, breakMovingBlades = true, enableKevins = true, collectables = true, useRefills = true, pressDashSwitches = true, canBounce = true,
         scareBirds = true, collectTouchSwitches = true, collectBadelineOrbs = true, useFeathers = true, coreModeToggles = true;
     public bool useBoosters = false;
     public float waterFriction;
 
-    public Extensions.TheoInteraction theoInteraction;
-    public Extensions.PufferInteraction pufferInteraction;
-    public Extensions.DreamBlockBehavior dreamBlockBehavior;
+    public KoseiHelperModuleSettings.NemesisInteractions.TheoBehavior theoBehavior;
+    public KoseiHelperModuleSettings.NemesisInteractions.PufferBehavior pufferBehavior;
+    public KoseiHelperModuleSettings.NemesisInteractions.DreamBlockBehavior dreamBlockBehavior;
+    public KoseiHelperModuleSettings.NemesisInteractions.DashBlockBehavior dashBlockBehavior;
 
     public NemesisGunInteractions(EntityData data, Vector2 offset) : base(data, offset)
     {
         triggerMode = data.Enum("triggerMode", TriggerMode.OnEnter);
 
-        canKillPlayer = data.Bool("canKillPlayer", true);
-        dreamBlockBehavior = data.Enum("dreamBlockBehavior", Extensions.DreamBlockBehavior.GoThrough);
+        canKillPlayer = data.Bool("canKillPlayer", false);
+        dreamBlockBehavior = data.Enum("dreamBlockBehavior", KoseiHelperModuleSettings.NemesisInteractions.DreamBlockBehavior.GoThrough);
         breakBounceBlocks = data.Bool("breakBounceBlocks", true);
         activateFallingBlocks = data.Bool("activateFallingBlocks", true);
         harmEnemies = data.Bool("harmEnemies", true);
         breakSpinners = data.Bool("breakSpinners", true);
         breakMovingBlades = data.Bool("breakMovingBlades", true);
-        theoInteraction = data.Enum("theoInteraction", Extensions.TheoInteraction.HitSpring);
+        theoBehavior = data.Enum("theoInteraction", KoseiHelperModuleSettings.NemesisInteractions.TheoBehavior.HitSpring);
         enableKevins = data.Bool("enableKevins", true);
         collectables = data.Bool("collectables", true);
         useRefills = data.Bool("useRefills", true);
-        pufferInteraction = data.Enum("pufferInteraction", Extensions.PufferInteraction.Explode);
+        pufferBehavior = data.Enum("pufferInteraction", KoseiHelperModuleSettings.NemesisInteractions.PufferBehavior.Explode);
         pressDashSwitches = data.Bool("pressDashSwitches", true);
         canBounce = data.Bool("canBounce", true);
         useBoosters = data.Bool("useBoosters", false);
@@ -46,6 +47,7 @@ public class NemesisGunInteractions : Trigger
         collectBadelineOrbs = data.Bool("collectBadelineOrbs", true);
         useFeathers = data.Bool("useFeathers", true);
         coreModeToggles = data.Bool("coreModeToggles", true);
+        dashBlockBehavior = data.Enum("dashBlockBehavior", KoseiHelperModuleSettings.NemesisInteractions.DashBlockBehavior.BreakAll);
     }
 
     public override void OnEnter(Player player)
@@ -71,27 +73,27 @@ public class NemesisGunInteractions : Trigger
 
     public void ChangeSettings()
     {
-        Extensions.canKillPlayer = canKillPlayer;
-        Extensions.dreamBlockBehavior = dreamBlockBehavior;
-        Extensions.breakBounceBlocks = breakBounceBlocks;
-        Extensions.activateFallingBlocks = activateFallingBlocks;
-        Extensions.harmEnemies = harmEnemies;
-        Extensions.harmTheo = harmTheo;
-        Extensions.breakSpinners = breakSpinners;
-        Extensions.breakMovingBlades = breakMovingBlades;
-        Extensions.theoInteraction = theoInteraction;
-        Extensions.enableKevins = enableKevins;
-        Extensions.collectables = collectables;
-        Extensions.useRefills = useRefills;
-        Extensions.pufferInteraction = pufferInteraction;
-        Extensions.pressDashSwitches = pressDashSwitches;
-        Extensions.canBounce = canBounce;
-        Extensions.useBoosters = useBoosters;
-        Extensions.waterFriction = waterFriction;
-        Extensions.scareBirds = scareBirds;
-        Extensions.collectTouchSwitches = collectTouchSwitches;
-        Extensions.collectBadelineOrbs = collectBadelineOrbs;
-        Extensions.useFeathers = useFeathers;
-        Extensions.coreModeToggles = coreModeToggles;
+        KoseiHelperModule.Settings.GunInteractions.CanKillPlayer = canKillPlayer;
+        KoseiHelperModule.Settings.GunInteractions.BreakBounceBlocks = breakBounceBlocks;
+        KoseiHelperModule.Settings.GunInteractions.ActivateFallingBlocks = activateFallingBlocks;
+        KoseiHelperModule.Settings.GunInteractions.HarmEnemies = harmEnemies;
+        KoseiHelperModule.Settings.GunInteractions.BreakSpinners = breakSpinners;
+        KoseiHelperModule.Settings.GunInteractions.BreakMovingBlades = breakMovingBlades;
+        KoseiHelperModule.Settings.GunInteractions.EnableKevins = enableKevins;
+        KoseiHelperModule.Settings.GunInteractions.Collectables = collectables;
+        KoseiHelperModule.Settings.GunInteractions.UseRefills = useRefills;
+        KoseiHelperModule.Settings.GunInteractions.PressDashSwitches = pressDashSwitches;
+        KoseiHelperModule.Settings.GunInteractions.CanBounce = canBounce;
+        KoseiHelperModule.Settings.GunInteractions.UseBoosters = useBoosters;
+        KoseiHelperModule.Settings.GunInteractions.WaterFriction = waterFriction;
+        KoseiHelperModule.Settings.GunInteractions.ScareBirds = scareBirds;
+        KoseiHelperModule.Settings.GunInteractions.CollectTouchSwitches = collectTouchSwitches;
+        KoseiHelperModule.Settings.GunInteractions.CollectBadelineOrbs = collectBadelineOrbs;
+        KoseiHelperModule.Settings.GunInteractions.UseFeathers = useFeathers;
+        KoseiHelperModule.Settings.GunInteractions.CoreModeToggles = coreModeToggles;
+        KoseiHelperModule.Settings.GunInteractions.theoBehavior = theoBehavior;
+        KoseiHelperModule.Settings.GunInteractions.dreamBlockBehavior = dreamBlockBehavior;
+        KoseiHelperModule.Settings.GunInteractions.pufferBehavior = pufferBehavior;
+        KoseiHelperModule.Settings.GunInteractions.dashBlockBehavior = dashBlockBehavior;
     }
 }

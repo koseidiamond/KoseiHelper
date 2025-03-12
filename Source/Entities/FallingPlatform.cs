@@ -93,6 +93,7 @@ public class FallingPlatform : JumpthruPlatform
         triggered = true;
         Audio.Play(sound, Center);
         Add(new Coroutine(FallSequence()));
+        hasFallen = true;
     }
     private IEnumerator FallSequence()
     {

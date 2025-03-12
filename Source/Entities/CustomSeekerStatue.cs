@@ -21,7 +21,7 @@ namespace Celeste.Mod.KoseiHelper.Entities
         private Sprite sprite;
 
         public string sound, flag, statueSprite, hatchSprite;
-        public int depth;
+        public new int depth;
         public float distance;
         public bool particles;
         public CustomSeekerStatue(EntityData data, Vector2 offset)

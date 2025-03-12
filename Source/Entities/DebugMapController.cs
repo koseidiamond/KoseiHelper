@@ -20,8 +20,8 @@ public class DebugMapController : Entity
     private static string blockDebugMap;
     private static string roomsToAffect;
 
-    private static List<Vector2> keys;
-    private static Camera camera;
+    //private static List<Vector2> keys;
+    //private static Camera camera;
 
     private static Color[] fgTilesColor = new Color[8]
     {
@@ -193,7 +193,7 @@ public DebugMapController(EntityData data, Vector2 offset) : base(data.Position 
         base.Awake(scene);
         KoseiHelperModule.Session.DebugMapModified = true;
         MapEditor.gridColor = gridColor;
-        camera = SceneAs<Level>().Camera;
+        //camera = SceneAs<Level>().Camera;
     }
 
     public override void Update()
