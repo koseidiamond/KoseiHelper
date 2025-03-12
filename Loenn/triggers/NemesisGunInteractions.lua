@@ -15,7 +15,6 @@ NemesisGunInteractions.placements = {
 		theoInteraction = "HitSpring",
 		breakSpinners = true,
 		breakMovingBlades = true,
-		enableKevins = true,
 		dashBlockBehavior = "BreakAll",
 		collectables = true,
 		useRefills = true,

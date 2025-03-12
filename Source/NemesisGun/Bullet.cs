@@ -660,40 +660,10 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                     return;
                 }
 
-                if (solid is CrushBlock cBlock && KoseiHelperModule.Settings.GunInteractions.EnableKevins && owner is Player p)
+                if (solid is CrushBlock cBlock && owner is Player p)
                 {
-                    if (cBlock.canMoveHorizontally && cBlock.canMoveHorizontally)
-                    {
-                        Vector2 diff = new Vector2(cBlock.X - CenterX, cBlock.Y - CenterY);
-                        diff.X /= cBlock.Width;
-                        diff.Y /= cBlock.Height;
-                        if (Math.Abs(diff.X) >= Math.Abs(diff.Y))
-                        {
-                            // Horizontal hit, check sign of diff.X
-                        }
-                        else
-                        {
-                            // Vertical hit, check sign of diff.Y
-                        }
-                    }
-                    else
-                    {
-                        if (cBlock.canMoveVertically)
-                        {
-                            if (CenterY < cBlock.Top)
-                                cBlock.OnDashCollide(p, -Vector2.UnitY);
-                            else
-                                cBlock.OnDashCollide(p, Vector2.UnitY);
-                        }
-                        if (cBlock.canMoveHorizontally)
-                        {
-                            if (CenterX > cBlock.Right)
-                                cBlock.OnDashCollide(p, Vector2.UnitX);
-                            else
-                                cBlock.OnDashCollide(p, -Vector2.UnitX);
-                        }
-                    }
                     DestroyBullet();
+                    return;
                 }
 
                 if (solid is LightningBreakerBox lBBox && owner is Player pl)

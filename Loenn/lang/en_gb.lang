@@ -602,7 +602,6 @@ triggers.KoseiHelper/NemesisGunInteractions.attributes.description.activateFalli
 triggers.KoseiHelper/NemesisGunInteractions.attributes.description.dreamBlockBehavior=Whether bullets should be able to pass through dream blocks or destroy them.
 triggers.KoseiHelper/NemesisGunInteractions.attributes.description.breakSpinners=Whether bullets should be able to break spinners.
 triggers.KoseiHelper/NemesisGunInteractions.attributes.description.breakMovingBlades=Whether bullets should be able to break blades/stars/dust bunnies that move/rotate.
-triggers.KoseiHelper/NemesisGunInteractions.attributes.description.enableKevins=Whether bullets can hit Kevins like dashes.
 triggers.KoseiHelper/NemesisGunInteractions.attributes.description.dashBlockBehavior=Whether bullets can destroy dash blocks (or only the dashable ones). Also affects emple Cracked Blocks.\nCustom Temple Cracked blocks will see its health reduced on BreakSome mode.
 triggers.KoseiHelper/NemesisGunInteractions.attributes.description.collectables=Whether the player can collect entities (berries, keys, gems, hearts, cassettes) by shooting.
 triggers.KoseiHelper/NemesisGunInteractions.attributes.description.useRefills=Whether bullets can use refills for the player.

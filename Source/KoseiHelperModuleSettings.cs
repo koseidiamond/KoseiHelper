@@ -97,10 +97,6 @@ public class KoseiHelperModuleSettings : EverestModuleSettings {
         [SettingSubText("Whether bullets should be able to break blades/stars/dust bunnies that move/rotate.")]
         public bool BreakMovingBlades { get; set; } = true;
 
-        [SettingSubText("Whether bullets can hit Kevins like dashes.\n" +
-            "Currently bugged and does not work with Kevins that can be hit from all sides.")]
-        public bool EnableKevins { get; set; } = true;
-
         [SettingSubText("Whether bullets should be able to use feathers (or permanently destroy their bubbles if shielded).")]
         public bool UseFeathers { get; set; } = true;
 

@@ -12,7 +12,7 @@ public class NemesisGunInteractions : Trigger
     private TriggerMode triggerMode;
 
     public bool canKillPlayer = false, breakBounceBlocks = true, activateFallingBlocks = true, harmEnemies = true,
-        breakSpinners = true, breakMovingBlades = true, enableKevins = true, collectables = true, useRefills = true, pressDashSwitches = true, canBounce = true,
+        breakSpinners = true, breakMovingBlades = true, collectables = true, useRefills = true, pressDashSwitches = true, canBounce = true,
         scareBirds = true, collectTouchSwitches = true, collectBadelineOrbs = true, useFeathers = true, coreModeToggles = true;
     public bool useBoosters = false;
     public float waterFriction;
@@ -34,7 +34,6 @@ public class NemesisGunInteractions : Trigger
         breakSpinners = data.Bool("breakSpinners", true);
         breakMovingBlades = data.Bool("breakMovingBlades", true);
         theoBehavior = data.Enum("theoInteraction", KoseiHelperModuleSettings.NemesisInteractions.TheoBehavior.HitSpring);
-        enableKevins = data.Bool("enableKevins", true);
         collectables = data.Bool("collectables", true);
         useRefills = data.Bool("useRefills", true);
         pufferBehavior = data.Enum("pufferInteraction", KoseiHelperModuleSettings.NemesisInteractions.PufferBehavior.Explode);
@@ -79,7 +78,6 @@ public class NemesisGunInteractions : Trigger
         KoseiHelperModule.Settings.GunInteractions.HarmEnemies = harmEnemies;
         KoseiHelperModule.Settings.GunInteractions.BreakSpinners = breakSpinners;
         KoseiHelperModule.Settings.GunInteractions.BreakMovingBlades = breakMovingBlades;
-        KoseiHelperModule.Settings.GunInteractions.EnableKevins = enableKevins;
         KoseiHelperModule.Settings.GunInteractions.Collectables = collectables;
         KoseiHelperModule.Settings.GunInteractions.UseRefills = useRefills;
         KoseiHelperModule.Settings.GunInteractions.PressDashSwitches = pressDashSwitches;
