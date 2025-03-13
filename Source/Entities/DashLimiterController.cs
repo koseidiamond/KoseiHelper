@@ -40,10 +40,10 @@ public class DashLimiterController : Entity
     }
     public override void Added(Scene scene)
     {
-        Level level = SceneAs<Level>();
-        if (level.Tracker.GetEntity<DashLimiterController>().count > 1)
-            this.RemoveSelf();
         base.Added(scene);
+        Level level = SceneAs<Level>();
+        //if (level.Tracker.GetEntity<DashLimiterController>().count > 1)
+        //    this.RemoveSelf();
         level.Session.SetCounter("KoseiHelper_RemainingDashes", count);
     }
 
@@ -91,11 +91,9 @@ public class DashLimiterController : Entity
 
     public override void Render()
     {
+
         base.Render();
-        if (Scene.Tracker.GetEntity<Player>() is not { } player)
-        {
-            return;
-        }
+        Player player = Scene.Tracker.GetEntity<Player>();
         if (player != null)
         {
             indicatorsPerRow = 5;
