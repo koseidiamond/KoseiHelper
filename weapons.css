@@ -1,6 +1,6 @@
 body {
-    background-color: #1d1029;
-    color: #f2e6f3;
+    background-color: #2e2e2e;
+    color: #e6e6e6;
     font-family: "Segoe UI","Noto Sans",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji";
     display: flex;
     flex-flow: row wrap;
@@ -20,13 +20,13 @@ img{
 button {
     width: 4em;
     height: 1.5em;
-    background-color: #a676b3;
-    color: #4a255c;
+    background-color: #b8b8b8;
+    color: #4a4a4a;
     border: none;
     border-radius: 0.5em;
     font-size: 1.5em;
 }
 
 button:hover{
-    background-color: #c493c7;
+    background-color: #9c93c7;
 }
