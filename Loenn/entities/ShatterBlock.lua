@@ -23,7 +23,8 @@ function ShatterDashBlock.placements()
 			givesCoyote = false,
 			requireOnlySpeed = false,
 			flagSet = "",
-			substractSpeedMode = "Substract"
+			substractSpeedMode = "Substract",
+			destroyStaticMovers = false
         }
     }
 end
@@ -68,7 +69,8 @@ ShatterDashBlock.fieldOrder= {
 	"canDash",
 	"givesCoyote",
 	"requireOnlySpeed",
-	"permanent"
+	"permanent",
+	"destroyStaticMovers"
 }
 
 ShatterDashBlock.sprite = fakeTilesHelper.getEntitySpriteFunction("tiletype", "blendin")

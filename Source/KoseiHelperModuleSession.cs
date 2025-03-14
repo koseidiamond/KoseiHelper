@@ -1,8 +1,11 @@
 using Microsoft.Xna.Framework;
+using System.Collections.Generic;
 
 namespace Celeste.Mod.KoseiHelper;
 
 public class KoseiHelperModuleSession : EverestModuleSession {
+
+    public HashSet<EntityID> SoftDoNotLoad { get; set; } = new();
     public bool HasPufferDash { get; set; } = false;
     public bool PufferDashActive { get; set; } = false;
 

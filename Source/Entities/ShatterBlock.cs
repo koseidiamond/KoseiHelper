@@ -29,6 +29,7 @@ public class ShatterDashBlock : Solid
     private bool requireOnlySpeed = false;
     private float previousHSpeed, previousVSpeed;
     private string flagSet;
+    private bool destroyStaticMovers;
     private enum SubstractSpeedMode
     {
         Substract,
@@ -54,6 +55,7 @@ public class ShatterDashBlock : Solid
         shakeTime = Math.Max(0f, data.Float("ShakeTime", 0.3f));
         speedAfterShatterMode = data.Enum("substractSpeedMode", SubstractSpeedMode.Substract);
         flagSet = data.Attr("flagSet", "");
+        destroyStaticMovers = data.Bool("destroyStaticMovers", false);
         OnDashCollide = OnDashed;
         SurfaceSoundIndex = SurfaceIndex.TileToIndex[tileType];
     }
@@ -61,6 +63,11 @@ public class ShatterDashBlock : Solid
     public override void Awake(Scene scene)
     {
         base.Awake(scene);
+        if (permanent && KoseiHelperModule.Session.SoftDoNotLoad.Contains(id))
+        {
+            DestroyStaticMovers();
+            RemoveSelf();
+        }
         TileGrid tileGrid;
         if (!blendIn)
         {
@@ -120,6 +127,8 @@ public class ShatterDashBlock : Solid
         }
 
         Celeste.Freeze(delay);
+        if (destroyStaticMovers)
+            DestroyStaticMovers();
         Collidable = false;
         SceneAs<Level>().DirectionalShake(direction * -1, shakeTime);
         switch (speedAfterShatterMode)
@@ -155,7 +164,7 @@ public class ShatterDashBlock : Solid
     public void RemoveAndFlagAsGone()
     {
         RemoveSelf();
-        SceneAs<Level>().Session.DoNotLoad.Add(id);
+        KoseiHelperModule.Session.SoftDoNotLoad.Add(id);
     }
 
     private DashCollisionResults OnDashed(Player player, Vector2 direction)

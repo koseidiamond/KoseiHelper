@@ -265,6 +265,7 @@ entities.KoseiHelper/ShatterDashBlock.attributes.description.givesCoyote=Whether
 entities.KoseiHelper/ShatterDashBlock.attributes.description.requireOnlySpeed=Whether the block can be broken if the speed requirement is met, regardless of the dash state.
 entities.KoseiHelper/ShatterDashBlock.attributes.description.flagSet=The flag that will be set when the block is shattered.
 entities.KoseiHelper/ShatterDashBlock.attributes.description.substractSpeedMode=Whether the player speed should be decreased by substraction, multiplication, or set to a fixed number.
+entities.KoseiHelper/ShatterDashBlock.attributes.description.destroyStaticMovers=Whether entities attached to this block should be destroyed (or not loaded if it was permanently destroyed)
 
 #Oshiro Doors
 entities.KoseiHelper/CustomOshiroDoor.placements.name.CustomOshiroDoor= Custom Oshiro Door

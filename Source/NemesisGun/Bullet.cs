@@ -623,6 +623,13 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                     DestroyBullet();
                     return;
                 }
+
+                if (entity is SidewaysJumpThru sidewaysJumpthru && sidewaysJumpthru.Collider.Bounds.Intersects(Hitbox) && !dead)
+                {
+                    if ((sidewaysJumpthru.AllowLeftToRight && velocity.X < 0) || (!sidewaysJumpthru.AllowLeftToRight && velocity.X > 0))
+                    DestroyBullet();
+                    return;
+                }
             }
 
             // Solid interactions
