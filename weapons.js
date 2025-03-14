@@ -125,7 +125,179 @@ let weapons = [
 	80,
 	0.22,
 	0.007],
+	["Bomb Launcher"]
 ];
+
+function getLauncher(name) {
+    return `{
+    {
+        _editorLayer = 0,
+        _fromLayer = "entities",
+        _id = 1,
+        _name = "KoseiHelper/SpawnController",
+        absoluteCoords = false,
+        appearSound = "event:/none",
+        blockHeight = 16,
+        blockSinks = false,
+        blockTileType = "3",
+        blockWidth = 16,
+        boosterRed = false,
+        cloudFragile = true,
+        crushBlockAxe = "Both",
+        crushBlockChillout = false,
+        dashBlockCanDash = true,
+        decalDepth = 9000,
+        decalTexture = "10-farewell/creature_f00",
+        decreaseCounter = false,
+        dictKeys = "explodeOnSpawn,explodeTime,respawnOnExplode",
+        dictValues = "true,0.3,false",
+        disappearSound = "event:/none",
+        dummyFix = true,
+        entityPath = "Celeste.Mod.CavernHelper.CrystalBomb",
+        entityToSpawn = "CustomEntity",
+        everyXDashes = 1,
+        fallingBlockBadeline = false,
+        fallingBlockClimbFall = false,
+        featherShielded = false,
+        featherSingleUse = true,
+        flag = "",
+        flagCycleAt = 9999,
+        flagStop = false,
+        flagValue = true,
+        iceballAlwaysIce = false,
+        iceballSpeed = 1,
+        jumpthruTexture = "wood",
+        maxCounterCap = 9999,
+        minCounterCap = 0,
+        moveBlockCanSteer = false,
+        moveBlockDirection = "Down",
+        moveBlockFast = true,
+        nodeRelativeToPlayerFacing = true,
+        nodeX = 0,
+        nodeY = 0,
+        offsetX = 0,
+        offsetY = 0,
+        persistent = false,
+        poofWhenDisappearing = false,
+        refillTwoDashes = false,
+        relativeToPlayerFacing = true,
+        removeDash = false,
+        removeStamina = false,
+        soundIndex = -1,
+        spawnCondition = "OnFlagEnabled",
+        spawnCooldown = 0,
+        spawnFlag = "KoseiHelper_playerIsShooting",
+        spawnFlagValue = true,
+        spawnLimit = -1,
+        spawnSpeed = 300,
+        swapBlockTheme = "Normal",
+        timeToLive = 5,
+        x = 704,
+        y = 48,
+        zipMoverTheme = "Normal"
+    },
+    {
+        _editorLayer = 0,
+        _fromLayer = "entities",
+        _id = 2,
+        _name = "KoseiHelper/SpawnController",
+        absoluteCoords = false,
+        appearSound = "event:/none",
+        blockHeight = 16,
+        blockSinks = false,
+        blockTileType = "3",
+        blockWidth = 16,
+        boosterRed = false,
+        cloudFragile = true,
+        crushBlockAxe = "Both",
+        crushBlockChillout = false,
+        dashBlockCanDash = true,
+        decalDepth = 9000,
+        decalTexture = "10-farewell/creature_f00",
+        decreaseCounter = false,
+        dictKeys = "whitelist,attachTo,ignoreAnchors,ignoreContainerBounds,destroyable,fitContained,restrictToNode",
+        dictValues = "CrystalBomb,Bullet,true,true,false,true,false",
+        disappearSound = "event:/none",
+        dummyFix = true,
+        entityPath = "Celeste.Mod.EeveeHelper.Entities.AttachedContainer",
+        entityToSpawn = "CustomEntity",
+        everyXDashes = 1,
+        fallingBlockBadeline = false,
+        fallingBlockClimbFall = false,
+        featherShielded = false,
+        featherSingleUse = true,
+        flag = "",
+        flagCycleAt = 9999,
+        flagStop = false,
+        flagValue = true,
+        iceballAlwaysIce = false,
+        iceballSpeed = 1,
+        jumpthruTexture = "wood",
+        maxCounterCap = 9999,
+        minCounterCap = 0,
+        moveBlockCanSteer = false,
+        moveBlockDirection = "Down",
+        moveBlockFast = true,
+        nodeRelativeToPlayerFacing = true,
+        nodeX = 0,
+        nodeY = 0,
+        offsetX = 24,
+        offsetY = 0,
+        persistent = false,
+        poofWhenDisappearing = false,
+        refillTwoDashes = false,
+        relativeToPlayerFacing = true,
+        removeDash = false,
+        removeStamina = false,
+        soundIndex = -1,
+        spawnCondition = "OnFlagEnabled",
+        spawnCooldown = 0,
+        spawnFlag = "KoseiHelper_playerIsShooting",
+        spawnFlagValue = true,
+        spawnLimit = -1,
+        spawnSpeed = 300,
+        swapBlockTheme = "Normal",
+        timeToLive = 5,
+        x = 672,
+        y = 48,
+        zipMoverTheme = "Normal"
+    },
+    {
+        _editorColor = "",
+        _editorLayer = 0,
+        _fromLayer = "triggers",
+        _id = 3,
+        _name = "KoseiHelper/NemesisGunSettings",
+        bulletExplosion = false,
+        bulletTexture = "objects/KoseiHelper/Guns/Bullets/Invisible",
+        canShootInFeather = false,
+        color1 = "78acfb",
+        color2 = "262070",
+        cooldown = 40,
+        customParticleTexture = "particles/KoseiHelper/star",
+        dashBehavior = "None",
+        directions = "EightDirections",
+        enabled = true,
+        freezeFrames = 0,
+        gunTexture = "objects/KoseiHelper/Guns/Bullets/Invisible",
+        gunshotSound = "event:/KoseiHelper/bullet",
+        height = 64,
+        horizontalAcceleration = 0,
+        lifetime = 600,
+        loseGunOnRespawn = false,
+        particleAlpha = 0.08,
+        particleType = "Bubble",
+        recoilCooldown = 0,
+        recoilStrength = 0,
+        speedMultiplier = 0.28,
+        triggerMode = "OnStay",
+        verticalAcceleration = 0,
+        width = 64,
+        x = 656,
+        y = 32
+    }
+}`;
+}
 
 function getEntity(name, bulletExplosion, bulletTexture, canShootInFeather, color1, color2, cooldown, customParticleTexture, dashBehavior, directions, freezeFrames,
 gunTexture, gunshotSound, horizontalAcceleration, lifetime, particleAlpha, particleType, recoilCooldown, recoilStrength, speedMultiplier, verticalAcceleration) {
@@ -167,17 +339,18 @@ gunTexture, gunshotSound, horizontalAcceleration, lifetime, particleAlpha, parti
 
 
 function buttonClick(button) {
-    let index = button.id.substring(7); // 7 is the length of "button_"
-    let info = weapons[index]; // Get weapon data based on the index
-
-    // Pass the whole weapon data array to the getEntity function
-    navigator.clipboard.writeText(getEntity(...info)); // Spread the weapon array to pass all attributes
-
-    // Change button text and style to indicate success
+    let index = button.id.substring(7);
+    let info = weapons[index];
+    if (index == 6) {
+        navigator.clipboard.writeText(getLauncher(...info)); 
+    } else {
+        navigator.clipboard.writeText(getEntity(...info)); 
+    }
     button.innerHTML = "Copied!";
     button.style.backgroundColor = "#e1bde0";
     setDefaultColor(button);
 }
+
 
 async function setDefaultColor(button) {
     await sleep(1000);
@@ -192,32 +365,25 @@ function sleep(ms) {
 for (let i = 0; i < weapons.length; i++) {
     let info = weapons[i];
 
-    // Create a container div for the weapon's info
     let e = document.createElement("DIV");
     
-    // Create and append a line break
     let br = document.createElement("BR");
 
-    // Create and append the weapon's title (name)
     let title = document.createElement("H2");
     title.innerHTML = info[0];
 
-    // Create and append the weapon's image
     let image = document.createElement("IMG");
     image.setAttribute("src", "./Images/weapons/" + info[0] + ".png");
 
-    // Create and append the "Copy" button
     let button = document.createElement("BUTTON");
     button.innerHTML = "Copy";
     button.id = "button_" + i;
     button.setAttribute("onclick", "buttonClick(this)");
 
-    // Append all elements to the container div
     e.append(title);
     e.append(image);
     e.append(br);
     e.append(button);
 
-    // Append the container div to the document body
     document.body.append(e);
 }
