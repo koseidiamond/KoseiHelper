@@ -5,7 +5,7 @@ namespace Celeste.Mod.KoseiHelper;
 
 public class KoseiHelperModuleSession : EverestModuleSession {
 
-    public HashSet<EntityID> SoftDoNotLoad { get; set; } = new();
+    public HashSet<EntityID> SoftDoNotLoad { get; set; } = new(); // Used to remove staticMovers from entities that should not load
     public bool HasPufferDash { get; set; } = false;
     public bool PufferDashActive { get; set; } = false;
 
@@ -13,7 +13,6 @@ public class KoseiHelperModuleSession : EverestModuleSession {
     public bool FlagDashActive { get; set; } = false;
     public bool HasCounterDash { get; set; } = false;
     public bool CounterDashActive { get; set; } = false;
-
     public bool DebugMapModified { get; set; } = false;
     public bool ClimbJumpHook { get; set; } = false;
     // Flag Refill Controller options

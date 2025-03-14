@@ -26,7 +26,9 @@ NemesisGunSettings.placements = {
 		recoilStrength = 80,
 		recoilCooldown = 16,
 		canShootInFeather = true,
-		freezeFrames = 0
+		freezeFrames = 0,
+		horizontalAcceleration = 0,
+		verticalAcceleration = 0
 		}
 	}
 }
@@ -166,6 +168,8 @@ NemesisGunSettings.fieldOrder =
 	"lifetime",
 	"speedMultiplier",
 	"freezeFrames",
+	"horizontalAcceleration",
+	"verticalAcceleration",
 	"gunTexture",
 	"bulletTexture",
 	"enabled",

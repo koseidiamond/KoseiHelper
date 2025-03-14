@@ -15,7 +15,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
     public class Bullet : Entity
     {
         public Rectangle Hitbox => new Rectangle((int)Position.X, (int)Position.Y, 6, 6);
-        private Vector2 velocity;
+        private Vector2 velocity, startVelocity;
         private readonly Actor owner;
         private int lifetime;
         private bool dead;
@@ -37,7 +37,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
             else
                 position.Y = position.Y - 4;
             Position = position;
-            this.velocity = velocity;
+            this.startVelocity = this.velocity = velocity;
             this.owner = owner;
             lifetime = KoseiHelperModule.Settings.GunSettings.Lifetime;
             BouncedOffBumper = new List<Bumper>();
@@ -52,6 +52,15 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
         public override void Update()
         {
             base.Update();
+
+            // For curved bullets
+            if (startVelocity.X > 0) // When shooting left
+                velocity.X -= Engine.DeltaTime * KoseiHelperModule.Settings.GunSettings.HorizontalAcceleration;
+            else // When shooting right
+                velocity.X += Engine.DeltaTime * KoseiHelperModule.Settings.GunSettings.HorizontalAcceleration;
+            velocity.X = Math.Clamp(velocity.X, -Math.Abs(startVelocity.X), Math.Abs(startVelocity.X));
+            velocity.Y += Engine.DeltaTime * KoseiHelperModule.Settings.GunSettings.VerticalAcceleration;
+
             if (updateCount > extraUpdates)
             {
                 updateCount = 0;
@@ -372,7 +381,6 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 {
                     if (owner is Player playerCoreModeToggle)
                         coreModeToggle.OnPlayer(playerCoreModeToggle);
-                    //DestroyBullet();
                     return;
                 }
 

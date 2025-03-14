@@ -21,6 +21,7 @@ public class NemesisGunSettingsTrigger : Trigger
     private float particleAlpha;
     public bool canShootInFeather = true;
     private int freezeFrames;
+    private float horizontalAcceleration = 0f, verticalAcceleration = 0f;
 
     public KoseiHelperModuleSettings.NemesisSettings.GunDirections gunDirections;
 
@@ -47,6 +48,8 @@ public class NemesisGunSettingsTrigger : Trigger
         particleAlpha = data.Float("particleAlpha", 1f);
         canShootInFeather = data.Bool("canShootInFeather", true);
         freezeFrames = data.Int("freezeFrames", 0);
+        horizontalAcceleration = data.Float("horizontalAcceleration", 0f);
+        verticalAcceleration = data.Float("verticalAcceleration", 0f);
     }
 
     public override void OnEnter(Player player)
@@ -82,6 +85,8 @@ public class NemesisGunSettingsTrigger : Trigger
         KoseiHelperModule.Settings.GunSettings.RecoilCooldown = recoilCooldown;
         KoseiHelperModule.Settings.GunSettings.CanShootInFeather = canShootInFeather;
         KoseiHelperModule.Settings.GunSettings.FreezeFrames = freezeFrames;
+        KoseiHelperModule.Settings.GunSettings.HorizontalAcceleration = horizontalAcceleration;
+        KoseiHelperModule.Settings.GunSettings.VerticalAcceleration = verticalAcceleration;
         Extensions.color1 = color1;
         Extensions.color2 = color2;
         Extensions.shotDustType = shotDustType;

@@ -50,6 +50,18 @@ public class KoseiHelperModuleSettings : EverestModuleSettings {
         [SettingInGame(false)]
         public float Recoil { get; set; } = 80f;
 
+        [SettingSubText("How much the bullets should accelerate horizontally on each frame.\n" +
+            "Using both accelerations can result in curved trajectories! Recommended values are between -1 and 1.")]
+        [SettingNumberInput(allowNegatives: true, maxLength: 99)]
+        [SettingInGame(false)]
+        public float HorizontalAcceleration { get; set; } = 0f;
+
+        [SettingSubText("How much the bullets should accelerate vertically on each frame.\n" +
+            "Using both accelerations can result in curved trajectories! Recommended values are between -1 and 1.")]
+        [SettingNumberInput(allowNegatives: true, maxLength: 99)]
+        [SettingInGame(false)]
+        public float VerticalAcceleration { get; set; } = 0f;
+
         public enum DashBehavior
         {
             ReplacesDash,
@@ -73,7 +85,8 @@ public class KoseiHelperModuleSettings : EverestModuleSettings {
         [SettingName("KoseiHelper_NemesisSettings_GunDirections")]
         public GunDirections gunDirections { get; set; } = GunDirections.EightDirections;
     }
-    [SettingSubText("General Nemesis Gun settings. These can be overridden by specific map settings.")]
+    [SettingSubText("General Nemesis Gun settings. These can be overridden by specific map settings.\n" +
+        "Some options are not available while a map is loaded. Go to the Overworld to configure them.")]
     public NemesisSettings GunSettings { get; set; } = new();
 
     [SettingSubMenu]
