@@ -635,14 +635,16 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                         case KoseiHelperModuleSettings.NemesisInteractions.DreamBlockBehavior.Destroy:
                             Audio.Play("event:/KoseiHelper/shatter_dream_block", dreamBlock.Center);
                             Audio.Play("event:/new_content/game/10_farewell/glider_emancipate", dreamBlock.Center);
+                            SceneAs<Level>().Displacement.AddBurst(dreamBlock.Center, 0.3f, 8, Math.Min(dreamBlock.Width, dreamBlock.Height), 0.8f);
                             dreamBlock.OneUseDestroy();
+                            DestroyBullet();
                             break;
                         case KoseiHelperModuleSettings.NemesisInteractions.DreamBlockBehavior.GoThrough:
                             if ((owner.Scene as Level).Session.Inventory.DreamDash)
                                 return;
                             else
                                 DestroyBullet();
-                            break;
+                                return;
                         default: // None
                             DestroyBullet();
                             break;
@@ -662,6 +664,13 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
 
                 if (solid is CrushBlock cBlock && owner is Player p)
                 {
+                    DestroyBullet();
+                    return;
+                }
+
+                if (solid is SwapBlock swapBlock && owner is Player pSwapBlock && KoseiHelperModule.Settings.GunInteractions.MoveSwapBlocks)
+                {
+                    swapBlock.OnDash(velocity);
                     DestroyBullet();
                     return;
                 }

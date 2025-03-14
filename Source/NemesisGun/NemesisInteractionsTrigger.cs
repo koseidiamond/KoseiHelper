@@ -11,7 +11,7 @@ public class NemesisGunInteractions : Trigger
 {
     private TriggerMode triggerMode;
 
-    public bool canKillPlayer = false, breakBounceBlocks = true, activateFallingBlocks = true, harmEnemies = true,
+    public bool canKillPlayer = false, breakBounceBlocks = true, activateFallingBlocks = true, harmEnemies = true, moveSwapBlocks = true,
         breakSpinners = true, breakMovingBlades = true, collectables = true, useRefills = true, pressDashSwitches = true, canBounce = true,
         scareBirds = true, collectTouchSwitches = true, collectBadelineOrbs = true, useFeathers = true, coreModeToggles = true;
     public bool useBoosters = false;
@@ -46,6 +46,7 @@ public class NemesisGunInteractions : Trigger
         collectBadelineOrbs = data.Bool("collectBadelineOrbs", true);
         useFeathers = data.Bool("useFeathers", true);
         coreModeToggles = data.Bool("coreModeToggles", true);
+        moveSwapBlocks = data.Bool("moveSwapBlocks", true);
         dashBlockBehavior = data.Enum("dashBlockBehavior", KoseiHelperModuleSettings.NemesisInteractions.DashBlockBehavior.BreakAll);
     }
 
@@ -93,5 +94,6 @@ public class NemesisGunInteractions : Trigger
         KoseiHelperModule.Settings.GunInteractions.dreamBlockBehavior = dreamBlockBehavior;
         KoseiHelperModule.Settings.GunInteractions.pufferBehavior = pufferBehavior;
         KoseiHelperModule.Settings.GunInteractions.dashBlockBehavior = dashBlockBehavior;
+        KoseiHelperModule.Settings.GunInteractions.MoveSwapBlocks = moveSwapBlocks;
     }
 }

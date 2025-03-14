@@ -88,6 +88,9 @@ public class KoseiHelperModuleSettings : EverestModuleSettings {
         [SettingSubText("Whether falling blocks/falling platforms should start falling when shot.")]
         public bool ActivateFallingBlocks { get; set; } = true;
 
+        [SettingSubText("Whether swap blocks should move when shot.")]
+        public bool MoveSwapBlocks { get; set; } = true;
+
         [SettingSubText("Whether bullets should be able to harm/kill enemies (Oshiro, goombas, seekers and plants).\nIf the enemy is a Badeline Boss, the player will be teleported to it in order to hit it.")]
         public bool HarmEnemies { get; set; } = true;
 
