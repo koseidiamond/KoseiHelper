@@ -619,3 +619,4 @@ triggers.KoseiHelper/NemesisGunInteractions.attributes.description.theoInteracti
 triggers.KoseiHelper/NemesisGunInteractions.attributes.description.pufferInteraction=Whether pufferfishes should explode or bounced like when they hit a spring.
 triggers.KoseiHelper/NemesisGunInteractions.attributes.description.moveSwapBlocks=Whether swap blocks should move when shot.
 triggers.KoseiHelper/NemesisGunInteractions.attributes.description.collideWithPlatforms=Whether bullets should collide with platform entities (jumpthrus, clouds, etc) in the correct direction.\nSideways jumpthrus and upside down ones from Helping Hand are supported.
+triggers.KoseiHelper/NemesisGunInteractions.attributes.description.moveMovingBlocks=Whether bullets can make moving blocks to start moving.

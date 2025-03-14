@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using FrostHelper;
 using Celeste.Mod.MaxHelpingHand.Entities;
+using System.Runtime.CompilerServices;
 
 namespace Celeste.Mod.KoseiHelper.NemesisGun
 {
@@ -50,6 +51,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
 
         public override void Update()
         {
+            base.Update();
             if (updateCount > extraUpdates)
             {
                 updateCount = 0;
@@ -690,8 +692,15 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                     return;
                 }
 
-                if (solid is CrushBlock cBlock && owner is Player p)
+                if (solid is CrushBlock cBlock) // TODO stupid kevins SOMEONE PLEASE HELP
                 {
+                    DestroyBullet();
+                    return;
+                }
+
+                if (solid is MoveBlock moveBlock && KoseiHelperModule.Settings.GunInteractions.MoveMovingBlocks) // TODO stupid kevins SOMEONE PLEASE HELP
+                {
+                    moveBlock.triggered = true;
                     DestroyBullet();
                     return;
                 }

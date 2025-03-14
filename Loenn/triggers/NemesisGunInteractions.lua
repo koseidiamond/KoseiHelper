@@ -29,7 +29,8 @@ NemesisGunInteractions.placements = {
 		useFeathers = true,
 		coreModeToggles = true,
 		moveSwapBlocks = true,
-		collideWithPlatforms = true
+		collideWithPlatforms = true,
+		moveMovingBlocks = false
 		}
 	}
 }

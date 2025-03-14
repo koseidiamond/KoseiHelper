@@ -100,6 +100,9 @@ public class KoseiHelperModuleSettings : EverestModuleSettings {
         [SettingSubText("Whether bullets should be able to break spinners.")]
         public bool BreakSpinners { get; set; } = true;
 
+        [SettingSubText("Whether bullets can activate moving blocks.")]
+        public bool MoveMovingBlocks { get; set; } = false;
+
         [SettingSubText("Whether bullets should be able to break blades/stars/dust bunnies that move/rotate.")]
         public bool BreakMovingBlades { get; set; } = true;
 
