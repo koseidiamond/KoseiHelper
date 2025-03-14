@@ -88,6 +88,9 @@ public class KoseiHelperModuleSettings : EverestModuleSettings {
         [SettingSubText("Whether falling blocks/falling platforms should start falling when shot.")]
         public bool ActivateFallingBlocks { get; set; } = true;
 
+        [SettingSubText("Whether bullets should collide with platforms like jump throughs, moving platforms or clouds.")]
+        public bool CollideWithPlatforms { get; set; } = true;
+
         [SettingSubText("Whether swap blocks should move when shot.")]
         public bool MoveSwapBlocks { get; set; } = true;
 

@@ -13,7 +13,7 @@ public class NemesisGunInteractions : Trigger
 
     public bool canKillPlayer = false, breakBounceBlocks = true, activateFallingBlocks = true, harmEnemies = true, moveSwapBlocks = true,
         breakSpinners = true, breakMovingBlades = true, collectables = true, useRefills = true, pressDashSwitches = true, canBounce = true,
-        scareBirds = true, collectTouchSwitches = true, collectBadelineOrbs = true, useFeathers = true, coreModeToggles = true;
+        scareBirds = true, collectTouchSwitches = true, collectBadelineOrbs = true, useFeathers = true, coreModeToggles = true, collideWithPlatforms = true;
     public bool useBoosters = false;
     public float waterFriction;
 
@@ -48,6 +48,7 @@ public class NemesisGunInteractions : Trigger
         coreModeToggles = data.Bool("coreModeToggles", true);
         moveSwapBlocks = data.Bool("moveSwapBlocks", true);
         dashBlockBehavior = data.Enum("dashBlockBehavior", KoseiHelperModuleSettings.NemesisInteractions.DashBlockBehavior.BreakAll);
+        collideWithPlatforms = data.Bool("collideWithPlatforms", true);
     }
 
     public override void OnEnter(Player player)
@@ -95,5 +96,6 @@ public class NemesisGunInteractions : Trigger
         KoseiHelperModule.Settings.GunInteractions.pufferBehavior = pufferBehavior;
         KoseiHelperModule.Settings.GunInteractions.dashBlockBehavior = dashBlockBehavior;
         KoseiHelperModule.Settings.GunInteractions.MoveSwapBlocks = moveSwapBlocks;
+        KoseiHelperModule.Settings.GunInteractions.CollideWithPlatforms = collideWithPlatforms;
     }
 }

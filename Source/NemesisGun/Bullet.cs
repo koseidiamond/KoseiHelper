@@ -397,7 +397,8 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                     return;
                 }
 
-                if (entity is Cassette cassette && KoseiHelperModule.Settings.GunInteractions.Collectables && cassette.Collider.Bounds.Intersects(Hitbox) && !dead && owner is Player playercassette)
+                if (entity is Cassette cassette && KoseiHelperModule.Settings.GunInteractions.Collectables && cassette.Collider.Bounds.Intersects(Hitbox) && !dead &&
+                    owner is Player playercassette)
                 {
                     cassette.OnPlayer(playercassette);
                     DestroyBullet();
@@ -442,7 +443,8 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                     }
                     return;
                 }
-                if (entity is CollabUtils2.Entities.SilverBerry silverBerry && silverBerry.Collider.Bounds.Intersects(Hitbox) && KoseiHelperModule.Settings.GunInteractions.CanKillPlayer && !dead)
+                if (entity is CollabUtils2.Entities.SilverBerry silverBerry && silverBerry.Collider.Bounds.Intersects(Hitbox) &&
+                    KoseiHelperModule.Settings.GunInteractions.CanKillPlayer && !dead)
                 {
                     if (owner is Player plSilver)
                         plSilver.Die(Vector2.Zero, true);
@@ -617,17 +619,36 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                     return;
                 }
 
-                if (entity is FallingPlatform fallingPlatform && fallingPlatform.Collider.Bounds.Intersects(Hitbox) && KoseiHelperModule.Settings.GunInteractions.ActivateFallingBlocks && !dead && !fallingPlatform.triggered)
+                if (entity is FallingPlatform fallingPlatform && fallingPlatform.Collider.Bounds.Intersects(Hitbox) &&
+                    KoseiHelperModule.Settings.GunInteractions.ActivateFallingBlocks && !dead && !fallingPlatform.triggered
+                    && KoseiHelperModule.Settings.GunInteractions.CollideWithPlatforms && velocity.Y < 0)
                 {
                     fallingPlatform.StartFalling();
                     DestroyBullet();
                     return;
                 }
 
-                if (entity is SidewaysJumpThru sidewaysJumpthru && sidewaysJumpthru.Collider.Bounds.Intersects(Hitbox) && !dead)
+                if (entity is SidewaysJumpThru sidewaysJumpthru && sidewaysJumpthru.Collider.Bounds.Intersects(Hitbox) && !dead &&
+                    KoseiHelperModule.Settings.GunInteractions.CollideWithPlatforms)
                 {
                     if ((sidewaysJumpthru.AllowLeftToRight && velocity.X < 0) || (!sidewaysJumpthru.AllowLeftToRight && velocity.X > 0))
-                    DestroyBullet();
+                        DestroyBullet();
+                    return;
+                }
+
+                if (entity is UpsideDownJumpThru upsidedownJumpthru && upsidedownJumpthru.Collider.Bounds.Intersects(Hitbox) && !dead &&
+                    KoseiHelperModule.Settings.GunInteractions.CollideWithPlatforms)
+                {
+                    if (velocity.Y < 0)
+                        DestroyBullet();
+                    return;
+                }
+
+                // Affects moving platforms, clouds, etc
+                if (entity is JumpThru jumpthru && jumpthru.Collider.Bounds.Intersects(Hitbox) && !dead && KoseiHelperModule.Settings.GunInteractions.CollideWithPlatforms)
+                {
+                    if (velocity.Y > 0)
+                        DestroyBullet();
                     return;
                 }
             }

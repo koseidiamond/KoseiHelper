@@ -98,17 +98,13 @@ public class FallingPlatform : JumpthruPlatform
     private IEnumerator FallSequence()
     {
         Level level = SceneAs<Level>();
-        // Continue falling until hitting a solid
         while (true)
         {
             if (!fallHorizontally) // Vertical movement
             {
                 MoveV(customFallSpeed * Engine.DeltaTime);
                 if (CollideCheck<Solid>(TopCenter + Vector2.UnitY))
-                {
-                    // We hit something solid (ground or another platform), stop falling
                     break;
-                }
             }
             else // Horizontal movement
             {
@@ -118,10 +114,7 @@ public class FallingPlatform : JumpthruPlatform
                 {
                     MoveV(customFallSpeed * Engine.DeltaTime);
                     if (CollideCheck<Solid>(TopCenter + Vector2.UnitY))
-                    {
-                        // We hit something solid (ground or another platform), stop falling
-                        break; //TODO make them fall
-                    }
+                        break;
                 }
             }
 
