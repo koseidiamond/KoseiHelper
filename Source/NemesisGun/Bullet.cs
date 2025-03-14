@@ -55,9 +55,9 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
 
             // For curved bullets
             if (startVelocity.X > 0) // When shooting left
-                velocity.X -= Engine.DeltaTime * KoseiHelperModule.Settings.GunSettings.HorizontalAcceleration;
-            else // When shooting right
                 velocity.X += Engine.DeltaTime * KoseiHelperModule.Settings.GunSettings.HorizontalAcceleration;
+            else // When shooting right
+                velocity.X -= Engine.DeltaTime * KoseiHelperModule.Settings.GunSettings.HorizontalAcceleration;
             velocity.X = Math.Clamp(velocity.X, -Math.Abs(startVelocity.X), Math.Abs(startVelocity.X));
             velocity.Y += Engine.DeltaTime * KoseiHelperModule.Settings.GunSettings.VerticalAcceleration;
 
@@ -126,7 +126,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
         {
             if (CanDoShit(owner))
             {
-                float angle = (float)Math.Atan2(-velocity.Y, velocity.X);
+                float angle = (float)Math.Atan2(velocity.Y, velocity.X);
                 bulletTexture.DrawCentered(Position, Color.White, 1, angle);
             }
         }

@@ -591,8 +591,8 @@ triggers.KoseiHelper/NemesisGunSettings.attributes.description.recoilStrength=Ho
 triggers.KoseiHelper/NemesisGunSettings.attributes.description.recoilCooldown=How much time needs to pass until the player can be pushed backwards again from shooting.\nLow values can allow infinite speedbuilding with the default strength.
 triggers.KoseiHelper/NemesisGunSettings.attributes.description.canShootInFeather=Whether the player should have the gun available while in the feather state.
 triggers.KoseiHelper/NemesisGunSettings.attributes.description.freezeFrames=How many freeze frames should give each shot.
-triggers.KoseiHelper/NemesisGunSettings.attributes.description.horizontalAcceleration=How much the bullet should accelerate horizontally on each frame.\nBoth accelerations combined can result in curved trajectories!\nRecommended values are between -1 (boomerang-like) and 1 (onwards).
-triggers.KoseiHelper/NemesisGunSettings.attributes.description.verticalAcceleration=How much the bullet should accelerate horizontally on each frame.\nBoth accelerations combined can result in curved trajectories!\nRecommended values are between -1 (upwards) and 1 (downwards).
+triggers.KoseiHelper/NemesisGunSettings.attributes.description.horizontalAcceleration=How much the bullet should accelerate horizontally on each frame until reaching its max speed.\nBoth accelerations combined can result in curved trajectories!\nRecommended values are between -0.2 (boomerang-like) and 0.2 (onwards).
+triggers.KoseiHelper/NemesisGunSettings.attributes.description.verticalAcceleration=How much the bullet should accelerate vertically on each frame.\nBoth accelerations combined can result in curved trajectories!\nRecommended values are between -0.2 (upwards) and 0.2 (downwards).
 
 triggers.KoseiHelper/NemesisGunInteractions.placements.name.NemesisGunInteractions=Nemesis Gun Interactions
 triggers.KoseiHelper/NemesisGunInteractions.placements.description.NemesisGunInteractions=Configure which entities the Nemesis Gun can affect.

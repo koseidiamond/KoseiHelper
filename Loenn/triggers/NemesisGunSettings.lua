@@ -82,6 +82,7 @@ NemesisGunSettings.fieldInformation =
 		"event:/KoseiHelper/Guns/shotMeow",
 		"event:/KoseiHelper/Guns/shotArrow",
 		"event:/KoseiHelper/Guns/shotBoomerang",
+		"event:/KoseiHelper/Guns/shotFirework",
 		"event:/KoseiHelper/bullet",
 		"event:/KoseiHelper/bulletB",
 		},
