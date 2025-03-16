@@ -60,7 +60,8 @@ FlagFakeBerry.placements = {
 			depthBeforeFollowing = -100,
 			depthWhileFollowing = -1000000,
 			collectTime = 0.15,
-			resetsFlag = true
+			resetsFlag = true,
+			customSpriteID = ""
         }
     }
 }
@@ -75,6 +76,7 @@ FlagFakeBerry.fieldOrder = {
 	"reappearSfx",
 	"depthBeforeFollowing",
 	"depthWhileFollowing",
+	"customSpriteID",
 	"winged",
 	"moon",
 	"resetsFlag"

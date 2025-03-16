@@ -171,6 +171,7 @@ entities.KoseiHelper/FlagFakeBerry.attributes.description.collectSfx=The sound t
 entities.KoseiHelper/FlagFakeBerry.attributes.description.reappearSfx=The sound the berry makes when reappearing.
 entities.KoseiHelper/FlagFakeBerry.attributes.description.depthBeforeFollowing=The depth when the berry is not following the player.
 entities.KoseiHelper/FlagFakeBerry.attributes.description.depthWhileFollowing=The depth while the berry is following the player.\n(A very low value means it will render above everything else)
+entities.KoseiHelper/FlagFakeBerry.attributes.description.customSpriteID=The id of your custom sprite, from your Sprites.xml.\nLeave this field empty if you want to use vanilla sprites.
 entities.KoseiHelper/FlagFakeBerry.attributes.description.collectTime=The time that the player needs to be on safe ground until the berry is "collected".
 entities.KoseiHelper/FlagFakeBerry.attributes.description.resetsFlag=The flag will be unset when the strawberry reappears (including on room reload).
 

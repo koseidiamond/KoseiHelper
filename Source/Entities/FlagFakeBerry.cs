@@ -61,6 +61,7 @@ namespace Celeste.Mod.KoseiHelper.Entities
         public List<GenericStrawberrySeed> Seeds => seeds;
     public string gotSeedFlag => "collected_seeds_of_" + ID.ToString();
     public bool WaitingOnSeeds => waitingOnSeeds;
+        private string customSpriteID;
     public FlagFakeBerry(EntityData data, Vector2 offset, EntityID gid)
     {
         ID = gid;
@@ -68,13 +69,14 @@ namespace Celeste.Mod.KoseiHelper.Entities
         hadWings = Winged = data.Bool("winged", false);
         Moon = data.Bool("moon");
         reappearMode = data.Enum("reappearMode", ReappearMode.Never);
-            flag = data.Attr("flag", "KoseiHelper_FlagFakeBerry");
-            collectSfx = data.Attr("collectSfx", "event:/game/general/seed_poof");
-            reappearSfx = data.Attr("reappearSfx", "event:/game/general/seed_reappear");
-            collectTime = data.Float("collectTime", 0.15f);
-            resetFlag = data.Bool("resetsFlag", true);
-            depthBeforeFollowing = data.Int("depthBeforeFollowing", -100);
-            depthWhileFollowing = data.Int("depthWhileFollowing", -1000000);
+        flag = data.Attr("flag", "KoseiHelper_FlagFakeBerry");
+        collectSfx = data.Attr("collectSfx", "event:/game/general/seed_poof");
+        reappearSfx = data.Attr("reappearSfx", "event:/game/general/seed_reappear");
+        collectTime = data.Float("collectTime", 0.15f);
+        resetFlag = data.Bool("resetsFlag", true);
+        depthBeforeFollowing = data.Int("depthBeforeFollowing", -100);
+        depthWhileFollowing = data.Int("depthWhileFollowing", -1000000);
+            customSpriteID = data.Attr("customSpriteID", "");
         Depth = -depthBeforeFollowing;
         Collider = new Hitbox(14f, 14f, -7f, -7f);
         Add(new PlayerCollider(new Action<Player>(OnPlayer), null, null));
@@ -99,11 +101,16 @@ namespace Celeste.Mod.KoseiHelper.Entities
     public override void Added(Scene scene)
     {
         base.Added(scene);
-        if (Moon)
-            sprite = GFX.SpriteBank.Create("moonberry");
-        else
-            sprite = GFX.SpriteBank.Create("strawberry");
-        Add(sprite);
+            if (string.IsNullOrEmpty(customSpriteID))
+            {
+                if (Moon)
+                    sprite = GFX.SpriteBank.Create("moonberry");
+                else
+                    sprite = GFX.SpriteBank.Create("strawberry");
+            }
+            else
+                sprite = GFX.SpriteBank.Create(customSpriteID);
+                Add(sprite);
             if (resetFlag)
                 (scene as Level).Session.SetFlag(flag, false);
         if (Winged)
