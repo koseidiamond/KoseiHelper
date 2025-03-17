@@ -12,7 +12,8 @@ CustomPauseController.placements = {
 		canSaveAndQuit = true,
 		timerIsStopped = false,
 		timerHidden = false,
-		dieOnUnpause = false
+		dieOnUnpause = false,
+		flagWhilePaused = "KoseiHelper_GameIsPaused"
 		}
 	}
 }

@@ -424,6 +424,7 @@ entities.KoseiHelper/CustomPauseController.attributes.description.timerIsStopped
 entities.KoseiHelper/CustomPauseController.attributes.description.timerHidden=If the timer for the map should not be displayed.
 entities.KoseiHelper/CustomPauseController.attributes.description.dieOnUnpause=If the player should be punished with death after pausing the game.\nPrevents pause buffering.
 entities.KoseiHelper/CustomPauseController.attributes.description.persistent=If this controller should persist across rooms.
+entities.KoseiHelper/CustomPauseController.attributes.description.flagWhilePaused=This flag will be true while the game is paused.
 
 # Flag Refill Controller
 entities.KoseiHelper/FlagRefillController.placements.name.FlagRefillController=Flag/Counter Refill Controller

@@ -14,6 +14,7 @@ public class CustomPauseController : Entity
     public bool timerIsStopped, timerHidden = false;
     public bool pauseTimerWhilePauseMenu = false;
     public bool dieOnUnpause = false;
+    public string flagWhilePaused = "KoseiHelper_GameIsPaused";
 
     public CustomPauseController(EntityData data, Vector2 offset) : base(data.Position + offset)
     {
@@ -24,6 +25,7 @@ public class CustomPauseController : Entity
         timerHidden = data.Bool("timerHidden", false);
         pauseTimerWhilePauseMenu = data.Bool("pauseTimerWhilePauseMenu", false);
         dieOnUnpause = data.Bool("dieOnUnpause", false);
+        flagWhilePaused = data.Attr("flagWhilePaused", "KoseiHelper_GameIsPaused");
     }
 
     public override void Awake(Scene scene)
@@ -31,6 +33,7 @@ public class CustomPauseController : Entity
         base.Awake(scene);
         Level level = SceneAs<Level>();
         level.unpauseTimer = 0;
+        level.Session.SetFlag(flagWhilePaused, false);
     }
 
     public override void Added(Scene scene)
@@ -43,6 +46,7 @@ public class CustomPauseController : Entity
         level.TimerStopped = timerIsStopped;
         level.TimerHidden = timerHidden;
         level.PauseMainMenuOpen = true;
+        level.Session.SetFlag(flagWhilePaused, false);
         if (level.Paused)
             level.TimerStopped = true;
     }
@@ -62,5 +66,14 @@ public class CustomPauseController : Entity
         if (Scene.Tracker.GetEntity<Player>() is not { } player)
             yield break;
         player.Die(Vector2.Zero, true, true);
+    }
+
+    public override void Render() // The entity doesn't update while the game is paused so we're using this
+    {
+        Level level = SceneAs<Level>();
+        if (level.PauseMainMenuOpen && level.Paused)
+            level.Session.SetFlag(flagWhilePaused, true);
+        else
+            level.Session.SetFlag(flagWhilePaused, false);
     }
 }
