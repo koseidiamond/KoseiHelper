@@ -2,7 +2,6 @@ using Celeste.Mod.Entities;
 using Monocle;
 using System;
 using Microsoft.Xna.Framework;
-using ExtendedVariants.Variants;
 
 namespace Celeste.Mod.KoseiHelper.Entities;
 

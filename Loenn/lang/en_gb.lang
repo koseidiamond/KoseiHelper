@@ -620,6 +620,7 @@ triggers.KoseiHelper/NemesisGunInteractions.attributes.description.collectBadeli
 triggers.KoseiHelper/NemesisGunInteractions.attributes.description.useFeathers=Whether bullets should be able to use feathers (or permanently destroy their bubbles if shielded).
 triggers.KoseiHelper/NemesisGunInteractions.attributes.description.coreModeToggles=Whether bullets should be able to swap Core Mode Toggles.
 triggers.KoseiHelper/NemesisGunInteractions.attributes.description.theoInteraction=Whether Theo should die when shot, bounce like when he hits a spring, or jump like when he is inside spinners.
+triggers.KoseiHelper/NemesisGunInteractions.attributes.description.jellyfishInteraction=Whether jellyfishes should disappear or bounce like when they hit a spring.
 triggers.KoseiHelper/NemesisGunInteractions.attributes.description.pufferInteraction=Whether pufferfishes should explode or bounced like when they hit a spring.
 triggers.KoseiHelper/NemesisGunInteractions.attributes.description.moveSwapBlocks=Whether swap blocks should move when shot.
 triggers.KoseiHelper/NemesisGunInteractions.attributes.description.collideWithPlatforms=Whether bullets should collide with platform entities (jumpthrus, clouds, etc) in the correct direction.\nSideways jumpthrus and upside down ones from Helping Hand are supported.

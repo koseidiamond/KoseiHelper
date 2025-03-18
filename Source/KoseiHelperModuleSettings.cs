@@ -178,6 +178,20 @@ public class KoseiHelperModuleSettings : EverestModuleSettings {
             "or jump like when he is inside spinners. Default HitSpring.")]
         [SettingName("KoseiHelper_NemesisSettings_TheoBehavior")]
         public TheoBehavior theoBehavior { get; set; } = TheoBehavior.HitSpring;
+
+        public enum JellyfishBehavior
+        {
+            None,
+            Kill,
+            HitSpring,
+            Throw
+        }
+
+        [SettingSubText("Whether Jellyfishes should die when shot, bounce like when they hit a spring,\n" +
+            "be pushed like when you throw them, or nothing. Default HitSpring.")]
+        [SettingName("KoseiHelper_NemesisSettings_JellyfishBehavior")]
+        public JellyfishBehavior jellyfishBehavior { get; set; } = JellyfishBehavior.HitSpring;
+
         public enum DreamBlockBehavior
         {
             GoThrough,

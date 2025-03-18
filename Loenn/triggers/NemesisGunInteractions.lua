@@ -13,6 +13,7 @@ NemesisGunInteractions.placements = {
 		activateFallingBlocks = true,
 		harmEnemies = true,
 		theoInteraction = "HitSpring",
+		jellyfishInteraction = "HitSpring",
 		breakSpinners = true,
 		breakMovingBlades = true,
 		dashBlockBehavior = "BreakAll",
@@ -55,6 +56,17 @@ NemesisGunInteractions.fieldInformation =
 		"None",
 		"HitSpinner",
 		"HitSpring"
+		},
+		editable = false
+	},
+	jellyfishInteraction =
+	{
+		options =
+		{
+		"Kill",
+		"None",
+		"HitSpring",
+		"Throw"
 		},
 		editable = false
 	},

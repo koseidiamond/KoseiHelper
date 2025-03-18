@@ -15,8 +15,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
     [Tracked]
     public class Bullet : Entity
     {
-        public Rectangle Hitbox => new Rectangle((int)Position.X - (Extensions.bulletWidth + Extensions.bulletXOffset),
-            (int)Position.Y - (Extensions.bulletHeight + Extensions.bulletYOffset),Extensions.bulletWidth, Extensions.bulletHeight);
+        public Rectangle Hitbox => new Rectangle((int)Position.X + Extensions.bulletXOffset, (int)Position.Y + Extensions.bulletYOffset, Extensions.bulletWidth, Extensions.bulletHeight);
         private Vector2 velocity, startVelocity;
         private readonly Actor owner;
         private int lifetime;
@@ -212,7 +211,10 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                     case KoseiHelperModuleSettings.NemesisInteractions.TheoBehavior.HitSpinner:
                         theo.HitSpinner(this);
                         break;
-                    case KoseiHelperModuleSettings.NemesisInteractions.TheoBehavior.HitSpring:
+                    case KoseiHelperModuleSettings.NemesisInteractions.TheoBehavior.Kill:
+                        theo.Die();
+                        break;
+                    default:
                         if (theo.Left > Left)
                         {
                             theo.MoveTowardsY(CenterY + 5f, 4f);
@@ -229,17 +231,14 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                         }
                         else
                         {
-                            if (theo.Top <= Bottom)
+                            if (theo.Top <= Bottom +1)
                             {
                                 theo.Speed.X *= 0.5f;
                                 theo.Speed.Y = -160f;
                                 theo.noGravityTimer = 0.15f;
                             }
                         }
-                        break;
-                    default:
-                        theo.Die();
-                        break;
+                            break;
                 }
                 DestroyBullet();
                 return;
@@ -393,6 +392,53 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 {
                     if (owner is Player playerCoreModeToggle)
                         coreModeToggle.OnPlayer(playerCoreModeToggle);
+                    return;
+                }
+
+                if (entity is Glider jelly && jelly.Collider.Bounds.Intersects(Hitbox) && !dead)
+                {
+                    switch (KoseiHelperModule.Settings.GunInteractions.jellyfishBehavior)
+                    {
+                        case KoseiHelperModuleSettings.NemesisInteractions.JellyfishBehavior.None:
+                            break;
+                        case KoseiHelperModuleSettings.NemesisInteractions.JellyfishBehavior.Throw:
+                            jelly.OnRelease(velocity);
+                            DestroyBullet();
+                            break;
+                        case KoseiHelperModuleSettings.NemesisInteractions.JellyfishBehavior.HitSpring:
+                            if (jelly.Left > Left)
+                            {
+                                jelly.MoveTowardsY(CenterY + 5f, 4f);
+                                jelly.Speed.X = 160f;
+                                jelly.Speed.Y = -80f;
+                                jelly.noGravityTimer = 0.1f;
+                            }
+                            else if (Math.Round(jelly.Right) < Right)
+                            {
+                                jelly.MoveTowardsY(CenterY + 5f, 4f);
+                                jelly.Speed.X = -160f;
+                                jelly.Speed.Y = -80f;
+                                jelly.noGravityTimer = 0.1f;
+                            }
+                            else
+                            {
+                                if (jelly.Top <= Bottom + 1)
+                                {
+                                    jelly.Speed.X *= 0.5f;
+                                    jelly.Speed.Y = -160f;
+                                    jelly.noGravityTimer = 0.15f;
+                                }
+                            }
+                            DestroyBullet();
+                            break;
+                        default:
+                            Audio.Play("event:/new_content/game/10_farewell/glider_emancipate", Position);
+                            jelly.sprite.Play("death");
+                            jelly.destroyed = true;
+                            jelly.RemoveSelf();
+                            DestroyBullet();
+                            break;
+                    }
                     return;
                 }
 

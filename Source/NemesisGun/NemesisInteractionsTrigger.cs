@@ -18,6 +18,7 @@ public class NemesisGunInteractions : Trigger
     public bool useBoosters = false;
     public float waterFriction;
 
+    public KoseiHelperModuleSettings.NemesisInteractions.JellyfishBehavior jellyfishBehavior;
     public KoseiHelperModuleSettings.NemesisInteractions.TheoBehavior theoBehavior;
     public KoseiHelperModuleSettings.NemesisInteractions.PufferBehavior pufferBehavior;
     public KoseiHelperModuleSettings.NemesisInteractions.DreamBlockBehavior dreamBlockBehavior;
@@ -35,6 +36,7 @@ public class NemesisGunInteractions : Trigger
         breakSpinners = data.Bool("breakSpinners", true);
         breakMovingBlades = data.Bool("breakMovingBlades", true);
         theoBehavior = data.Enum("theoInteraction", KoseiHelperModuleSettings.NemesisInteractions.TheoBehavior.HitSpring);
+        jellyfishBehavior = data.Enum("jellyfishInteraction", KoseiHelperModuleSettings.NemesisInteractions.JellyfishBehavior.HitSpring);
         collectables = data.Bool("collectables", true);
         useRefills = data.Bool("useRefills", true);
         pufferBehavior = data.Enum("pufferInteraction", KoseiHelperModuleSettings.NemesisInteractions.PufferBehavior.Explode);
@@ -94,6 +96,7 @@ public class NemesisGunInteractions : Trigger
         KoseiHelperModule.Settings.GunInteractions.UseFeathers = useFeathers;
         KoseiHelperModule.Settings.GunInteractions.CoreModeToggles = coreModeToggles;
         KoseiHelperModule.Settings.GunInteractions.theoBehavior = theoBehavior;
+        KoseiHelperModule.Settings.GunInteractions.jellyfishBehavior = jellyfishBehavior;
         KoseiHelperModule.Settings.GunInteractions.dreamBlockBehavior = dreamBlockBehavior;
         KoseiHelperModule.Settings.GunInteractions.pufferBehavior = pufferBehavior;
         KoseiHelperModule.Settings.GunInteractions.dashBlockBehavior = dashBlockBehavior;
