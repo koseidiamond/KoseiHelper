@@ -7,17 +7,20 @@ using System.Collections.Generic;
 using System.Reflection;
 using FrostHelper;
 using Celeste.Mod.MaxHelpingHand.Entities;
-using System.Runtime.CompilerServices;
+using Celeste.Mod.Entities;
 
 namespace Celeste.Mod.KoseiHelper.NemesisGun
 {
+    [CustomEntity("KoseiHelper/Bullet")]
     [Tracked]
     public class Bullet : Entity
     {
-        public Rectangle Hitbox => new Rectangle((int)Position.X, (int)Position.Y, 6, 6);
+        public Rectangle Hitbox => new Rectangle((int)Position.X - (Extensions.bulletWidth + Extensions.bulletXOffset),
+            (int)Position.Y - (Extensions.bulletHeight + Extensions.bulletYOffset),Extensions.bulletWidth, Extensions.bulletHeight);
         private Vector2 velocity, startVelocity;
         private readonly Actor owner;
         private int lifetime;
+        private float lifetimeUpdate;
         private bool dead;
         private int updateCount;
         private const int extraUpdates = 30;
@@ -49,6 +52,12 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
             (owner.Scene as Level).Session.SetFlag("KoseiHelper_playerIsShooting", true);
         }
 
+        public override void Added(Scene scene)
+        {
+            base.Added(scene);
+            lifetimeUpdate = lifetime;
+        }
+
         public override void Update()
         {
             base.Update();
@@ -58,9 +67,10 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 velocity.X += Engine.DeltaTime * KoseiHelperModule.Settings.GunSettings.HorizontalAcceleration;
             else // When shooting right
                 velocity.X -= Engine.DeltaTime * KoseiHelperModule.Settings.GunSettings.HorizontalAcceleration;
+
             velocity.X = Math.Clamp(velocity.X, -Math.Abs(startVelocity.X), Math.Abs(startVelocity.X));
             velocity.Y += Engine.DeltaTime * KoseiHelperModule.Settings.GunSettings.VerticalAcceleration;
-
+            Logger.Debug(nameof(KoseiHelperModule), $"{Hitbox}");
             if (updateCount > extraUpdates)
             {
                 updateCount = 0;
@@ -116,7 +126,9 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                     }
                 }
             }
-            if (--lifetime <= 0 && owner != null)
+
+            lifetimeUpdate -= Engine.TimeRate * Engine.TimeRateB;
+            if (lifetimeUpdate <= 0 && owner != null)
                 DestroyBullet();
             updateCount++;
             Update();

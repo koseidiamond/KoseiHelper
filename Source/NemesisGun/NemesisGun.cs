@@ -162,7 +162,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                     rotation = (float)-Math.PI / 4 - (float)Math.PI;
 
             }
-            return ToCursor(player, cursorPos).RotateTowards(rotation, MathHelper.TwoPi) * KoseiHelperModule.Settings.GunSettings.SpeedMultiplier;
+            return ToCursor(player, cursorPos).RotateTowards(rotation, MathHelper.TwoPi) * KoseiHelperModule.Settings.GunSettings.SpeedMultiplier * Engine.TimeRate * Engine.TimeRateB;
         }
 
         public override void LoadContent(bool firstLoad)

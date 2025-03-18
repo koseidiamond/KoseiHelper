@@ -28,7 +28,11 @@ NemesisGunSettings.placements = {
 		canShootInFeather = true,
 		freezeFrames = 0,
 		horizontalAcceleration = 0,
-		verticalAcceleration = 0
+		verticalAcceleration = 0,
+		--bulletHeight = 6,
+        --bulletWidth = 6,
+		--bulletXOffset = 0,
+		--bulletYOffset = 0
 		}
 	}
 }

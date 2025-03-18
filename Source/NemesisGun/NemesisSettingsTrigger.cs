@@ -22,6 +22,7 @@ public class NemesisGunSettingsTrigger : Trigger
     public bool canShootInFeather = true;
     private int freezeFrames;
     private float horizontalAcceleration = 0f, verticalAcceleration = 0f;
+    private int bulletWidth = 6, bulletHeight = 6, bulletXOffset, bulletYOffset;
 
     public KoseiHelperModuleSettings.NemesisSettings.GunDirections gunDirections;
 
@@ -50,6 +51,10 @@ public class NemesisGunSettingsTrigger : Trigger
         freezeFrames = data.Int("freezeFrames", 0);
         horizontalAcceleration = data.Float("horizontalAcceleration", 0f);
         verticalAcceleration = data.Float("verticalAcceleration", 0f);
+        bulletWidth = data.Int("bulletWidth", 6);
+        bulletHeight = data.Int("bulletHeight", 6);
+        bulletXOffset = data.Int("bulletXOffset", 0);
+        bulletYOffset = data.Int("bulletYOffset", 0);
     }
 
     public override void OnEnter(Player player)
@@ -96,6 +101,10 @@ public class NemesisGunSettingsTrigger : Trigger
         Extensions.bulletTexture = bulletTexture;
         Extensions.particleAlpha = particleAlpha;
         Extensions.customParticleTexture = customParticleTexture;
+        Extensions.bulletWidth = bulletWidth;
+        Extensions.bulletHeight = bulletHeight;
+        Extensions.bulletXOffset = bulletXOffset;
+        Extensions.bulletYOffset = bulletYOffset;
 
         if (enabled)
         {
