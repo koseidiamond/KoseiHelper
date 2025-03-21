@@ -69,7 +69,6 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
 
             velocity.X = Math.Clamp(velocity.X, -Math.Abs(startVelocity.X), Math.Abs(startVelocity.X));
             velocity.Y += Engine.DeltaTime * KoseiHelperModule.Settings.GunSettings.VerticalAcceleration;
-            Logger.Debug(nameof(KoseiHelperModule), $"{Hitbox}");
             if (updateCount > extraUpdates)
             {
                 updateCount = 0;
