@@ -10,13 +10,18 @@ CustomWire.placements = {
     name = "CustomWire",
     data = {
         depth = 2000,
-        color = "6B6A3C"
+        color = "6B6A3C",
+		thickness = 1,
+		affectedByWind = true
     }
 }
 
 CustomWire.fieldInformation = {
     color = {
         fieldType = "color"
+    },
+	thickness = {
+        fieldType = "integer"
     }
 }
 
