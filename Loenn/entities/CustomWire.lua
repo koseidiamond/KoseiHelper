@@ -12,7 +12,8 @@ CustomWire.placements = {
         depth = 2000,
         color = "6B6A3C",
 		thickness = 1,
-		affectedByWind = true
+		affectedByWind = true,
+		attachToSolids = true
     }
 }
 

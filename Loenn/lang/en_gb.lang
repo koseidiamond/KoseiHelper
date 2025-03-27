@@ -92,6 +92,16 @@ entities.KoseiHelper/CounterBarController.attributes.description.reverse=Whether
 #entities.KoseiHelper/FallDamageController.attributes.description.playerHealth=The amount of health that the player has.\n(This is a Session Slider called koseiHelper_health so you can display it with a Slider Bar if you want)
 #entities.KoseiHelper/FallDamageController.attributes.description.persistent=If the controller should persist across rooms.
 
+# Custom Wire
+entities.KoseiHelper/CustomWire.placements.name.CustomWire=Custom Wire
+entities.KoseiHelper/CustomWire.placements.description.CustomWire=aaa
+entities.KoseiHelper/CustomWire.attributes.description.depth=The depth at which the wire is rendered.
+entities.KoseiHelper/CustomWire.attributes.description.thickness=How wide the wire should be in pixels.
+entities.KoseiHelper/CustomWire.attributes.description.color=The color of the wire.
+entities.KoseiHelper/CustomWire.attributes.description.affectedByWind=Whether the wire should wobble more aggresively when there is wind.
+entities.KoseiHelper/CustomWire.attributes.description.attachToSolids=Whether the wire should attach to solids.\nIt is only attached from its position, not from its node!
+
+
 # Reskinnable Parallax Debris
 
 entities.KoseiHelper/ReskinnableParallaxDebris.placements.name.ReskinnableParallaxDebris=Reskinnable Parallax Debris
@@ -567,6 +577,18 @@ triggers.KoseiHelper/SelfieTrigger.attributes.description.buttonTexture=The path
 triggers.KoseiHelper/SelfieTrigger.attributes.description.flag=The flag required for this trigger to be activated.\nLeave empty for no flag required.
 triggers.KoseiHelper/SelfieTrigger.attributes.description.triggerMode=Whether the trigger should activate when the player enters or exits it.
 triggers.KoseiHelper/SelfieTrigger.attributes.description.oneUse=Whether the trigger should delete itself after the selfie is displayed.
+
+# Restart Game Trigger
+triggers.KoseiHelper/RestartGameTrigger.placements.name.RestartGameTrigger=Restart Game Trigger
+triggers.KoseiHelper/RestartGameTrigger.placements.description.RestartGameTrigger=Fully restarts Celeste.exe when the player enters the trigger.
+
+# Restart Game Trigger
+triggers.KoseiHelper/SetWindowSizeTrigger.placements.name.SetWindowSizeTrigger=Set Window Size Trigger
+triggers.KoseiHelper/SetWindowSizeTrigger.placements.description.SetWindowSizeTrigger=Forces Celeste.exe to be resized to the specified size in the screen.
+triggers.KoseiHelper/SetWindowSizeTrigger.attributes.description.windowWidth=The width of the game.
+triggers.KoseiHelper/SetWindowSizeTrigger.attributes.description.windowHeight=The height of the game.
+triggers.KoseiHelper/SetWindowSizeTrigger.attributes.description.onLeave=Whether the trigger should have effect when the player leaves the trigger.
+triggers.KoseiHelper/SetWindowSizeTrigger.attributes.description.fullScreen=Whether the trigger should force the game to be full screen instead of windowed.
 
 # Nemesis Gun Triggers
 

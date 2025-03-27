@@ -14,21 +14,40 @@ public class CustomWire : Entity
     public SimpleCurve curve;
     public Color color;
     public Vector2 node;
-    public bool affectedByWind;
+    public bool affectedByWind, attachToSolid;
     public int thickness;
+
     public CustomWire(EntityData data, Vector2 offset) : base(data.Position + offset)
     {
         Depth = data.Int("depth");
         color = data.HexColor("color", Color.Olive);
         affectedByWind = data.Bool("affectedByWind", true);
         thickness = data.Int("thickness", 1);
+        attachToSolid = data.Bool("attachToSolids", true);
+
         Vector2[] array = data.NodesOffset(offset);
-        if (array.Length != 0)
+        node = array[0];
+        if (attachToSolid)
         {
-            node = array[0];
+            Collider = new Hitbox(4, 4, -2, -2);
+            Add(new StaticMover
+            {
+                SolidChecker = IsRiding,
+                OnDestroy = base.RemoveSelf,
+                OnMove = Move
+            });
         }
         curve.Begin = Position;
         curve.End = node;
+    }
+
+    public override void Update()
+    {
+        base.Update();
+        if (attachToSolid)
+        {
+            curve.Begin = Position;
+        }
     }
 
     public override void Render()
@@ -46,14 +65,14 @@ public class CustomWire : Entity
             vector = new Vector2((float)Math.Sin(sineX + level.WindSineTimer * 2f), (float)Math.Sin(sineY + level.WindSineTimer * 2.8f)) * 8f * (float)(Math.Sin(Engine.DeltaTime) + 1.0) / 2f;
         
         curve.Control = (curve.Begin + curve.End) / 2f + new Vector2(0f, 24f) + vector;
-        if (IsVisible())
+        if (CullHelper.IsCurveVisible(curve, 2f))
         {
             Vector2 start = curve.Begin;
             for (int i = 1; i <= 16; i++)
             {
                 float percent = (float)i / 16f;
                 Vector2 point = curve.GetPoint(percent);
-                Draw.Line(start, point, color, thickness);
+                Draw.Line(start, point, color, thickness); // color can be multiplied by alpha
                 start = point;
             }
         }
@@ -65,8 +84,13 @@ public class CustomWire : Entity
         Draw.Line(curve.Begin, curve.End, Color.Red);
     }
 
-    private bool IsVisible()
+    private bool IsRiding(Solid solid)
     {
-        return CullHelper.IsCurveVisible(curve, 2f);
+        return CollideCheck(solid, Position);
+    }
+
+    private void Move(Vector2 amount)
+    {
+        Position += amount;
     }
 }
