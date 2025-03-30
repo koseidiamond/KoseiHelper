@@ -31,8 +31,11 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
         private readonly List<Spring> BouncedOffSpring;
         private static FieldInfo feather_shielded = typeof(FlyFeather).GetField("shielded", BindingFlags.NonPublic | BindingFlags.Instance);
 
+        private int colliderxOffset = Extensions.bulletXOffset, collideryOffset = Extensions.bulletYOffset;
+        private int colliderWidth = Extensions.bulletWidth, colliderHeight = Extensions.bulletHeight;
         public Bullet(Vector2 position, Vector2 velocity, Actor owner)
         {
+            base.Collider = new Hitbox(colliderWidth, colliderHeight, colliderxOffset, collideryOffset);
             Player player = (Player)owner;
             if (player.Ducking == true)
                 position.Y = position.Y - 2;
@@ -856,9 +859,10 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
         public override void DebugRender(Camera camera)
         {
             base.DebugRender(camera);
-            Draw.HollowRect(Hitbox, Color.Red);
+            Draw.HollowRect(Hitbox, Extensions.color1);
 
         }
+
         public static bool CanDoShit(Actor owner)
             => owner != null && owner.Scene != null && owner.Scene.Tracker != null;
     }

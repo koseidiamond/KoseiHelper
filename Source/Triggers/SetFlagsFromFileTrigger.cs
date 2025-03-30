@@ -35,7 +35,7 @@ namespace Celeste.Mod.KoseiHelper.Triggers
 
             if (player != null && !string.IsNullOrEmpty(filePath))
             {
-                if (Everest.Content.TryGet(filePath, out var modAsset))
+                if (Everest.Content.TryGet(filePath, out ModAsset modAsset))
                 {
                     try
                     {
