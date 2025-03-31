@@ -40,6 +40,8 @@ function MaryBlock.texture(room, entity)
         return "objects/KoseiHelper/MaryBlock/idle00"
 	elseif maryType == "Mary" then
 		return "objects/KoseiHelper/MaryBlock/mary00"
+		elseif maryType == "Bubble" then
+		return "objects/KoseiHelper/MaryBlock/marybuble00"
     end
 end
 

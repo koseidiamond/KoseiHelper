@@ -3,7 +3,7 @@ using Monocle;
 using System;
 using Microsoft.Xna.Framework;
 using System.Collections;
-using static Celeste.Mod.KoseiHelper.Entities.MaryBlock;
+using System.Collections.Generic;
 
 namespace Celeste.Mod.KoseiHelper.Entities;
 
@@ -25,8 +25,8 @@ public class MaryBlock : Entity
     private readonly BloomPoint bloom;
     private readonly VertexLight light;
 
-    private float positionTimer = 0f;
     private Vector2 previousPlayerPos = Vector2.Zero;
+    private Queue<Vector2> playerPositionHistory = new Queue<Vector2>(15);
 
     public enum MaryType
     {
@@ -87,13 +87,13 @@ public class MaryBlock : Entity
         if (player != null)
         {
             direction = Math.Sign(Scene.Tracker.GetEntity<Player>().Position.X - this.Position.X);
-            if (positionTimer <= 0f)
-            {
                 previousPlayerPos = player.Position;
-                positionTimer = 0.5f;
+            if (playerPositionHistory.Count >= 15)
+            {
+                playerPositionHistory.Dequeue();  // Remove the oldest position if we have 15 positions (0.25s = 15 frames)
             }
+            playerPositionHistory.Enqueue(player.Position);
         }
-        positionTimer -= Engine.DeltaTime;
 
         TheoCrystal theo = SceneAs<Level>().Tracker.GetNearestEntity<TheoCrystal>(Center);
         if (theo != null && affectTheo && CollideCheck(theo))
@@ -117,6 +117,7 @@ public class MaryBlock : Entity
         {
             Collidable = false;
             Audio.Play("event:/KoseiHelper/mary", Position);
+            Vector2 bubblePosition = GetPositionFromHistory();
             if (maryType == MaryType.Potted || maryType == MaryType.Idle)
             player.SideBounce(direction, Position.X, Position.Y);
             if (maryType == MaryType.Potted)
@@ -127,12 +128,22 @@ public class MaryBlock : Entity
                 player.RefillDash();
             }
             if (maryType == MaryType.Bubble)
-                player.StartCassetteFly(previousPlayerPos, Center);
+            {
+                player.StartCassetteFly(bubblePosition, Center);
+                player.RefillDash();
+            }
             float angle = player.Speed.Angle();
             level.ParticlesFG.Emit(maryParticle, 5, Center + new Vector2(0, -2), Vector2.One * 4f, angle - (float)Math.PI / 2f);
             Add(new Coroutine(RefillRoutine(player)));
             respawnTimer = 2.5f;
         }
+    }
+
+    private Vector2 GetPositionFromHistory()
+    {
+        if (playerPositionHistory.Count < 15)
+            return previousPlayerPos;
+        return playerPositionHistory.Peek();
     }
 
     private void OnTheo(TheoCrystal theo)
@@ -191,9 +202,7 @@ public class MaryBlock : Entity
         SlashFx.Burst(Position, angle);
         bool flag2 = oneUse;
         if (flag2)
-        {
             this.RemoveSelf();
-        }
         yield break;
     }
 }
