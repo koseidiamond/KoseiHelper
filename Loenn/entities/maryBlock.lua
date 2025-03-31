@@ -7,10 +7,23 @@ MaryBlock.placements = {
 	{
 		name = "Mary Block",
 		data = {
-			potted = false,
 			outline = false,
-			affectTheo = false
+			affectTheo = false,
+			oneUse = true,
+			maryType = "Idle",
 		}
+	}
+}
+
+MaryBlock.fieldInformation = {
+	maryType = {
+		options = {
+			"Potted",
+			"Idle",
+			"Mary",
+			"Bubble"
+		},
+		editable = false
 	}
 }
 
@@ -20,11 +33,13 @@ function MaryBlock.selection(room, entity)
 end
 
 function MaryBlock.texture(room, entity)
-    local potted = entity.potted
-    if potted then
+    local maryType = entity.maryType
+    if maryType == "Potted" then
         return "objects/KoseiHelper/MaryBlock/potted00"
-    else
+    elseif maryType == "Idle" then
         return "objects/KoseiHelper/MaryBlock/idle00"
+	elseif maryType == "Mary" then
+		return "objects/KoseiHelper/MaryBlock/mary00"
     end
 end
 
