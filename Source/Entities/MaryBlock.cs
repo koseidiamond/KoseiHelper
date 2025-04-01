@@ -22,9 +22,16 @@ public class MaryBlock : Entity
     private bool oneUse = true;
     private Wiggler wiggler;
 
+    // darkmary variables
+    private MTexture distortionTexture;
+    private float distortionAlpha;
+    private Vector2 distortionVector;
+    private float oscillationPhase = 0f;
+
     private readonly BloomPoint bloom;
     private readonly VertexLight light;
 
+    // bubblemary variables
     private Vector2 previousPlayerPos = Vector2.Zero;
     private Queue<Vector2> playerPositionHistory = new Queue<Vector2>(15);
 
@@ -33,7 +40,8 @@ public class MaryBlock : Entity
         Potted,
         Idle,
         Mary,
-        Bubble
+        Bubble,
+        Dark
     };
     public MaryType maryType;
 
@@ -68,6 +76,11 @@ public class MaryBlock : Entity
             sprite.Play("bubble");
             Collider = new Hitbox(8, 16, -4, 0);
         }
+        if (maryType == MaryType.Dark)
+        {
+            sprite.Play("dark");
+            Collider = new Hitbox(8, 16, -4, 0);
+        }
         if (!oneUse)
         {
             Add(wiggler = Wiggler.Create(1f, 4f, delegate (float v)
@@ -75,9 +88,24 @@ public class MaryBlock : Entity
                 sprite.Scale = Vector2.One * (1f + v * 0.2f);
             }, false, false));
         }
+
+        MTexture mTexture = GFX.Game["util/displacementcirclehollow"];
+        distortionTexture = mTexture.GetSubtexture(0, 0, mTexture.Width, mTexture.Height);
+        if (maryType == MaryType.Dark)
+        {
+            Add(new DisplacementRenderHook(RenderDisplacement));
+            maryParticle.Color = Color.Purple;
+            maryParticle.Color2 = Color.DarkViolet;
+        }
+
         Add(bloom = new BloomPoint(0.2f, 12f));
         Add(light = new VertexLight(Color.LightYellow, 0.3f, 12, 32));
         Add(new PlayerCollider(OnPlayer));
+    }
+
+    private void RenderDisplacement()
+    {
+        distortionTexture.DrawCentered(Position + new Vector2(0,6), Color.White * 0.8f * distortionAlpha, distortionVector);
     }
 
     public override void Update()
@@ -87,16 +115,19 @@ public class MaryBlock : Entity
         if (player != null)
         {
             direction = Math.Sign(Scene.Tracker.GetEntity<Player>().Position.X - this.Position.X);
-                previousPlayerPos = player.Position;
-            if (playerPositionHistory.Count >= 15)
+            if (maryType == MaryType.Bubble)
             {
-                playerPositionHistory.Dequeue();  // Remove the oldest position if we have 15 positions (0.25s = 15 frames)
+                previousPlayerPos = player.Position;
+                if (playerPositionHistory.Count >= 15)
+                {
+                    playerPositionHistory.Dequeue();  // Remove the oldest position if we have 15 positions (0.25s = 15 frames)
+                }
+                playerPositionHistory.Enqueue(player.Position);
             }
-            playerPositionHistory.Enqueue(player.Position);
         }
 
         TheoCrystal theo = SceneAs<Level>().Tracker.GetNearestEntity<TheoCrystal>(Center);
-        if (theo != null && affectTheo && CollideCheck(theo))
+        if (theo != null && affectTheo && CollideCheck(theo) && Collidable)
             OnTheo(theo);
         bool flag = this.respawnTimer > 0f;
         if (flag)
@@ -105,6 +136,26 @@ public class MaryBlock : Entity
             bool flag2 = this.respawnTimer <= 0f;
             if (flag2)
                 Respawn();
+        }
+        if (maryType == MaryType.Dark) // TODO
+        {
+            if (Collidable)
+            {
+                distortionAlpha = Calc.Approach(distortionAlpha, 1f, Engine.DeltaTime * 4f);
+                oscillationPhase += Engine.DeltaTime * 200f;
+                if (oscillationPhase > Math.PI * 2)
+                    oscillationPhase -= (float)(Math.PI * 2);
+                if (Scene.OnInterval(0.5f))
+                    SceneAs<Level>().Displacement.AddBurst(Center, 0.3f, 12, 32, 0.1f);
+                if (Scene.OnInterval(0.1f))
+                {
+                    distortionAlpha = 0f;
+                    distortionVector = new Vector2(
+                        (float)(Math.Sin(oscillationPhase) * 0.075f + 0.125f));
+                }
+            }
+            else
+                distortionAlpha = 0f;
         }
         light.Alpha = Calc.Approach(light.Alpha, sprite.Visible ? 1f : 0f, 4f * Engine.DeltaTime);
         bloom.Alpha = light.Alpha * 0.8f;
@@ -132,6 +183,11 @@ public class MaryBlock : Entity
                 player.StartCassetteFly(bubblePosition, Center);
                 player.RefillDash();
             }
+            if (maryType == MaryType.Dark)
+            {
+                Input.Rumble(RumbleStrength.Strong, RumbleLength.Medium);
+                Audio.Play("event:/game/05_mirror_temple/eye_pulse", player.Position);
+            }
             float angle = player.Speed.Angle();
             level.ParticlesFG.Emit(maryParticle, 5, Center + new Vector2(0, -2), Vector2.One * 4f, angle - (float)Math.PI / 2f);
             Add(new Coroutine(RefillRoutine(player)));
@@ -149,13 +205,20 @@ public class MaryBlock : Entity
     private void OnTheo(TheoCrystal theo)
     {
         Level level = SceneAs<Level>();
+        Collidable = false;
+        sprite.Visible = false;
         Audio.Play("event:/KoseiHelper/mary", Position);
         theo.HitSpinner(this);
-        if (potted)
+        if (maryType == MaryType.Potted)
             theo.ExplodeLaunch(Position);
         float angle = theo.Speed.Angle();
         level.ParticlesFG.Emit(maryParticle, 5, Center + new Vector2(0, -2), Vector2.One * 4f, angle - (float)Math.PI / 2f);
-        RemoveSelf();
+        if (maryType == MaryType.Dark)
+            theo.Die();
+        if (oneUse)
+            RemoveSelf();
+        else
+            respawnTimer = 2.5f;
     }
 
     public override void Render()
@@ -172,7 +235,7 @@ public class MaryBlock : Entity
         {
             Collidable = true;
             sprite.Visible = true;
-            outline = false;
+            outline = true;
             Depth = -100;
             wiggler.Start();
             Audio.Play("event:/KoseiHelper/maryReappear", this.Position);

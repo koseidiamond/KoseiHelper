@@ -20,6 +20,7 @@
 		<Justify x="0.5" y="0.5" />
 		<Loop id="idle" path="idle" delay="0.15" frames="00-01" />
 		<Loop id="mary" path="mary" delay="0.15" frames="00-01" />
+		<Loop id="dark" path="dark" delay="0.2" frames="00-01" />
 		<Loop id="bubble" path="marybuble" delay="0.15" frames="00-01" />
 		<Loop id="potted" path="potted" delay="0.15" frames="00" />
 	</koseiHelper_maryBlock>
