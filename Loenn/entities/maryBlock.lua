@@ -22,7 +22,8 @@ MaryBlock.fieldInformation = {
 			"Idle",
 			"Mary",
 			"Bubble",
-			"Dark"
+			"Dark",
+			"Bald"
 		},
 		editable = false
 	}
@@ -45,6 +46,8 @@ function MaryBlock.texture(room, entity)
 		return "objects/KoseiHelper/MaryBlock/marybuble00"
 	elseif maryType == "Dark" then
 		return "objects/KoseiHelper/MaryBlock/dark00"
+		elseif maryType == "Bald" then
+		return "objects/KoseiHelper/MaryBlock/bald00"
     end
 end
 

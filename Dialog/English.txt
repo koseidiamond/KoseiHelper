@@ -5,4 +5,5 @@ KoseiHelper_NemesisSettings_JellyfishBehavior=Jellyfish Behavior
 KoseiHelper_NemesisSettings_PufferBehavior=Puffer Behavior
 KoseiHelper_NemesisSettings_DreamBlockBehavior=Dream Block Behavior
 KoseiHelper_NemesisSettings_dashBlockBehavior=Dash Block Behavior
+KoseiHelper_MaryBlock_Bald=Wow, that was a close shave!
 KoseiHelper=Kosei Helper Test Map

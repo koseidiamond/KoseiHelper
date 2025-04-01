@@ -15,6 +15,7 @@ public class MaryBlock : Entity
     public bool potted;
     private int direction = -1;
     public static ParticleType maryParticle = SwitchGate.P_Behind;
+    public static ParticleType darkMaryParticle = maryParticle;
     public bool outline;
     public bool affectTheo;
 
@@ -35,13 +36,16 @@ public class MaryBlock : Entity
     private Vector2 previousPlayerPos = Vector2.Zero;
     private Queue<Vector2> playerPositionHistory = new Queue<Vector2>(15);
 
+    private bool playerIsBald;
+
     public enum MaryType
     {
         Potted,
         Idle,
         Mary,
         Bubble,
-        Dark
+        Dark,
+        Bald
     };
     public MaryType maryType;
 
@@ -53,6 +57,10 @@ public class MaryBlock : Entity
         oneUse = data.Bool("oneUse", true);
         potted = data.Bool("potted", false); // legacy
         maryType = data.Enum("maryType", MaryType.Idle);
+        darkMaryParticle.Color = Color.Purple;
+        darkMaryParticle.Color2 = Color.DarkViolet;
+        maryParticle.Color = Color.Yellow;
+        maryParticle.Color2 = Color.Orange;
         if (potted) // legacy
             maryType = MaryType.Potted;
         Add(sprite = GFX.SpriteBank.Create("koseiHelper_maryBlock"));
@@ -64,6 +72,11 @@ public class MaryBlock : Entity
         if (maryType == MaryType.Idle)
         {
             sprite.Play("idle");
+            Collider = new Hitbox(8, 12, -4, 4);
+        }
+        if (maryType == MaryType.Bald)
+        {
+            sprite.Play("bald");
             Collider = new Hitbox(8, 12, -4, 4);
         }
         if (maryType == MaryType.Mary)
@@ -94,8 +107,6 @@ public class MaryBlock : Entity
         if (maryType == MaryType.Dark)
         {
             Add(new DisplacementRenderHook(RenderDisplacement));
-            maryParticle.Color = Color.Purple;
-            maryParticle.Color2 = Color.DarkViolet;
         }
 
         Add(bloom = new BloomPoint(0.2f, 12f));
@@ -141,18 +152,23 @@ public class MaryBlock : Entity
         {
             if (Collidable)
             {
-                distortionAlpha = Calc.Approach(distortionAlpha, 1f, Engine.DeltaTime * 4f);
-                oscillationPhase += Engine.DeltaTime * 200f;
-                if (oscillationPhase > Math.PI * 2)
-                    oscillationPhase -= (float)(Math.PI * 2);
-                if (Scene.OnInterval(0.5f))
-                    SceneAs<Level>().Displacement.AddBurst(Center, 0.3f, 12, 32, 0.1f);
-                if (Scene.OnInterval(0.1f))
+                distortionAlpha = Calc.Approach(distortionAlpha, 0.15f, Engine.DeltaTime * 4f);
+                oscillationPhase += Engine.DeltaTime * (float)Math.PI;
+                if (oscillationPhase > 100000)
+                    oscillationPhase = 0f;
+                if (Scene.OnInterval(0.6f))
+                    SceneAs<Level>().Displacement.AddBurst(Center, 0.3f, 12, 40, 0.2f);
+                if (Scene.OnInterval(0.075f))
                 {
                     distortionAlpha = 0f;
                     distortionVector = new Vector2(
-                        (float)(Math.Sin(oscillationPhase) * 0.075f + 0.125f));
+                        (float)(Math.Sin(oscillationPhase) * 0.3f + 0.1f));
                 }
+                float anxietyDistance = Vector2.DistanceSquared(player.Center, Center) / 1.5f;
+                float darkEffectTarget = (!(anxietyDistance >= 0f) ? 1f : Calc.ClampedMap(anxietyDistance, 256f, 4096f, 0.5f));
+                Distort.AnxietyOrigin = new Vector2((player.Center.X - Position.X) / 320f, (player.Center.Y - Position.Y) / 180f);
+                Engine.TimeRate = Calc.Approach(Engine.TimeRate, darkEffectTarget, 4f * Engine.DeltaTime);
+                Distort.GameRate = Calc.Approach(Distort.GameRate, Calc.Map(Engine.TimeRate, 0.5f, 1f), Engine.DeltaTime * 2f);
             }
             else
                 distortionAlpha = 0f;
@@ -169,10 +185,20 @@ public class MaryBlock : Entity
             Collidable = false;
             Audio.Play("event:/KoseiHelper/mary", Position);
             Vector2 bubblePosition = GetPositionFromHistory();
+            if (maryType == MaryType.Bald && !playerIsBald)
+            {
+                Scene.Add(new MiniTextbox("KoseiHelper_MaryBlock_Bald"));
+                player.Get<PlayerHair>()?.RemoveSelf();
+                playerIsBald = true;
+            }
             if (maryType == MaryType.Potted || maryType == MaryType.Idle)
-            player.SideBounce(direction, Position.X, Position.Y);
+            {
+                player.SideBounce(direction, Position.X, Position.Y);
+            }
             if (maryType == MaryType.Potted)
+            {
                 player.ExplodeLaunch(Position, false);
+            }
             if (maryType == MaryType.Mary)
             {
                 player.SuperJump();
@@ -187,9 +213,15 @@ public class MaryBlock : Entity
             {
                 Input.Rumble(RumbleStrength.Strong, RumbleLength.Medium);
                 Audio.Play("event:/game/05_mirror_temple/eye_pulse", player.Position);
+                Distort.AnxietyOrigin = new Vector2((player.Center.X - Position.X) / 320f, (player.Center.Y - Position.Y) / 180f);
+                Engine.TimeRate = 1f;
+                Distort.GameRate = 1f;
             }
             float angle = player.Speed.Angle();
-            level.ParticlesFG.Emit(maryParticle, 5, Center + new Vector2(0, -2), Vector2.One * 4f, angle - (float)Math.PI / 2f);
+            if (maryType == MaryType.Dark)
+                level.ParticlesFG.Emit(darkMaryParticle, 5, Center + new Vector2(0, -2), Vector2.One * 4f, angle - (float)Math.PI / 2f);
+            else
+                level.ParticlesFG.Emit(maryParticle, 5, Center + new Vector2(0, -2), Vector2.One * 4f, angle - (float)Math.PI / 2f);
             Add(new Coroutine(RefillRoutine(player)));
             respawnTimer = 2.5f;
         }
@@ -212,7 +244,10 @@ public class MaryBlock : Entity
         if (maryType == MaryType.Potted)
             theo.ExplodeLaunch(Position);
         float angle = theo.Speed.Angle();
-        level.ParticlesFG.Emit(maryParticle, 5, Center + new Vector2(0, -2), Vector2.One * 4f, angle - (float)Math.PI / 2f);
+        if (maryType == MaryType.Dark)
+            level.ParticlesFG.Emit(darkMaryParticle, 5, Center + new Vector2(0, -2), Vector2.One * 4f, angle - (float)Math.PI / 2f);
+        else
+            level.ParticlesFG.Emit(maryParticle, 5, Center + new Vector2(0, -2), Vector2.One * 4f, angle - (float)Math.PI / 2f);
         if (maryType == MaryType.Dark)
             theo.Die();
         if (oneUse)
@@ -231,15 +266,25 @@ public class MaryBlock : Entity
     private void Respawn()
     {
         bool flag = !this.Collidable;
+        Player player = Scene.Tracker.GetEntity<Player>();
         if (flag)
         {
+            if (player != null && maryType == MaryType.Bald)
+            {
+                player.Add(player.Hair);
+                player.ResetSpriteNextFrame(player.Sprite.Mode);
+                playerIsBald = false;
+            }
             Collidable = true;
             sprite.Visible = true;
             outline = true;
             Depth = -100;
             wiggler.Start();
             Audio.Play("event:/KoseiHelper/maryReappear", this.Position);
-            SceneAs<Level>().ParticlesFG.Emit(maryParticle, 16, this.Position, Vector2.One * 2f);
+            if (maryType == MaryType.Dark)
+                SceneAs<Level>().ParticlesFG.Emit(darkMaryParticle, 16, this.Position, Vector2.One * 2f);
+            else
+                SceneAs<Level>().ParticlesFG.Emit(maryParticle, 16, this.Position, Vector2.One * 2f);
             if (maryType == MaryType.Potted)
                 sprite.Play("potted");
             if (maryType == MaryType.Idle)
@@ -260,8 +305,16 @@ public class MaryBlock : Entity
         this.Depth = 8999;
         yield return 0.05f;
         float angle = player.Speed.Angle();
-        SceneAs<Level>().ParticlesFG.Emit(maryParticle, 5, this.Position, Vector2.One * 4f, angle - 1.5707964f);
-        SceneAs<Level>().ParticlesFG.Emit(maryParticle, 5, this.Position, Vector2.One * 4f, angle + 1.5707964f);
+        if (maryType == MaryType.Dark)
+        {
+            SceneAs<Level>().ParticlesFG.Emit(darkMaryParticle, 5, this.Position, Vector2.One * 4f, angle - 1.5707964f);
+            SceneAs<Level>().ParticlesFG.Emit(darkMaryParticle, 5, this.Position, Vector2.One * 4f, angle + 1.5707964f);
+        }
+        else
+        {
+            SceneAs<Level>().ParticlesFG.Emit(maryParticle, 5, this.Position, Vector2.One * 4f, angle - 1.5707964f);
+            SceneAs<Level>().ParticlesFG.Emit(maryParticle, 5, this.Position, Vector2.One * 4f, angle + 1.5707964f);
+        }
         SlashFx.Burst(Position, angle);
         bool flag2 = oneUse;
         if (flag2)

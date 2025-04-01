@@ -214,7 +214,7 @@ entities.KoseiHelper/TriggerSpinner.attributes.description.sound=The sound that 
 # Mary Pot
 entities.KoseiHelper/MaryBlock.placements.name.maryblock=Mary
 entities.KoseiHelper/MaryBlock.placements.description.Mary Block=These flowers bounce the player from both sides, like a spring but with less strength.
-entities.KoseiHelper/MaryBlock.attributes.description.maryType=Potted Mary launches the player like puffers/bumpers but without freeze frames.\nIdle Mary launches the player like springs.\nBubble Mary puts the player in a bubble and forces them to return to their position moments ago.\nMary Mary forces the player to do a super.\nDark Mary is dark.
+entities.KoseiHelper/MaryBlock.attributes.description.maryType=Potted Mary launches the player like puffers/bumpers but without freeze frames.\nIdle Mary launches the player like springs.\nBubble Mary puts the player in a bubble and forces them to return to their position moments ago.\nMary Mary forces the player to do a super.\nDark Mary slows down time when close.\nBald Mary makes you bald.
 entities.KoseiHelper/MaryBlock.attributes.description.outline=If the sprite should be rendered with an outline.
 entities.KoseiHelper/MaryBlock.attributes.description.affectTheo=If Theo should be able to bounce (if potted) or destroy Mary.\nIf Mary is dark, she will kill Theo.
 
