@@ -48,6 +48,7 @@ public class KoseiHelperModule : EverestModule {
         On.Celeste.Player.ClimbBoundsCheck += KoseiHelperModule.ClimbCheck;
         DebugMapController.Load();
         ClimbJumpController.Load();
+        Everest.Events.Player.OnRegisterStates += MaryBlock.RegisterBaldState;
     }
 
     public override void Unload() {
@@ -60,6 +61,7 @@ public class KoseiHelperModule : EverestModule {
         On.Celeste.Player.ClimbBoundsCheck -= KoseiHelperModule.ClimbCheck;
         DebugMapController.Unload();
         ClimbJumpController.Unload();
+        Everest.Events.Player.OnRegisterStates -= MaryBlock.RegisterBaldState;
     }
 
     private static bool ClimbCheck(On.Celeste.Player.orig_ClimbBoundsCheck orig, Player self, int dir)

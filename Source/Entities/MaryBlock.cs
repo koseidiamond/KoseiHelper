@@ -22,6 +22,8 @@ public class MaryBlock : Entity
     public float respawnTimer;
     private bool oneUse = true;
     private Wiggler wiggler;
+    private readonly BloomPoint bloom;
+    private readonly VertexLight light;
 
     // darkmary variables
     private MTexture distortionTexture;
@@ -29,13 +31,13 @@ public class MaryBlock : Entity
     private Vector2 distortionVector;
     private float oscillationPhase = 0f;
 
-    private readonly BloomPoint bloom;
-    private readonly VertexLight light;
-
     // bubblemary variables
     private Vector2 previousPlayerPos = Vector2.Zero;
-    private Queue<Vector2> playerPositionHistory = new Queue<Vector2>(15);
+    private const int bubbleFrames = 15;
+    private Queue<Vector2> playerPositionHistory = new Queue<Vector2>(bubbleFrames);
 
+    // baldmary variables
+    private float baldTimer = 0f;
     private bool playerIsBald;
 
     public enum MaryType
@@ -122,6 +124,7 @@ public class MaryBlock : Entity
     public override void Update()
     {
         base.Update();
+        Logger.Debug(nameof(KoseiHelperModule), $"{baldTimer}");
         Player player = Scene.Tracker.GetEntity<Player>();
         if (player != null)
         {
@@ -129,11 +132,27 @@ public class MaryBlock : Entity
             if (maryType == MaryType.Bubble)
             {
                 previousPlayerPos = player.Position;
-                if (playerPositionHistory.Count >= 15)
+                if (playerPositionHistory.Count >= bubbleFrames)
                 {
-                    playerPositionHistory.Dequeue();  // Remove the oldest position if we have 15 positions (0.25s = 15 frames)
+                    playerPositionHistory.Dequeue();  // Remove the oldest position if we have bubbleFrames positions
                 }
                 playerPositionHistory.Enqueue(player.Position);
+            }
+            if (maryType == MaryType.Bald)
+            {
+                baldTimer += Engine.DeltaTime;
+                if (playerIsBald)
+                {
+                    if (baldTimer >= 0.5f || (Input.Dash.Pressed || Input.CrouchDash.Pressed))
+                    {
+                        playerIsBald = false;
+                        player.Add(player.Hair);
+                        player.ResetSpriteNextFrame(player.Sprite.Mode);
+                        baldTimer = 0f;
+                        player.StateMachine.State = Player.StNormal;
+                    }
+                }
+
             }
         }
 
@@ -145,7 +164,7 @@ public class MaryBlock : Entity
         {
             this.respawnTimer -= Engine.DeltaTime;
             bool flag2 = this.respawnTimer <= 0f;
-            if (flag2)
+            if (flag2 && Visible)
                 Respawn();
         }
         if (maryType == MaryType.Dark) // TODO
@@ -188,7 +207,8 @@ public class MaryBlock : Entity
             if (maryType == MaryType.Bald && !playerIsBald)
             {
                 Scene.Add(new MiniTextbox("KoseiHelper_MaryBlock_Bald"));
-                player.Get<PlayerHair>()?.RemoveSelf();
+                player.StateMachine.State = StBald;
+                baldTimer = 0f;
                 playerIsBald = true;
             }
             if (maryType == MaryType.Potted || maryType == MaryType.Idle)
@@ -229,7 +249,7 @@ public class MaryBlock : Entity
 
     private Vector2 GetPositionFromHistory()
     {
-        if (playerPositionHistory.Count < 15)
+        if (playerPositionHistory.Count < bubbleFrames)
             return previousPlayerPos;
         return playerPositionHistory.Peek();
     }
@@ -269,12 +289,6 @@ public class MaryBlock : Entity
         Player player = Scene.Tracker.GetEntity<Player>();
         if (flag)
         {
-            if (player != null && maryType == MaryType.Bald)
-            {
-                player.Add(player.Hair);
-                player.ResetSpriteNextFrame(player.Sprite.Mode);
-                playerIsBald = false;
-            }
             Collidable = true;
             sprite.Visible = true;
             outline = true;
@@ -316,9 +330,39 @@ public class MaryBlock : Entity
             SceneAs<Level>().ParticlesFG.Emit(maryParticle, 5, this.Position, Vector2.One * 4f, angle + 1.5707964f);
         }
         SlashFx.Burst(Position, angle);
-        bool flag2 = oneUse;
-        if (flag2)
-            this.RemoveSelf();
+        if (oneUse)
+            if (maryType == MaryType.Bald)
+            {
+                Collidable = false;
+                Visible = false;
+            }
+            else
+                this.RemoveSelf();
         yield break;
+    }
+
+    private class BaldStateComponent : Component
+    {
+        public BaldStateComponent() : base(false, false) { }
+        public MaryBlock CurrentMary;
+    }
+
+    public static int StBald;
+
+    public static void RegisterBaldState(Player player)
+    {
+        StBald = player.AddState("KoseiHelper_StBald", StBaldUpdate, null, StBaldBegin, null);
+        player.Add(new BaldStateComponent());
+    }
+
+    private static void StBaldBegin(Player player)
+    {
+        player.Get<PlayerHair>()?.RemoveSelf();
+    }
+
+    private static int StBaldUpdate(Player player)
+    {
+
+        return StBald;
     }
 }
