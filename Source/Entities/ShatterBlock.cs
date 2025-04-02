@@ -30,6 +30,7 @@ public class ShatterDashBlock : Solid
     private float previousHSpeed, previousVSpeed;
     private string flagSet;
     private bool destroyStaticMovers;
+    private bool verticalSpeed;
     private enum SubstractSpeedMode
     {
         Substract,
@@ -47,6 +48,7 @@ public class ShatterDashBlock : Solid
         blendIn = data.Bool("blendin");
         tileType = data.Char("tiletype", '3');
         canDash = data.Bool("canDash", true);
+        verticalSpeed = data.Bool("verticalSpeed", false);
         givesCoyote = data.Bool("givesCoyote", false);
         requireOnlySpeed = data.Bool("requireOnlySpeed", false);
         delay = MathHelper.Clamp(data.Float("FreezeTime", 0.1f), 0, 0.5f);
@@ -95,8 +97,6 @@ public class ShatterDashBlock : Solid
         }
     }
 
-
-
     public void Break(Player player, Vector2 direction, bool playSound = true, bool playDebrisSound = true)
     {
         if (playSound)
@@ -135,14 +135,23 @@ public class ShatterDashBlock : Solid
         {
             case SubstractSpeedMode.Set:
                 //player.Speed = Vector2.UnitX.RotateTowards(direction.Angle(), 6.3f) * speedDecrease;
-                player.Speed = new Vector2(Vector2.UnitX.RotateTowards(direction.Angle(), 6.3f).X * speedDecrease, player.Speed.Y);
+                if (verticalSpeed)
+                    player.Speed = new Vector2(player.Speed.X, Vector2.UnitY.RotateTowards(direction.Angle(), 6.3f).Y * speedDecrease);
+                else
+                    player.Speed = new Vector2(Vector2.UnitX.RotateTowards(direction.Angle(), 6.3f).X * speedDecrease, player.Speed.Y);
                 break;
             case SubstractSpeedMode.Multiply:
                 //player.Speed *= new Vector2(Math.Abs(Vector2.UnitX.RotateTowards(direction.Angle(), 6.3f).X), Math.Abs(Vector2.UnitX.RotateTowards(direction.Angle(), 6.3f).Y)) * speedDecrease;
-                player.Speed = new Vector2(player.Speed.X * Math.Abs(Vector2.UnitX.RotateTowards(direction.Angle(), 6.3f).X) * speedDecrease, player.Speed.Y);
+                if (verticalSpeed)
+                    player.Speed = new Vector2(player.Speed.X, player.Speed.Y * Math.Abs(Vector2.UnitY.RotateTowards(direction.Angle(), 6.3f).Y) * speedDecrease);
+                else
+                    player.Speed = new Vector2(player.Speed.X * Math.Abs(Vector2.UnitX.RotateTowards(direction.Angle(), 6.3f).X) * speedDecrease, player.Speed.Y);
                 break;
             default: // Decrease
-                player.Speed -= Vector2.UnitX.RotateTowards(direction.Angle(), 6.3f) * speedDecrease;
+                if (verticalSpeed)
+                    player.Speed -= Vector2.UnitY.RotateTowards(direction.Angle(), 6.3f) * speedDecrease;
+                else
+                    player.Speed -= Vector2.UnitX.RotateTowards(direction.Angle(), 6.3f) * speedDecrease;
                 break;
         }
 
@@ -169,7 +178,8 @@ public class ShatterDashBlock : Solid
 
     private DashCollisionResults OnDashed(Player player, Vector2 direction)
     {
-        if (Math.Abs(player.Speed.X) > speedReq && (canDash || (!canDash && player.StateMachine.state != 2)))
+        if ((verticalSpeed && Math.Abs(player.Speed.Y) > speedReq) || (!verticalSpeed && Math.Abs(player.Speed.X) > speedReq) &&
+            (canDash || (!canDash && player.StateMachine.state != 2)))
         {
             Break(player, direction, true);
             return DashCollisionResults.Ignore;
@@ -197,21 +207,27 @@ public class ShatterDashBlock : Solid
     {
         foreach (Player entity in Scene.Tracker.GetEntities<Player>())
         {
-            if (Math.Abs(previousHSpeed) > speedReq && CollideFirst<Player>(Position + Vector2.UnitX * 2f) != null)
+            if (verticalSpeed)
             {
-                return entity;
+                if (Math.Abs(previousVSpeed) > speedReq && CollideFirst<Player>(Position + Vector2.UnitX * 2f) != null)
+                    return entity;
+                if (Math.Abs(previousVSpeed) > speedReq && CollideFirst<Player>(Position - Vector2.UnitX * 2f) != null)
+                    return entity;
+                if (Math.Abs(previousVSpeed) > speedReq && previousVSpeed > 0 && CollideFirst<Player>(Position - Vector2.UnitY) != null)
+                    return entity;
+                if (Math.Abs(previousVSpeed) > speedReq && previousVSpeed < 0 && CollideFirst<Player>(Position + Vector2.UnitY) != null)
+                    return entity;
             }
-            if (Math.Abs(previousHSpeed) > speedReq && CollideFirst<Player>(Position - Vector2.UnitX * 2f) != null)
+            else
             {
-                return entity;
-            }
-            if (Math.Abs(previousHSpeed) > speedReq && previousVSpeed > 0 && CollideFirst<Player>(Position - Vector2.UnitY) != null)
-            {
-                return entity;
-            }
-            if (Math.Abs(previousHSpeed) > speedReq && previousVSpeed < 0 && CollideFirst<Player>(Position + Vector2.UnitY) != null)
-            {
-                return entity;
+                if (Math.Abs(previousHSpeed) > speedReq && CollideFirst<Player>(Position + Vector2.UnitX * 2f) != null)
+                    return entity;
+                if (Math.Abs(previousHSpeed) > speedReq && CollideFirst<Player>(Position - Vector2.UnitX * 2f) != null)
+                    return entity;
+                if (Math.Abs(previousHSpeed) > speedReq && previousVSpeed > 0 && CollideFirst<Player>(Position - Vector2.UnitY) != null)
+                    return entity;
+                if (Math.Abs(previousHSpeed) > speedReq && previousVSpeed < 0 && CollideFirst<Player>(Position + Vector2.UnitY) != null)
+                    return entity;
             }
         }
         return null;

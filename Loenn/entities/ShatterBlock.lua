@@ -24,7 +24,8 @@ function ShatterDashBlock.placements()
 			requireOnlySpeed = false,
 			flagSet = "",
 			substractSpeedMode = "Substract",
-			destroyStaticMovers = false
+			destroyStaticMovers = false,
+			verticalSpeed = false
         }
     }
 end
@@ -66,6 +67,7 @@ ShatterDashBlock.fieldOrder= {
 	"SpeedDecrease",
 	"SpeedRequirement",
 	"blendin",
+	"verticalSpeed",
 	"canDash",
 	"givesCoyote",
 	"requireOnlySpeed",
