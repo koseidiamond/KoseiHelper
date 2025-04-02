@@ -63,6 +63,8 @@ SpawnController.placements = {
 		blockSinks = false,
 		crushBlockAxe = "Both",
 		crushBlockChillout = false,
+		winged = false,
+		moon = false,
 		decalTexture = "10-farewell/creature_f00",
 		decalDepth = 9000,
 		flagCycleAt = 9999,
@@ -106,6 +108,7 @@ SpawnController.fieldInformation = function (entity) return {
 		"JumpthruPlatform",
 		"FloatySpaceBlock",
 		"Kevin",
+		"Strawberry",
 		"Decal",
 		"Flag",
 		"Counter",
@@ -236,6 +239,8 @@ function SpawnController.ignoredFields(entity)
 	"blockSinks",
 	"crushBlockAxe",
 	"crushBlockChillout",
+	"winged",
+	"moon",
 	"everyXDashes",
 	"decalTexture",
 	"decalDepth",
@@ -321,6 +326,10 @@ function SpawnController.ignoredFields(entity)
 		doNotIgnore("crushBlockAxe")
 		doNotIgnore("crushBlockChillout")
 	end
+	if entity.entityToSpawn == "Strawberry" then
+		doNotIgnore("winged")
+		doNotIgnore("moon")
+	end
 	if entity.entityToSpawn == "Decal" then
 		doNotIgnore("decalTexture")
 		doNotIgnore("decalDepth")
@@ -391,6 +400,7 @@ SpawnController.fieldOrder =  {
 	"removeStamina",
 	"relativeToPlayerFacing",
 	"nodeRelativeToPlayerFacing",
+	"persistent",
 	"absoluteCoords",
 	"entityPath",
 	"dictKeys",
@@ -448,6 +458,8 @@ function SpawnController.texture(room, entity)
 		return "objects/KoseiHelper/Controllers/SpawnController/StarJumpBlock"
 	elseif entityToSpawn == "Kevin" then
 		return "objects/KoseiHelper/Controllers/SpawnController/CrushBlock"
+	elseif entityToSpawn == "Strawberry" then
+		return "objects/KoseiHelper/Controllers/SpawnController/Strawberry"
 	elseif entityToSpawn == "Decal" then
 		return "objects/KoseiHelper/Controllers/SpawnController/Decal"
 	elseif entityToSpawn == "Flag" then

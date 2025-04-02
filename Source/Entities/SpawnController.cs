@@ -36,6 +36,7 @@ public enum EntityType
     FloatySpaceBlock,
     StarJumpBlock,
     CrushBlock,
+    Strawberry,
     Decal,
     Flag,
     Counter,
@@ -145,6 +146,9 @@ public class SpawnController : Entity
     public int minCounterCap = 0, maxCounterCap = 9999;
     public bool decreaseCounter;
 
+    private bool isWinged;
+    private bool isMoon;
+
     //Custom Entity Fields
     private string entityPath;
     private List<string> dictionaryKeys;
@@ -237,6 +241,9 @@ public class SpawnController : Entity
         maxCounterCap = data.Int("maxCounterCap", 9999);
         decreaseCounter = data.Bool("decreaseCounter", false);
 
+        isWinged = data.Bool("winged", false);
+        isMoon = data.Bool("moon", false);
+
         //Custom Entities
         entityPath = data.Attr("entityPath");
         dictionaryKeys = data.Attr("dictKeys").Replace(" ", string.Empty).Split(',').ToList();
@@ -319,7 +326,7 @@ public class SpawnController : Entity
                     Logger.Debug(nameof(KoseiHelperModule), $"An entity is going to spawn: {entityToSpawn}");
                 else //Logs the parameters used in Lönn + the original constructor
                     Logger.Debug(nameof(KoseiHelperModule), $"An entity ({entityPath}) is going to spawn, with the attributes: " +
-                    $"{string.Join(", ", dictionaryKeys.Zip(dictionaryValues, (key, value) => $"{key}={value}"))}, using constructor with parameters: " +
+                    $"{string.Join(", ", dictionaryKeys.Zip(dictionaryValues, (key, value) => $"{key}={value}"))}, with parameters: " +
                     $"{string.Join(", ", FakeAssembly.GetFakeEntryAssembly().GetType(entityPath).GetConstructors().Select(constructor =>
                     $"{constructor.Name}({string.Join(", ", constructor.GetParameters().Select(param => $"{param.ParameterType.Name} {param.Name}"))})"))}.");
 
@@ -439,6 +446,26 @@ public class SpawnController : Entity
                         break;
                     case EntityType.CrushBlock:
                         spawnedEntity = new CrushBlock(spawnPosition, blockWidth, blockHeight, crushBlockAxe, crushBlockChillout);
+                        break;
+                    case EntityType.Strawberry:
+                        EntityData strawberryData = new()
+                        {
+                            Position = spawnPosition,
+                            Level = level.Session.LevelData,
+                            Values = new()
+                        };
+                        for (int i = 0; i < dictionaryKeys.Count; i++)
+                        {
+                            strawberryData.Values[dictionaryKeys[i]] = dictionaryValues.ElementAtOrDefault(i);
+                        }
+                        strawberryData.Values["winged"] = strawberryData.Bool("Winged", isWinged).ToString();
+                        strawberryData.Values["moon"] = strawberryData.Bool("Moon", isMoon).ToString();
+                        EntityID strawberryID = new EntityID(level.Session.LevelData.Name, entityID++);
+                        spawnedEntity = new Strawberry(
+                            strawberryData,
+                            Vector2.Zero,
+                            strawberryID
+                        );
                         break;
                     case EntityType.Decal:
                         if (player.Facing == Facings.Left)
@@ -608,13 +635,9 @@ public class SpawnController : Entity
                     else if (param.ParameterType == typeof(Vector2))
                     { //Needs to check if the entity has just the position or position + offset
                         if (param.Name.Contains("position", StringComparison.OrdinalIgnoreCase))
-                        {
                             ctorParams.Add(spawn);
-                        }
                         else
-                        {
                             ctorParams.Add(Vector2.Zero);
-                        }
                     }
                     else if (param.ParameterType.IsEnum)
                     {
