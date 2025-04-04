@@ -56,6 +56,7 @@ public class CustomCobweb : Entity
     }
     public override void Added(Scene scene)
     {
+        base.Added(scene);
         edgeColor = Color.Lerp(color, edgeColor, edgeColorAlpha);
         if (removeIfNotColliding &&
             (!scene.CollideCheck<Solid>(new Rectangle((int)anchorA.X - 2, (int)anchorA.Y - 2, 4, 4)) || !scene.CollideCheck<Solid>(new Rectangle((int)anchorB.X - 2, (int)anchorB.Y - 2, 4, 4))))
@@ -73,16 +74,18 @@ public class CustomCobweb : Entity
             }
         }
     }
+
     public override void Update()
     {
         waveTimer += Engine.DeltaTime * waveMultiplier;
         base.Update();
     }
+
     public override void Render()
     {
         DrawCobweb(anchorA, anchorB, 12, drawOffshoots: true);
     }
-    private void DrawCobweb(Vector2 a, Vector2 b, int steps, bool drawOffshoots)
+    public void DrawCobweb(Vector2 a, Vector2 b, int steps, bool drawOffshoots)
     {
         SimpleCurve curve = new SimpleCurve(a, b, (a + b) / 2f + Vector2.UnitY * (8f + (float)Math.Sin(waveTimer) * 4f));
         if (drawOffshoots && offshoots != null)

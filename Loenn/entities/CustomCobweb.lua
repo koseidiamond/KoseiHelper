@@ -40,7 +40,9 @@ CustomCobweb.fieldInformation = {
 	},
 	depth = {
         fieldType = "integer",
-        options = depths.addDepths(depths.getDepths(), {}),
+        options = depths.addDepths(depths.getDepths(), {
+		{"Cobwebs", -1}
+		}),
         editable = true
     }
 }
