@@ -54,7 +54,7 @@ public class DebugRenderer : Entity
         nonDebug = data.Bool("nonDebug", false);
         fontSize = data.Float("fontSize", 1f);
         ellipseSegments = data.Int("ellipseSegments", 99);
-        Depth = data.Int("Depth", -999999);
+        Depth = data.Int("depth", -999999);
     }
 
     public override void Update()
