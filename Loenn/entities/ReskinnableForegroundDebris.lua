@@ -1,3 +1,6 @@
+local mods = require("mods")
+local depths = mods.requireFromPlugin("libraries.depths")
+
 local ReskinnableParallaxDebris = {}
 
 ReskinnableParallaxDebris.name = "KoseiHelper/ReskinnableParallaxDebris"
@@ -30,8 +33,10 @@ ReskinnableParallaxDebris.placements = {
 
 ReskinnableParallaxDebris.fieldInformation = {
 	depth = {
-		fieldType = "integer"
-	},
+        fieldType = "integer",
+        options = depths.addDepths(depths.getDepths(), {}),
+        editable = true
+    },
 	sine = {
 		minimumValue = 0
 	},

@@ -2,10 +2,17 @@ local drawableNinePatch = require("structs.drawable_nine_patch")
 local drawableSprite = require("structs.drawable_sprite")
 local enums = require("consts.celeste_enums")
 
+local mods = require("mods")
+local depths = mods.requireFromPlugin("libraries.depths")
+
 local CustomGoldenBlock = {}
 
 CustomGoldenBlock.name = "KoseiHelper/CustomGoldenBlock"
-CustomGoldenBlock.depth = -10000
+
+function CustomGoldenBlock.depth(room,entity)
+	return entity.depth
+end
+
 CustomGoldenBlock.warnBelowSize = {16, 16}
 CustomGoldenBlock.placements = {
     name = "CustomGoldenBlock",
@@ -32,7 +39,11 @@ CustomGoldenBlock.fieldInformation = {
         options = enums.tileset_sound_ids,
         fieldType = "integer"
     },
-	depth = { fieldType = "integer" },
+	depth = {
+        fieldType = "integer",
+        options = depths.addDepths(depths.getDepths(), {}),
+        editable = true
+    },
 	appearDistance = {
 		fieldType = "integer",
 		minimumValue = "1"

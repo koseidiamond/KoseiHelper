@@ -37,8 +37,8 @@ CustomWire.fieldInformation = {
 CustomWire.nodeLimits = {1, 1}
 CustomWire.nodeVisibility = "never"
 
-function CustomWire.depth(room, entity)
-    return entity.above and -8500 or 2000
+function CustomWire.depth(room,entity)
+	return entity.depth
 end
 
 local defaultColor = {89 / 255, 88 / 255, 102 / 255}

@@ -1,3 +1,6 @@
+local mods = require("mods")
+local depths = mods.requireFromPlugin("libraries.depths")
+
 local FlagFakeBerry = {}
 
 FlagFakeBerry.name = "KoseiHelper/FlagFakeBerry"
@@ -91,8 +94,16 @@ FlagFakeBerry.fieldInformation = {
 		},
 		editable = false
 	},
-	depthBeforeFollowing = { fieldType = "integer" },
-	depthWhileFollowing = { fieldType = "integer" }
+	depthBeforeFollowing = {
+        fieldType = "integer",
+        options = depths.addDepths(depths.getDepths(), {}),
+        editable = true
+    },
+	depthWhileFollowing = {
+        fieldType = "integer",
+        options = depths.addDepths(depths.getDepths(), {}),
+        editable = true
+    }
 }
 
 return FlagFakeBerry

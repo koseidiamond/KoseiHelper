@@ -1,8 +1,14 @@
+local mods = require("mods")
+local depths = mods.requireFromPlugin("libraries.depths")
 
 local CustomSeekerStatue = {}
 
 CustomSeekerStatue.name = "KoseiHelper/CustomSeekerStatue"
-CustomSeekerStatue.depth = 8999
+
+function CustomSeekerStatue.depth(room,entity)
+	return entity.depth
+end
+
 CustomSeekerStatue.nodeLineRenderType = "line"
 CustomSeekerStatue.nodeLimits = {1, -1}
 CustomSeekerStatue.texture = "decals/5-temple/statue_e"
@@ -33,10 +39,11 @@ CustomSeekerStatue.fieldInformation = {
 		},
         editable = false
     },
-	depth =
-	{
-		fieldType = "integer"
-	},
+	depth = {
+        fieldType = "integer",
+        options = depths.addDepths(depths.getDepths(), {}),
+        editable = true
+    },
 	distance =
 	{
 		fieldType = "integer"

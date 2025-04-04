@@ -12,7 +12,8 @@ entities.KoseiHelper/DebugRenderer.attributes.description.fontSize=If the shape 
 entities.KoseiHelper/DebugRenderer.attributes.description.ellipseSegments=If the shape is an Ellipse, the number of "sides" of the ellipse.\nWrite a low number for a polygon.\nWARNING: Writing values higher than a few thousands can cause tons of lag.
 entities.KoseiHelper/DebugRenderer.attributes.description.imagePath=The path to your custom texture, relative to Atlases/Gameplay/.
 entities.KoseiHelper/DebugRenderer.attributes.description.scaled=If the custom image should be scaled to fill the entire rectangle.\nOtherwise, the sprite will be rendered at the topleft corner.
-entities.KoseiHelper/DebugRenderer.attributes.description.nonDebug=If the shape should also be displayed while not using debug.
+entities.KoseiHelper/DebugRenderer.attributes.description.nonDebug=If the shape should also be displayed while not using debug.\nWARNING: Circles display as a rhombus in this mode.
+entities.KoseiHelper/DebugRenderer.attributes.description.depth=The depth at which the Renderer appears in Lönn. Debug always appears above everything else in-game.
 
 # Debug Map Controller
 entities.KoseiHelper/DebugMapController.placements.name.DebugMapController=Debug Map Controller

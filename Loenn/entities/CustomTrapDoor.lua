@@ -1,9 +1,16 @@
+local mods = require("mods")
+local depths = mods.requireFromPlugin("libraries.depths")
+
 local drawableRectangle = require("structs.drawable_rectangle")
 
 local CustomTrapdoor = {}
 
 CustomTrapdoor.name = "KoseiHelper/CustomTrapdoor"
-CustomTrapdoor.depth = 8999
+
+function CustomTrapdoor.depth(room,entity)
+	return entity.depth
+end
+
 CustomTrapdoor.placements = {
     name = "CustomTrapdoor",
 	data = {
@@ -16,7 +23,11 @@ CustomTrapdoor.placements = {
 }
 
 CustomTrapdoor.fieldInformation = {
-	depth = { fieldType = "integer"}
+	depth = {
+        fieldType = "integer",
+        options = depths.addDepths(depths.getDepths(), {}),
+        editable = true
+    }
 }
 
 local color = {22 / 255, 27 / 255, 48 / 255, 1.0}

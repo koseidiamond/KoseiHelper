@@ -1,9 +1,16 @@
 local utils = require("utils")
 local drawing = require("utils.drawing")
 
+local mods = require("mods")
+local depths = mods.requireFromPlugin("libraries.depths")
+
 local DebugRenderer = {}
 DebugRenderer.name = "KoseiHelper/DebugRenderer"
-DebugRenderer.depth = -1
+
+function DebugRenderer.depth(room,entity)
+	return entity.depth
+end
+
 DebugRenderer.nodeLineRenderType = "line"
 DebugRenderer.nodeLimits = {0,1}
 DebugRenderer.nodeVisibility= "always"
@@ -41,6 +48,7 @@ DebugRenderer.fieldOrder = {
 	"width",
 	"height",
 	"color",
+	"depth",
 	"shape",
 	"flag",
 	"message",
@@ -74,7 +82,11 @@ DebugRenderer.fieldInformation = {
 		editable = false
 	},
 	color = { fieldType = "color" },
-	depth = { fieldType = "integer" },
+	depth = {
+        fieldType = "integer",
+        options = depths.addDepths(depths.getDepths(), {}),
+        editable = true
+    },
 	ellipseSegments = {
 		fieldType = "integer",
 		minimumValue = 3
@@ -91,9 +103,7 @@ function DebugRenderer.ignoredFields(entity)
 	"ellipseSegments",
 	"imagePath",
 	"scaled",
-	"color",
-	"depth",
-	"nonDebug"
+	"color"
 	}
     local function doNotIgnore(value)
         for i = #ignored, 1, -1 do
@@ -117,9 +127,6 @@ function DebugRenderer.ignoredFields(entity)
 	if entity.shape == "Image" then
 		doNotIgnore("imagePath")
 		doNotIgnore("scaled")
-	end
-	if entity.nonDebug == true then
-		doNotIgnore("depth")
 	end
 	return ignored
 end

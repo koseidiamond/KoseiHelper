@@ -1,5 +1,8 @@
 local drawableSprite = require("structs.drawable_sprite")
 
+local mods = require("mods")
+local depths = mods.requireFromPlugin("libraries.depths")
+
 local CustomHahaha = {}
 
 CustomHahaha.name = "KoseiHelper/CustomHahaha"
@@ -22,9 +25,18 @@ CustomHahaha.placements = {
     }
 }
 
+function CustomHahaha.depth(room,entity)
+	return entity.depth
+end
+
 CustomHahaha.fieldInformation = {
 	depth = { fieldType = "integer" },
-	groupSize = { fieldType = "integer" }
+	groupSize = { fieldType = "integer" },
+	depth = {
+        fieldType = "integer",
+        options = depths.addDepths(depths.getDepths(), {}),
+        editable = true
+    }
 }
 
 local texture = "characters/oldlady/ha00"
