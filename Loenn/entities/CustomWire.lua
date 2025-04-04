@@ -2,6 +2,9 @@ local drawing = require("utils.drawing")
 local utils = require("utils")
 local drawableLine = require("structs.drawable_line")
 
+local mods = require("mods")
+local depths = mods.requireFromPlugin("libraries.depths")
+
 local CustomWire = {}
 
 CustomWire.name = "KoseiHelper/CustomWire"
@@ -23,6 +26,11 @@ CustomWire.fieldInformation = {
     },
 	thickness = {
         fieldType = "integer"
+    },
+	depth = {
+        fieldType = "integer",
+        options = depths.addDepths(depths.getDepths(), {}),
+        editable = true
     }
 }
 

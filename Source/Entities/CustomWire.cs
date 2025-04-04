@@ -78,12 +78,6 @@ public class CustomWire : Entity
         }
     }
 
-    public override void DebugRender(Camera camera)
-    {
-        base.DebugRender(camera);
-        Draw.Line(curve.Begin, curve.End, Color.Red);
-    }
-
     private bool IsRiding(Solid solid)
     {
         return CollideCheck(solid, Position);

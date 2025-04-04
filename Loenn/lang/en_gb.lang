@@ -35,6 +35,19 @@ entities.KoseiHelper/DebugMapController.attributes.description.ignoreDummy=Wheth
 entities.KoseiHelper/DebugMapController.attributes.description.blockDebugMap=If this flag is true, the debug map will be completely empty,\npreventing players to see the map or teleport to other rooms.\nLeave empty to always allow opening the debug map.
 entities.KoseiHelper/DebugMapController.attributes.description.roomsToAffect=The rooms that start with this preffix will be affected. Case sensitive.
 
+# Custom Cobweb
+entities.KoseiHelper/CustomCobweb.placements.name.CustomCobweb=Custom Cobweb
+entities.KoseiHelper/CustomCobweb.placements.description.CustomCobweb=Decorative entity composed of two or more curved lines.\nPress N to add more nodes.
+entities.KoseiHelper/CustomCobweb.attributes.description.depth=The depth at which the cobwebs will be rendered.
+entities.KoseiHelper/CustomCobweb.attributes.description.color=The main color of the cobwebs.
+entities.KoseiHelper/CustomCobweb.attributes.description.edgeColor=The color of the offshoots (this is multiplied by the main color).
+entities.KoseiHelper/CustomCobweb.attributes.description.edgeColorAlpha=How much the color of the offshoots will be applied on top of the main color, from 0 to 1.
+entities.KoseiHelper/CustomCobweb.attributes.description.waveMultiplier=How much the cobwebs should wobble (0 is static, and high values look bouncy).
+entities.KoseiHelper/CustomCobweb.attributes.description.offshoots=The offshoots (extra nodes) can have a slight variation in their position. Lower this value if they look too displaced.
+entities.KoseiHelper/CustomCobweb.attributes.description.removeIfNotColliding=Whether the nodes that are not attached to a solid should remove themselves, like in vanilla.
+entities.KoseiHelper/CustomCobweb.attributes.description.thickness=The thickness of the cobwebs, in pixels (supports decimals).
+
+
 # Dash Limiter Controller
 entities.KoseiHelper/DashLimiterController.placements.name.DashLimiterController=Dash Limiter Controller
 entities.KoseiHelper/DashLimiterController.placements.description.DashLimiterController=Limits the amount of dashes that the player can do per screen.
