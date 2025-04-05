@@ -556,6 +556,7 @@ triggers.KoseiHelper/OOBTrigger.attributes.description.climbFix=In vanilla, the 
 triggers.KoseiHelper/KillIfNotGroundedTrigger.placements.name.KillIfNotGroundedTrigger=Kill If Not Grounded Trigger
 triggers.KoseiHelper/KillIfNotGroundedTrigger.placements.description.KillIfNotGroundedTrigger=Kills the player if they are not on ground (or, optionally, not climbing either) while inside.
 triggers.KoseiHelper/KillIfNotGroundedTrigger.attributes.description.spareIfClimbing=Enable this option if you don't want to kill the player while they are climbing inside the trigger.
+triggers.KoseiHelper/KillIfNotGroundedTrigger.attributes.description.killIfGrounded=Whether the player should die if they touch the ground while inside the trigger.
 
 # Metadata Trigger
 triggers.KoseiHelper/MetadataTrigger.placements.name.MetadataTrigger=Metadata Trigger

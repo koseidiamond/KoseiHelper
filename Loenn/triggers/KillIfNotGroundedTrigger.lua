@@ -7,7 +7,8 @@ KillIfNotGroundedTrigger.placements = {
 	{
 		name = "KillIfNotGroundedTrigger",
 		data = {
-			spareIfClimbing = false
+			spareIfClimbing = false,
+			killIfGrounded = false
 		}
 	}
 }
