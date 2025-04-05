@@ -1,13 +1,15 @@
 # KoseiHelper
-Celeste mod with several random mechanics.
+Celeste mod with several new mechanics and customizable versions of vanilla entities.
 
-Contributors:
+Code contributors:
 
-- DavDualMain (Entity Spawner modded entity support)
+- DavDualMain (Entity Spawner: support for modded entities)
 - Vividescence (Shatter Dash blocks)
 - Oli (Guneline creator)
 - ashley_bl (Started the Nemesis Gun, a modification of Guneline)
+- Spooooky (helped me set up the Weapon Picker)
 
 DOCUMENTATION: https://github.com/koseidiamond/KoseiHelper/wiki
 
-Please contact me on Discord (@koseidiamond) or open an issue if you have any requests or difficulty understanding the helper. Contributions are appreciated!
+Please contact me on Discord (@koseidiamond) or open an issue if you have any requests. Ask me if you have difficulty understanding a feature.
+Contributions are appreciated!
