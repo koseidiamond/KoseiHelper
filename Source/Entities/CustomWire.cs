@@ -10,7 +10,7 @@ namespace Celeste.Mod.KoseiHelper.Entities;
 [Tracked]
 public class CustomWire : Entity
 {
-    public float sineX, sineY;
+    public float sineX, sineY, wobbliness;
     public SimpleCurve curve;
     public Color color;
     public Vector2 node;
@@ -24,6 +24,7 @@ public class CustomWire : Entity
         affectedByWind = data.Bool("affectedByWind", true);
         thickness = data.Int("thickness", 1);
         attachToSolid = data.Bool("attachToSolids", true);
+        wobbliness = data.Float("wobbliness", 1f);
 
         Vector2[] array = data.NodesOffset(offset);
         node = array[0];
@@ -63,7 +64,7 @@ public class CustomWire : Entity
         }
         else
             vector = new Vector2((float)Math.Sin(sineX + level.WindSineTimer * 2f), (float)Math.Sin(sineY + level.WindSineTimer * 2.8f)) * 8f * (float)(Math.Sin(Engine.DeltaTime) + 1.0) / 2f;
-        
+        vector.Y *= wobbliness;
         curve.Control = (curve.Begin + curve.End) / 2f + new Vector2(0f, 24f) + vector;
         if (CullHelper.IsCurveVisible(curve, 2f))
         {

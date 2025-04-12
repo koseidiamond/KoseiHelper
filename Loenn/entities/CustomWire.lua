@@ -16,7 +16,8 @@ CustomWire.placements = {
         color = "6B6A3C",
 		thickness = 1,
 		affectedByWind = true,
-		attachToSolids = true
+		attachToSolids = true,
+		wobbliness = 1
     }
 }
 
@@ -27,6 +28,9 @@ CustomWire.fieldInformation = {
 	thickness = {
         fieldType = "integer"
     },
+	wobbliness = {
+		minimumValue = 0
+	},
 	depth = {
         fieldType = "integer",
         options = depths.addDepths(depths.getDepths(), {}),
