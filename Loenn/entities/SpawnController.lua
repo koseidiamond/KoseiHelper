@@ -63,6 +63,7 @@ SpawnController.placements = {
 		blockSinks = false,
 		crushBlockAxe = "Both",
 		crushBlockChillout = false,
+		hasBottom = false,
 		winged = false,
 		moon = false,
 		decalTexture = "10-farewell/creature_f00",
@@ -108,6 +109,7 @@ SpawnController.fieldInformation = function (entity) return {
 		"JumpthruPlatform",
 		"FloatySpaceBlock",
 		"Kevin",
+		"Water",
 		"Strawberry",
 		"Decal",
 		"Flag",
@@ -239,6 +241,7 @@ function SpawnController.ignoredFields(entity)
 	"blockSinks",
 	"crushBlockAxe",
 	"crushBlockChillout",
+	"hasBottom",
 	"winged",
 	"moon",
 	"everyXDashes",
@@ -326,6 +329,9 @@ function SpawnController.ignoredFields(entity)
 		doNotIgnore("crushBlockAxe")
 		doNotIgnore("crushBlockChillout")
 	end
+	if entity.entityToSpawn == "Water" then
+		doNotIgnore("hasBottom")
+	end
 	if entity.entityToSpawn == "Strawberry" then
 		doNotIgnore("winged")
 		doNotIgnore("moon")
@@ -356,7 +362,7 @@ function SpawnController.ignoredFields(entity)
 	--Entities with size
 	if entity.entityToSpawn == "DashBlock" or entity.entityToSpawn == "FallingBlock" or entity.entityToSpawn == "IceBlock" or entity.entityToSpawn == "MoveBlock" or entity.entityToSpawn == "StarJumpBlock"
 	or entity.entityToSpawn == "Kevin"	or entity.entityToSpawn == "SwapBlock" or entity.entityToSpawn == "ZipMover" or entity.entityToSpawn == "DreamBlock" or entity.entityToSpawn == "GlassBlock"
-	or entity.entityToSpawn == "FloatySpaceBlock" then
+	or entity.entityToSpawn == "FloatySpaceBlock" or entity.entityToSpawn == "Water" then
 		doNotIgnore("blockWidth")
 		doNotIgnore("blockHeight")
 	end
@@ -458,6 +464,8 @@ function SpawnController.texture(room, entity)
 		return "objects/KoseiHelper/Controllers/SpawnController/StarJumpBlock"
 	elseif entityToSpawn == "Kevin" then
 		return "objects/KoseiHelper/Controllers/SpawnController/CrushBlock"
+	elseif entityToSpawn == "Water" then
+		return "objects/KoseiHelper/Controllers/SpawnController/Water"
 	elseif entityToSpawn == "Strawberry" then
 		return "objects/KoseiHelper/Controllers/SpawnController/Strawberry"
 	elseif entityToSpawn == "Decal" then

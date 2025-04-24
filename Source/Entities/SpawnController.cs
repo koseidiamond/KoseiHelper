@@ -36,6 +36,7 @@ public enum EntityType
     FloatySpaceBlock,
     StarJumpBlock,
     CrushBlock,
+    Water,
     Strawberry,
     Decal,
     Flag,
@@ -137,6 +138,8 @@ public class SpawnController : Entity
     public CrushBlock.Axes crushBlockAxe;
     public bool crushBlockChillout;
 
+    public bool hasTop, hasBottom;
+
     public string decalTexture;
     public int decalDepth;
 
@@ -230,6 +233,9 @@ public class SpawnController : Entity
         blockSinks = data.Bool("blockSinks", false);
         crushBlockAxe = data.Enum("crushBlockAxe", CrushBlock.Axes.Both);
         crushBlockChillout = data.Bool("crushBlockChillout", false);
+
+        hasTop = data.Bool("hasTop", true);
+        hasBottom = data.Bool("hasBottom", false);
 
         decalTexture = data.Attr("decalTexture", "10-farewell/creature_f00");
         decalDepth = data.Int("decalDepth", 9000);
@@ -446,6 +452,9 @@ public class SpawnController : Entity
                         break;
                     case EntityType.CrushBlock:
                         spawnedEntity = new CrushBlock(spawnPosition, blockWidth, blockHeight, crushBlockAxe, crushBlockChillout);
+                        break;
+                    case EntityType.Water:
+                        spawnedEntity = new Water(spawnPosition,hasTop,hasBottom,blockWidth,blockHeight);
                         break;
                     case EntityType.Strawberry:
                         EntityData strawberryData = new()
