@@ -1,4 +1,4 @@
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Monocle;
 using System;
@@ -51,10 +51,10 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
 
             float angle = value.Angle();
             float angleThreshold = (float)Math.PI / 8f;
-            if (angle < 0)
+            /*if (angle < 0)
             {
                 angleThreshold -= Calc.ToRad(5f);
-            }
+            }*/
             switch (gunDirections)
             {
                 case KoseiHelperModuleSettings.NemesisSettings.GunDirections.Horizontal:
@@ -128,6 +128,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
             }
             return Vector2.Zero;
         }
+
 
         private static Vector2 GetGunVector(Actor player, Vector2 cursorPos, Facings forceDir)
         {
