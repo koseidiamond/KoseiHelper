@@ -12,6 +12,7 @@ public class NemesisGunSettingsTrigger : Trigger
     private bool enabled = true, bulletExplosion = true, loseGunOnRespawn = true;
     private string gunshotSound, gunTexture, bulletTexture, customParticleTexture;
     private int cooldown, recoilCooldown, lifetime;
+    private bool recoilUpwards;
     private TriggerMode triggerMode;
     private Color color1, color2;
     private DustType shotDustType;
@@ -44,6 +45,7 @@ public class NemesisGunSettingsTrigger : Trigger
         lifetime = data.Int("lifetime", 600);
         speedMultiplier = data.Float("speedMultiplier", 1f);
         recoil = data.Float("recoilStrength", 80f);
+        recoilUpwards = data.Bool("recoilUpwards", false);
         recoilCooldown = data.Int("recoilCooldown", 16);
         dashBehavior = data.Enum("dashBehavior", KoseiHelperModuleSettings.NemesisSettings.DashBehavior.None);
         particleAlpha = data.Float("particleAlpha", 1f);
@@ -87,6 +89,7 @@ public class NemesisGunSettingsTrigger : Trigger
         KoseiHelperModule.Settings.GunSettings.Lifetime = lifetime;
         KoseiHelperModule.Settings.GunSettings.SpeedMultiplier = speedMultiplier;
         KoseiHelperModule.Settings.GunSettings.Recoil = recoil;
+        KoseiHelperModule.Settings.GunSettings.RecoilUpwards = recoilUpwards;
         KoseiHelperModule.Settings.GunSettings.RecoilCooldown = recoilCooldown;
         KoseiHelperModule.Settings.GunSettings.CanShootInFeather = canShootInFeather;
         KoseiHelperModule.Settings.GunSettings.FreezeFrames = freezeFrames;

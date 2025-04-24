@@ -17,6 +17,10 @@ public class KoseiHelperModule : EverestModule {
     public override Type SaveDataType => typeof(KoseiHelperModuleSaveData);
     public static KoseiHelperModuleSaveData SaveData => (KoseiHelperModuleSaveData) Instance._SaveData;
 
+    public bool frostHelperLoaded = false;
+    public bool collabUtils2Loaded = false;
+    public bool helpingHandLoaded = false;
+
     public KoseiHelperModule() {
         Instance = this;
 #if DEBUG
@@ -49,6 +53,11 @@ public class KoseiHelperModule : EverestModule {
         DebugMapController.Load();
         ClimbJumpController.Load();
         Everest.Events.Player.OnRegisterStates += MaryBlock.RegisterBaldState;
+
+        if (!frostHelperLoaded && Everest.Loader.DependencyLoaded(new EverestModuleMetadata { Name = "FrostHelper", Version = new Version(1, 46, 0) }))
+            loadFrostHelper();
+        if (!collabUtils2Loaded && Everest.Loader.DependencyLoaded(new EverestModuleMetadata { Name = "CollabUtils2", Version = new Version(1, 10, 0) }))
+            loadCollabUtils2();
     }
 
     public override void Unload() {
@@ -62,6 +71,43 @@ public class KoseiHelperModule : EverestModule {
         DebugMapController.Unload();
         ClimbJumpController.Unload();
         Everest.Events.Player.OnRegisterStates -= MaryBlock.RegisterBaldState;
+
+        if (frostHelperLoaded)
+            unloadFrostHelper();
+        if (helpingHandLoaded)
+            unloadHelpingHand();
+        if (collabUtils2Loaded)
+            unloadCollabUtils2();
+    }
+
+    private void loadFrostHelper()
+    {
+        frostHelperLoaded = true;
+    }
+
+    private void unloadFrostHelper()
+    {
+        frostHelperLoaded = false;
+    }
+
+    private void loadHelpingHand()
+    {
+        helpingHandLoaded = true;
+    }
+
+    private void unloadHelpingHand()
+    {
+        helpingHandLoaded = false;
+    }
+
+    private void loadCollabUtils2()
+    {
+        collabUtils2Loaded = true;
+    }
+
+    private void unloadCollabUtils2()
+    {
+        collabUtils2Loaded = false;
     }
 
     private static bool ClimbCheck(On.Celeste.Player.orig_ClimbBoundsCheck orig, Player self, int dir)

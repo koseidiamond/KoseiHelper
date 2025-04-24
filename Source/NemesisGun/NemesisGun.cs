@@ -267,10 +267,13 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                     {
                         if (self.StateMachine.state != 11 && self.StateMachine.state != 17 && (self.StateMachine.state != 19 || KoseiHelperModule.Settings.GunSettings.CanShootInFeather))
                         Gunshot(self, CursorPos);
-                        if (GetEightDirectionalAim(KoseiHelperModule.Settings.GunSettings.gunDirections).Y < Math.Sqrt(2) / 2 &&
-                            GetEightDirectionalAim(KoseiHelperModule.Settings.GunSettings.gunDirections).Y > -Math.Sqrt(2) / 2 && recoilCooldown <= 0)
+                        if (recoilCooldown <= 0)
                         {
-                            self.Speed.X += KoseiHelperModule.Settings.GunSettings.Recoil * (float)(0 - self.Facing); // Horizontal recoil, by default 80f, same as vanilla backboosts
+                            if (GetEightDirectionalAim(KoseiHelperModule.Settings.GunSettings.gunDirections).Y < Math.Sqrt(2) / 2 &&
+                            GetEightDirectionalAim(KoseiHelperModule.Settings.GunSettings.gunDirections).Y > -Math.Sqrt(2) / 2 && !KoseiHelperModule.Settings.GunSettings.RecoilUpwards)
+                                self.Speed.X += KoseiHelperModule.Settings.GunSettings.Recoil * (float)(0 - self.Facing); // Horizontal recoil, by default 80f, same as vanilla backboosts
+                            else if (KoseiHelperModule.Settings.GunSettings.RecoilUpwards)
+                                self.Speed.Y -= KoseiHelperModule.Settings.GunSettings.Recoil;
                             recoilCooldown = KoseiHelperModule.Settings.GunSettings.RecoilCooldown;
                         }
                         Celeste.Freeze(Engine.DeltaTime * KoseiHelperModule.Settings.GunSettings.FreezeFrames);

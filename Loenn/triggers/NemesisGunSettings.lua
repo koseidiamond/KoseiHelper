@@ -25,6 +25,7 @@ NemesisGunSettings.placements = {
 		speedMultiplier = 1,
 		recoilStrength = 80,
 		recoilCooldown = 16,
+		recoilUpwards = false,
 		canShootInFeather = true,
 		freezeFrames = 0,
 		horizontalAcceleration = 0,
@@ -180,6 +181,7 @@ NemesisGunSettings.fieldOrder =
 	"bulletTexture",
 	"enabled",
 	"loseGunOnRespawn",
+	"recoilUpwards",
 	"canShootInFeather",
 	"bulletExplosion"
 	

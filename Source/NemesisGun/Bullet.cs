@@ -5,9 +5,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
-using FrostHelper;
-using Celeste.Mod.MaxHelpingHand.Entities;
 using Celeste.Mod.Entities;
+using System.Runtime.CompilerServices;
 
 namespace Celeste.Mod.KoseiHelper.NemesisGun
 {
@@ -15,6 +14,24 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
     [Tracked]
     public class Bullet : Entity
     {
+        /*[OnLoad]
+        public static void Load()
+        {
+            On.Monocle.Tracker.Initialize += TrackerInitialize;
+        }
+
+        [OnUnload]
+        public static void Unload()
+        {
+            On.Monocle.Tracker.Initialize -= TrackerInitialize;
+        }
+
+        private static void TrackerInitialize(On.Monocle.Tracker.orig_Initialize orig)
+        {
+            orig();
+            MonocleExt.TrackEntity<BadelineBoost>(inherited: true);
+        }*/
+
         public Rectangle Hitbox => new Rectangle((int)Position.X + Extensions.bulletXOffset, (int)Position.Y + Extensions.bulletYOffset, Extensions.bulletWidth, Extensions.bulletHeight);
         private Vector2 velocity, startVelocity;
         private readonly Actor owner;
@@ -141,6 +158,62 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
             {
                 float angle = (float)Math.Atan2(velocity.Y, velocity.X);
                 bulletTexture.DrawCentered(Position, Color.White, 1, angle);
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        private void CollisionCheck_FrostHelper()
+        {
+            if (owner.Scene.CollideFirst<FrostHelper.CustomSpinner>(Hitbox) is FrostHelper.CustomSpinner customSpinner && KoseiHelperModule.Settings.GunInteractions.BreakSpinners && !dead)
+            {
+                customSpinner.Destroy();
+                DestroyBullet();
+                return;
+            }
+        }
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        private void CollisionCheck_HelpingHand()
+        {
+            if (owner.Scene.CollideFirst<MaxHelpingHand.Entities.FlagTouchSwitch>(Hitbox) is MaxHelpingHand.Entities.FlagTouchSwitch flagTouchSwitch &&
+                KoseiHelperModule.Settings.GunInteractions.CollectTouchSwitches && !dead)
+            {
+                if (owner is Player p_tswitch)
+                {
+                    flagTouchSwitch.TurnOn();
+                }
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        private void CollisionCheckEntity_HelpingHand(Entity entity)
+        {
+             if(entity is MaxHelpingHand.Entities.SidewaysJumpThru sidewaysJumpthru && sidewaysJumpthru.Collider.Bounds.Intersects(Hitbox) && !dead &&
+                    KoseiHelperModule.Settings.GunInteractions.CollideWithPlatforms)
+                {
+                if ((sidewaysJumpthru.AllowLeftToRight && velocity.X < 0) || (!sidewaysJumpthru.AllowLeftToRight && velocity.X > 0))
+                    DestroyBullet();
+                return;
+            }
+
+            if (entity is MaxHelpingHand.Entities.UpsideDownJumpThru upsidedownJumpthru && upsidedownJumpthru.Collider.Bounds.Intersects(Hitbox) && !dead &&
+                KoseiHelperModule.Settings.GunInteractions.CollideWithPlatforms)
+            {
+                if (velocity.Y < 0)
+                    DestroyBullet();
+                return;
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        private void CollisionCheckEntity_CollabUtils2(Entity entity)
+        {
+            if (entity is CollabUtils2.Entities.SilverBerry silverBerry && silverBerry.Collider.Bounds.Intersects(Hitbox) &&
+                    KoseiHelperModule.Settings.GunInteractions.CanKillPlayer && !dead)
+                {
+                if (owner is Player plSilver)
+                    plSilver.Die(Vector2.Zero, true);
+                DestroyBullet();
+                return;
             }
         }
 
@@ -305,10 +378,9 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 return;
             }
 
-            if (owner.Scene.CollideFirst<CustomSpinner>(Hitbox) is CustomSpinner customSpinner && KoseiHelperModule.Settings.GunInteractions.BreakSpinners && !dead)
+            if (KoseiHelperModule.Instance.frostHelperLoaded)
             {
-                customSpinner.Destroy();
-                DestroyBullet();
+                CollisionCheck_FrostHelper();
                 return;
             }
 
@@ -348,12 +420,9 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 return;
             }
 
-            if (owner.Scene.CollideFirst<FlagTouchSwitch>(Hitbox) is FlagTouchSwitch flagTouchSwitch && KoseiHelperModule.Settings.GunInteractions.CollectTouchSwitches && !dead)
+            if (KoseiHelperModule.Instance.helpingHandLoaded)
             {
-                if (owner is Player p_tswitch)
-                {
-                    flagTouchSwitch.TurnOn();
-                }
+                CollisionCheck_HelpingHand();
                 return;
             }
 
@@ -513,12 +582,9 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                     }
                     return;
                 }
-                if (entity is CollabUtils2.Entities.SilverBerry silverBerry && silverBerry.Collider.Bounds.Intersects(Hitbox) &&
-                    KoseiHelperModule.Settings.GunInteractions.CanKillPlayer && !dead)
+                if (KoseiHelperModule.Instance.collabUtils2Loaded)
                 {
-                    if (owner is Player plSilver)
-                        plSilver.Die(Vector2.Zero, true);
-                    DestroyBullet();
+                    CollisionCheckEntity_CollabUtils2(entity);
                     return;
                 }
 
@@ -698,19 +764,9 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                     return;
                 }
 
-                if (entity is SidewaysJumpThru sidewaysJumpthru && sidewaysJumpthru.Collider.Bounds.Intersects(Hitbox) && !dead &&
-                    KoseiHelperModule.Settings.GunInteractions.CollideWithPlatforms)
+                if (KoseiHelperModule.Instance.helpingHandLoaded) // Sideways and upsidedown jumpthroughs
                 {
-                    if ((sidewaysJumpthru.AllowLeftToRight && velocity.X < 0) || (!sidewaysJumpthru.AllowLeftToRight && velocity.X > 0))
-                        DestroyBullet();
-                    return;
-                }
-
-                if (entity is UpsideDownJumpThru upsidedownJumpthru && upsidedownJumpthru.Collider.Bounds.Intersects(Hitbox) && !dead &&
-                    KoseiHelperModule.Settings.GunInteractions.CollideWithPlatforms)
-                {
-                    if (velocity.Y < 0)
-                        DestroyBullet();
+                    CollisionCheckEntity_HelpingHand(entity);
                     return;
                 }
 

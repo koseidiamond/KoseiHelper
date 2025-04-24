@@ -36,6 +36,9 @@ public class KoseiHelperModuleSettings : EverestModuleSettings {
         [SettingRange(min: 0, max: 999)]
         public int RecoilCooldown { get; set; } = 16;
 
+        [SettingSubText("Whether the recoil should push you upwards instead of working like an horizontal backboost.")]
+        public bool RecoilUpwards { get; set; } = false;
+
         [SettingSubText("How many freeze frames occur each time you shoot. Default 0.")]
         [SettingRange(min: 0, max: 60)]
         public int FreezeFrames { get; set; } = 0;
