@@ -115,6 +115,8 @@ entities.KoseiHelper/CustomWire.attributes.description.color=The color of the wi
 entities.KoseiHelper/CustomWire.attributes.description.affectedByWind=Whether the wire should wobble more aggresively when there is wind.
 entities.KoseiHelper/CustomWire.attributes.description.attachToSolids=Whether the wire should attach to solids.\nIt is only attached from its position, not from its node!
 entities.KoseiHelper/CustomWire.attributes.description.wobbliness=How much the wire should wobble up and down. Values that are too big will also make it wobble upwards.
+entities.KoseiHelper/CustomWire.attributes.description.alpha=The transparency of the wire, where 1 is fully opaque and 0 is invisible.
+entities.KoseiHelper/CustomWire.attributes.description.flag=Whether a flag needs to be enabled for the wire to be visible.\nLeave empty for no flag required.
 
 # Reskinnable Parallax Debris
 

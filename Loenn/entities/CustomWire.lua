@@ -17,7 +17,9 @@ CustomWire.placements = {
 		thickness = 1,
 		affectedByWind = true,
 		attachToSolids = true,
-		wobbliness = 1
+		wobbliness = 1,
+		alpha = 1,
+		flag = ""
     }
 }
 
@@ -30,6 +32,10 @@ CustomWire.fieldInformation = {
     },
 	wobbliness = {
 		minimumValue = 0
+	},
+	alpha = {
+		minimumValue = 0,
+		maximumValue = 1
 	},
 	depth = {
         fieldType = "integer",

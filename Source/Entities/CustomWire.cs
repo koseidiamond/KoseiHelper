@@ -16,11 +16,15 @@ public class CustomWire : Entity
     public Vector2 node;
     public bool affectedByWind, attachToSolid;
     public int thickness;
+    public float alpha;
+    public string flag;
 
     public CustomWire(EntityData data, Vector2 offset) : base(data.Position + offset)
     {
         Depth = data.Int("depth");
         color = data.HexColor("color", Color.Olive);
+        alpha = data.Float("alpha", 1f);
+        flag = data.Attr("flag", "");
         affectedByWind = data.Bool("affectedByWind", true);
         thickness = data.Int("thickness", 1);
         attachToSolid = data.Bool("attachToSolids", true);
@@ -45,6 +49,10 @@ public class CustomWire : Entity
     public override void Update()
     {
         base.Update();
+        if (SceneAs<Level>().Session.GetFlag(flag) || string.IsNullOrEmpty(flag))
+            Visible = true;
+        else
+            Visible = false;
         if (attachToSolid)
         {
             curve.Begin = Position;
@@ -73,7 +81,7 @@ public class CustomWire : Entity
             {
                 float percent = (float)i / 16f;
                 Vector2 point = curve.GetPoint(percent);
-                Draw.Line(start, point, color, thickness); // color can be multiplied by alpha
+                Draw.Line(start, point, color * alpha, thickness); // color can be multiplied by alpha
                 start = point;
             }
         }
