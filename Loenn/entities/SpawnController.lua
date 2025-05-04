@@ -131,8 +131,9 @@ SpawnController.fieldInformation = function (entity) return {
 		"OnCassetteBeat",
 		"OnCustomButtonPress",
 		"OnSpeedX",
-		"OnInterval"--,
-		--"OnClimb"
+		"OnInterval",
+		"OnClimb",
+		"OnJump"
 		},
 		editable = false
 	},

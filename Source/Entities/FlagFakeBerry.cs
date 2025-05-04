@@ -1,15 +1,9 @@
-using Celeste;
-using Celeste.Mod;
 using Celeste.Mod.Entities;
-using Celeste.Mod.MaxHelpingHand.Entities;
-using ExtendedVariants.Variants;
 using Microsoft.Xna.Framework;
 using Monocle;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Reflection;
-using static Celeste.LavaRect;
 
 namespace Celeste.Mod.KoseiHelper.Entities
 {

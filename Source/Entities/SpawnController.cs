@@ -55,7 +55,8 @@ public enum SpawnCondition
     OnCustomButtonPress = 4,
     OnSpeedX = 5,
     OnInterval = 6,
-    OnClimb = 7
+    OnClimb = 7,
+    OnJump = 8
 }
 
 [CustomEntity("KoseiHelper/SpawnController")]
@@ -96,6 +97,7 @@ public class SpawnController : Entity
     public static ParticleType poofParticle = TouchSwitch.P_FireWhite;
     private List<Entity> spawnedEntities = new List<Entity>();
     public Entity spawnedEntity = null;
+    public static bool playerIsJumping;
 
     //entity specific data
 
@@ -324,8 +326,10 @@ public class SpawnController : Entity
                 SpawnCondition.OnInterval => spawnCooldown == 0,
                 SpawnCondition.OnCustomButtonPress => KoseiHelperModule.Settings.SpawnButton.Pressed && spawnCooldown == 0,
                 SpawnCondition.OnClimb => player.StateMachine.state == 1,
+                SpawnCondition.OnJump => playerIsJumping,
                 _ => false
             };
+            playerIsJumping = false;
             if (conditionMet && spawnLimit != 0 && spawnCooldown == 0 && player != null)
             {
                 if (entityToSpawn != EntityType.CustomEntity)
@@ -695,5 +699,50 @@ public class SpawnController : Entity
     private void OnChangeMode(Session.CoreModes mode)
     {
         coreMode = mode;
+    }
+
+    private static void jumpCheck(Player player)
+    {
+        playerIsJumping = true;
+    }
+
+    private static void onPlayerJump(On.Celeste.Player.orig_Jump orig, Player self, bool particles, bool playSfx)
+    {
+        jumpCheck(self);
+        orig(self, particles, playSfx);
+    }
+
+    private static void onPlayerSuperJump(On.Celeste.Player.orig_SuperJump orig, Player self)
+    {
+        jumpCheck(self);
+        orig(self);
+    }
+
+    private static void onPlayerWallJump(On.Celeste.Player.orig_WallJump orig, Player self, int dir)
+    {
+        jumpCheck(self);
+        orig(self, dir);
+    }
+
+    private static void onPlayerSuperWallJump(On.Celeste.Player.orig_SuperWallJump orig, Player self, int dir)
+    {
+        jumpCheck(self);
+        orig(self, dir);
+    }
+
+    public static void Load()
+    {
+        On.Celeste.Player.Jump += onPlayerJump;
+        On.Celeste.Player.SuperJump += onPlayerSuperJump;
+        On.Celeste.Player.WallJump += onPlayerWallJump;
+        On.Celeste.Player.SuperWallJump += onPlayerSuperWallJump;
+    }
+
+    public static void Unload()
+    {
+        On.Celeste.Player.Jump -= onPlayerJump;
+        On.Celeste.Player.SuperJump -= onPlayerSuperJump;
+        On.Celeste.Player.WallJump -= onPlayerWallJump;
+        On.Celeste.Player.SuperWallJump -= onPlayerSuperWallJump;
     }
 }

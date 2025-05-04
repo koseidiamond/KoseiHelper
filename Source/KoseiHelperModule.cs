@@ -52,6 +52,7 @@ public class KoseiHelperModule : EverestModule {
         On.Celeste.Player.ClimbBoundsCheck += KoseiHelperModule.ClimbCheck;
         DebugMapController.Load();
         ClimbJumpController.Load();
+        SpawnController.Load();
         Everest.Events.Player.OnRegisterStates += MaryBlock.RegisterBaldState;
 
         if (!frostHelperLoaded && Everest.Loader.DependencyLoaded(new EverestModuleMetadata { Name = "FrostHelper", Version = new Version(1, 46, 0) }))
@@ -70,6 +71,7 @@ public class KoseiHelperModule : EverestModule {
         On.Celeste.Player.ClimbBoundsCheck -= KoseiHelperModule.ClimbCheck;
         DebugMapController.Unload();
         ClimbJumpController.Unload();
+        SpawnController.Unload();
         Everest.Events.Player.OnRegisterStates -= MaryBlock.RegisterBaldState;
 
         if (frostHelperLoaded)
