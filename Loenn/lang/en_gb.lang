@@ -49,6 +49,14 @@ entities.KoseiHelper/CustomCobweb.attributes.description.removeIfNotColliding=Wh
 entities.KoseiHelper/CustomCobweb.attributes.description.thickness=The thickness of the cobwebs, in pixels (supports decimals).
 
 
+# Evil Holdable Controller
+entities.KoseiHelper/EvilHoldableController.placements.name.EvilHoldableController=Evil Holdable Controller
+entities.KoseiHelper/EvilHoldableController.placements.description.EvilHoldableController=Holdables will have a negative effect while held.
+entities.KoseiHelper/EvilHoldableController.attributes.description.timeToKill=If a holdable is held for the time specified, the player will die.\nLeave as -1 for infinite time (no kill).
+entities.KoseiHelper/EvilHoldableController.attributes.description.drainsStamina=Holdables will drain stamina while not grounded.
+entities.KoseiHelper/EvilHoldableController.attributes.description.drainsDash=Holdables will consume a dash when grabbed for the first time.
+entities.KoseiHelper/EvilHoldableController.attributes.description.dropIfNoStamina=If the player runs out of stamina, they will drop the holdable.
+
 # Dash Limiter Controller
 entities.KoseiHelper/DashLimiterController.placements.name.DashLimiterController=Dash Limiter Controller
 entities.KoseiHelper/DashLimiterController.placements.description.DashLimiterController=Limits the amount of dashes that the player can do per screen.
