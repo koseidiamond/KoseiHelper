@@ -19,14 +19,15 @@ public class PregnantFlutterbird : Actor
     };
 
     private Sprite sprite;
-    private Vector2 start;
+    private Vector2 start, currentPosition;
     private Coroutine routine;
     private bool flyingAway;
     private SoundSource tweetingSfx;
     private SoundSource flyawaySfx;
-    private readonly BloomPoint bloom;
-    private readonly VertexLight light;
     private int customDepth;
+
+    private Vector2 Speed;
+    private float noGravityTimer;
 
     public int childrenCount;
     public float timeToGiveBirth;
@@ -62,16 +63,16 @@ public class PregnantFlutterbird : Actor
 
     private float birthCooldown;
     private SoundSource laserSfx;
+    public static ParticleType deathParticle;
 
     public PregnantFlutterbird(EntityData data, Vector2 offset) : base(data.Position + offset)
     {
-        start = Position;
+        start = currentPosition = Position;
         
         Add(routine = new Coroutine(IdleRoutine()));
         Add(flyawaySfx = new SoundSource());
         Add(tweetingSfx = new SoundSource());
         tweetingSfx.Play("event:/game/general/birdbaby_tweet_loop");
-
         base.Collider = new Hitbox(4f, 4f, -2f, -4f);
         Add(new PlayerCollider(OnPlayer));
 
@@ -99,8 +100,8 @@ public class PregnantFlutterbird : Actor
 
         if (emitLight)
         {
-            Add(bloom = new BloomPoint(0.45f, 8f));
-            Add(light = new VertexLight(Color.White, 0.45f, 12, 28));
+            Add(new BloomPoint(0.45f, 8f));
+            Add(new VertexLight(Color.White, 0.45f, 12, 28));
         }
     }
 
@@ -109,7 +110,7 @@ public class PregnantFlutterbird : Actor
         bool killOnContact, bool bouncy, bool flyAway, string flyAwayFlag, string sterilizationFlag, bool squishable, string hopSfx, string birthSfx, string spriteID,
         int depth, bool emitLight, bool coyote) : base(position)
     {
-        this.start = this.Position;
+        this.start = this.currentPosition = this.Position;
 
         Add(routine = new Coroutine(IdleRoutine()));
         Add(this.flyawaySfx = new SoundSource());
@@ -142,14 +143,22 @@ public class PregnantFlutterbird : Actor
 
         if (this.emitLight)
         {
-            Add(bloom = new BloomPoint(0.45f, 8f));
-            Add(light = new VertexLight(Color.White, 0.45f, 12, 28));
+            Add(new BloomPoint(0.45f, 8f));
+            Add(new VertexLight(Color.White, 0.45f, 12, 28));
         }
     }
 
 
     public override void Added(Scene scene)
     {
+        deathParticle = new ParticleType(ParticleTypes.Dust)
+        {
+            LifeMin = 1.5f,
+            LifeMax = 2.25f,
+            Friction = 2f,
+            SpeedMax = -2f,
+            SpeedMin = 0.25f
+        };
         base.Added(scene);
     }
 
@@ -175,6 +184,43 @@ public class PregnantFlutterbird : Actor
         Player player = level.Tracker.GetEntity<Player>();
         sprite.Scale.X = Calc.Approach(sprite.Scale.X, Math.Sign(sprite.Scale.X), 4f * Engine.DeltaTime);
         sprite.Scale.Y = Calc.Approach(sprite.Scale.Y, 1f, 4f * Engine.DeltaTime);
+
+        if (noGravityTimer > 0f)
+            noGravityTimer -= Engine.DeltaTime;
+        else
+            noGravityTimer = 0f;
+
+            float num = 800f;
+        if (Math.Abs(Speed.Y) <= 30f)
+        {
+            num *= 0.5f;
+        }
+        float num2 = 350f;
+        if (Speed.Y < 0f)
+        {
+            num2 *= 0.5f;
+        }
+        Speed.X = Calc.Approach(Speed.X, 0f, num2 * Engine.DeltaTime);
+        if (noGravityTimer > 0f)
+        {
+            noGravityTimer -= Engine.DeltaTime;
+        }
+        else
+        {
+            Speed.Y = Calc.Approach(Speed.Y, 200f, num * Engine.DeltaTime);
+        }
+        if (!flyingAway)
+            MoveV(Speed.Y * Engine.DeltaTime);
+
+        SquishCallback = (CollisionData d) =>
+        {
+            if (!TrySquishWiggle(d, 2, 2) && squishable)
+            {
+                Audio.Play("event:/game/05_mirror_temple/eyebro_eyemove", Position);
+                SceneAs<Level>().Particles.Emit(deathParticle, Center, Color.Red, - 1f);
+                RemoveSelf();
+            }
+        };
 
         if (string.IsNullOrEmpty(sterilizationFlag) || !level.Session.GetFlag(sterilizationFlag)) // If the bird is fertile, it will try to reproduce
         {
@@ -336,6 +382,7 @@ public class PregnantFlutterbird : Actor
         while (true)
         {
             Player player = Scene.Tracker.GetEntity<Player>();
+
             float delay = 0.25f + Calc.Random.NextFloat(1f);
             for (float p2 = 0f; p2 < delay; p2 += Engine.DeltaTime)
             {
@@ -345,21 +392,26 @@ public class PregnantFlutterbird : Actor
                 }
                 yield return null;
             }
-            Audio.Play(hopSfx, Position);
-            Vector2 target = start + new Vector2(-4f + Calc.Random.NextFloat(8f), 0f);
-            sprite.Scale.X = Math.Sign(target.X - Position.X);
-            if (!chaser)
-            {
-                SimpleCurve bezier = new SimpleCurve(Position, target, (Position + target) / 2f - Vector2.UnitY * 14f);
-                for (float p2 = 0f; p2 < 1f; p2 += Engine.DeltaTime * 4f)
+            if (OnGround(new Vector2(CenterX, CenterY + 3f)))
                 {
-                    Position = bezier.GetPoint(p2);
-                    yield return null;
+                Audio.Play(hopSfx, Position);
+                noGravityTimer = 0.1f;
+                currentPosition = Position;
+                Vector2 target = currentPosition + new Vector2(-4f + Calc.Random.NextFloat(8f), 0f);
+                sprite.Scale.X = Math.Sign(target.X - Position.X);
+                if (!chaser)
+                {
+                    SimpleCurve bezier = new SimpleCurve(Position, target, (Position + target) / 2f - Vector2.UnitY * 14f);
+                    for (float p2 = 0f; p2 < 1f; p2 += Engine.DeltaTime * 4f)
+                    {
+                        Position = bezier.GetPoint(p2);
+                        yield return null;
+                    }
+                    sprite.Scale.X = (float)Math.Sign(sprite.Scale.X) * 1.4f;
+                    sprite.Scale.Y = 0.6f;
+                    Position = target;
                 }
-                sprite.Scale.X = (float)Math.Sign(sprite.Scale.X) * 1.4f;
-                sprite.Scale.Y = 0.6f;
-                Position = target;
-            } 
+            }
         }
     }
 
