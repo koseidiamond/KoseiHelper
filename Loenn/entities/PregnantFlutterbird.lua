@@ -1,0 +1,91 @@
+local drawableSpriteStruct = require("structs.drawable_sprite")
+local utils = require("utils")
+
+local mods = require("mods")
+local depths = mods.requireFromPlugin("libraries.depths")
+
+local PregnantFlutterbird = {}
+
+local colors = {
+    "89FBFF",
+    "F0FC6C",
+    "F493FF",
+    "93BAFF"
+}
+
+PregnantFlutterbird.name = "KoseiHelper/PregnantFlutterbird"
+PregnantFlutterbird.depth = -9999
+PregnantFlutterbird.placements = {
+    name = "PregnantFlutterbird",
+	data = {
+		childrenCount = 1,
+		timeToGiveBirth = 5,
+		chaser = false,
+		gender = "Nonbinary",
+		orientation = "Gay",
+		shootLasers = false,
+		killOnContact = false,
+		bouncy = false,
+		flyAway = true,
+		flyAwayFlag = "",
+		sterilizationFlag = "",
+		squishable = false,
+		hopSfx = "event:/game/general/birdbaby_hop",
+		birthSfx = "event:/game/09_core/frontdoor_heartfill",
+		spriteID = "flutterbird",
+		emitLight = false,
+		depth = -9999,
+		coyote = false
+	}
+}
+
+-- 
+
+PregnantFlutterbird.fieldInformation = {
+    childrenCount = {
+        fieldType = "integer"
+    },
+    gender = {
+        options = {
+			"Nonbinary",
+			"Male",
+			"Female"
+		},
+		editable = false
+	},
+	orientation = {
+        options = {
+			"Gay",
+			"Straight",
+			"Asexual",
+			"Bisexual",
+			"Self"
+		},
+		editable = false
+	},
+	depth = {
+        fieldType = "integer",
+        options = depths.addDepths(depths.getDepths(), {}),
+        editable = true
+    }
+}
+
+function PregnantFlutterbird.depth(room,entity)
+	return entity.depth
+end
+
+local texture = "scenery/flutterbird/idle00"
+
+function PregnantFlutterbird.sprite(room, entity)
+    utils.setSimpleCoordinateSeed(entity.x, entity.y)
+
+    local colorIndex = math.random(1, #colors)
+    local PregnantFlutterbirdSprite = drawableSpriteStruct.fromTexture(texture, entity)
+
+    PregnantFlutterbirdSprite:setJustification(0.5, 1.0)
+    PregnantFlutterbirdSprite:setColor(colors[colorIndex])
+
+    return PregnantFlutterbirdSprite
+end
+
+return PregnantFlutterbird
