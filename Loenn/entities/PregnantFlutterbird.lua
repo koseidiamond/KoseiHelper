@@ -39,7 +39,28 @@ PregnantFlutterbird.placements = {
 	}
 }
 
--- 
+PregnantFlutterbird.fieldOrder = {
+	"x",
+	"y",
+	"gender",
+	"orientation",
+	"childrenCount",
+	"timeToGiveBirth",
+	"flyAwayFlag",
+	"sterilizationFlag",
+	"hopSfx",
+	"birthSfx",
+	"spriteID",
+	"depth",
+	"bouncy",
+	"chaser",
+	"coyote",
+	"flyAway",
+	"killOnContact",
+	"shootLasers",
+	"squishable",
+	"emitLight"
+}
 
 PregnantFlutterbird.fieldInformation = {
     childrenCount = {

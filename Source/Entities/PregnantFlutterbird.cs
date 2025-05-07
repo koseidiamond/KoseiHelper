@@ -96,14 +96,14 @@ public class PregnantFlutterbird : Actor
         spriteID = data.Attr("spriteID", "flutterbird");
         Depth = customDepth = data.Int("depth", -9999);
         coyote = data.Bool("coyote", false);
-
+        emitLight = data.Bool("emitLight", false);
         Add(sprite = GFX.SpriteBank.Create(spriteID));
         sprite.Color = Calc.Random.Choose(colors);
 
         if (emitLight)
         {
-            Add(new BloomPoint(0.45f, 8f));
-            Add(new VertexLight(Color.White, 0.45f, 12, 28));
+            Add(new BloomPoint(0.75f, 12f));
+            Add(new VertexLight(Color.White, 0.8f, 12, 28));
         }
         Add(laserSfx = new SoundSource());
     }
@@ -148,8 +148,8 @@ public class PregnantFlutterbird : Actor
 
         if (this.emitLight)
         {
-            Add(new BloomPoint(0.45f, 8f));
-            Add(new VertexLight(Color.White, 0.45f, 12, 28));
+            Add(new BloomPoint(0.75f, 12f));
+            Add(new VertexLight(Color.White, 0.8f, 12, 28));
         }
         Add(laserSfx = new SoundSource());
     }
