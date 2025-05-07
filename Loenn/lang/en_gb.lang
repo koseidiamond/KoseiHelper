@@ -60,6 +60,7 @@ entities.KoseiHelper/DebugMapController.attributes.description.ignoreDummy=Wheth
 entities.KoseiHelper/DebugMapController.attributes.description.blockDebugMap=If this flag is true, the debug map will be completely empty,\npreventing players to see the map or teleport to other rooms.\nLeave empty to always allow opening the debug map.
 entities.KoseiHelper/DebugMapController.attributes.description.roomsToAffect=The rooms that start with this preffix will be affected. Case sensitive.
 
+
 # Custom Cobweb
 entities.KoseiHelper/CustomCobweb.placements.name.CustomCobweb=Custom Cobweb
 entities.KoseiHelper/CustomCobweb.placements.description.CustomCobweb=Decorative entity composed of two or more curved lines.\nPress N to add more nodes.
@@ -563,8 +564,10 @@ entities.KoseiHelper/SpawnController.attributes.description.decreaseCounter=If t
 entities.KoseiHelper/SpawnController.attributes.description.entityPath=The full path to the entity class to be spawned.\nSpawning will only work for entities that accept an EntityData and Vector2 parameterized constructor.\n For example, Celeste.Strawberry.
 entities.KoseiHelper/SpawnController.attributes.description.dictKeys=The names of the keys the Values dictionary of the EntityData used to spawn the entity will use.\nMust match the ones expected by the entity in its constructor for the Entity to find them.\nIn simple words, the parameters separated by commas. For example, winged,moon.
 entities.KoseiHelper/SpawnController.attributes.description.dictValues=The values of the Values dictionary of the EntityData used to spawn the entity.\nEach value will be associated with the corresponding key as the values are organized, first key with first value and so forth.\nAny values that exceed the amount of keys will be ignored, and any keys with no corresponding value will have no value.\In simple words, the values of the parameters (in the same order, separated by commas). For example, true,false.
+entities.KoseiHelper/SpawnController.attributes.description.noNode=Whether the entity shouldn't have a node.\nCan cause issues for certain entities, but it's useful for other entities (like berries).
 entities.KoseiHelper/SpawnController.attributes.name.dictKeys=Attributes
 entities.KoseiHelper/SpawnController.attributes.name.dictValues=Attribute values
+
 
 
 #TRIGGERS

@@ -153,6 +153,7 @@ public class SpawnController : Entity
 
     private bool isWinged;
     private bool isMoon;
+    private bool noNode;
 
     //Custom Entity Fields
     private string entityPath;
@@ -190,6 +191,7 @@ public class SpawnController : Entity
         persistency = data.Bool("persistent", false);
         everyXDashes = data.Int("everyXDashes", 1);
         poofWhenDisappearing = data.Bool("poofWhenDisappearing", true);
+        noNode = data.Bool("noNode", false);
         dashCount = 0;
         if (persistency)
             base.Tag = Tags.Persistent;
@@ -606,15 +608,30 @@ public class SpawnController : Entity
     private Entity GetEntityFromPath(Vector2 spawn, Vector2 node, LevelData data)
     {
         Logger.Debug(nameof(KoseiHelperModule), $"Spawning entity at position: {spawn}");
-        EntityData entityData = new()
+        EntityData entityData;
+        if (noNode)
         {
-            Position = spawn,
-            Width = blockWidth,
-            Height = blockHeight,
-            Nodes = new Vector2[] { node },
-            Level = data,
-            Values = new()
-        };
+            entityData = new()
+            {
+                Position = spawn,
+                Width = blockWidth,
+                Height = blockHeight,
+                Level = data,
+                Values = new()
+            };
+        }
+        else
+        {
+            entityData = new()
+            {
+                Position = spawn,
+                Width = blockWidth,
+                Height = blockHeight,
+                Nodes = new Vector2[] { node },
+                Level = data,
+                Values = new()
+            };
+        }
         for (int i = 0; i < dictionaryKeys.Count; i++)
         {
             entityData.Values[dictionaryKeys[i]] = dictionaryValues.ElementAtOrDefault(i);

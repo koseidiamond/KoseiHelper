@@ -77,7 +77,8 @@ SpawnController.placements = {
 		-- Custom Entity (or any entity that can be spawned with EntityData)
 		entityPath = "",
 		dictKeys = "",
-		dictValues = ""
+		dictValues = "",
+		noNode = false
 		}
 	}
 }
@@ -251,6 +252,7 @@ function SpawnController.ignoredFields(entity)
 	"entityPath",
 	"dictKeys",
 	"dictValues",
+	"noNode",
 	"flagCycleAt",
 	"flagStop",
 	"minCounterCap",
@@ -377,6 +379,7 @@ function SpawnController.ignoredFields(entity)
 		doNotIgnore("entityPath")
 		doNotIgnore("dictKeys")
 		doNotIgnore("dictValues")
+		doNotIgnore("noNode")
 	end
 	return ignored
 end
