@@ -55,10 +55,12 @@ public class KoseiHelperModule : EverestModule {
         SpawnController.Load();
         Everest.Events.Player.OnRegisterStates += MaryBlock.RegisterBaldState;
 
-        if (!frostHelperLoaded && Everest.Loader.DependencyLoaded(new EverestModuleMetadata { Name = "FrostHelper", Version = new Version(1, 46, 0) }))
-            loadFrostHelper();
+        if (!frostHelperLoaded && Everest.Loader.DependencyLoaded(new EverestModuleMetadata { Name = "FrostHelper", Version = new Version(1, 66, 0) }))
+            frostHelperLoaded = true;
         if (!collabUtils2Loaded && Everest.Loader.DependencyLoaded(new EverestModuleMetadata { Name = "CollabUtils2", Version = new Version(1, 10, 0) }))
-            loadCollabUtils2();
+            collabUtils2Loaded = true;
+        if (!helpingHandLoaded && Everest.Loader.DependencyLoaded(new EverestModuleMetadata { Name = "MaxHelpingHand", Version = new Version(1, 33, 6) }))
+            helpingHandLoaded = true;
     }
 
     public override void Unload() {
@@ -74,42 +76,9 @@ public class KoseiHelperModule : EverestModule {
         SpawnController.Unload();
         Everest.Events.Player.OnRegisterStates -= MaryBlock.RegisterBaldState;
 
-        if (frostHelperLoaded)
-            unloadFrostHelper();
-        if (helpingHandLoaded)
-            unloadHelpingHand();
-        if (collabUtils2Loaded)
-            unloadCollabUtils2();
-    }
-
-    private void loadFrostHelper()
-    {
-        frostHelperLoaded = true;
-    }
-
-    private void unloadFrostHelper()
-    {
-        frostHelperLoaded = false;
-    }
-
-    private void loadHelpingHand()
-    {
-        helpingHandLoaded = true;
-    }
-
-    private void unloadHelpingHand()
-    {
-        helpingHandLoaded = false;
-    }
-
-    private void loadCollabUtils2()
-    {
-        collabUtils2Loaded = true;
-    }
-
-    private void unloadCollabUtils2()
-    {
-        collabUtils2Loaded = false;
+            frostHelperLoaded = false;
+            helpingHandLoaded = false;
+            collabUtils2Loaded = false;
     }
 
     private static bool ClimbCheck(On.Celeste.Player.orig_ClimbBoundsCheck orig, Player self, int dir)

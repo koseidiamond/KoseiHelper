@@ -14,6 +14,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
     [Tracked]
     public class Bullet : Entity
     {
+        //bits&bolts fix:
         /*[OnLoad]
         public static void Load()
         {
@@ -381,7 +382,6 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
             if (KoseiHelperModule.Instance.frostHelperLoaded)
             {
                 CollisionCheck_FrostHelper();
-                return;
             }
 
             if (owner.Scene.CollideFirst<BadelineBoost>(Hitbox) is BadelineBoost badelineBoost && !dead && owner is Player playerBadelineBoost)
@@ -423,7 +423,6 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
             if (KoseiHelperModule.Instance.helpingHandLoaded)
             {
                 CollisionCheck_HelpingHand();
-                return;
             }
 
             if (owner.Scene.CollideFirst<FinalBoss>(Hitbox) is FinalBoss boss && KoseiHelperModule.Settings.GunInteractions.HarmEnemies && !dead)
@@ -585,7 +584,6 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 if (KoseiHelperModule.Instance.collabUtils2Loaded)
                 {
                     CollisionCheckEntity_CollabUtils2(entity);
-                    return;
                 }
 
                 if (entity is Key key && key.Collider.Bounds.Intersects(Hitbox) && KoseiHelperModule.Settings.GunInteractions.Collectables && !dead)
@@ -767,7 +765,6 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 if (KoseiHelperModule.Instance.helpingHandLoaded) // Sideways and upsidedown jumpthroughs
                 {
                     CollisionCheckEntity_HelpingHand(entity);
-                    return;
                 }
 
                 // Affects moving platforms, clouds, etc
