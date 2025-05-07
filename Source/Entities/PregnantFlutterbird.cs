@@ -83,6 +83,8 @@ public class PregnantFlutterbird : Actor
         gender = data.Enum("gender", Gender.Nonbinary);
         orientation = data.Enum("orientation", Orientation.Gay);
         shootLasers = data.Bool("shootLasers", false);
+        if (shootLasers)
+            Add(new Coroutine(ShootLasers()));
         killOnContact = data.Bool("killOnContact", false);
         bouncy = data.Bool("bouncy", false);
         flyAway = data.Bool("flyAway", true);
@@ -103,6 +105,7 @@ public class PregnantFlutterbird : Actor
             Add(new BloomPoint(0.45f, 8f));
             Add(new VertexLight(Color.White, 0.45f, 12, 28));
         }
+        Add(laserSfx = new SoundSource());
     }
 
     // this constructor is used when a baby bird is born
@@ -126,6 +129,8 @@ public class PregnantFlutterbird : Actor
         this.gender = gender;
         this.orientation = orientation;
         this.shootLasers = shootLasers;
+        if (this.shootLasers)
+            Add(new Coroutine(ShootLasers()));
         this.killOnContact = killOnContact;
         this.bouncy = bouncy;
         this.flyAwayFlag = flyAwayFlag;
@@ -146,6 +151,7 @@ public class PregnantFlutterbird : Actor
             Add(new BloomPoint(0.45f, 8f));
             Add(new VertexLight(Color.White, 0.45f, 12, 28));
         }
+        Add(laserSfx = new SoundSource());
     }
 
 
@@ -207,7 +213,8 @@ public class PregnantFlutterbird : Actor
         }
         else
         {
-            Speed.Y = Calc.Approach(Speed.Y, 200f, num * Engine.DeltaTime);
+            if (!chaser)
+                Speed.Y = Calc.Approach(Speed.Y, 200f, num * Engine.DeltaTime);
         }
         if (!flyingAway)
             MoveV(Speed.Y * Engine.DeltaTime);
@@ -216,9 +223,7 @@ public class PregnantFlutterbird : Actor
         {
             if (!TrySquishWiggle(d, 2, 2) && squishable)
             {
-                Audio.Play("event:/game/05_mirror_temple/eyebro_eyemove", Position);
-                SceneAs<Level>().Particles.Emit(deathParticle, Center, Color.Red, - 1f);
-                RemoveSelf();
+                Die();
             }
         };
 
@@ -227,7 +232,7 @@ public class PregnantFlutterbird : Actor
             if (this.orientation == Orientation.Self && Scene.OnInterval(timeToGiveBirth)) // Self reproduction is separated from other orientations
                 GiveBirth();
 
-            foreach (PregnantFlutterbird otherbird in Scene.Tracker.GetEntities<PregnantFlutterbird>())
+            foreach (PregnantFlutterbird otherbird in Scene.Tracker.GetEntities<PregnantFlutterbird>()) // TODO fix reproduction
             {
                 // If both birds are fertile then...
                 if (CollideCheck(otherbird, this.Center) && string.IsNullOrEmpty(otherbird.sterilizationFlag) || !level.Session.GetFlag(otherbird.sterilizationFlag))
@@ -320,7 +325,7 @@ public class PregnantFlutterbird : Actor
             birthCooldown -= Engine.DeltaTime;
         else
             birthCooldown = 0f;
-        if (chaser)
+        if (chaser && player != null)
         {
             sprite.Play("fly");
             if (Depth < Depths.FakeWalls)
@@ -355,8 +360,11 @@ public class PregnantFlutterbird : Actor
         Player player = level.Tracker.GetEntity<Player>();
         if (player != null)
         {
-            //level.Add(Engine.Pooler.Create<FinalBossBeam>().Init(this, player));
-            // TODO properly create a beam
+            //Laser fossBeam = Engine.Pooler.Create<Laser>();
+            //Init(player, fossBeam);
+            //this.Scene.Add(fossBeam);
+
+            SceneAs<Level>().Add(Engine.Pooler.Create<Laser>().Init(this, player, 1.4f, 0.9f));
         }
         yield return 1.4f;
         laserSfx.Stop();
@@ -451,6 +459,16 @@ public class PregnantFlutterbird : Actor
             }
             yield return null;
         }
+        Die();
+    }
+
+    public void Die()
+    {
+        Level level = SceneAs<Level>();
+        Audio.Play("event:/game/05_mirror_temple/eyebro_eyemove", Position);
+        level.Particles.Emit(deathParticle, Center, Color.Red, -1f);
+        foreach (Laser laser in level.Tracker.GetEntities<Laser>())
+            laser.Destroy();
         Scene.Remove(this);
         RemoveSelf(); // just in case idk
     }

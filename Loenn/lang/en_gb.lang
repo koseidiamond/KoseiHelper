@@ -21,7 +21,7 @@ entities.KoseiHelper/PregnantFlutterbird.attributes.description.hopSfx=The sound
 entities.KoseiHelper/PregnantFlutterbird.attributes.description.birthSfx=The sound when the bird gives birth.
 entities.KoseiHelper/PregnantFlutterbird.attributes.description.spriteID=The ID or tag of the sprite in your Sprites.xml.
 entities.KoseiHelper/PregnantFlutterbird.attributes.description.emitLight=Whether the bird should emit light.
-entities.KoseiHelper/PregnantFlutterbird.attributes.description.depth=The depth at which the flutterbird appears.\n(Note: the depth decreases by 2 while flying away)
+entities.KoseiHelper/PregnantFlutterbird.attributes.description.depth=The depth at which the flutterbird appears.\n(Note: the depth decreases by 2 while flying away)\n(If the bird is a chaser, the chasing behavior will be different if the depth is below -13000)
 entities.KoseiHelper/PregnantFlutterbird.attributes.description.coyote=Whether the bird gives coyote frames upon touch.
 
 # Debug Renderer

@@ -728,6 +728,16 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                     return;
                 }
 
+                if (entity is PregnantFlutterbird plutterbird && KoseiHelperModule.Settings.GunInteractions.HarmEnemies && plutterbird.Collider.Bounds.Intersects(Hitbox) && !dead)
+                {
+                    if (plutterbird.shootLasers || plutterbird.killOnContact)
+                        plutterbird.Die();
+                    if (plutterbird.flyAway)
+                        plutterbird.FlyAway(Math.Sign(plutterbird.X - X), Calc.Random.NextFloat(0.2f));
+                    DestroyBullet();
+                    return;
+                }
+
                 if (entity is DefrostableBlock defrostableBlock && defrostableBlock.Collider.Bounds.Intersects(Hitbox) && !dead)
                 {
                     defrostableBlock.defrosting = true;
