@@ -6,17 +6,10 @@ using System;
 
 namespace Celeste.Mod.KoseiHelper.Entities;
 
-[CustomEntity("KoseiHelper/PregnantFlutterbird")]
+[CustomEntity("KoseiHelper/SpecialFlutterbird")]
 [Tracked]
 public class PregnantFlutterbird : Actor
 {
-    private static Color[] colors = new Color[4]
-    {
-        Calc.HexToColor("89fbff"),
-        Calc.HexToColor("f0fc6c"),
-        Calc.HexToColor("f493ff"),
-        Calc.HexToColor("93baff")
-    };
 
     private Sprite sprite;
     private Vector2 start, currentPosition;
@@ -33,7 +26,7 @@ public class PregnantFlutterbird : Actor
     public int childrenCount;
     public float timeToGiveBirth;
     public bool chaser;
-    public float hoppingDistance; 
+    public float hoppingDistance; // unused because somehow it's not working
     public enum Gender
     {
         Nonbinary,
@@ -107,7 +100,7 @@ public class PregnantFlutterbird : Actor
         coyote = data.Bool("coyote", false);
         emitLight = data.Bool("emitLight", false);
         Add(sprite = GFX.SpriteBank.Create(spriteID));
-        sprite.Color = Calc.Random.Choose(colors);
+        sprite.Color = data.HexColor("color", Color.White);
 
         if (emitLight)
         {
@@ -121,7 +114,7 @@ public class PregnantFlutterbird : Actor
     // Babies don't have a partner and it doesn't matter if they are poly or not because THEY CAN'T REPRODUCE (they are minors).
     public PregnantFlutterbird(Vector2 position, int childrenCount, float timeToGiveBirth, bool chaser, Gender gender, Orientation orientation, bool shootLasers,
         bool killOnContact, bool bouncy, bool flyAway, string flyAwayFlag, string sterilizationFlag, bool squishable, string hopSfx, string birthSfx, string spriteID,
-        int depth, bool emitLight, bool coyote, float hoppingDistance) : base(position)
+        int depth, bool emitLight, bool coyote, float hoppingDistance, Color color) : base(position)
     {
         this.start = this.currentPosition = this.Position;
         this.Position.Y += 1f;
@@ -156,7 +149,7 @@ public class PregnantFlutterbird : Actor
         this.coyote = coyote;
 
         Add(sprite = GFX.SpriteBank.Create(this.spriteID));
-        sprite.Color = Calc.Random.Choose(colors);
+        this.sprite.Color = color;
         if (this.emitLight)
         {
             Add(new BloomPoint(0.75f, 12f));
@@ -346,17 +339,20 @@ public class PregnantFlutterbird : Actor
         if (chaser && player != null)
         {
             sprite.Play("fly");
-            if (Depth < Depths.FakeWalls)
-                Position = Calc.Approach(Position, player.Position, 1f);
-            else
+            if (level.IsInCamera(Center, 40f))
             {
-                MoveTowardsX(player.Position.X, 1f);
-                MoveTowardsY(player.Position.Y, 0.8f);
+                if (Depth < Depths.FakeWalls)
+                    Position = Calc.Approach(Position, player.Position, 1f);
+                else
+                {
+                    MoveTowardsX(player.Position.X, 1f);
+                    MoveTowardsY(player.Position.Y, 0.8f);
+                }
+                if (player.Position.X < Position.X)
+                    sprite.FlipX = true;
+                else
+                    sprite.FlipX = false;
             }
-            if (player.Position.X < Position.X)
-                sprite.FlipX = true;
-            else
-                sprite.FlipX = false;
         }
         base.Update();
     }
@@ -396,7 +392,7 @@ public class PregnantFlutterbird : Actor
             Audio.Play(birthSfx, Center);
             SceneAs<Level>().Particles.Emit(ParticleTypes.SparkyDust, Position, Color.Pink);
             Scene.Add(new PregnantFlutterbird(Position, childrenCount, timeToGiveBirth, chaser, gender, orientation, shootLasers, killOnContact, bouncy, flyAway, flyAwayFlag,
-                sterilizationFlag, squishable, hopSfx, birthSfx, spriteID, Depth, emitLight, coyote, hoppingDistance));
+                sterilizationFlag, squishable, hopSfx, birthSfx, spriteID, Depth, emitLight, coyote, hoppingDistance, sprite.Color));
         }
     }
 
@@ -405,8 +401,8 @@ public class PregnantFlutterbird : Actor
         while (true)
         {
             Player player = Scene.Tracker.GetEntity<Player>();
-            float delay = 0.25f + Calc.Random.NextFloat(1f);
-            for (float p2 = 0f; p2 < delay; p2 += Engine.DeltaTime)
+            float delay = 0.25f + Calc.Random.NextFloat(1f); // TODO customize the hopping delay
+            for (float p2 = 0f; p2 < delay; p2 += Engine.DeltaTime) // TODO customize the scared distance
             {
                 if (player != null && this.flyAway && Math.Abs(player.X - X) < 48f && player.Y > Y - 40f && player.Y < Y + 8f)
                 {
@@ -416,10 +412,11 @@ public class PregnantFlutterbird : Actor
             }
             if (OnGround(new Vector2(CenterX, CenterY + 2f)))
                 {
-                Audio.Play(hopSfx, Position);
+                if (!chaser)
+                    Audio.Play(hopSfx, Position);
                 noGravityTimer = 0.1f;
                 currentPosition = Position;
-                Vector2 target = currentPosition + new Vector2(-4f + Calc.Random.NextFloat(hoppingDistance), 0f);
+                Vector2 target = currentPosition + new Vector2(-4f + Calc.Random.NextFloat(8f), 0f);
                 sprite.Scale.X = Math.Sign(target.X - Position.X);
                 if (!chaser)
                 {
@@ -511,7 +508,7 @@ public class PregnantFlutterbird : Actor
 
     public override void DebugRender(Camera camera)
     {
-        if (chaser)
+        if (chaser && SceneAs<Level>().IsInCamera(Center, 40f))
             Draw.Line(this.Center, SceneAs<Level>().Tracker.GetEntity<Player>().Center, Color.Red);
         base.DebugRender(camera);
     }

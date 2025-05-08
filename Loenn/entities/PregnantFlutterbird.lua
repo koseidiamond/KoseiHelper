@@ -6,14 +6,7 @@ local depths = mods.requireFromPlugin("libraries.depths")
 
 local PregnantFlutterbird = {}
 
-local colors = {
-    "89FBFF",
-    "F0FC6C",
-    "F493FF",
-    "93BAFF"
-}
-
-PregnantFlutterbird.name = "KoseiHelper/PregnantFlutterbird"
+PregnantFlutterbird.name = "KoseiHelper/SpecialFlutterbird"
 PregnantFlutterbird.depth = -9999
 PregnantFlutterbird.placements = {
     name = "PregnantFlutterbird",
@@ -38,7 +31,9 @@ PregnantFlutterbird.placements = {
 		coyote = false,
 		polyamorous = true,
 		partnerID = 0,
-		hoppingDistance = 8
+		--hoppingDistance = 8,
+		color = "ffffff"
+		
 	}
 }
 
@@ -55,6 +50,8 @@ PregnantFlutterbird.fieldOrder = {
 	"birthSfx",
 	"spriteID",
 	"depth",
+	"color",
+	--"hoppingDistance",
 	"partnerID",
 	"bouncy",
 	"chaser",
@@ -94,6 +91,9 @@ PregnantFlutterbird.fieldInformation = {
         options = depths.addDepths(depths.getDepths(), {}),
         editable = true
     },
+	color = {
+        fieldType = "color"
+    },
 	partnerID = {
 		fieldType = "integer",
 		minimumValue = 0
@@ -104,7 +104,8 @@ function PregnantFlutterbird.ignoredFields(entity)
 	local ignored = {
 	"_name",
 	"_id",
-	"partnerID"
+	"partnerID",
+	"hoppingDistance"
 	}
 	
     local function doNotIgnore(value)
@@ -131,11 +132,10 @@ local texture = "scenery/flutterbird/idle00"
 function PregnantFlutterbird.sprite(room, entity)
     utils.setSimpleCoordinateSeed(entity.x, entity.y)
 
-    local colorIndex = math.random(1, #colors)
     local PregnantFlutterbirdSprite = drawableSpriteStruct.fromTexture(texture, entity)
 
     PregnantFlutterbirdSprite:setJustification(0.5, 1.0)
-    PregnantFlutterbirdSprite:setColor(colors[colorIndex])
+    PregnantFlutterbirdSprite:setColor(entity.color)
 
     return PregnantFlutterbirdSprite
 end
