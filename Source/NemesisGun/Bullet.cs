@@ -110,37 +110,47 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                     switch (Extensions.shotDustType)
                     {
                         case DustType.Sparkly:
-                            (owner.Scene as Level).Particles.Emit(ParticleTypes.SparkyDust, Position, Color.Lerp(Extensions.color1, Extensions.color2, Calc.Random.NextFloat()) * Extensions.particleAlpha);
+                            (owner.Scene as Level).Particles.Emit(ParticleTypes.SparkyDust, Position,
+                                Color.Lerp(Extensions.color1, Extensions.color2, Calc.Random.NextFloat()) * Extensions.particleAlpha);
                             break;
                         case DustType.Chimney:
-                            (owner.Scene as Level).Particles.Emit(ParticleTypes.Chimney, Position, Color.Lerp(Extensions.color1, Extensions.color2, Calc.Random.NextFloat()) * Extensions.particleAlpha);
+                            (owner.Scene as Level).Particles.Emit(ParticleTypes.Chimney, Position,
+                                Color.Lerp(Extensions.color1, Extensions.color2, Calc.Random.NextFloat()) * Extensions.particleAlpha);
                             break;
                         case DustType.Steam:
-                            (owner.Scene as Level).Particles.Emit(ParticleTypes.Steam, Position, Color.Lerp(Extensions.color1, Extensions.color2, Calc.Random.NextFloat()) * Extensions.particleAlpha);
+                            (owner.Scene as Level).Particles.Emit(ParticleTypes.Steam, Position,
+                                Color.Lerp(Extensions.color1, Extensions.color2, Calc.Random.NextFloat()) * Extensions.particleAlpha);
                             break;
                         case DustType.VentDust:
-                            (owner.Scene as Level).Particles.Emit(ParticleTypes.VentDust, Position, Color.Lerp(Extensions.color1, Extensions.color2, Calc.Random.NextFloat()) * Extensions.particleAlpha);
+                            (owner.Scene as Level).Particles.Emit(ParticleTypes.VentDust, Position,
+                                Color.Lerp(Extensions.color1, Extensions.color2, Calc.Random.NextFloat()) * Extensions.particleAlpha);
                             break;
                         case DustType.Bubble: // Player.P_CassetteFly
-                            (owner.Scene as Level).Particles.Emit(Player.P_CassetteFly, Position, Color.Lerp(Extensions.color1, Extensions.color2, Calc.Random.NextFloat()) * Extensions.particleAlpha);
+                            (owner.Scene as Level).Particles.Emit(Player.P_CassetteFly, Position,
+                                Color.Lerp(Extensions.color1, Extensions.color2, Calc.Random.NextFloat()) * Extensions.particleAlpha);
                             break;
                         case DustType.Fire:
-                            (owner.Scene as Level).Particles.Emit(p_fire, Position, Color.Lerp(Extensions.color1, Extensions.color2, Calc.Random.NextFloat()) * Extensions.particleAlpha);
+                            (owner.Scene as Level).Particles.Emit(p_fire, Position,
+                                Color.Lerp(Extensions.color1, Extensions.color2, Calc.Random.NextFloat()) * Extensions.particleAlpha);
                             break;
                         case DustType.Ice:
-                            (owner.Scene as Level).Particles.Emit(p_ice, Position, Color.Lerp(Extensions.color1, Extensions.color2, Calc.Random.NextFloat()) * Extensions.particleAlpha);
+                            (owner.Scene as Level).Particles.Emit(p_ice, Position,
+                                Color.Lerp(Extensions.color1, Extensions.color2, Calc.Random.NextFloat()) * Extensions.particleAlpha);
                             break;
                         case DustType.Feather:
-                            (owner.Scene as Level).Particles.Emit(p_feather, Position, Color.Lerp(Extensions.color1, Extensions.color2, Calc.Random.NextFloat()) * Extensions.particleAlpha);
+                            (owner.Scene as Level).Particles.Emit(p_feather, Position,
+                                Color.Lerp(Extensions.color1, Extensions.color2, Calc.Random.NextFloat()) * Extensions.particleAlpha);
                             break;
                         case DustType.Custom:
                             p_custom.Source = customParticleTexture;
-                            (owner.Scene as Level).Particles.Emit(p_custom, Position, Color.Lerp(Extensions.color1, Extensions.color2, Calc.Random.NextFloat()) * Extensions.particleAlpha);
+                            (owner.Scene as Level).Particles.Emit(p_custom, Position,
+                                Color.Lerp(Extensions.color1, Extensions.color2, Calc.Random.NextFloat()) * Extensions.particleAlpha);
                             break;
                         case DustType.None:
                             break;
                         default: // Normal (Dust)
-                            (owner.Scene as Level).Particles.Emit(ParticleTypes.Dust, Position, Color.Lerp(Extensions.color1, Extensions.color2, Calc.Random.NextFloat()) * Extensions.particleAlpha);
+                            (owner.Scene as Level).Particles.Emit(ParticleTypes.Dust, Position,
+                                Color.Lerp(Extensions.color1, Extensions.color2, Calc.Random.NextFloat()) * Extensions.particleAlpha);
                             break;
                     }
                 }
@@ -165,7 +175,8 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
         [MethodImpl(MethodImplOptions.NoInlining)]
         private void CollisionCheck_FrostHelper()
         {
-            if (owner.Scene.CollideFirst<FrostHelper.CustomSpinner>(Hitbox) is FrostHelper.CustomSpinner customSpinner && KoseiHelperModule.Settings.GunInteractions.BreakSpinners && !dead)
+            if (owner.Scene.CollideFirst<FrostHelper.CustomSpinner>(Hitbox) is FrostHelper.CustomSpinner customSpinner &&
+                KoseiHelperModule.Settings.GunInteractions.BreakSpinners && !dead)
             {
                 customSpinner.Destroy();
                 DestroyBullet();
@@ -458,7 +469,8 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
             foreach (Entity entity in (owner.Scene as Level).Entities)
             {
 
-                if (entity is CoreModeToggle coreModeToggle && coreModeToggle.Collider.Bounds.Intersects(Hitbox) && KoseiHelperModule.Settings.GunInteractions.CoreModeToggles &&!dead)
+                if (entity is CoreModeToggle coreModeToggle && coreModeToggle.Collider.Bounds.Intersects(Hitbox) &&
+                    KoseiHelperModule.Settings.GunInteractions.CoreModeToggles &&!dead)
                 {
                     if (owner is Player playerCoreModeToggle)
                         coreModeToggle.OnPlayer(playerCoreModeToggle);
@@ -597,7 +609,8 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 }
 
 
-                if (entity is Booster booster && booster.Collider.Bounds.Intersects(Hitbox) && KoseiHelperModule.Settings.GunInteractions.UseBoosters && !dead && owner is Player p_booster)
+                if (entity is Booster booster && booster.Collider.Bounds.Intersects(Hitbox) && KoseiHelperModule.Settings.GunInteractions.UseBoosters &&
+                    !dead && owner is Player p_booster)
                 {
                     if (booster.respawnTimer <= 0 && booster.cannotUseTimer <= 0 && !booster.BoostingPlayer)
                     {
@@ -621,7 +634,8 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                     return;
                 }
 
-                if (entity is Refill refill && refill.Collider.Bounds.Intersects(Hitbox) && KoseiHelperModule.Settings.GunInteractions.UseRefills && !dead && owner is Player refill_player)
+                if (entity is Refill refill && refill.Collider.Bounds.Intersects(Hitbox) && KoseiHelperModule.Settings.GunInteractions.UseRefills &&
+                    !dead && owner is Player refill_player)
                 {
                     if (refill.Collidable)
                     {
@@ -728,12 +742,10 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                     return;
                 }
 
-                if (entity is PregnantFlutterbird plutterbird && KoseiHelperModule.Settings.GunInteractions.HarmEnemies && plutterbird.Collider.Bounds.Intersects(Hitbox) && !dead)
+                if (entity is PregnantFlutterbird plutterbird && KoseiHelperModule.Settings.GunInteractions.HarmEnemies && plutterbird.Collider.Bounds.Intersects(Hitbox) &&
+                    !dead && !plutterbird.flyingAway)
                 {
-                    if (plutterbird.shootLasers || plutterbird.killOnContact)
-                        plutterbird.Die();
-                    if (plutterbird.flyAway)
-                        plutterbird.FlyAway(Math.Sign(plutterbird.X - X), Calc.Random.NextFloat(0.2f));
+                    plutterbird.Die();
                     DestroyBullet();
                     return;
                 }

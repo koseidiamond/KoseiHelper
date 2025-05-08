@@ -21,7 +21,7 @@ public class PregnantFlutterbird : Actor
     private Sprite sprite;
     private Vector2 start, currentPosition;
     private Coroutine routine;
-    private bool flyingAway;
+    public bool flyingAway;
     private SoundSource tweetingSfx;
     private SoundSource flyawaySfx;
     private int customDepth;
@@ -61,6 +61,7 @@ public class PregnantFlutterbird : Actor
     public bool emitLight; // done
     public bool coyote; // done
 
+    private bool baby;
     private float birthCooldown;
     private SoundSource laserSfx;
     public static ParticleType deathParticle;
@@ -68,7 +69,7 @@ public class PregnantFlutterbird : Actor
     public PregnantFlutterbird(EntityData data, Vector2 offset) : base(data.Position + offset)
     {
         start = currentPosition = Position;
-        
+        this.baby = false;
         Add(routine = new Coroutine(IdleRoutine()));
         Add(flyawaySfx = new SoundSource());
         Add(tweetingSfx = new SoundSource());
@@ -90,7 +91,7 @@ public class PregnantFlutterbird : Actor
         flyAway = data.Bool("flyAway", true);
         flyAwayFlag = data.Attr("flyAwayFlag", "");
         sterilizationFlag = data.Attr("sterilizationFlag", "");
-        squishable = data.Bool("squishable", false);
+        squishable = data.Bool("squishable", true);
         hopSfx = data.Attr("hopSfx", "event:/game/general/birdbaby_hop");
         birthSfx = data.Attr("birthSfx", "event:/game/09_core/frontdoor_heartfill");
         spriteID = data.Attr("spriteID", "flutterbird");
@@ -108,19 +109,20 @@ public class PregnantFlutterbird : Actor
         Add(laserSfx = new SoundSource());
     }
 
-    // this constructor is used when a baby bird is born
+    // this constructor is used when a baby bird is born. BABIES CANNOT REPRODUCE.
     public PregnantFlutterbird(Vector2 position, int childrenCount, float timeToGiveBirth, bool chaser, Gender gender, Orientation orientation, bool shootLasers,
         bool killOnContact, bool bouncy, bool flyAway, string flyAwayFlag, string sterilizationFlag, bool squishable, string hopSfx, string birthSfx, string spriteID,
         int depth, bool emitLight, bool coyote) : base(position)
     {
         this.start = this.currentPosition = this.Position;
-
+        this.Position.Y += 1f;
+        this.baby = true;
         Add(routine = new Coroutine(IdleRoutine()));
         Add(this.flyawaySfx = new SoundSource());
         Add(tweetingSfx = new SoundSource());
         tweetingSfx.Play("event:/game/general/birdbaby_tweet_loop");
 
-        base.Collider = new Hitbox(4f, 4f, -2f, -2f);
+        base.Collider = new Hitbox(4f, 4f, -2f, -4f);
         Add(new PlayerCollider(OnPlayer));
 
         this.childrenCount = childrenCount;
@@ -145,7 +147,6 @@ public class PregnantFlutterbird : Actor
 
         Add(sprite = GFX.SpriteBank.Create(this.spriteID));
         sprite.Color = Calc.Random.Choose(colors);
-
         if (this.emitLight)
         {
             Add(new BloomPoint(0.75f, 12f));
@@ -227,7 +228,7 @@ public class PregnantFlutterbird : Actor
             }
         };
 
-        if (string.IsNullOrEmpty(sterilizationFlag) || !level.Session.GetFlag(sterilizationFlag)) // If the bird is fertile, it will try to reproduce
+        if (!baby && (string.IsNullOrEmpty(sterilizationFlag) || !level.Session.GetFlag(sterilizationFlag))) // If the bird is fertile and an adult, it will try to reproduce.
         {
             if (this.orientation == Orientation.Self && Scene.OnInterval(timeToGiveBirth)) // Self reproduction is separated from other orientations
                 GiveBirth();
@@ -235,7 +236,8 @@ public class PregnantFlutterbird : Actor
             foreach (PregnantFlutterbird otherbird in Scene.Tracker.GetEntities<PregnantFlutterbird>()) // TODO fix reproduction
             {
                 // If both birds are fertile then...
-                if (CollideCheck(otherbird, this.Center) && string.IsNullOrEmpty(otherbird.sterilizationFlag) || !level.Session.GetFlag(otherbird.sterilizationFlag))
+                if (CollideCheck(otherbird, this.Center) && otherbird != this &&
+                    (string.IsNullOrEmpty(otherbird.sterilizationFlag) || !level.Session.GetFlag(otherbird.sterilizationFlag)))
                 {
                     switch (this.gender)
                         // We make sure they are attracted to each other based on gender/orientation of both of them
@@ -465,8 +467,11 @@ public class PregnantFlutterbird : Actor
     public void Die()
     {
         Level level = SceneAs<Level>();
-        Audio.Play("event:/game/05_mirror_temple/eyebro_eyemove", Position);
-        level.Particles.Emit(deathParticle, Center, Color.Red, -1f);
+        if (!flyingAway) // doesn't make sense to actually "die" if they are just oob
+        {
+            Audio.Play("event:/game/05_mirror_temple/eyebro_eyemove", Position);
+            level.Particles.Emit(deathParticle, Center, Color.Red, -1f);
+        }
         foreach (Laser laser in level.Tracker.GetEntities<Laser>())
             laser.Destroy();
         Scene.Remove(this);

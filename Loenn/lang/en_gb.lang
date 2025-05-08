@@ -8,7 +8,7 @@ entities.KoseiHelper/PregnantFlutterbird.attributes.description.childrenCount=Th
 entities.KoseiHelper/PregnantFlutterbird.attributes.description.gender=The gender of the bird. Determines who it can reproduce with.
 entities.KoseiHelper/PregnantFlutterbird.attributes.description.orientation=The sexual orientation of the bird. Determines who it can reproduce with.\nFor example, a gay female can only reproduce with other females that are also attracted to females.
 entities.KoseiHelper/PregnantFlutterbird.attributes.description.texture=The custom texture of the bird.
-entities.KoseiHelper/PregnantFlutterbird.attributes.description.chaser=There are some things that are better not known.
+entities.KoseiHelper/PregnantFlutterbird.attributes.description.chaser=Whether the bird chases Madeline.\nIf the bird has a very low depth (appear above tiles) it will travel through solids.
 entities.KoseiHelper/PregnantFlutterbird.attributes.description.timeToGiveBirth=Cooldown between births.
 entities.KoseiHelper/PregnantFlutterbird.attributes.description.shootLasers=Whether the flutterbird shoots deadly giant lasers through its eyes.
 entities.KoseiHelper/PregnantFlutterbird.attributes.description.killOnContact=Whether the bird is evil.
@@ -689,7 +689,7 @@ triggers.KoseiHelper/NemesisGunInteractions.placements.name.NemesisGunInteractio
 triggers.KoseiHelper/NemesisGunInteractions.placements.description.NemesisGunInteractions=Configure which entities the Nemesis Gun can affect.
 triggers.KoseiHelper/NemesisGunInteractions.attributes.description.triggerMode=Whether this trigger should have effect when the player enters/exits it, or while inside.
 triggers.KoseiHelper/NemesisGunInteractions.attributes.description.canKillPlayer=Whether bullets should be able to kill the player upon contact if they bounce back from a bumper/spring,\nor if they shoot at their golden/silver berry.
-triggers.KoseiHelper/NemesisGunInteractions.attributes.description.harmEnemies=Whether bullets should be able to harm/kill enemies (Oshiro, goombas, seekers and plants).\nIf the enemy is a Badeline Boss, the player will be teleported to it in order to hit it.
+triggers.KoseiHelper/NemesisGunInteractions.attributes.description.harmEnemies=Whether bullets should be able to harm/kill enemies (Oshiro, goombas, seekers, plants and pregnant flutterbirds).\nIf the enemy is a Badeline Boss, the player will be teleported to it in order to hit it.
 triggers.KoseiHelper/NemesisGunInteractions.attributes.description.harmTheo=Whether bullets should be able to kill Theo.
 triggers.KoseiHelper/NemesisGunInteractions.attributes.description.breakBounceBlocks=Whether bounce blocks (core blocks) should break when shot.
 triggers.KoseiHelper/NemesisGunInteractions.attributes.description.activateFallingBlocks=Whether falling blocks/falling platforms should start falling when shot.
