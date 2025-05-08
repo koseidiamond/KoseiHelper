@@ -2,13 +2,13 @@
 
 # Pregnant Flutterbird
 entities.KoseiHelper/PregnantFlutterbird.placements.name.PregnantFlutterbird=Pregnant Flutterbird
-entities.KoseiHelper/PregnantFlutterbird.placements.description.PregnantFlutterbird=Flutterbird but pregnant.
+entities.KoseiHelper/PregnantFlutterbird.placements.description.PregnantFlutterbird=Flutterbirds that can create offsprings upon reproduction.\nThey can also be used for gameplay.
 entities.KoseiHelper/PregnantFlutterbird.attributes.description.birthSfx=The sound that the bird makes while giving birth.
 entities.KoseiHelper/PregnantFlutterbird.attributes.description.childrenCount=The maximum number of children that can be born from this bird.
-entities.KoseiHelper/PregnantFlutterbird.attributes.description.gender=The gender of the bird. Determines who it can reproduce with.
+entities.KoseiHelper/PregnantFlutterbird.attributes.description.gender=The gender of the bird. Determines who it can reproduce with.\nThe bird with the lowest entity ID has the dominant genes, regardless of gender.
 entities.KoseiHelper/PregnantFlutterbird.attributes.description.orientation=The sexual orientation of the bird. Determines who it can reproduce with.\nFor example, a gay female can only reproduce with other females that are also attracted to females.
 entities.KoseiHelper/PregnantFlutterbird.attributes.description.texture=The custom texture of the bird.
-entities.KoseiHelper/PregnantFlutterbird.attributes.description.chaser=Whether the bird chases Madeline.\nIf the bird has a very low depth (appear above tiles) it will travel through solids.
+entities.KoseiHelper/PregnantFlutterbird.attributes.description.chaser=Whether the bird chases Madeline.\nIf the bird has a very low depth (< -13000) it will travel through solids.
 entities.KoseiHelper/PregnantFlutterbird.attributes.description.timeToGiveBirth=Cooldown between births.
 entities.KoseiHelper/PregnantFlutterbird.attributes.description.shootLasers=Whether the flutterbird shoots deadly giant lasers through its eyes.
 entities.KoseiHelper/PregnantFlutterbird.attributes.description.killOnContact=Whether the bird is evil.

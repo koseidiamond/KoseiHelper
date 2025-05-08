@@ -25,6 +25,7 @@ public class PregnantFlutterbird : Actor
     private SoundSource tweetingSfx;
     private SoundSource flyawaySfx;
     private int customDepth;
+    public EntityID entityID;
 
     private Vector2 Speed;
     private float noGravityTimer;
@@ -66,8 +67,9 @@ public class PregnantFlutterbird : Actor
     private SoundSource laserSfx;
     public static ParticleType deathParticle;
 
-    public PregnantFlutterbird(EntityData data, Vector2 offset) : base(data.Position + offset)
+    public PregnantFlutterbird(EntityData data, Vector2 offset, EntityID eid) : base(data.Position + offset)
     {
+        entityID = eid;
         start = currentPosition = Position;
         this.baby = false;
         Add(routine = new Coroutine(IdleRoutine()));
@@ -109,7 +111,7 @@ public class PregnantFlutterbird : Actor
         Add(laserSfx = new SoundSource());
     }
 
-    // this constructor is used when a baby bird is born. BABIES CANNOT REPRODUCE.
+    // this constructor is used when a baby bird is born. BABIES CANNOT REPRODUCE. So they don't need an entityID either.
     public PregnantFlutterbird(Vector2 position, int childrenCount, float timeToGiveBirth, bool chaser, Gender gender, Orientation orientation, bool shootLasers,
         bool killOnContact, bool bouncy, bool flyAway, string flyAwayFlag, string sterilizationFlag, bool squishable, string hopSfx, string birthSfx, string spriteID,
         int depth, bool emitLight, bool coyote) : base(position)
@@ -233,90 +235,93 @@ public class PregnantFlutterbird : Actor
             if (this.orientation == Orientation.Self && Scene.OnInterval(timeToGiveBirth)) // Self reproduction is separated from other orientations
                 GiveBirth();
 
-            foreach (PregnantFlutterbird otherbird in Scene.Tracker.GetEntities<PregnantFlutterbird>()) // TODO fix reproduction
+            foreach (PregnantFlutterbird otherbird in Scene.Tracker.GetEntities<PregnantFlutterbird>())
             {
                 // If both birds are fertile then...
                 if (CollideCheck(otherbird, this.Center) && otherbird != this &&
                     (string.IsNullOrEmpty(otherbird.sterilizationFlag) || !level.Session.GetFlag(otherbird.sterilizationFlag)))
                 {
-                    switch (this.gender)
-                        // We make sure they are attracted to each other based on gender/orientation of both of them
+                    if (entityID.ID < otherbird.entityID.ID) // the bird with the lowest entity id has the dominant alleles
                     {
-                        case Gender.Male:
-                            switch (this.orientation)
-                            {
-                                case Orientation.Gay: // Gay x Gay/Bi males
-                                    if (otherbird.gender == Gender.Male && (otherbird.orientation == Orientation.Gay || otherbird.orientation == Orientation.Bisexual))
-                                        GiveBirth();
-                                    break;
-                                case Orientation.Bisexual: // Bi x anyone attracted to males
-                                    if (otherbird.gender == Gender.Male && (otherbird.orientation == Orientation.Gay || otherbird.orientation == Orientation.Bisexual) ||
-                                        otherbird.gender == Gender.Female && (otherbird.orientation == Orientation.Straight || otherbird.orientation == Orientation.Bisexual) ||
-                                        otherbird.gender == Gender.Nonbinary && otherbird.orientation == Orientation.Straight)
-                                        GiveBirth();
-                                    break;
-                                case Orientation.Straight: // Straight x straight/bi females
-                                    if (otherbird.gender == Gender.Female && (otherbird.orientation == Orientation.Straight || otherbird.orientation == Orientation.Bisexual))
-                                        GiveBirth();
-                                    break;
-                                case Orientation.Asexual:
-                                    // Asexual males do not reproduce
-                                    break;
-                                case Orientation.Self:
-                                    // Logic handled separatedly
-                                    break;
-                            }
-                            break;
-                        case Gender.Female:
-                            switch (this.orientation)
-                            {
-                                case Orientation.Gay: // Lesbian x Lesbian/Bi females
-                                    if (otherbird.gender == Gender.Female && (otherbird.orientation == Orientation.Gay || otherbird.orientation == Orientation.Bisexual))
-                                        GiveBirth();
-                                    break;
-                                case Orientation.Bisexual: // Bi x anyone attracted to females
-                                    if (otherbird.gender == Gender.Female && (otherbird.orientation == Orientation.Gay || otherbird.orientation == Orientation.Bisexual) ||
-                                        otherbird.gender == Gender.Male && (otherbird.orientation == Orientation.Straight || otherbird.orientation == Orientation.Bisexual) ||
-                                        otherbird.gender == Gender.Nonbinary && otherbird.orientation == Orientation.Straight)
-                                        GiveBirth();
-                                    break;
-                                case Orientation.Straight: // Straight x straight/bi females
-                                    if (otherbird.gender == Gender.Male && (otherbird.orientation == Orientation.Straight || otherbird.orientation == Orientation.Bisexual))
-                                        GiveBirth();
-                                    break;
-                                case Orientation.Asexual:
-                                    // Asexual females do not reproduce
-                                    break;
-                                case Orientation.Self:
-                                    // Logic handled separatedly
-                                    break;
-                            }
-                            break;
-                        case Gender.Nonbinary:
-                            switch (this.orientation)
-                            {
-                                case Orientation.Gay: // enby x Gay/Bi enby
-                                    if (otherbird.gender == Gender.Nonbinary && (otherbird.orientation == Orientation.Gay || otherbird.orientation == Orientation.Bisexual))
-                                        GiveBirth();
-                                    break;
-                                case Orientation.Bisexual: // enby x anyone attracted to enbies
-                                    if (otherbird.gender == Gender.Female && otherbird.orientation == Orientation.Bisexual ||
-                                        otherbird.gender == Gender.Male && otherbird.orientation == Orientation.Bisexual ||
-                                        otherbird.gender == Gender.Nonbinary && (otherbird.orientation == Orientation.Gay || otherbird.orientation == Orientation.Bisexual))
-                                        GiveBirth();
-                                    break;
-                                case Orientation.Straight: // enby x bi males/females
-                                    if (otherbird.orientation == Orientation.Bisexual && (otherbird.gender == Gender.Male || otherbird.gender == Gender.Female))
-                                        GiveBirth();
-                                    break;
-                                case Orientation.Asexual:
-                                    // Asexual nonbinary birds do not reproduce
-                                    break;
-                                case Orientation.Self:
-                                    // Logic handled separatedly
-                                    break;
-                            }
-                            break;
+                        switch (this.gender)
+                        // We make sure they are attracted to each other based on gender/orientation of both of them
+                        {
+                            case Gender.Male:
+                                switch (this.orientation)
+                                {
+                                    case Orientation.Gay: // Gay x Gay/Bi males
+                                        if (otherbird.gender == Gender.Male && (otherbird.orientation == Orientation.Gay || otherbird.orientation == Orientation.Bisexual))
+                                            GiveBirth();
+                                        break;
+                                    case Orientation.Bisexual: // Bi x anyone attracted to males
+                                        if (otherbird.gender == Gender.Male && (otherbird.orientation == Orientation.Gay || otherbird.orientation == Orientation.Bisexual) ||
+                                            otherbird.gender == Gender.Female && (otherbird.orientation == Orientation.Straight || otherbird.orientation == Orientation.Bisexual) ||
+                                            otherbird.gender == Gender.Nonbinary && otherbird.orientation == Orientation.Straight)
+                                            GiveBirth();
+                                        break;
+                                    case Orientation.Straight: // Straight x straight/bi females
+                                        if (otherbird.gender == Gender.Female && (otherbird.orientation == Orientation.Straight || otherbird.orientation == Orientation.Bisexual))
+                                            GiveBirth();
+                                        break;
+                                    case Orientation.Asexual:
+                                        // Asexual males do not reproduce
+                                        break;
+                                    case Orientation.Self:
+                                        // Logic handled separatedly
+                                        break;
+                                }
+                                break;
+                            case Gender.Female:
+                                switch (this.orientation)
+                                {
+                                    case Orientation.Gay: // Lesbian x Lesbian/Bi females
+                                        if (otherbird.gender == Gender.Female && (otherbird.orientation == Orientation.Gay || otherbird.orientation == Orientation.Bisexual))
+                                            GiveBirth();
+                                        break;
+                                    case Orientation.Bisexual: // Bi x anyone attracted to females
+                                        if (otherbird.gender == Gender.Female && (otherbird.orientation == Orientation.Gay || otherbird.orientation == Orientation.Bisexual) ||
+                                            otherbird.gender == Gender.Male && (otherbird.orientation == Orientation.Straight || otherbird.orientation == Orientation.Bisexual) ||
+                                            otherbird.gender == Gender.Nonbinary && otherbird.orientation == Orientation.Straight)
+                                            GiveBirth();
+                                        break;
+                                    case Orientation.Straight: // Straight x straight/bi females
+                                        if (otherbird.gender == Gender.Male && (otherbird.orientation == Orientation.Straight || otherbird.orientation == Orientation.Bisexual))
+                                            GiveBirth();
+                                        break;
+                                    case Orientation.Asexual:
+                                        // Asexual females do not reproduce
+                                        break;
+                                    case Orientation.Self:
+                                        // Logic handled separatedly
+                                        break;
+                                }
+                                break;
+                            case Gender.Nonbinary:
+                                switch (this.orientation)
+                                {
+                                    case Orientation.Gay: // enby x Gay/Bi enby
+                                        if (otherbird.gender == Gender.Nonbinary && (otherbird.orientation == Orientation.Gay || otherbird.orientation == Orientation.Bisexual))
+                                            GiveBirth();
+                                        break;
+                                    case Orientation.Bisexual: // enby x anyone attracted to enbies
+                                        if (otherbird.gender == Gender.Female && otherbird.orientation == Orientation.Bisexual ||
+                                            otherbird.gender == Gender.Male && otherbird.orientation == Orientation.Bisexual ||
+                                            otherbird.gender == Gender.Nonbinary && (otherbird.orientation == Orientation.Gay || otherbird.orientation == Orientation.Bisexual))
+                                            GiveBirth();
+                                        break;
+                                    case Orientation.Straight: // enby x bi males/females
+                                        if (otherbird.orientation == Orientation.Bisexual && (otherbird.gender == Gender.Male || otherbird.gender == Gender.Female))
+                                            GiveBirth();
+                                        break;
+                                    case Orientation.Asexual:
+                                        // Asexual nonbinary birds do not reproduce
+                                        break;
+                                    case Orientation.Self:
+                                        // Logic handled separatedly
+                                        break;
+                                }
+                                break;
+                        }
                     }
                 }
             }
@@ -362,11 +367,9 @@ public class PregnantFlutterbird : Actor
         Player player = level.Tracker.GetEntity<Player>();
         if (player != null)
         {
-            //Laser fossBeam = Engine.Pooler.Create<Laser>();
-            //Init(player, fossBeam);
-            //this.Scene.Add(fossBeam);
-
-            SceneAs<Level>().Add(Engine.Pooler.Create<Laser>().Init(this, player, 1.4f, 0.9f));
+            Laser laser = Engine.Pooler.Create<Laser>().Init(this, player, 1.4f, 0.9f);
+            laser.owner = this;
+            SceneAs<Level>().Add(laser);
         }
         yield return 1.4f;
         laserSfx.Stop();
@@ -383,7 +386,6 @@ public class PregnantFlutterbird : Actor
             SceneAs<Level>().Particles.Emit(ParticleTypes.SparkyDust, Position, Color.Pink);
             Scene.Add(new PregnantFlutterbird(Position, childrenCount, timeToGiveBirth, chaser, gender, orientation, shootLasers, killOnContact, bouncy, flyAway, flyAwayFlag,
                 sterilizationFlag, squishable, hopSfx, birthSfx, spriteID, Depth, emitLight, coyote));
-            
         }
     }
 
@@ -402,7 +404,7 @@ public class PregnantFlutterbird : Actor
                 }
                 yield return null;
             }
-            if (OnGround(new Vector2(CenterX, CenterY + 3f)))
+            if (OnGround(new Vector2(CenterX, CenterY + 2f)))
                 {
                 Audio.Play(hopSfx, Position);
                 noGravityTimer = 0.1f;
@@ -473,7 +475,10 @@ public class PregnantFlutterbird : Actor
             level.Particles.Emit(deathParticle, Center, Color.Red, -1f);
         }
         foreach (Laser laser in level.Tracker.GetEntities<Laser>())
-            laser.Destroy();
+        {
+            if (laser.owner == this)
+                laser.Destroy();
+        }
         Scene.Remove(this);
         RemoveSelf(); // just in case idk
     }

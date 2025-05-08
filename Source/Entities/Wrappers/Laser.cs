@@ -21,6 +21,7 @@ namespace Celeste.Mod.KoseiHelper.Entities
         private float angle;
         private float beamAlpha;
         private float sideFadeAlpha;
+        public PregnantFlutterbird owner;
         public Laser()
         {
             base.Depth = -1000000;
@@ -168,9 +169,6 @@ namespace Celeste.Mod.KoseiHelper.Entities
             if (player == null)
             {
                 player = base.Scene.CollideFirst<Player>(vector - value, vector2 - value);
-            }
-            if (player == null)
-            {
                 player = base.Scene.CollideFirst<Player>(vector, vector2);
             }
             if (player != null)
