@@ -1,8 +1,8 @@
 #ENTITIES
 
 # Pregnant Flutterbird
-entities.KoseiHelper/SpecialFlutterbird.placements.name.SpecialFlutterbird=Special Flutterbird
-entities.KoseiHelper/SpecialFlutterbird.placements.description.SpecialFlutterbird=Flutterbirds that can spawn babies when the conditions are met.\nThey can also be used for gameplay.
+entities.KoseiHelper/SpecialFlutterbird.placements.name.PregnantFlutterbird=Special Flutterbird
+entities.KoseiHelper/SpecialFlutterbird.placements.description.PregnantFlutterbird=Flutterbirds that can spawn babies when the conditions are met.\nThey can also be used for gameplay.
 entities.KoseiHelper/SpecialFlutterbird.attributes.description.birthSfx=The sound when a baby is spawned.
 entities.KoseiHelper/SpecialFlutterbird.attributes.description.childrenCount=The maximum number of children that can be spawned from this bird.
 entities.KoseiHelper/SpecialFlutterbird.attributes.description.gender=The gender of the bird. Determines who it can reproduce with.\nThe bird with the lowest entity ID has the dominant genes, regardless of gender.
@@ -25,6 +25,7 @@ entities.KoseiHelper/SpecialFlutterbird.attributes.description.coyote=Whether th
 entities.KoseiHelper/SpecialFlutterbird.attributes.description.polyamorous=Whether the bird will try to reproduce with any other bird that they are attracted to,\nor only a specific bird (close and reopen to specify the couple's id).
 entities.KoseiHelper/SpecialFlutterbird.attributes.description.partnerID=The entity ID of the bird that can reproduce with this one (if they like each other and have not reached the max baby count).\nMono birds do not reproduce with poly birds and vice versa.\nBoth birds must have each other's id to be official partners.
 entities.KoseiHelper/SpecialFlutterbird.attributes.description.hoppingDistance=How much the birds should hop horizontally, on average.
+entities.KoseiHelper/SpecialFlutterbird.attributes.description.scaredDistance=The horizontal distance at which the bird will be scared and fly away.
 
 # Debug Renderer
 entities.KoseiHelper/DebugRenderer.placements.name.DebugRenderer=Debug Renderer

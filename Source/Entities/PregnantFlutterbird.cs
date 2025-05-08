@@ -26,7 +26,8 @@ public class PregnantFlutterbird : Actor
     public int childrenCount;
     public float timeToGiveBirth;
     public bool chaser;
-    public float hoppingDistance; // unused because somehow it's not working
+    public float hoppingDistance; // unused for now
+    public float scaredDistance;
     public enum Gender
     {
         Nonbinary,
@@ -85,6 +86,7 @@ public class PregnantFlutterbird : Actor
         polyamorous = data.Bool("polyamorous", true);
         partnerID = data.Int("partnerID", 0);
         hoppingDistance = data.Float("hoppingDistance", 8f);
+        scaredDistance = data.Float("scaredDistance", 48f);
         if (shootLasers)
             Add(new Coroutine(ShootLasers()));
         killOnContact = data.Bool("killOnContact", false);
@@ -114,7 +116,7 @@ public class PregnantFlutterbird : Actor
     // Babies don't have a partner and it doesn't matter if they are poly or not because THEY CAN'T REPRODUCE (they are minors).
     public PregnantFlutterbird(Vector2 position, int childrenCount, float timeToGiveBirth, bool chaser, Gender gender, Orientation orientation, bool shootLasers,
         bool killOnContact, bool bouncy, bool flyAway, string flyAwayFlag, string sterilizationFlag, bool squishable, string hopSfx, string birthSfx, string spriteID,
-        int depth, bool emitLight, bool coyote, float hoppingDistance, Color color) : base(position)
+        int depth, bool emitLight, bool coyote, float hoppingDistance, float scaredDistance, Color color) : base(position)
     {
         this.start = this.currentPosition = this.Position;
         this.Position.Y += 1f;
@@ -133,6 +135,7 @@ public class PregnantFlutterbird : Actor
         this.gender = gender;
         this.orientation = orientation;
         this.hoppingDistance = hoppingDistance;
+        this.scaredDistance = scaredDistance;
         this.shootLasers = shootLasers;
         if (this.shootLasers)
             Add(new Coroutine(ShootLasers()));
@@ -392,7 +395,7 @@ public class PregnantFlutterbird : Actor
             Audio.Play(birthSfx, Center);
             SceneAs<Level>().Particles.Emit(ParticleTypes.SparkyDust, Position, Color.Pink);
             Scene.Add(new PregnantFlutterbird(Position, childrenCount, timeToGiveBirth, chaser, gender, orientation, shootLasers, killOnContact, bouncy, flyAway, flyAwayFlag,
-                sterilizationFlag, squishable, hopSfx, birthSfx, spriteID, Depth, emitLight, coyote, hoppingDistance, sprite.Color));
+                sterilizationFlag, squishable, hopSfx, birthSfx, spriteID, Depth, emitLight, coyote, hoppingDistance, scaredDistance, sprite.Color));
         }
     }
 
@@ -401,10 +404,10 @@ public class PregnantFlutterbird : Actor
         while (true)
         {
             Player player = Scene.Tracker.GetEntity<Player>();
-            float delay = 0.25f + Calc.Random.NextFloat(1f); // TODO customize the hopping delay
+            float delay = 0.25f + Calc.Random.NextFloat(1f);
             for (float p2 = 0f; p2 < delay; p2 += Engine.DeltaTime) // TODO customize the scared distance
             {
-                if (player != null && this.flyAway && Math.Abs(player.X - X) < 48f && player.Y > Y - 40f && player.Y < Y + 8f)
+                if (player != null && this.flyAway && Math.Abs(player.X - X) < scaredDistance && player.Y > Y - 40f && player.Y < Y + 8f)
                 {
                     FlyAway(Math.Sign(X - player.X), Calc.Random.NextFloat(0.2f));
                 }

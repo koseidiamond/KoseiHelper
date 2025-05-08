@@ -32,7 +32,8 @@ PregnantFlutterbird.placements = {
 		polyamorous = true,
 		partnerID = 0,
 		--hoppingDistance = 8,
-		color = "ffffff"
+		color = "ffffff",
+		scaredDistance = 48
 		
 	}
 }
@@ -52,6 +53,7 @@ PregnantFlutterbird.fieldOrder = {
 	"depth",
 	"color",
 	--"hoppingDistance",
+	"scaredDistance",
 	"partnerID",
 	"bouncy",
 	"chaser",
@@ -105,7 +107,8 @@ function PregnantFlutterbird.ignoredFields(entity)
 	"_name",
 	"_id",
 	"partnerID",
-	"hoppingDistance"
+	"hoppingDistance",
+	"scaredDistance"
 	}
 	
     local function doNotIgnore(value)
@@ -118,6 +121,9 @@ function PregnantFlutterbird.ignoredFields(entity)
     end
 	if entity.polyamorous == false then
 		doNotIgnore("partnerID")
+	end
+	if entity.flyAway == true then
+		doNotIgnore("scaredDistance")
 	end
 
 	return ignored
