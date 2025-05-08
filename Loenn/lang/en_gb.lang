@@ -1,7 +1,7 @@
 #ENTITIES
 
 # Pregnant Flutterbird
-entities.KoseiHelper/PregnantFlutterbird.placements.name.PregnantFlutterbird=Pregnant Flutterbird
+entities.KoseiHelper/PregnantFlutterbird.placements.name.PregnantFlutterbird=Special Flutterbird
 entities.KoseiHelper/PregnantFlutterbird.placements.description.PregnantFlutterbird=Flutterbirds that can create offsprings upon reproduction.\nThey can also be used for gameplay.
 entities.KoseiHelper/PregnantFlutterbird.attributes.description.birthSfx=The sound that the bird makes while giving birth.
 entities.KoseiHelper/PregnantFlutterbird.attributes.description.childrenCount=The maximum number of children that can be born from this bird.
@@ -15,14 +15,17 @@ entities.KoseiHelper/PregnantFlutterbird.attributes.description.killOnContact=Wh
 entities.KoseiHelper/PregnantFlutterbird.attributes.description.bouncy=Whether the bird can bounce you back.
 entities.KoseiHelper/PregnantFlutterbird.attributes.description.flyAway=Whether the bird should fly away when the player is too close.
 entities.KoseiHelper/PregnantFlutterbird.attributes.description.flyAwayFlag=The flag that will be set to true when the bird flies away.
-entities.KoseiHelper/PregnantFlutterbird.attributes.description.sterilizationFlag=The bird will be infertile while this flag is true.
+entities.KoseiHelper/PregnantFlutterbird.attributes.description.sterilizationFlag=The bird will be infertile while this flag is true.\nIf either of the partners are sterile, the baby will not spawn.
 entities.KoseiHelper/PregnantFlutterbird.attributes.description.squishable=Whether the bird can be crushed to death.
 entities.KoseiHelper/PregnantFlutterbird.attributes.description.hopSfx=The sound when the bird hops.
-entities.KoseiHelper/PregnantFlutterbird.attributes.description.birthSfx=The sound when the bird gives birth.
+entities.KoseiHelper/PregnantFlutterbird.attributes.description.birthSfx=The sound when the bird spawns a baby.
 entities.KoseiHelper/PregnantFlutterbird.attributes.description.spriteID=The ID or tag of the sprite in your Sprites.xml.
 entities.KoseiHelper/PregnantFlutterbird.attributes.description.emitLight=Whether the bird should emit light.
 entities.KoseiHelper/PregnantFlutterbird.attributes.description.depth=The depth at which the flutterbird appears.\n(Note: the depth decreases by 2 while flying away)\n(If the bird is a chaser, the chasing behavior will be different if the depth is below -13000)
 entities.KoseiHelper/PregnantFlutterbird.attributes.description.coyote=Whether the bird gives coyote frames upon touch.
+entities.KoseiHelper/PregnantFlutterbird.attributes.description.polyamorous=Whether the bird will try to reproduce with any other bird that they are attracted to,\nor only a specific bird (close and reopen to specify the couple's id).
+entities.KoseiHelper/PregnantFlutterbird.attributes.description.partnerID=The entity ID of the bird that can reproduce with this one (if they like each other and have not reached the max baby count).\nMono birds do not reproduce with poly birds and vice versa.\nBoth birds must have each other's id to be official partners.
+entities.KoseiHelper/PregnantFlutterbird.attributes.description.hoppingDistance=How much the birds should hop horizontally, on average.
 
 # Debug Renderer
 entities.KoseiHelper/DebugRenderer.placements.name.DebugRenderer=Debug Renderer

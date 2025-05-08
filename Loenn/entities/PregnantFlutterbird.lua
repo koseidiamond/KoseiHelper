@@ -35,7 +35,10 @@ PregnantFlutterbird.placements = {
 		spriteID = "flutterbird",
 		emitLight = false,
 		depth = -9999,
-		coyote = false
+		coyote = false,
+		polyamorous = true,
+		partnerID = 0,
+		hoppingDistance = 8
 	}
 }
 
@@ -52,6 +55,7 @@ PregnantFlutterbird.fieldOrder = {
 	"birthSfx",
 	"spriteID",
 	"depth",
+	"partnerID",
 	"bouncy",
 	"chaser",
 	"coyote",
@@ -59,7 +63,8 @@ PregnantFlutterbird.fieldOrder = {
 	"killOnContact",
 	"shootLasers",
 	"squishable",
-	"emitLight"
+	"emitLight",
+	"polyamorous"
 }
 
 PregnantFlutterbird.fieldInformation = {
@@ -88,8 +93,34 @@ PregnantFlutterbird.fieldInformation = {
         fieldType = "integer",
         options = depths.addDepths(depths.getDepths(), {}),
         editable = true
-    }
+    },
+	partnerID = {
+		fieldType = "integer",
+		minimumValue = 0
+	}
 }
+
+function PregnantFlutterbird.ignoredFields(entity)
+	local ignored = {
+	"_name",
+	"_id",
+	"partnerID"
+	}
+	
+    local function doNotIgnore(value)
+        for i = #ignored, 1, -1 do
+            if ignored[i] == value then
+                table.remove(ignored, i)
+                return
+            end
+        end
+    end
+	if entity.polyamorous == false then
+		doNotIgnore("partnerID")
+	end
+
+	return ignored
+end
 
 function PregnantFlutterbird.depth(room,entity)
 	return entity.depth

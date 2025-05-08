@@ -33,6 +33,7 @@ public class PregnantFlutterbird : Actor
     public int childrenCount;
     public float timeToGiveBirth;
     public bool chaser;
+    public float hoppingDistance; 
     public enum Gender
     {
         Nonbinary,
@@ -48,6 +49,8 @@ public class PregnantFlutterbird : Actor
         Bisexual,
         Self
     };
+    public bool polyamorous = true;
+    public int partnerID;
     public Orientation orientation; // done (hopefully)
     public bool shootLasers;
     public bool killOnContact; // done
@@ -86,6 +89,9 @@ public class PregnantFlutterbird : Actor
         gender = data.Enum("gender", Gender.Nonbinary);
         orientation = data.Enum("orientation", Orientation.Gay);
         shootLasers = data.Bool("shootLasers", false);
+        polyamorous = data.Bool("polyamorous", true);
+        partnerID = data.Int("partnerID", 0);
+        hoppingDistance = data.Float("hoppingDistance", 8f);
         if (shootLasers)
             Add(new Coroutine(ShootLasers()));
         killOnContact = data.Bool("killOnContact", false);
@@ -111,10 +117,11 @@ public class PregnantFlutterbird : Actor
         Add(laserSfx = new SoundSource());
     }
 
-    // this constructor is used when a baby bird is born. BABIES CANNOT REPRODUCE. So they don't need an entityID either.
+    // this constructor is used when a baby bird is born.
+    // Babies don't have a partner and it doesn't matter if they are poly or not because THEY CAN'T REPRODUCE (they are minors).
     public PregnantFlutterbird(Vector2 position, int childrenCount, float timeToGiveBirth, bool chaser, Gender gender, Orientation orientation, bool shootLasers,
         bool killOnContact, bool bouncy, bool flyAway, string flyAwayFlag, string sterilizationFlag, bool squishable, string hopSfx, string birthSfx, string spriteID,
-        int depth, bool emitLight, bool coyote) : base(position)
+        int depth, bool emitLight, bool coyote, float hoppingDistance) : base(position)
     {
         this.start = this.currentPosition = this.Position;
         this.Position.Y += 1f;
@@ -132,6 +139,7 @@ public class PregnantFlutterbird : Actor
         this.chaser = chaser;
         this.gender = gender;
         this.orientation = orientation;
+        this.hoppingDistance = hoppingDistance;
         this.shootLasers = shootLasers;
         if (this.shootLasers)
             Add(new Coroutine(ShootLasers()));
@@ -230,7 +238,7 @@ public class PregnantFlutterbird : Actor
             }
         };
 
-        if (!baby && (string.IsNullOrEmpty(sterilizationFlag) || !level.Session.GetFlag(sterilizationFlag))) // If the bird is fertile and an adult, it will try to reproduce.
+        if (!baby && childrenCount > 0 && (string.IsNullOrEmpty(sterilizationFlag) || !level.Session.GetFlag(sterilizationFlag))) // If the bird is fertile and an adult, it will try to reproduce.
         {
             if (this.orientation == Orientation.Self && Scene.OnInterval(timeToGiveBirth)) // Self reproduction is separated from other orientations
                 GiveBirth();
@@ -238,10 +246,13 @@ public class PregnantFlutterbird : Actor
             foreach (PregnantFlutterbird otherbird in Scene.Tracker.GetEntities<PregnantFlutterbird>())
             {
                 // If both birds are fertile then...
-                if (CollideCheck(otherbird, this.Center) && otherbird != this &&
+                if (CollideCheck(otherbird, this.Center) && otherbird != this && // The partner can't be sterile either
                     (string.IsNullOrEmpty(otherbird.sterilizationFlag) || !level.Session.GetFlag(otherbird.sterilizationFlag)))
                 {
-                    if (entityID.ID < otherbird.entityID.ID) // the bird with the lowest entity id has the dominant alleles
+                    if (entityID.ID < otherbird.entityID.ID &&
+                        ((polyamorous && otherbird.polyamorous) ||
+                        (!polyamorous && !otherbird.polyamorous && otherbird.entityID.ID == partnerID && otherbird.partnerID == entityID.ID)))
+                        // the bird with the lowest entity id has the dominant alleles. poly x poly or mono x mono
                     {
                         switch (this.gender)
                         // We make sure they are attracted to each other based on gender/orientation of both of them
@@ -378,14 +389,14 @@ public class PregnantFlutterbird : Actor
 
     public void GiveBirth()
     {
-        Logger.Debug(nameof(KoseiHelperModule), $"A bird has become pregnant! GG! Birth cooldown: {birthCooldown}");
         if (birthCooldown <= 0f)
         {
             this.birthCooldown = this.timeToGiveBirth;
+            childrenCount--;
             Audio.Play(birthSfx, Center);
             SceneAs<Level>().Particles.Emit(ParticleTypes.SparkyDust, Position, Color.Pink);
             Scene.Add(new PregnantFlutterbird(Position, childrenCount, timeToGiveBirth, chaser, gender, orientation, shootLasers, killOnContact, bouncy, flyAway, flyAwayFlag,
-                sterilizationFlag, squishable, hopSfx, birthSfx, spriteID, Depth, emitLight, coyote));
+                sterilizationFlag, squishable, hopSfx, birthSfx, spriteID, Depth, emitLight, coyote, hoppingDistance));
         }
     }
 
@@ -394,7 +405,6 @@ public class PregnantFlutterbird : Actor
         while (true)
         {
             Player player = Scene.Tracker.GetEntity<Player>();
-
             float delay = 0.25f + Calc.Random.NextFloat(1f);
             for (float p2 = 0f; p2 < delay; p2 += Engine.DeltaTime)
             {
@@ -409,19 +419,23 @@ public class PregnantFlutterbird : Actor
                 Audio.Play(hopSfx, Position);
                 noGravityTimer = 0.1f;
                 currentPosition = Position;
-                Vector2 target = currentPosition + new Vector2(-4f + Calc.Random.NextFloat(8f), 0f);
+                Vector2 target = currentPosition + new Vector2(-4f + Calc.Random.NextFloat(hoppingDistance), 0f);
                 sprite.Scale.X = Math.Sign(target.X - Position.X);
                 if (!chaser)
                 {
                     SimpleCurve bezier = new SimpleCurve(Position, target, (Position + target) / 2f - Vector2.UnitY * 14f);
                     for (float p2 = 0f; p2 < 1f; p2 += Engine.DeltaTime * 4f)
                     {
-                        Position = bezier.GetPoint(p2);
+                        //Position = bezier.GetPoint(p2);
+                        MoveTowardsX(bezier.GetPoint(p2).X, 8f);
+                        MoveTowardsY(bezier.GetPoint(p2).Y, 8f);
                         yield return null;
                     }
                     sprite.Scale.X = (float)Math.Sign(sprite.Scale.X) * 1.4f;
                     sprite.Scale.Y = 0.6f;
-                    Position = target;
+                    //Position = target;
+                    MoveTowardsX(target.X, 1f);
+                    MoveTowardsY(target.Y, 1f);
                 }
             }
         }
