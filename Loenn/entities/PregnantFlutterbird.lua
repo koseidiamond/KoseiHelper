@@ -10,6 +10,7 @@ PregnantFlutterbird.name = "KoseiHelper/SpecialFlutterbird"
 PregnantFlutterbird.depth = -9999
 PregnantFlutterbird.placements = {
     name = "PregnantFlutterbird",
+	alternativeName = "SpecialFlutterbird",
 	data = {
 		childrenCount = 1,
 		timeToGiveBirth = 5,
@@ -33,7 +34,8 @@ PregnantFlutterbird.placements = {
 		partnerID = 0,
 		--hoppingDistance = 8,
 		color = "ffffff",
-		scaredDistance = 48
+		scaredDistance = 48,
+		explodes = false
 		
 	}
 }
@@ -63,7 +65,8 @@ PregnantFlutterbird.fieldOrder = {
 	"shootLasers",
 	"squishable",
 	"emitLight",
-	"polyamorous"
+	"polyamorous",
+	"explodes"
 }
 
 PregnantFlutterbird.fieldInformation = {

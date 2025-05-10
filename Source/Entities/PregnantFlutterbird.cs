@@ -45,24 +45,26 @@ public class PregnantFlutterbird : Actor
     };
     public bool polyamorous = true;
     public int partnerID;
-    public Orientation orientation; // done (hopefully)
+    public Orientation orientation;
     public bool shootLasers;
-    public bool killOnContact; // done
+    public bool killOnContact;
     public bool bouncy;
-    public bool flyAway; // done
-    public string flyAwayFlag; // done
-    public string sterilizationFlag; // done
+    public bool flyAway;
+    public string flyAwayFlag;
+    public string sterilizationFlag;
     public bool squishable;
-    public string hopSfx; // done
-    public string birthSfx; // done
-    public string spriteID; // done
-    public bool emitLight; // done
-    public bool coyote; // done
+    public string hopSfx;
+    public string birthSfx;
+    public string spriteID;
+    public bool emitLight;
+    public bool coyote;
+    public bool explodes;
 
     private bool baby;
     private float birthCooldown;
     private SoundSource laserSfx;
     public static ParticleType deathParticle;
+    private Circle pushRadius;
 
     public PregnantFlutterbird(EntityData data, Vector2 offset, EntityID eid) : base(data.Position + offset)
     {
@@ -87,6 +89,7 @@ public class PregnantFlutterbird : Actor
         partnerID = data.Int("partnerID", 0);
         hoppingDistance = data.Float("hoppingDistance", 8f);
         scaredDistance = data.Float("scaredDistance", 48f);
+        explodes = data.Bool("explodes", false);
         if (shootLasers)
             Add(new Coroutine(ShootLasers()));
         killOnContact = data.Bool("killOnContact", false);
@@ -110,13 +113,14 @@ public class PregnantFlutterbird : Actor
             Add(new VertexLight(Color.White, 0.8f, 12, 28));
         }
         Add(laserSfx = new SoundSource());
+        pushRadius = new Circle(6f);
     }
 
     // this constructor is used when a baby bird is born.
     // Babies don't have a partner and it doesn't matter if they are poly or not because THEY CAN'T REPRODUCE (they are minors).
     public PregnantFlutterbird(Vector2 position, int childrenCount, float timeToGiveBirth, bool chaser, Gender gender, Orientation orientation, bool shootLasers,
         bool killOnContact, bool bouncy, bool flyAway, string flyAwayFlag, string sterilizationFlag, bool squishable, string hopSfx, string birthSfx, string spriteID,
-        int depth, bool emitLight, bool coyote, float hoppingDistance, float scaredDistance, Color color) : base(position)
+        int depth, bool emitLight, bool coyote, float hoppingDistance, float scaredDistance, Color color, bool explodes) : base(position)
     {
         this.start = this.currentPosition = this.Position;
         this.Position.Y += 1f;
@@ -150,6 +154,7 @@ public class PregnantFlutterbird : Actor
         this.Depth = depth;
         this.emitLight = emitLight;
         this.coyote = coyote;
+        this.explodes = explodes;
 
         Add(sprite = GFX.SpriteBank.Create(this.spriteID));
         this.sprite.Color = color;
@@ -159,6 +164,7 @@ public class PregnantFlutterbird : Actor
             Add(new VertexLight(Color.White, 0.8f, 12, 28));
         }
         Add(laserSfx = new SoundSource());
+        pushRadius = new Circle(6f);
     }
 
 
@@ -188,6 +194,8 @@ public class PregnantFlutterbird : Actor
             }
             if (coyote)
                 player.jumpGraceTimer = 0.15f;
+            if (explodes)
+                Explode();
         }
     }
 
@@ -386,6 +394,56 @@ public class PregnantFlutterbird : Actor
         Audio.Play("event:/char/badeline/boss_laser_fire", Position);
     }
 
+    private void Explode()
+    {
+        Collider collider = base.Collider;
+        base.Collider = pushRadius;
+        Audio.Play("event:/new_content/game/10_farewell/puffer_splode", Position);
+        Player player = CollideFirst<Player>();
+        if (player != null && !base.Scene.CollideCheck<Solid>(Position, player.Center))
+        {
+            player.ExplodeLaunch(Position, snapUp: false, sidesOnly: true);
+        }
+        TheoCrystal theoCrystal = CollideFirst<TheoCrystal>();
+        if (theoCrystal != null && !base.Scene.CollideCheck<Solid>(Position, theoCrystal.Center))
+        {
+            theoCrystal.ExplodeLaunch(Position);
+        }
+        foreach (TempleCrackedBlock entity in base.Scene.Tracker.GetEntities<TempleCrackedBlock>())
+        {
+            if (CollideCheck(entity))
+            {
+                entity.Break(Position);
+            }
+        }
+        foreach (TouchSwitch entity2 in base.Scene.Tracker.GetEntities<TouchSwitch>())
+        {
+            if (CollideCheck(entity2))
+            {
+                entity2.TurnOn();
+            }
+        }
+        foreach (FloatingDebris entity3 in base.Scene.Tracker.GetEntities<FloatingDebris>())
+        {
+            if (CollideCheck(entity3))
+            {
+                entity3.OnExplode(Position);
+            }
+        }
+        base.Collider = collider;
+        Level level = SceneAs<Level>();
+        level.Shake();
+        level.Displacement.AddBurst(Position, 0.4f, 12f, 36f, 0.5f);
+        level.Displacement.AddBurst(Position, 0.4f, 24f, 48f, 0.5f);
+        level.Displacement.AddBurst(Position, 0.4f, 36f, 60f, 0.5f);
+        for (float num = 0f; num < MathF.PI * 2f; num += 0.17453292f)
+        {
+            Vector2 position = base.Center + Calc.AngleToVector(num + Calc.Random.Range(-MathF.PI / 90f, MathF.PI / 90f), Calc.Random.Range(12, 18));
+            level.Particles.Emit(Seeker.P_Regen, position, num);
+        }
+        Die();
+    }
+
     public void GiveBirth()
     {
         if (birthCooldown <= 0f)
@@ -395,7 +453,7 @@ public class PregnantFlutterbird : Actor
             Audio.Play(birthSfx, Center);
             SceneAs<Level>().Particles.Emit(ParticleTypes.SparkyDust, Position, Color.Pink);
             Scene.Add(new PregnantFlutterbird(Position, childrenCount, timeToGiveBirth, chaser, gender, orientation, shootLasers, killOnContact, bouncy, flyAway, flyAwayFlag,
-                sterilizationFlag, squishable, hopSfx, birthSfx, spriteID, Depth, emitLight, coyote, hoppingDistance, scaredDistance, sprite.Color));
+                sterilizationFlag, squishable, hopSfx, birthSfx, spriteID, Depth, emitLight, coyote, hoppingDistance, scaredDistance, sprite.Color, explodes));
         }
     }
 

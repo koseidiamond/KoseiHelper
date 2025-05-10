@@ -8,7 +8,9 @@ EvilHoldableController.placements = {
 		name = "EvilHoldableController",
 		data = {
 		timeToKill = 1,
-		drainsStamina = true
+		drainsStamina = true,
+		dropIfNoStamina = false,
+		drainsDash = false
 		}
 	}
 }

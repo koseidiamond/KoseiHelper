@@ -2,6 +2,7 @@
 
 # Pregnant Flutterbird
 entities.KoseiHelper/SpecialFlutterbird.placements.name.PregnantFlutterbird=Special Flutterbird
+entities.KoseiHelper/SpecialFlutterbird.placements.name.SpecialFlutterbird=Pregnant Flutterbird
 entities.KoseiHelper/SpecialFlutterbird.placements.description.PregnantFlutterbird=Flutterbirds that can spawn babies when the conditions are met.\nThey can also be used for gameplay.
 entities.KoseiHelper/SpecialFlutterbird.attributes.description.birthSfx=The sound when a baby is spawned.
 entities.KoseiHelper/SpecialFlutterbird.attributes.description.childrenCount=The maximum number of children that can be spawned from this bird.
@@ -26,6 +27,7 @@ entities.KoseiHelper/SpecialFlutterbird.attributes.description.polyamorous=Wheth
 entities.KoseiHelper/SpecialFlutterbird.attributes.description.partnerID=The entity ID of the bird that can reproduce with this one (if they like each other and have not reached the max baby count).\nMono birds do not reproduce with poly birds and vice versa.\nBoth birds must have each other's id to be official partners.
 entities.KoseiHelper/SpecialFlutterbird.attributes.description.hoppingDistance=How much the birds should hop horizontally, on average.
 entities.KoseiHelper/SpecialFlutterbird.attributes.description.scaredDistance=The horizontal distance at which the bird will be scared and fly away.
+entities.KoseiHelper/SpecialFlutterbird.attributes.description.explodes=Whether the flutterbird will explode upon touch.
 
 # Debug Renderer
 entities.KoseiHelper/DebugRenderer.placements.name.DebugRenderer=Debug Renderer
@@ -144,7 +146,7 @@ entities.KoseiHelper/CounterBarController.attributes.description.reverse=Whether
 
 # Custom Wire
 entities.KoseiHelper/CustomWire.placements.name.CustomWire=Custom Wire
-entities.KoseiHelper/CustomWire.placements.description.CustomWire=aaa
+entities.KoseiHelper/CustomWire.placements.description.CustomWire=Decorative wires, compatible with wind and optionally attached, supporting visual customization options and flags.
 entities.KoseiHelper/CustomWire.attributes.description.depth=The depth at which the wire is rendered.
 entities.KoseiHelper/CustomWire.attributes.description.thickness=How wide the wire should be in pixels.
 entities.KoseiHelper/CustomWire.attributes.description.color=The color of the wire.
@@ -502,6 +504,7 @@ entities.KoseiHelper/FlagRefillController.attributes.description.decrease=Counte
 
 # Spawn Controller - General attributes
 entities.KoseiHelper/SpawnController.placements.name.SpawnController=Spawn Controller
+entities.KoseiHelper/SpawnController.placements.name.Spawner=Spawner
 entities.KoseiHelper/SpawnController.placements.description.SpawnController=This controller spawns something on a button press.\nCertain entities may have custom attributes!
 entities.KoseiHelper/SpawnController.attributes.description.offsetX=Horizontal offset relative to the player position where the entity will spawn.\n(Can be negative for the opposite side)
 entities.KoseiHelper/SpawnController.attributes.description.offsetY=Vertical offset relative to the player position where the entity will spawn.\n(Can be negative for the opposite side)
