@@ -63,8 +63,10 @@ public class PregnantFlutterbird : Actor
     private bool baby;
     private float birthCooldown;
     private SoundSource laserSfx;
-    public static ParticleType deathParticle;
+    public ParticleType deathParticle;
+    public ParticleType explosionParticle;
     private Circle pushRadius;
+    private Color birdColor;
 
     public PregnantFlutterbird(EntityData data, Vector2 offset, EntityID eid) : base(data.Position + offset)
     {
@@ -105,7 +107,7 @@ public class PregnantFlutterbird : Actor
         coyote = data.Bool("coyote", false);
         emitLight = data.Bool("emitLight", false);
         Add(sprite = GFX.SpriteBank.Create(spriteID));
-        sprite.Color = data.HexColor("color", Color.White);
+        sprite.Color = birdColor = data.HexColor("color", Color.White);
 
         if (emitLight)
         {
@@ -177,6 +179,11 @@ public class PregnantFlutterbird : Actor
             Friction = 2f,
             SpeedMax = -2f,
             SpeedMin = 0.25f
+        };
+        explosionParticle = new ParticleType(Seeker.P_Regen)
+        {
+            Color = birdColor,
+            Color2 = birdColor
         };
         base.Added(scene);
     }
@@ -439,7 +446,7 @@ public class PregnantFlutterbird : Actor
         for (float num = 0f; num < MathF.PI * 2f; num += 0.17453292f)
         {
             Vector2 position = base.Center + Calc.AngleToVector(num + Calc.Random.Range(-MathF.PI / 90f, MathF.PI / 90f), Calc.Random.Range(12, 18));
-            level.Particles.Emit(Seeker.P_Regen, position, num);
+            level.Particles.Emit(explosionParticle, position, num);
         }
         Die();
     }
@@ -508,7 +515,7 @@ public class PregnantFlutterbird : Actor
             SceneAs<Level>().Session.SetFlag(flyAwayFlag, true);
         sprite.Scale.X = (float)(-direction) * 1.25f;
         sprite.Scale.Y = 1.25f;
-        level.ParticlesFG.Emit(Calc.Random.Choose<ParticleType>(ParticleTypes.Dust), Position, -MathF.PI / 2f);
+        level.ParticlesFG.Emit(Calc.Random.Choose(ParticleTypes.Dust), Position, -MathF.PI / 2f);
         Vector2 from = Position;
         Vector2 to = Position + new Vector2(direction * 4, -8f);
         for (float p = 0f; p < 1f; p += Engine.DeltaTime * 3f)

@@ -362,6 +362,7 @@ entities.KoseiHelper/TilesetOshiroDoor.attributes.description.debris=If the oshi
 
 #Bound Refill
 entities.KoseiHelper/BoundRefill.placements.name.boundRefill=Bound Refill
+entities.KoseiHelper/BoundRefill.placements.name.OOBRefill=OOB Refill
 entities.KoseiHelper/BoundRefill.placements.description.Bound Refill=OutBound refills allow the player to never transition and be outside of the current room (and force the camera to follow the player).\nInBound refills allow the player to immediately transition to the room they are in ("bounded" again).
 entities.KoseiHelper/BoundRefill.attributes.description.outBound=If this is true, this will be an OutBound refill. These are generally placed inside a room.\nIf it's false, it will be an InBound refill. These are generally placed out of bounds, overlapping with a different room.
 entities.KoseiHelper/BoundRefill.attributes.description.climbFix=In vanilla, the player can't climb if they are to the left/right of the current screen.\nNot recommended to disable.\n(The refill with the highest ID determines if the player can climb outside the current room or not).
@@ -590,6 +591,7 @@ triggers.KoseiHelper/ForceHiccupTrigger.attributes.description.triggerMode=If th
 
 #OOB Trigger
 triggers.KoseiHelper/OOBTrigger.placements.name.OOBTrigger=OOB Trigger
+triggers.KoseiHelper/OOBTrigger.placements.name.BoundTrigger=Bound Trigger
 triggers.KoseiHelper/OOBTrigger.placements.description.BoundTrigger=The trigger version of Bound Refills.\nAllows to enter the physical space of other rooms without transitioning to them.
 triggers.KoseiHelper/OOBTrigger.attributes.name.inBound=InBound
 triggers.KoseiHelper/OOBTrigger.attributes.description.onlyOnce=If the trigger should disappear upon being activated.
@@ -607,14 +609,23 @@ triggers.KoseiHelper/KillIfNotGroundedTrigger.attributes.description.killIfGroun
 triggers.KoseiHelper/MetadataTrigger.placements.name.MetadataTrigger=Metadata Trigger
 triggers.KoseiHelper/MetadataTrigger.placements.description.MetadataTrigger=Changes the map/room metadata.\nImportant: Room metadata will have effect once the room reloads (reenter/F5/respawn).
 triggers.KoseiHelper/MetadataTrigger.attributes.description.onlyOnce=If the trigger should disappear upon being activated.
+triggers.KoseiHelper/MetadataTrigger.attributes.description.metadataToAffect=Whether the trigger should alter only the map metadata, the room metadata, or everything.
 triggers.KoseiHelper/MetadataTrigger.attributes.description.theoInBubble=Whether the player is allowed to hold Theo and other holdables while in a booster.
 triggers.KoseiHelper/MetadataTrigger.attributes.description.seekerSlowdown=Whether Seekers should be able to slow down time when attacking the player.\nDisables music layer 3 if enabled.
 triggers.KoseiHelper/MetadataTrigger.attributes.description.heartIsEnd=Whether collecting a heart counts as the end of the level.
 triggers.KoseiHelper/MetadataTrigger.attributes.description.dreaming=Whether the map is in the dreaming state.\nChanges the appearance of the Stars background (instant) and bonfires (reload).
+triggers.KoseiHelper/MetadataTrigger.attributes.description.coreMode=The core mode (fire, ice or neither).
+triggers.KoseiHelper/MetadataTrigger.attributes.description.inventory=Your inventory. Changes the player's abilities.\n Prologue: 0 dashes, Dream blocks disabled, wearing a backpack, ground refills enabled\n Default: 1 dash, Dream blocks enabled, wearing a backpack, ground refills enabled\n OldSite: 1 dash, Dream blocks disabled, wearing a backpack, ground refills enabled\n CH6End: 2 dashes, Dream blocks enabled, wearing a backpack, ground refills enabled\n TheSummit: 2 dashes, Dream blocks enabled, not wearing a backpack, ground refills enabled\n Core: 2 dashes, Dream blocks enabled, wearing a backpack, ground refills disabled\n Farewell: 1 dash, Dream blocks enabled, not wearing a backpack, ground refills enabled
 triggers.KoseiHelper/MetadataTrigger.attributes.description.isDark=Whether the room is dark (effect on room reload).
 triggers.KoseiHelper/MetadataTrigger.attributes.description.isSpace=Whether the room is in space (end of Core) (effect on room reload).
 triggers.KoseiHelper/MetadataTrigger.attributes.description.isUnderwater=Whether the room is submerged in water (effect on room reload).
 triggers.KoseiHelper/MetadataTrigger.attributes.description.disableDownTransition=Whether the player is allowed to transition downwards (effect is instant).
+triggers.KoseiHelper/MetadataTrigger.attributes.description.flag=The flag that needs to be set for the trigger to have an effect.\nLeave empty for no flag required.
+triggers.KoseiHelper/MetadataTrigger.attributes.name.theoInBubble=Theo In Booster
+triggers.KoseiHelper/MetadataTrigger.attributes.name.heartIsEnd=End Level on Heart
+triggers.KoseiHelper/MetadataTrigger.attributes.name.isUnderwater=Underwater
+triggers.KoseiHelper/MetadataTrigger.attributes.name.isSpace=Space
+triggers.KoseiHelper/MetadataTrigger.attributes.name.isDark=Dark
 
 # Detach Follower Trigger
 triggers.KoseiHelper/DetachFollowerTrigger.placements.name.DetachFollowerTrigger=Detach Follower Trigger

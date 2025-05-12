@@ -8,11 +8,15 @@ MetadataTrigger.placements = {
 		name = "MetadataTrigger",
 		data = {
 		onlyOnce = false,
+		metadataToAffect = "Both",
+		flag = "",
 		-- Map metadata
 		heartIsEnd = false,
 		seekerSlowdown = true,
 		theoInBubble = false,
 		dreaming = false,
+		coreMode = "NoChange",
+		inventory = "NoChange",
 		-- Room metadata
 		isSpace = false,
 		isDark = false,
@@ -23,11 +27,41 @@ MetadataTrigger.placements = {
 }
 
 MetadataTrigger.fieldInformation = function (entity) return {
+	metadataToAffect = {
+		options = {
+		"Both",
+		"Map",
+		"Room"
+		},
+		editable = false
+	},
 	triggerMode = {
 		options = {
 		"OnEnter",
 		"OnLeave",
 		"OnStay"
+		},
+		editable = false
+	},
+	coreMode = {
+		options = {
+		"NoChange",
+		"Cold",
+		"Hot",
+		"None"
+		},
+		editable = false
+	},
+	inventory = {
+		options = {
+		"NoChange",
+		"CH6End",
+		"Core",
+		"Default",
+		"Farewell",
+		"OldSite",
+		"Prologue",
+		"TheSummit"
 		},
 		editable = false
 	}
@@ -43,6 +77,8 @@ MetadataTrigger.fieldOrder= {
 	"seekerSlowdown",
 	"theoInBubble",
 	"dreaming",
+	"coreMode",
+	"inventory",
 	"isUnderwater",
 	"isSpace",
 	"disableDownTransition",

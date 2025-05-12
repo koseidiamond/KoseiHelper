@@ -6,6 +6,7 @@ BoundRefill.depth = 8999
 BoundRefill.placements = {
 	{
 		name = "Bound Refill",
+		alternativeName = "OOBRefill",
 		data = {
 			outBound = true,
 			climbFix = true,
