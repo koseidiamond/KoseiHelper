@@ -1,7 +1,7 @@
 local Goomba = {}
 
 Goomba.name = "KoseiHelper/Goomba"
-Goomba.depth = -100
+Goomba.depth = -1
 
 Goomba.placements = {
 	{
@@ -19,9 +19,20 @@ Goomba.placements = {
 			gravityMultiplier = 1,
 			canEnableTouchSwitches = false,
 			minisAmount = 10,
-			slowdown = false
+			slowdown = false,
+			deathSound = "event:/KoseiHelper/goomba",
+			spriteID = "koseiHelper_goomba",
+			deathAnimation = false,
+			flagOnDeath = "",
+			color = "FFFFFF"
 		}
 	}
+}
+
+Goomba.fieldInformation = {
+	color = {
+        fieldType = "color"
+    }
 }
 
 function Goomba.ignoredFields(entity)
@@ -62,6 +73,13 @@ Goomba.fieldInformation = {
 		editable = false
 	}
 }
+
+local function hexToRGB(hex)
+    local r = tonumber(hex:sub(1, 2), 16) / 255
+    local g = tonumber(hex:sub(3, 4), 16) / 255
+    local b = tonumber(hex:sub(5, 6), 16) / 255
+    return r, g, b
+end
 
 function Goomba.texture(room, entity)
     local wide = entity.isWide

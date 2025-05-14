@@ -51,6 +51,14 @@ public class Goomba : Actor
     private float number2 = -1f;
     private float number3, randomAnxietyOffset;
 
+    public string spriteID;
+    public bool deathAnimation;
+    public string flagOnDeath;
+    public Color color;
+
+    private float previousTimeRate, previousGameRate, previousAnxiety;
+    private bool dead = false;
+    
     public Goomba(EntityData data, Vector2 offset) : base(data.Position + offset)
     {
         isBaby = false;
@@ -73,6 +81,7 @@ public class Goomba : Actor
         canEnableTouchSwitches = data.Bool("canEnableTouchSwitches", false);
         deathSound = data.Attr("deathSound", "event:/KoseiHelper/goomba");
         minisAmount = data.Int("minisAmount", 10);
+        color = data.HexColor("color", Color.White);
         if (!isWide)
         {
             Collider = new Hitbox(13, 12, -7, -4);
@@ -89,9 +98,17 @@ public class Goomba : Actor
             Add(new DashListener { OnDash = OnDashFlyAway });
         Add(new PlayerCollider(OnPlayer));
         Add(new PlayerCollider(OnPlayerBounce, bounceCollider));
+        spriteID = data.Attr("spriteID", "koseiHelper_goomba");
         Add(sprite = GFX.SpriteBank.Create("koseiHelper_goomba"));
+        sprite.Color = color;
         sprite.Play("idle");
+        deathAnimation = data.Bool("deathAnimation", false);
+        flagOnDeath = data.Attr("flagOnDeath", "");
         Add(sine = new SineWave(2f, 0f));
+        sprite.OnFinish = anim =>
+        {
+            CeasedToExist();
+        };
     }
     // this ctor is used for the minigoombas when a goomba can spawn minis
     public Goomba(Vector2 position, float newSpeed, bool newOutline, bool newIsWide, bool newIsWinged, bool newCanBeBounced) : base(position)
@@ -116,6 +133,10 @@ public class Goomba : Actor
         Add(sprite = GFX.SpriteBank.Create("koseiHelper_goomba"));
         sprite.Play("idle");
         sprite.Scale = new Vector2(0.5f, 0.5f);
+        sprite.OnFinish = anim =>
+        {
+            CeasedToExist();
+        };
     }
 
     public override void Awake(Scene scene)
@@ -161,6 +182,9 @@ public class Goomba : Actor
                 target = 1f;
                 number3 = 0f;
             }
+            previousTimeRate = Engine.TimeRate;
+            previousGameRate = Distort.GameRate;
+            previousAnxiety = Distort.Anxiety;
             Engine.TimeRate = Calc.Approach(Engine.TimeRate, target, 4f * Engine.DeltaTime);
             Distort.GameRate = Calc.Approach(Distort.GameRate, Calc.Map(Engine.TimeRate, 0.5f, 1f), Engine.DeltaTime * 2f);
             Distort.Anxiety = Calc.Approach(Distort.Anxiety, (0.5f + randomAnxietyOffset) * number3, 8f * Engine.DeltaTime);
@@ -170,28 +194,43 @@ public class Goomba : Actor
             this.Scene.Add(new Goomba(new Vector2(this.Position.X, this.Position.Y + 4), originalSpeedX + originalSpeedX / 4, false, false, false, true));
             minisSpawned += 1;
         }
-        if (speedX != 0)
-            if (!isWide)
-                if (!isWinged)
-                    sprite.Play("walk");
+        if (Collidable & !dead)
+        {
+            if (speedX != 0)
+            {
+                if (!isWide)
+                {
+                    if (!isWinged)
+                        sprite.Play("walk");
+                    else
+                        sprite.Play("winged");
+                }
                 else
-                    sprite.Play("winged");
+                {
+                    if (!isWinged)
+                        sprite.Play("widewalk");
+                    else
+                        sprite.Play("widewinged");
+                }
+            }
             else
-                if (!isWinged)
-                sprite.Play("widewalk");
-            else
-                sprite.Play("widewinged");
-        else
-            if (!isWide)
-            if (!isWinged)
-                sprite.Play("idle");
-            else
-                sprite.Play("wingedidle");
-        else
-                if (!isWinged)
-            sprite.Play("wideidle");
-        else
-            sprite.Play("widewingedidle");
+            {
+                if (!isWide)
+                {
+                    if (!isWinged)
+                        sprite.Play("idle");
+                    else
+                        sprite.Play("wingedidle");
+                }
+                else
+                {
+                    if (!isWinged)
+                        sprite.Play("wideidle");
+                    else
+                        sprite.Play("widewingedidle");
+                }
+            }
+        }
         if (canEnableTouchSwitches)
             EnableTouchSwitch();
         speedY = Math.Min(speedY * 0.6f, 0f);
@@ -253,16 +292,9 @@ public class Goomba : Actor
 
         if (base.Bottom > (float)level.Bounds.Bottom + 16)
         {
-            this.RemoveSelf();
-            if (slowdown)
-            {
-                Engine.TimeRate = 1f;
-                Distort.GameRate = 1f;
-                Distort.Anxiety = 0f;
-            }
+            CeaseToExist();
         }
         base.Update();
-
         if (isWinged && flyAway) // flyAway behavior
         {
             MoveVExact((int)Engine.DeltaTime, onCollideV);
@@ -271,13 +303,7 @@ public class Goomba : Actor
                 MoveVExact((int)(flapSpeed * Engine.DeltaTime), onCollideV);
                 if (base.Y < (float)(SceneAs<Level>().Bounds.Top - 16))
                 {
-                    RemoveSelf();
-                    if (slowdown)
-                    {
-                        Engine.TimeRate = 1f;
-                        Distort.GameRate = 1f;
-                        Distort.Anxiety = 0f;
-                    }
+                    CeaseToExist();
                 }
             }
             else
@@ -298,23 +324,48 @@ public class Goomba : Actor
             if (!TrySquishWiggle(d, 2, 2))
             {
                 Audio.Play(deathSound, Center);
-                RemoveSelf();
-                if (slowdown)
-                {
-                    Engine.TimeRate = 1f;
-                    Distort.GameRate = 1f;
-                    Distort.Anxiety = 0f;
-                }
+                CeaseToExist();
             }
         };
+    }
+
+    private void CeaseToExist()
+    {
+        dead = true;
+        if (deathAnimation)
+        {
+            Collidable = false;
+            sprite.Play("dead");
+            if (slowdown)
+            {
+                Engine.TimeRate = previousTimeRate;
+                Distort.GameRate = previousGameRate;
+                Distort.Anxiety = previousAnxiety;
+            }
+        }
+        else
+            CeasedToExist();
+    }
+
+    private void CeasedToExist()
+    {
+        dead = true;
+        Session session = SceneAs<Level>().Session;
+        this.RemoveSelf();
+        if (slowdown)
+        {
+            Engine.TimeRate = previousTimeRate;
+            Distort.GameRate = previousGameRate;
+            Distort.Anxiety = previousAnxiety;
+        }
+        if (!string.IsNullOrEmpty(flagOnDeath))
+            session.SetFlag(flagOnDeath, true);
     }
 
     private void OnPlayer(Player player)
     {
         if (player.Scene != null)
-        {
             player.Die(player.Center);
-        }
     }
 
     private void OnPlayerBounce(Player player)
@@ -324,13 +375,7 @@ public class Goomba : Actor
         player.Bounce(base.Top - 2f);
         if (!isBaby)
             Audio.Play(deathSound, Position);
-        this.RemoveSelf();
-        if (slowdown)
-        {
-            Engine.TimeRate = 1f;
-            Distort.GameRate = 1f;
-            Distort.Anxiety = 0f;
-        }
+        CeaseToExist();
         float angle = player.Speed.Angle();
         level.ParticlesFG.Emit(goombaParticle, 5, Position, Vector2.One * 4f, angle - (float)Math.PI / 2f);
     }
@@ -432,13 +477,7 @@ public class Goomba : Actor
             Audio.Play(deathSound, Position);
         }
         Celeste.Freeze(0.05f);
-        this.RemoveSelf();
-        if (slowdown)
-        {
-            Engine.TimeRate = 1f;
-            Distort.GameRate = 1f;
-            Distort.Anxiety = 0f;
-        }
+        CeaseToExist();
         float angle = player.Speed.Angle();
         level.ParticlesFG.Emit(goombaParticle, 5, Position, Vector2.One * 4f, angle - (float)Math.PI / 2f);
     }

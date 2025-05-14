@@ -14,6 +14,8 @@
 		<Loop id="widewingedidle" path="widewingedidle" delay="0.1" frames="00" />
 		<Loop id="widewinged" path="widewinged" delay="0.1" frames="00-01" />
 		
+		<Anim id="dead" path="dead" delay="0.1" frames="00"/>
+		
     </koseiHelper_goomba>
 	
 	<koseiHelper_maryBlock path="objects/KoseiHelper/MaryBlock/" start="idle">

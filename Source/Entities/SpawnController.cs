@@ -59,6 +59,15 @@ public enum SpawnCondition
     OnJump = 8
 }
 
+public enum CassetteColor
+{
+    Any,
+    Blue,
+    Rose,
+    BrightSun,
+    Malachite
+}
+
 [CustomEntity("KoseiHelper/SpawnController")]
 public class SpawnController : Entity
 {
@@ -69,6 +78,7 @@ public class SpawnController : Entity
     public float spawnCooldown, spawnTime;
     public bool relativeToPlayerFacing, nodeRelativeToPlayerFacing;
     public SpawnCondition spawnCondition;
+    public CassetteColor cassetteColor;
     public string spawnFlag;
     public bool spawnFlagValue;
     public float spawnSpeed;
@@ -83,7 +93,7 @@ public class SpawnController : Entity
 #pragma warning restore CS0414
     private bool hasSpawnedFromSpeed = false;
     private bool previousHasSpawnedFromFlag, currentHasSpawnedFromFlag;
-    private int currentCassetteIndex, previousCassetteIndex;
+    private int previousCassetteIndex;
     private bool canSpawnFromCassette = false;
     public int flagCount = 1;
     public int flagCycleAt = 9999;
@@ -184,6 +194,7 @@ public class SpawnController : Entity
         flagToEnableSpawner = data.Attr("flag", "");
         flagValue = data.Bool("flagValue", true);
         spawnCondition = data.Enum("spawnCondition", SpawnCondition.OnCustomButtonPress);
+        cassetteColor = data.Enum("cassetteColor", CassetteColor.Any);
         spawnFlag = data.Attr("spawnFlag", "koseiHelper_spawn");
         spawnFlagValue = data.Bool("spawnFlagValue", true);
         spawnSpeed = data.Float("spawnSpeed", 300f);
@@ -302,18 +313,26 @@ public class SpawnController : Entity
         bool isBlock = blockEntities.Contains(entityToSpawn);
         // If the flag flagToEnableSpawner is true, or if no flag is required, check if the spawn conditions are met
         // (Not to be confused with spawnFlag, this one is just a common requirement, the other is for the Flag Mode)
+        Logger.Debug(nameof(KoseiHelperModule), $"previousCassetteIndex={previousCassetteIndex}, cassetteBlockManager.currentIndex={cassetteBlockManager.currentIndex}");
         if (((flagValue && level.Session.GetFlag(flagToEnableSpawner)) || string.IsNullOrEmpty(flagToEnableSpawner) ||
             (!flagValue && !level.Session.GetFlag(flagToEnableSpawner))) && player != null && !player.JustRespawned)
         {
             if (cassetteBlockManager != null)
             {
-                if (currentCassetteIndex != cassetteBlockManager.currentIndex && // Make sure the player is not too close to the bounds of the level to prevent transition jank
-                player.Bottom < (float)level.Bounds.Bottom && player.Top > (float)level.Bounds.Top + 4 &&
-                player.Left > (float)level.Bounds.Left + 8 && player.Right < (float)level.Bounds.Right - 8)
+                if (cassetteColor == CassetteColor.Any ||
+                    (cassetteColor == CassetteColor.Blue && cassetteBlockManager.currentIndex == 0) ||
+                    (cassetteColor == CassetteColor.Rose && cassetteBlockManager.currentIndex == 1) ||
+                    (cassetteColor == CassetteColor.BrightSun && cassetteBlockManager.currentIndex == 2) ||
+                    (cassetteColor == CassetteColor.Malachite && cassetteBlockManager.currentIndex == 3))
                 {
-                    previousCassetteIndex = currentCassetteIndex;
-                    currentCassetteIndex = cassetteBlockManager.currentIndex;
-                    canSpawnFromCassette = true;
+                    // Make sure the player is not too close to the bounds of the level to prevent transition jank
+                    if (player.Bottom < (float)level.Bounds.Bottom && player.Top > (float)level.Bounds.Top + 4 &&
+                    player.Left > (float)level.Bounds.Left + 8 && player.Right < (float)level.Bounds.Right - 8)
+                    {
+                        
+                        previousCassetteIndex = cassetteBlockManager.currentIndex;
+                        canSpawnFromCassette = true;
+                    }
                 }
                 else
                     canSpawnFromCassette = false;
@@ -592,7 +611,6 @@ public class SpawnController : Entity
                 hasSpawnedFromSpeed = false;
         }
         previousHasSpawnedFromFlag = currentHasSpawnedFromFlag; // used on Flag Spawn Condition mode
-        previousCassetteIndex = currentCassetteIndex; // used on Cassette Beat Condition mode
         canSpawnFromCassette = false;
         if (player != null)
         {

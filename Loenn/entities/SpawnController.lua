@@ -35,6 +35,7 @@ SpawnController.placements = {
 		spawnSpeed = 300,
 		spawnLimit = -1,
 		everyXDashes = 1,
+		cassetteColor = "Any",
 		-- Entity-specific attributes
 		nodeX = 0,
 		nodeY = 0,
@@ -116,6 +117,16 @@ SpawnController.fieldInformation = function (entity) return {
 		"Flag",
 		"Counter",
 		"CustomEntity"
+		},
+		editable = false
+	},
+	cassetteColor = {
+		options = {
+		"Any",
+		"Blue",
+		"Rose",
+		"BrightSun",
+		"Malachite"
 		},
 		editable = false
 	},
@@ -247,6 +258,7 @@ function SpawnController.ignoredFields(entity)
 	"winged",
 	"moon",
 	"everyXDashes",
+	"cassetteColor",
 	"decalTexture",
 	"decalDepth",
 	"entityPath",
@@ -274,6 +286,9 @@ function SpawnController.ignoredFields(entity)
 	end
 	if entity.spawnCondition == "OnSpeedX" then
 		doNotIgnore("spawnSpeed")
+	end
+	if entity.spawnCondition == "OnCassetteBeat" then
+		doNotIgnore("cassetteColor")
 	end
 	if entity.spawnCondition == "OnDash" then
 		doNotIgnore("everyXDashes")
