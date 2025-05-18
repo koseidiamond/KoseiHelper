@@ -47,7 +47,6 @@ entities.KoseiHelper/DebugRenderer.attributes.description.depth=The depth at whi
 # Game Data Controller
 entities.KoseiHelper/GameDataController.placements.name.GameDataController=Game Data Controller
 entities.KoseiHelper/GameDataController.placements.description.GameDataController=Sets and updates several useful flags (bools), counters (ints) and sliders (floats).\nIt is recommended to use Mapping Utils to check these values in game.
-entities.KoseiHelper/GameDataController.attributes.description.alive=Flag while the player is not dead.
 entities.KoseiHelper/GameDataController.attributes.description.ducking=Flag while the player is crouching.
 entities.KoseiHelper/GameDataController.attributes.description.facing=Flag depending on the player's facing direction, with the suffix "Left" or "Right".\nExample: inputting the flag name ""KoseiHelper_Facing" will use the flag names "KoseiHelper_FacingLeft" and "KoseiHelper_FacingRight".
 entities.KoseiHelper/GameDataController.attributes.description.stamina=Slider depending on the player's current stamina.
@@ -59,7 +58,15 @@ entities.KoseiHelper/GameDataController.attributes.description.playerStateCounte
 entities.KoseiHelper/GameDataController.attributes.description.dashAttacking=Whether the player is in dash attack (not to be confused with dashing, which takes less time).
 entities.KoseiHelper/GameDataController.attributes.description.startedFromGolden=Whether the player has started from dying with a golden.
 entities.KoseiHelper/GameDataController.attributes.description.carryingGolden=Whether the player is currently carrying a golden.
-
+entities.KoseiHelper/GameDataController.attributes.description.darknessAlpha=Slider depending on the current darkness/light level.
+entities.KoseiHelper/GameDataController.attributes.description.bloomAmount=Slider depending on the current bloom level.
+entities.KoseiHelper/GameDataController.attributes.description.deaths=The number of deaths.
+entities.KoseiHelper/GameDataController.attributes.description.timesDashed=Total number of times that the player dashed (resets on respawn).
+entities.KoseiHelper/GameDataController.attributes.description.timesJumped=Total number of times that the player jumped (resets on respawn).
+entities.KoseiHelper/GameDataController.attributes.description.worldPositionX=The player's horizontal world position.
+entities.KoseiHelper/GameDataController.attributes.description.worldPositionY=The player's vertical world position.
+entities.KoseiHelper/GameDataController.attributes.description.featherTime=The time left until the player is kicked out of the feather.
+entities.KoseiHelper/GameDataController.attributes.description.launched=Whether the player is currently being launched (e.g. by a puffer).
 # Debug Map Controller
 entities.KoseiHelper/DebugMapController.placements.name.DebugMapController=Debug Map Controller
 entities.KoseiHelper/DebugMapController.placements.description.DebugMapController=Modifies the way the Debug Map is rendered. Persistent controller.\nYou should have only one of these in your map.

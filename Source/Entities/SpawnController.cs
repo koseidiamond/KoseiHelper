@@ -313,7 +313,6 @@ public class SpawnController : Entity
         bool isBlock = blockEntities.Contains(entityToSpawn);
         // If the flag flagToEnableSpawner is true, or if no flag is required, check if the spawn conditions are met
         // (Not to be confused with spawnFlag, this one is just a common requirement, the other is for the Flag Mode)
-        Logger.Debug(nameof(KoseiHelperModule), $"previousCassetteIndex={previousCassetteIndex}, cassetteBlockManager.currentIndex={cassetteBlockManager.currentIndex}");
         if (((flagValue && level.Session.GetFlag(flagToEnableSpawner)) || string.IsNullOrEmpty(flagToEnableSpawner) ||
             (!flagValue && !level.Session.GetFlag(flagToEnableSpawner))) && player != null && !player.JustRespawned)
         {

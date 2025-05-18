@@ -7,7 +7,6 @@ GameDataController.placements = {
 	{
 		name = "GameDataController",
 		data = {
-			alive = "KoseiHelper_AliveFlag",
 			ducking = "KoseiHelper_DuckingFlag",
 			facing = "KoseiHelper_FacingFlag",
 			stamina = "KoseiHelper_StaminaSlider",
@@ -19,7 +18,15 @@ GameDataController.placements = {
 			dashAttacking = "KoseiHelper_dashAttackingFlag",
 			startedFromGolden = "KoseiHelper_startedFromGoldenFlag",
 			carryingGolden = "KoseiHelper_carryingGoldenFlag",
-			forceMoveX = "KoseiHelper_forceMoveXCounter"
+			darknessAlpha = "KoseiHelper_darknessAlphaSlider",
+			bloomAmount = "KoseiHelper_bloomAmountSlider",
+			deaths = "KoseiHelper_deathCounter",
+			timesDashed = "KoseiHelper_timesDashedCounter",
+			timesJumped = "KoseiHelper_timesJumpedCounter",
+			worldPositionX = "KoseiHelper_worldPositionXSlider",
+			worldPositionY = "KoseiHelper_worldPositionYSlider",
+			featherTime = "KoseiHelper_featherTimeSlider",
+			launched = "KoseiHelper_launchedFlag"
 		}
 	}
 }
