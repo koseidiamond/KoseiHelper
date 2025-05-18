@@ -44,6 +44,22 @@ entities.KoseiHelper/DebugRenderer.attributes.description.scaled=If the custom i
 entities.KoseiHelper/DebugRenderer.attributes.description.nonDebug=If the shape should also be displayed while not using debug.\nWARNING: Circles display as a rhombus in this mode.
 entities.KoseiHelper/DebugRenderer.attributes.description.depth=The depth at which the Renderer appears in Lönn. Debug always appears above everything else in-game.
 
+# Game Data Controller
+entities.KoseiHelper/GameDataController.placements.name.GameDataController=Game Data Controller
+entities.KoseiHelper/GameDataController.placements.description.GameDataController=Sets and updates several useful flags (bools), counters (ints) and sliders (floats).\nIt is recommended to use Mapping Utils to check these values in game.
+entities.KoseiHelper/GameDataController.attributes.description.alive=Flag while the player is not dead.
+entities.KoseiHelper/GameDataController.attributes.description.ducking=Flag while the player is crouching.
+entities.KoseiHelper/GameDataController.attributes.description.facing=Flag depending on the player's facing direction, with the suffix "Left" or "Right".\nExample: inputting the flag name ""KoseiHelper_Facing" will use the flag names "KoseiHelper_FacingLeft" and "KoseiHelper_FacingRight".
+entities.KoseiHelper/GameDataController.attributes.description.stamina=Slider depending on the player's current stamina.
+entities.KoseiHelper/GameDataController.attributes.description.justRespawned=Flag while the player has respawned and not moved yet.
+entities.KoseiHelper/GameDataController.attributes.description.speedX=Slider for the player's horizontal speed.
+entities.KoseiHelper/GameDataController.attributes.description.speedY=Slider for the player's vertical speed.
+entities.KoseiHelper/GameDataController.attributes.description.onGround=Flag while the player is on the ground.\nAlso uses the suffix "Safe" for grounds that can collect berries.
+entities.KoseiHelper/GameDataController.attributes.description.playerStateCounter=The current state of the player.\n0 - Normal  1 - Climb 2 - Dash  3 - Swim\n4 - Boost  5 - RedDash 6 - HitSquash  7 - Launch\n8 - Pickup  9 - DreamDash 10 - SummitLaunch  11 - Dummy\n12 - IntroWalk  13 - IntroJump 14 - IntroRespawn  15 - IntroWakeUp\n16 - BirdDashTutorial  17 - Frozen 18 - ReflectionFall  19 - StarFly\n20 - TempleFall  21 - CassetteFly 22 - Attract  23 - IntroMoonJump\n24 - FlingBird  25 - IntroThinkForABit
+entities.KoseiHelper/GameDataController.attributes.description.dashAttacking=Whether the player is in dash attack (not to be confused with dashing, which takes less time).
+entities.KoseiHelper/GameDataController.attributes.description.startedFromGolden=Whether the player has started from dying with a golden.
+entities.KoseiHelper/GameDataController.attributes.description.carryingGolden=Whether the player is currently carrying a golden.
+
 # Debug Map Controller
 entities.KoseiHelper/DebugMapController.placements.name.DebugMapController=Debug Map Controller
 entities.KoseiHelper/DebugMapController.placements.description.DebugMapController=Modifies the way the Debug Map is rendered. Persistent controller.\nYou should have only one of these in your map.
@@ -259,7 +275,7 @@ entities.KoseiHelper/Goomba.attributes.description.deathSound=The sound to play 
 entities.KoseiHelper/Goomba.attributes.description.spriteID=The ID or tag of the sprite in your Sprites.xml.\nYou can copy the default sprite from KoseiHelper/Graphics/Sprites.xml.
 entities.KoseiHelper/Goomba.attributes.description.deathAnimation=Whether the goomba should play the "dead" animation when killed.\nIf using slowdown or flags, those will have effect after the animation finishes playing.
 entities.KoseiHelper/Goomba.attributes.description.flagOnDeath=The flag that will be set to true when the goomba dies.
-entities.KoseiHelper/Goomba.attributes.description.tint=The sprite will be tinted with this color.
+entities.KoseiHelper/Goomba.attributes.description.color=The sprite will be tinted with this color.
 
 #Trigger Spinner
 entities.KoseiHelper/TriggerSpinner.placements.name.TriggerSpinner=Trigger Spinner
