@@ -8,14 +8,14 @@ namespace Celeste.Mod.KoseiHelper.Triggers;
 public class ReplaceSpeedWithStoredSpeedTrigger : Trigger
 {
     public bool onlyOnce;
-    public bool replacesDirection; // TODO fix this
+    public bool replacesDirection;
     public bool addSpeed;
     public string firstSfx, replacementSfx;
     public float factor;
     public bool storeFirstSpeedOnly;
 
     private float storedXA, storedXB, storedYA, storedYB;
-    private bool storingCycle, hasStored, hasAltered;
+    private bool storingCycle, hasStored, hasAltered, dontNeedToStore;
     public enum SpeedAxis
     {
         SpeedX,
@@ -49,7 +49,8 @@ public class ReplaceSpeedWithStoredSpeedTrigger : Trigger
             else
                 Audio.Play(firstSfx);
         }
-        Store(player, storingCycle);
+        if (!dontNeedToStore)
+            Store(player, storingCycle);
         if (hasStored)
             Replace(player, storingCycle);
         hasStored = true;
@@ -104,7 +105,10 @@ public class ReplaceSpeedWithStoredSpeedTrigger : Trigger
                     break;
             }
         }
+        if (!storeFirstSpeedOnly)
             storingCycle = !storing;
+        else
+            dontNeedToStore = true;
     }
 
     public void Replace(Player player, bool storing)
@@ -115,38 +119,90 @@ public class ReplaceSpeedWithStoredSpeedTrigger : Trigger
             {
                 case SpeedAxis.SpeedX:
                     if (addSpeed)
-                        player.Speed.X += storedXB * factor;
+                    {
+                        if (replacesDirection)
+                            player.Speed.X += storedXB * factor;
+                        else
+                            player.Speed.X += storedXB * factor * Math.Sign(player.Speed.X);
+                    }
                     else
-                        player.Speed.X = storedXB * factor;
+                    {
+                        if (replacesDirection)
+                            player.Speed.X = storedXB * factor;
+                        else
+                            player.Speed.X = storedXB * factor * Math.Sign(player.Speed.X);
+                    }
                     break;
                 case SpeedAxis.SpeedY:
                     if (addSpeed)
-                        player.Speed.Y += storedYB * factor;
+                    {
+                        if (replacesDirection)
+                            player.Speed.Y += storedYB * factor;
+                        else
+                            player.Speed.Y += storedYB * factor * Math.Sign(player.Speed.Y);
+                    }
                     else
-                        player.Speed.Y = storedYB * factor;
+                    {
+                        if (replacesDirection)
+                            player.Speed.Y = storedYB * factor;
+                        else
+                            player.Speed.Y = storedYB * factor * Math.Sign(player.Speed.Y);
+                    }
                     break;
                 case SpeedAxis.Swapped:
-                    if (addSpeed)
-                    {
-                        player.Speed.X += storedYB * factor;
-                        player.Speed.Y += storedXB * factor;
-                    }
-                    else
-                    {
-                        player.Speed.X = storedYB * factor;
-                        player.Speed.Y = storedXB * factor;
-                    }
+                        if (addSpeed)
+                        {
+                            if (replacesDirection)
+                            {
+                                player.Speed.X += storedYB * factor;
+                                player.Speed.Y += storedXB * factor;
+                            }
+                            else
+                            {
+                                player.Speed.X += storedYB * factor * Math.Sign(player.Speed.Y);
+                                player.Speed.Y += storedXB * factor * Math.Sign(player.Speed.X);
+                            }
+                        }
+                        else
+                        {
+                            if (replacesDirection)
+                            {
+                                player.Speed.X = storedYB * factor;
+                                player.Speed.Y = storedXB * factor;
+                            }
+                            else
+                            {
+                                player.Speed.X = storedYB * factor * Math.Sign(player.Speed.Y);
+                                player.Speed.Y = storedXB * factor * Math.Sign(player.Speed.X);
+                            }
+                        }
                     break;
                 default: // Both
                     if (addSpeed)
                     {
-                        player.Speed.X += storedXB * factor;
-                        player.Speed.Y += storedYB * factor;
+                        if (replacesDirection)
+                        {
+                            player.Speed.X += storedXB * factor;
+                            player.Speed.Y += storedYB * factor;
+                        }
+                        else
+                        {
+                            player.Speed.X += storedXB * factor * Math.Sign(player.Speed.X);
+                            player.Speed.Y += storedYB * factor * Math.Sign(player.Speed.Y);
+                        }
                     }
                     else
                     {
-                        player.Speed.X = storedXB * factor;
-                        player.Speed.Y = storedYB * factor;
+                        if (replacesDirection)
+                        {
+                            player.Speed.X = storedXB * factor;
+                            player.Speed.Y = storedYB * factor;
+                        }
+                        else
+                        {
+                            player.Speed.X = storedXB * factor * Math.Sign(player.Speed.X);
+                            player.Speed.Y = storedYB * factor * Math.Sign(player.Speed.Y);
+                        }
                     }
                     break;
             }
@@ -157,38 +213,90 @@ public class ReplaceSpeedWithStoredSpeedTrigger : Trigger
             {
                 case SpeedAxis.SpeedX:
                     if (addSpeed)
-                        player.Speed.X += storedXA * factor;
+                    {
+                        if (replacesDirection)
+                            player.Speed.X += storedXA * factor;
+                        else
+                            player.Speed.X += storedXA * factor * Math.Sign(player.Speed.X);
+                    }
                     else
-                        player.Speed.X = storedXA * factor;
+                    {
+                        if (replacesDirection)
+                            player.Speed.X = storedXA * factor;
+                        else
+                            player.Speed.X = storedXA * factor * Math.Sign(player.Speed.X);
+                    }
                     break;
                 case SpeedAxis.SpeedY:
                     if (addSpeed)
-                        player.Speed.Y += storedYA * factor;
+                    {
+                        if (replacesDirection)
+                            player.Speed.Y += storedYA * factor;
+                        else
+                            player.Speed.Y += storedYA * factor * Math.Sign(player.Speed.Y);
+                    }
                     else
-                        player.Speed.Y = storedYA * factor;
+                    {
+                        if (replacesDirection)
+                            player.Speed.Y = storedYA * factor;
+                        else
+                            player.Speed.Y = storedYA * factor * Math.Sign(player.Speed.Y);
+                    }
                     break;
                 case SpeedAxis.Swapped:
                     if (addSpeed)
                     {
-                        player.Speed.X += storedYA * factor;
-                        player.Speed.Y += storedXA * factor;
+                        if (replacesDirection)
+                        {
+                            player.Speed.X += storedYA * factor;
+                            player.Speed.Y += storedXA * factor;
+                        }
+                        else
+                        {
+                            player.Speed.X += storedYA * factor * Math.Sign(player.Speed.Y);
+                            player.Speed.Y += storedXA * factor * Math.Sign(player.Speed.X);
+                        }
                     }
                     else
                     {
-                        player.Speed.X = storedYA * factor;
-                        player.Speed.Y = storedXA * factor;
+                        if (replacesDirection)
+                        {
+                            player.Speed.X = storedYA * factor;
+                            player.Speed.Y = storedXA * factor;
+                        }
+                        else
+                        {
+                            player.Speed.X = storedYA * factor * Math.Sign(player.Speed.Y);
+                            player.Speed.Y = storedXA * factor * Math.Sign(player.Speed.X);
+                        }
                     }
                     break;
                 default: // Both
                     if (addSpeed)
                     {
-                        player.Speed.X += storedXA * factor;
-                        player.Speed.Y += storedYA * factor;
+                        if (replacesDirection)
+                        {
+                            player.Speed.X += storedXA * factor;
+                            player.Speed.Y += storedYA * factor;
+                        }
+                        else
+                        {
+                            player.Speed.X += storedXA * factor * Math.Sign(player.Speed.X);
+                            player.Speed.Y += storedYA * factor * Math.Sign(player.Speed.Y);
+                        }
                     }
                     else
                     {
-                        player.Speed.X = storedXA * factor;
-                        player.Speed.Y = storedYA * factor;
+                        if (replacesDirection)
+                        {
+                            player.Speed.X = storedXA * factor;
+                            player.Speed.Y = storedYA * factor;
+                        }
+                        else
+                        {
+                            player.Speed.X = storedXA * factor * Math.Sign(player.Speed.X);
+                            player.Speed.Y = storedYA * factor * Math.Sign(player.Speed.Y);
+                        }
                     }
                     break;
             }
