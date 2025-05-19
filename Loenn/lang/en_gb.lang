@@ -707,6 +707,7 @@ triggers.KoseiHelper/ReplaceSpeedWithStoredSpeedTrigger.attributes.description.a
 triggers.KoseiHelper/ReplaceSpeedWithStoredSpeedTrigger.attributes.description.firstSfx=The storing speed sound that will play when the player enters the trigger for the first time.
 triggers.KoseiHelper/ReplaceSpeedWithStoredSpeedTrigger.attributes.description.replacementSfx=The sound that will play when the player enters the trigger and has the speed changed.
 triggers.KoseiHelper/ReplaceSpeedWithStoredSpeedTrigger.attributes.description.factor=The speed used for the replacement is premultiplied by this factor.\nE.g.: Stored speed of 300, Add mode, and factor 0.5, entering the trigger with 100 speed will result in a speed of 100+150.
+triggers.KoseiHelper/ReplaceSpeedWithStoredSpeedTrigger.attributes.description.storeFirstSpeedOnly=Whether it should store only the speed when first entered, instead of updating it every time it is entered.
 
 # Restart Game Trigger
 triggers.KoseiHelper/RestartGameTrigger.placements.name.RestartGameTrigger=Restart Game Trigger

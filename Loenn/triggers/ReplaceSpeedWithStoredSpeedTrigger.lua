@@ -13,7 +13,8 @@ ReplaceSpeedWithStoredSpeedTrigger.placements = {
 		addSpeed = false,
 		firstSfx = "event:/none",
 		replacementSfx = "event:/none",
-		factor = 1
+		factor = 1,
+		storeFirstSpeedOnly = false
 		}
 	}
 }
