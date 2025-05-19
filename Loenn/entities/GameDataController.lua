@@ -26,7 +26,13 @@ GameDataController.placements = {
 			worldPositionX = "KoseiHelper_worldPositionXSlider",
 			worldPositionY = "KoseiHelper_worldPositionYSlider",
 			featherTime = "KoseiHelper_featherTimeSlider",
-			launched = "KoseiHelper_launchedFlag"
+			launched = "KoseiHelper_launchedFlag",
+			transitioning = "KoseiHelper_transitioningFlag",
+			horizontalWindLevel = "KoseiHelper_horizontalWindLevelSlider",
+			demoDashing = "KoseiHelper_demoDashingFlag",
+			forceMoveX = "KoseiHelper_forceMoveXSlider",
+			wallSlide = "KoseiHelper_wallSlideSlider",
+			gliderBoost = "KoseiHelper_gliderBoostFlag"
 		}
 	}
 }

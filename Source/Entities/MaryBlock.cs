@@ -167,7 +167,7 @@ public class MaryBlock : Entity
             if (flag2 && Visible)
                 Respawn();
         }
-        if (maryType == MaryType.Dark) // TODO
+        if (maryType == MaryType.Dark)
         {
             if (Collidable)
             {

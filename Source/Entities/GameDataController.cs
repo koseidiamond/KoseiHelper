@@ -28,6 +28,12 @@ public class GameDataController : Entity
     public string worldPositionX, worldPositionY;
     public string featherTime;
     public string launched;
+    public string transitioning;
+    public string horizontalWindLevel;
+    public string demoDashing;
+    public string forceMoveX;
+    public string wallSlide;
+    public string gliderBoost;
 
     private static int timesJumpedCounter, timesWallJumped, timesWallbounced;
 
@@ -53,7 +59,14 @@ public class GameDataController : Entity
         worldPositionY = data.Attr("worldPositionY", "KoseiHelper_worldPositionYSlider");
         featherTime = data.Attr("featherTime", "KoseiHelper_featherTimeSlider");
         launched = data.Attr("launched", "KoseiHelper_launchedFlag");
+        transitioning = data.Attr("transitioning", "KoseiHelper_transitioningFlag");
+        horizontalWindLevel = data.Attr("horizontalWindLevel", "KoseiHelper_horizontalWindLevelSlider");
+        demoDashing = data.Attr("demoDashing", "KoseiHelper_demoDashingFlag");
+        forceMoveX = data.Attr("forceMoveX", "KoseiHelper_forceMoveXSlider");
+        wallSlide = data.Attr("wallSlide", "KoseiHelper_wallSlideSlider");
+        gliderBoost = data.Attr("gliderBoost", "KoseiHelper_gliderBoostFlag");
         base.Tag = Tags.PauseUpdate;
+        base.Tag = Tags.TransitionUpdate;
     }
 
     public override void Update()
@@ -116,6 +129,12 @@ public class GameDataController : Entity
             session.SetSlider(worldPositionY, player.Position.Y);
             session.SetSlider(featherTime, player.starFlyTimer);
             session.SetFlag(launched, player.launched);
+            session.SetFlag(transitioning, level.Transitioning);
+            session.SetSlider(horizontalWindLevel, level.VisualWind);
+            session.SetFlag(demoDashing,player.demoDashed);
+            session.SetSlider(forceMoveX,player.forceMoveXTimer);
+            session.SetSlider(wallSlide, player.wallSlideTimer);
+            session.SetFlag(gliderBoost, player.gliderBoostTimer > 0f ? true : false);
         }
     }
 

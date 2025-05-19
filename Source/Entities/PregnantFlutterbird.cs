@@ -470,7 +470,7 @@ public class PregnantFlutterbird : Actor
         {
             Player player = Scene.Tracker.GetEntity<Player>();
             float delay = 0.25f + Calc.Random.NextFloat(1f);
-            for (float p2 = 0f; p2 < delay; p2 += Engine.DeltaTime) // TODO customize the scared distance
+            for (float p2 = 0f; p2 < delay; p2 += Engine.DeltaTime)
             {
                 if (player != null && this.flyAway && Math.Abs(player.X - X) < scaredDistance && player.Y > Y - 40f && player.Y < Y + 8f)
                 {

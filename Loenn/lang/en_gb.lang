@@ -54,7 +54,7 @@ entities.KoseiHelper/GameDataController.attributes.description.justRespawned=Fla
 entities.KoseiHelper/GameDataController.attributes.description.speedX=Slider for the player's horizontal speed.
 entities.KoseiHelper/GameDataController.attributes.description.speedY=Slider for the player's vertical speed.
 entities.KoseiHelper/GameDataController.attributes.description.onGround=Flag while the player is on the ground.\nAlso uses the suffix "Safe" for grounds that can collect berries.
-entities.KoseiHelper/GameDataController.attributes.description.playerStateCounter=The current state of the player.\n0 - Normal  1 - Climb 2 - Dash  3 - Swim\n4 - Boost  5 - RedDash 6 - HitSquash  7 - Launch\n8 - Pickup  9 - DreamDash 10 - SummitLaunch  11 - Dummy\n12 - IntroWalk  13 - IntroJump 14 - IntroRespawn  15 - IntroWakeUp\n16 - BirdDashTutorial  17 - Frozen 18 - ReflectionFall  19 - StarFly\n20 - TempleFall  21 - CassetteFly 22 - Attract  23 - IntroMoonJump\n24 - FlingBird  25 - IntroThinkForABit
+entities.KoseiHelper/GameDataController.attributes.description.playerState=The current state of the player.\n0 - Normal  1 - Climb 2 - Dash  3 - Swim\n4 - Boost  5 - RedDash 6 - HitSquash  7 - Launch\n8 - Pickup  9 - DreamDash 10 - SummitLaunch  11 - Dummy\n12 - IntroWalk  13 - IntroJump 14 - IntroRespawn  15 - IntroWakeUp\n16 - BirdDashTutorial  17 - Frozen 18 - ReflectionFall  19 - StarFly\n20 - TempleFall  21 - CassetteFly 22 - Attract  23 - IntroMoonJump\n24 - FlingBird  25 - IntroThinkForABit
 entities.KoseiHelper/GameDataController.attributes.description.dashAttacking=Whether the player is in dash attack (not to be confused with dashing, which takes less time).
 entities.KoseiHelper/GameDataController.attributes.description.startedFromGolden=Whether the player has started from dying with a golden.
 entities.KoseiHelper/GameDataController.attributes.description.carryingGolden=Whether the player is currently carrying a golden.
@@ -67,6 +67,15 @@ entities.KoseiHelper/GameDataController.attributes.description.worldPositionX=Th
 entities.KoseiHelper/GameDataController.attributes.description.worldPositionY=The player's vertical world position.
 entities.KoseiHelper/GameDataController.attributes.description.featherTime=The time left until the player is kicked out of the feather.
 entities.KoseiHelper/GameDataController.attributes.description.launched=Whether the player is currently being launched (e.g. by a puffer).
+entities.KoseiHelper/GameDataController.attributes.description.transitioning=Whether the player is currently transitioning between rooms.\nNote: this flag has very limited uses, since most entities don't update while transitioning.
+entities.KoseiHelper/GameDataController.attributes.description.horizontalWindLevel=The current horizontal wind level.\nVanilla levels oscillate between 0 and 1 (no wind) 399 and 400 (normal wind), 800 (strong), and 1200 (crazy).\nVertical wind does not affect this slider.
+entities.KoseiHelper/GameDataController.attributes.description.demoDashing=Whether the player is currently demo dashing.\nThis only detects demo dashes performed with the demo dash button, not manual ones.
+entities.KoseiHelper/GameDataController.attributes.description.forceMoveX=When the player is forced to move horizontally, this slider has a non-zero value.\nE.g., while climbhopping, this becomes 0.200 during the first frame and decreases towards 0.
+entities.KoseiHelper/GameDataController.attributes.description.wallSlide=Slider depending on the time that the player can slide down a wall (starting at 1.2 seconds).\nThe frame before this slider becomes 0, the player will reach terminal falling speed (160).
+entities.KoseiHelper/GameDataController.attributes.description.gliderBoost=Whether the player is currently able to receive speed from a jellyvator, upright regrab or jelly bump.
+
+
+
 # Debug Map Controller
 entities.KoseiHelper/DebugMapController.placements.name.DebugMapController=Debug Map Controller
 entities.KoseiHelper/DebugMapController.placements.description.DebugMapController=Modifies the way the Debug Map is rendered. Persistent controller.\nYou should have only one of these in your map.
