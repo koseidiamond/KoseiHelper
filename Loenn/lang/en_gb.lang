@@ -690,6 +690,13 @@ triggers.KoseiHelper/SelfieTrigger.attributes.description.flag=The flag required
 triggers.KoseiHelper/SelfieTrigger.attributes.description.triggerMode=Whether the trigger should activate when the player enters or exits it.
 triggers.KoseiHelper/SelfieTrigger.attributes.description.oneUse=Whether the trigger should delete itself after the selfie is displayed.
 
+# Slider Fade Trigger
+triggers.KoseiHelper/SliderFadeTrigger.placements.name.SliderFadeTrigger=Slider Fade Trigger
+triggers.KoseiHelper/SliderFadeTrigger.placements.description.SliderFadeTrigger=Fades the value of a slider from value A to value B in the specified direction.
+triggers.KoseiHelper/SliderFadeTrigger.attributes.description.onlyOnce=Whether the trigger should delete itself after the player leaves it.
+triggers.KoseiHelper/SliderFadeTrigger.attributes.description.fadeFrom=The initial value of the slider.
+triggers.KoseiHelper/SliderFadeTrigger.attributes.description.fadeTo=The final value of the slider.
+
 # Restart Game Trigger
 triggers.KoseiHelper/RestartGameTrigger.placements.name.RestartGameTrigger=Restart Game Trigger
 triggers.KoseiHelper/RestartGameTrigger.placements.description.RestartGameTrigger=Fully restarts Celeste.exe when the player enters the trigger.
