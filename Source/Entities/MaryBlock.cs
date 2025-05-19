@@ -124,7 +124,7 @@ public class MaryBlock : Entity
     public override void Update()
     {
         base.Update();
-        Logger.Debug(nameof(KoseiHelperModule), $"{baldTimer}");
+        //Logger.Debug(nameof(KoseiHelperModule), $"{baldTimer}");
         Player player = Scene.Tracker.GetEntity<Player>();
         if (player != null)
         {

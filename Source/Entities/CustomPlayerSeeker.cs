@@ -768,7 +768,7 @@ public class CustomPlayerSeeker : Actor
     {
         if (canSwitchCharacters)
         {
-            Logger.Debug(nameof(KoseiHelperModule), $"Characters swapped! Playing as Madeline: {!isMadeline}");
+            //Logger.Debug(nameof(KoseiHelperModule), $"Characters swapped! Playing as Madeline: {!isMadeline}");
             if (isMadeline) // Become Seeker
             {
                 Audio.Play("event:/game/05_mirror_temple/seeker_revive", player.Position);

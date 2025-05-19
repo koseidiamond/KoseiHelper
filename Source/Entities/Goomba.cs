@@ -40,7 +40,7 @@ public class Goomba : Actor
     public float gravityMult = 1f;
     private SineWave sine;
     public int minisSpawned = 0;
-    public static ParticleType goombaParticle = Player.P_Split;
+    public ParticleType goombaParticle;
     public bool canEnableTouchSwitches;
     public string deathSound;
     public bool isBaby;
@@ -56,6 +56,7 @@ public class Goomba : Actor
     public bool deathAnimation;
     public string flagOnDeath;
     public Color color;
+    public Color particleColor;
 
     private float previousTimeRate, previousGameRate, previousAnxiety;
     private bool dead = false;
@@ -83,6 +84,7 @@ public class Goomba : Actor
         deathSound = data.Attr("deathSound", "event:/KoseiHelper/goomba");
         minisAmount = data.Int("minisAmount", 10);
         color = data.HexColor("color", Color.White);
+        particleColor = data.HexColor("particleColor", Player.P_Split.Color); // aka ff6def
         slowdownDistanceMax = data.Float("slowdownDistanceMax", 40f);
         slowdownDistanceMin = data.Float("slowdownDistanceMin", 16f);
         if (!isWide)
@@ -108,13 +110,10 @@ public class Goomba : Actor
         deathAnimation = data.Bool("deathAnimation", false);
         flagOnDeath = data.Attr("flagOnDeath", "");
         Add(sine = new SineWave(2f, 0f));
-        if (speedX != 0)
+        sprite.OnFinish = anim =>
         {
-            sprite.OnFinish = anim =>
-            {
-                CeasedToExist();
-            };
-        }
+            CeasedToExist();
+        };
     }
     // this ctor is used for the minigoombas when a goomba can spawn minis
     public Goomba(Vector2 position, float newSpeed, bool newOutline, bool newIsWide, bool newIsWinged, bool newCanBeBounced) : base(position)
@@ -139,17 +138,19 @@ public class Goomba : Actor
         Add(sprite = GFX.SpriteBank.Create("koseiHelper_goomba"));
         sprite.Play("idle");
         sprite.Scale = new Vector2(0.5f, 0.5f);
-        if (speedX != 0)
-        {
-            sprite.OnFinish = anim =>
+        sprite.OnFinish = anim =>
         {
             CeasedToExist();
         };
-        }
     }
 
     public override void Added(Scene scene)
     {
+        goombaParticle = new ParticleType(Player.P_Split)
+        {
+            Color = particleColor,
+            Color2 = particleColor
+        };
         base.Added(scene);
         Level level = SceneAs<Level>();
         previousTimeRate = Engine.TimeRate;
@@ -178,7 +179,6 @@ public class Goomba : Actor
                 {
                     float num3 = Vector2.DistanceSquared(player.Center, entity2.Center);
                     float distance = Vector2.Distance(player.Center, entity2.Center);
-                    Logger.Debug(nameof(KoseiHelperModule), $"num3={num3}, number2={number2}");
                     if (Vector2.Distance(player.Center, entity2.Center) < slowdownDistanceMax)
                         number2 = (!(number2 < 0f)) ? Math.Min(number2, num3) : num3; // Stops applying the slowdown effect if outside of radius
                     else
@@ -186,7 +186,6 @@ public class Goomba : Actor
                 }
                 // By default clamped to 16^2, 40^2
                 target = (!(number2 >= 0f)) ? 1f : Calc.ClampedMap(number2, (float)Math.Pow(slowdownDistanceMin, 2), (float)Math.Pow(slowdownDistanceMax,2), 0.5f);
-                Logger.Debug(nameof(KoseiHelperModule), $"target={target}");
                 Distort.AnxietyOrigin = new Vector2((player.Center.X - Position.X) / 320f, (player.Center.Y - Position.Y) / 180f);
                 number3 = ((!(-1 >= 0f)) ? 0f : Calc.ClampedMap(-1, 256f, 16384f, 1f, 0f));
             }

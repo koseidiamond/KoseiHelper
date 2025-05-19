@@ -292,6 +292,7 @@ entities.KoseiHelper/Goomba.attributes.description.spriteID=The ID or tag of the
 entities.KoseiHelper/Goomba.attributes.description.deathAnimation=Whether the goomba should play the "dead" animation when killed.\nIf using slowdown or flags, those will have effect after the animation finishes playing.
 entities.KoseiHelper/Goomba.attributes.description.flagOnDeath=The flag that will be set to true when the goomba dies.
 entities.KoseiHelper/Goomba.attributes.description.color=The sprite will be tinted with this color.
+entities.KoseiHelper/Goomba.attributes.description.particleColor=The color of the particles when the goomba ceases to exist.
 entities.KoseiHelper/Goomba.attributes.description.slowdownDistanceMax=The distance at which the goomba will start to apply the slowdown effect.
 entities.KoseiHelper/Goomba.attributes.description.slowdownDistanceMin=The distance at which the slowdown effect will have the maximum effect.
 

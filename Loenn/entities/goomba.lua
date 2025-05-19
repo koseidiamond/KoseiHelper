@@ -25,16 +25,11 @@ Goomba.placements = {
 			deathAnimation = false,
 			flagOnDeath = "",
 			color = "FFFFFF",
+			particleColor = "ff6def", -- Player.P_Split.Color
 			slowdownDistanceMax = 40,
 			slowdownDistanceMin = 16
 		}
 	}
-}
-
-Goomba.fieldInformation = {
-	color = {
-        fieldType = "color"
-    }
 }
 
 function Goomba.ignoredFields(entity)
@@ -66,6 +61,12 @@ function Goomba.ignoredFields(entity)
 end
 
 Goomba.fieldInformation = {
+	color = {
+        fieldType = "color"
+    },
+	particleColor = {
+        fieldType = "color"
+    },
 	timeToSpawnMinis = {
 		minimumValue = 0.001
 	},

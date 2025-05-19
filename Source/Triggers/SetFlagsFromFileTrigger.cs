@@ -49,28 +49,28 @@ namespace Celeste.Mod.KoseiHelper.Triggers
                             flags = content.Split(',').Select(flag => flag.Trim()).ToList();
                             foreach (var flag in flags)
                             {
-                                Logger.Debug(nameof(KoseiHelperModule), $"Flag loaded: {flag}");
+                                //Logger.Debug(nameof(KoseiHelperModule), $"Flag loaded: {flag}");
                                 level.Session.SetFlag(flag);
                             }
                         }
                     }
                     catch (Exception ex)
                     {
-                        Logger.Error(nameof(KoseiHelperModule), $"Error reading flags file: {ex.Message}");
+                        //Logger.Error(nameof(KoseiHelperModule), $"Error reading flags file: {ex.Message}");
                     }
                 }
                 else
-                    Logger.Debug(nameof(KoseiHelperModule), $"File not found at {filePath}");
+                    //Logger.Debug(nameof(KoseiHelperModule), $"File not found at {filePath}");
                 RemoveSelf();
             }
-            else
-                Logger.Debug(nameof(KoseiHelperModule), "File path is empty or invalid.");
+            //else
+                //Logger.Debug(nameof(KoseiHelperModule), "File path is empty or invalid.");
         }
         private void AppendFlagsToFile()
         {
             if (string.IsNullOrEmpty(flagsToWrite))
             {
-                Logger.Debug(nameof(KoseiHelperModule), "No flags to write.");
+                //Logger.Debug(nameof(KoseiHelperModule), "No flags to write.");
                 return;
             }
             try

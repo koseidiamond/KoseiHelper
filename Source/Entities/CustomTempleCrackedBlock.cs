@@ -71,7 +71,7 @@ public class CustomTempleCrackedBlock : TempleCrackedBlock
                 Audio.Play(customTempleCrackedBlock.breakSound, self.Center);
             if (customTempleCrackedBlock.health == 0)
             {
-                Logger.Debug(nameof(KoseiHelperModule), $"A Custom Temple Cracked Block was broken.");
+                //Logger.Debug(nameof(KoseiHelperModule), $"A Custom Temple Cracked Block was broken.");
                 Audio.Play(customTempleCrackedBlock.breakSound, self.Center);
                 self.broken = true;
                 self.Collidable = false;

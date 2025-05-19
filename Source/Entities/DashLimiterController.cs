@@ -68,7 +68,7 @@ public class DashLimiterController : Entity
 
     private IEnumerator killPlayerRoutine()
     {
-        Logger.Debug(nameof(KoseiHelperModule), $"The player has spent all dashes. Goodbye!");
+        //Logger.Debug(nameof(KoseiHelperModule), $"The player has spent all dashes. Goodbye!");
         yield return 0.01f;
         if (Scene.Tracker.GetEntity<Player>() is not { } player)
             yield break;

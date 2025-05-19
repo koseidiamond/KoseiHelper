@@ -64,8 +64,8 @@ public class FallDamageController : Entity
 
     private void CheckFallDamage(Player player)
     {
-        Logger.Debug(nameof(KoseiHelperModule), $"fallTime: {fallTime}, falling speed: {player.Speed.Y}, current health: {player.level.Session.GetSlider("koseiHelper_health")}");
-        Logger.Debug(nameof(KoseiHelperModule), $"fallTimeThreshold: {fallTimeThreshold}, fallDamageThreshold: {fallDamageThreshold}");
+        //Logger.Debug(nameof(KoseiHelperModule), $"fallTime: {fallTime}, falling speed: {player.Speed.Y}, current health: {player.level.Session.GetSlider("koseiHelper_health")}");
+        //Logger.Debug(nameof(KoseiHelperModule), $"fallTimeThreshold: {fallTimeThreshold}, fallDamageThreshold: {fallDamageThreshold}");
         if (fallTime >= fallTimeThreshold && player.Speed.Y >= fallDamageThreshold)
         {
             player.level.Session.SetSlider("koseiHelper_health", player.level.Session.GetSlider("koseiHelper_health") - fallDamageAmount);

@@ -5,15 +5,16 @@
         <Loop id="idle" path="idle" delay="0.1" frames="00" />
 		<Loop id="walk" path="walk" delay="0.1" frames="00-01" />
 		
-		<Anim id="wideidle" path="wideidle" delay="0.1" frames="00" />
+		<Loop id="wideidle" path="wideidle" delay="0.1" frames="00" />
 		<Loop id="widewalk" path="widewalk" delay="0.1" frames="00-01" />
 		
-		<Anim id="wingedidle" path="wingedidle" delay="0.1" frames="00" />
+		<Loop id="wingedidle" path="wingedidle" delay="0.1" frames="00" />
 		<Loop id="winged" path="winged" delay="0.1" frames="00-01" />
 		
 		<Loop id="widewingedidle" path="widewingedidle" delay="0.1" frames="00" />
 		<Loop id="widewinged" path="widewinged" delay="0.1" frames="00-01" />
 		
+		<!-- When this animation finishes playing, the goomba dies -->
 		<Anim id="dead" path="dead" delay="0.1" frames="00"/>
 		
     </koseiHelper_goomba>
