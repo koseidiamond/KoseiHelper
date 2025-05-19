@@ -47,6 +47,7 @@ public class Goomba : Actor
     public int springDirection;
     public int minisAmount;
     public bool slowdown;
+    public float slowdownDistanceMax, slowdownDistanceMin;
 
     private float number2 = -1f;
     private float number3, randomAnxietyOffset;
@@ -82,6 +83,8 @@ public class Goomba : Actor
         deathSound = data.Attr("deathSound", "event:/KoseiHelper/goomba");
         minisAmount = data.Int("minisAmount", 10);
         color = data.HexColor("color", Color.White);
+        slowdownDistanceMax = data.Float("slowdownDistanceMax", 40f);
+        slowdownDistanceMin = data.Float("slowdownDistanceMin", 16f);
         if (!isWide)
         {
             Collider = new Hitbox(13, 12, -7, -4);
@@ -174,10 +177,16 @@ public class Goomba : Actor
                 foreach (Goomba entity2 in base.Scene.Tracker.GetEntities<Goomba>())
                 {
                     float num3 = Vector2.DistanceSquared(player.Center, entity2.Center);
-                    if (Vector2.Distance(player.Center, entity2.Center) < 40f) number2 = ((!(number2 < 0f)) ? Math.Min(number2, num3) : num3);
-                    else number2 = -1f;
+                    float distance = Vector2.Distance(player.Center, entity2.Center);
+                    Logger.Debug(nameof(KoseiHelperModule), $"num3={num3}, number2={number2}");
+                    if (Vector2.Distance(player.Center, entity2.Center) < slowdownDistanceMax)
+                        number2 = (!(number2 < 0f)) ? Math.Min(number2, num3) : num3; // Stops applying the slowdown effect if outside of radius
+                    else
+                        number2 = -1f;
                 }
-                target = ((!(number2 >= 0f)) ? 1f : Calc.ClampedMap(number2, 256f, 4096f, 0.5f));
+                // By default clamped to 16^2, 40^2
+                target = (!(number2 >= 0f)) ? 1f : Calc.ClampedMap(number2, (float)Math.Pow(slowdownDistanceMin, 2), (float)Math.Pow(slowdownDistanceMax,2), 0.5f);
+                Logger.Debug(nameof(KoseiHelperModule), $"target={target}");
                 Distort.AnxietyOrigin = new Vector2((player.Center.X - Position.X) / 320f, (player.Center.Y - Position.Y) / 180f);
                 number3 = ((!(-1 >= 0f)) ? 0f : Calc.ClampedMap(-1, 256f, 16384f, 1f, 0f));
             }

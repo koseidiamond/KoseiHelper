@@ -24,7 +24,9 @@ Goomba.placements = {
 			spriteID = "koseiHelper_goomba",
 			deathAnimation = false,
 			flagOnDeath = "",
-			color = "FFFFFF"
+			color = "FFFFFF",
+			slowdownDistanceMax = 40,
+			slowdownDistanceMin = 16
 		}
 	}
 }
@@ -40,7 +42,9 @@ function Goomba.ignoredFields(entity)
 	"_name",
     "_id",
 	"minisAmount",
-	"timeToSpawnMinis"
+	"timeToSpawnMinis",
+	"slowdownDistanceMax",
+	"slowdownDistanceMin"
 	}
     local function doNotIgnore(value)
         for i = #ignored, 1, -1 do
@@ -54,6 +58,10 @@ function Goomba.ignoredFields(entity)
 		doNotIgnore("minisAmount")
 		doNotIgnore("timeToSpawnMinis")
 	end
+	if entity.slowdown == true then
+		doNotIgnore("slowdownDistanceMax")
+		doNotIgnore("slowdownDistanceMin")
+	end
 	return ignored
 end
 
@@ -63,6 +71,9 @@ Goomba.fieldInformation = {
 	},
 	gravityMultiplier = {
 		minimumValue = 1.0
+	},
+	slowdownDistanceMax = {
+		minimumValue = 0
 	},
 	behavior = {
 		options = {
