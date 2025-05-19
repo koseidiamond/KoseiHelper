@@ -697,6 +697,13 @@ triggers.KoseiHelper/SliderFadeTrigger.attributes.description.onlyOnce=Whether t
 triggers.KoseiHelper/SliderFadeTrigger.attributes.description.fadeFrom=The initial value of the slider.
 triggers.KoseiHelper/SliderFadeTrigger.attributes.description.fadeTo=The final value of the slider.
 
+# Slider Fade Trigger
+triggers.KoseiHelper/ReplaceSpeedWithStoredSpeedTrigger.placements.name.ReplaceSpeedWithStoredSpeedTrigger=Replace Speed With Stored Speed Trigger
+triggers.KoseiHelper/ReplaceSpeedWithStoredSpeedTrigger.placements.description.ReplaceSpeedWithStoredSpeedTrigger=The first time the player enters the trigger, it will store the speed.\nThe next time it is entered, it will replace the current speed with the stored speed.
+triggers.KoseiHelper/ReplaceSpeedWithStoredSpeedTrigger.attributes.description.onlyOnce=Whether the trigger should remove itself after replacing the speed once.
+triggers.KoseiHelper/ReplaceSpeedWithStoredSpeedTrigger.attributes.description.storesDirection=Whether the direction should be replaced too or not.
+triggers.KoseiHelper/ReplaceSpeedWithStoredSpeedTrigger.attributes.description.speedAxis=Which speed(s) should be replaced.
+
 # Restart Game Trigger
 triggers.KoseiHelper/RestartGameTrigger.placements.name.RestartGameTrigger=Restart Game Trigger
 triggers.KoseiHelper/RestartGameTrigger.placements.description.RestartGameTrigger=Fully restarts Celeste.exe when the player enters the trigger.

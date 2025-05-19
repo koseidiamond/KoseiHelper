@@ -2,8 +2,6 @@ using System;
 using Celeste.Mod.Entities;
 using Monocle;
 using Microsoft.Xna.Framework;
-using static MonoMod.InlineRT.MonoModRule;
-using System.Security.Cryptography.X509Certificates;
 
 namespace Celeste.Mod.KoseiHelper.Entities;
 

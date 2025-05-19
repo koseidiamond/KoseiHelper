@@ -15,7 +15,7 @@ public class SliderFadeTrigger : Trigger
     public SliderFadeTrigger(EntityData data, Vector2 offset) : base(data, offset)
     {
         sliderName = data.Attr("sliderName", "");
-        onlyOnce = data.Bool("fullScreen", false);
+        onlyOnce = data.Bool("onlyOnce", false);
         direction = data.Attr("positionMode");
         fadeFrom = data.Float("fadeFrom", 0f);
         fadeTo = data.Float("fadeTo", 0.5f);
