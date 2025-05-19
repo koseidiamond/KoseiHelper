@@ -9,7 +9,11 @@ ReplaceSpeedWithStoredSpeedTrigger.placements = {
 		data = {
 		storesDirection = true,
 		onlyOnce = false,
-		speedAxis = "SpeedX"
+		speedAxis = "SpeedX",
+		addSpeed = false,
+		firstSfx = "event:/none",
+		replacementSfx = "event:/none",
+		factor = 1
 		}
 	}
 }

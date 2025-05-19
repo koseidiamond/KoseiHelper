@@ -8,12 +8,14 @@ namespace Celeste.Mod.KoseiHelper.Triggers;
 public class ReplaceSpeedWithStoredSpeedTrigger : Trigger
 {
     public bool onlyOnce;
-    public bool storesDirection;
+    public bool replacesDirection; // TODO fix this
+    public bool addSpeed;
+    public string firstSfx, replacementSfx;
+    public float factor;
 
-    private bool alteredSpeedOnce, hasStoredSpeed;
-    private float storedFirstSpeedX, storedFirstSpeedY, storedSpeedX, storedSpeedY;
+    private bool alteredSpeedOnce;
+    private float storedSpeedX, storedSpeedY;
 
-    private bool notFirstTime;
     public enum SpeedAxis
     {
         SpeedX,
@@ -21,26 +23,27 @@ public class ReplaceSpeedWithStoredSpeedTrigger : Trigger
         Both,
         Swapped
     };
+
     private SpeedAxis speedAxis;
+
     public ReplaceSpeedWithStoredSpeedTrigger(EntityData data, Vector2 offset) : base(data, offset)
     {
-        storesDirection = data.Bool("storesDirection", true);
+        replacesDirection = data.Bool("storesDirection", true);
         onlyOnce = data.Bool("onlyOnce", false);
         speedAxis = data.Enum("speedAxis", SpeedAxis.SpeedX);
+        addSpeed = data.Bool("addSpeed", false);
+        firstSfx = data.Attr("firstSfx", "event:/none");
+        replacementSfx = data.Attr("replacementSfx", "event:/none");
+        factor = data.Float("factor", 1f);
     }
 
     public override void OnEnter(Player player)
     {
         base.OnEnter(player);
-        if (hasStoredSpeed)
-        {
-            ReplaceSpeed(player);
-            StoreSpeed(player, true);
-        }
-        else
-        {
-            StoreSpeed(player, false);
-        }
+        ReplaceSpeed(player);
+        StoreSpeed(player);
+        if (!string.IsNullOrEmpty(firstSfx))
+            Audio.Play(firstSfx);
     }
 
     public override void OnLeave(Player player)
@@ -50,33 +53,25 @@ public class ReplaceSpeedWithStoredSpeedTrigger : Trigger
             RemoveSelf();
     }
 
-    public void StoreSpeed(Player player, bool notFirstTime)
+    public void StoreSpeed(Player player)
     {
-        if (notFirstTime)
-        {
-        }
-        else
-        {
-        }
             switch (speedAxis)
             {
                 case SpeedAxis.SpeedX:
-                    storedSpeedX = storesDirection ? player.Speed.X : Math.Abs(player.Speed.X);
+                    storedSpeedX = replacesDirection ? player.Speed.X : Math.Abs(player.Speed.X);
                     break;
                 case SpeedAxis.SpeedY:
-                    storedSpeedY = storesDirection ? player.Speed.Y : Math.Abs(player.Speed.Y);
+                    storedSpeedY = replacesDirection ? player.Speed.Y : Math.Abs(player.Speed.Y);
                     break;
                 case SpeedAxis.Swapped:
-                    storedSpeedX = storesDirection ? player.Speed.Y : Math.Abs(player.Speed.Y);
-                    storedSpeedY = storesDirection ? player.Speed.X : Math.Abs(player.Speed.X);
+                    storedSpeedX = replacesDirection ? player.Speed.Y : Math.Abs(player.Speed.Y);
+                    storedSpeedY = replacesDirection ? player.Speed.X : Math.Abs(player.Speed.X);
                     break;
                 default: // Both
-                    storedSpeedX = storesDirection ? player.Speed.X : Math.Abs(player.Speed.X);
-                    storedSpeedY = storesDirection ? player.Speed.Y : Math.Abs(player.Speed.Y);
+                    storedSpeedX = replacesDirection ? player.Speed.X : Math.Abs(player.Speed.X);
+                    storedSpeedY = replacesDirection ? player.Speed.Y : Math.Abs(player.Speed.Y);
                     break;
-            }
-        Logger.Debug(nameof(KoseiHelperModule), $"storedSpeedX={storedSpeedX}, storedSpeedY={storedSpeedY}");
-        hasStoredSpeed = true;
+        }
     }
 
     public void ReplaceSpeed(Player player)
@@ -84,20 +79,44 @@ public class ReplaceSpeedWithStoredSpeedTrigger : Trigger
         switch (speedAxis)
         {
             case SpeedAxis.SpeedX:
-                player.Speed.X = storedSpeedX;
+                if (addSpeed)
+                    player.Speed.X += storedSpeedX * factor;
+                else
+                    player.Speed.X = storedSpeedX * factor;
                 break;
             case SpeedAxis.SpeedY:
-                player.Speed.Y = storedSpeedY;
+                if (addSpeed)
+                    player.Speed.Y += storedSpeedY * factor;
+                else
+                    player.Speed.Y = storedSpeedY * factor;
                 break;
             case SpeedAxis.Swapped:
-                player.Speed.Y = storedSpeedX;
-                player.Speed.X = storedSpeedY;
+                if (addSpeed)
+                {
+                    player.Speed.X += storedSpeedY * factor;
+                    player.Speed.Y += storedSpeedX * factor;
+                }
+                else
+                {
+                    player.Speed.X = storedSpeedY * factor;
+                    player.Speed.Y = storedSpeedX * factor;
+                }
                 break;
             default: // Both
-                player.Speed.X = storedSpeedX;
-                player.Speed.Y = storedSpeedY;
+                if (addSpeed)
+                {
+                    player.Speed.X += storedSpeedX * factor;
+                    player.Speed.Y += storedSpeedY * factor;
+                }
+                else
+                {
+                    player.Speed.X = storedSpeedX * factor;
+                    player.Speed.Y = storedSpeedY * factor;
+                }
                 break;
         }
         alteredSpeedOnce = true;
+        if (!string.IsNullOrEmpty(replacementSfx))
+            Audio.Play(replacementSfx);
     }
 }
