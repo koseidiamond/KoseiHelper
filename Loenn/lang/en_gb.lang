@@ -696,8 +696,9 @@ triggers.KoseiHelper/SliderFadeTrigger.placements.description.SliderFadeTrigger=
 triggers.KoseiHelper/SliderFadeTrigger.attributes.description.onlyOnce=Whether the trigger should delete itself after the player leaves it.
 triggers.KoseiHelper/SliderFadeTrigger.attributes.description.fadeFrom=The initial value of the slider.
 triggers.KoseiHelper/SliderFadeTrigger.attributes.description.fadeTo=The final value of the slider.
+triggers.KoseiHelper/SliderFadeTrigger.attributes.description.flag=The flag required for this trigger to be able to fade the slider.\nLeave empty for no flag required.
 
-# Slider Fade Trigger
+# Replace Speed With Stored Speed Trigger
 triggers.KoseiHelper/ReplaceSpeedWithStoredSpeedTrigger.placements.name.ReplaceSpeedWithStoredSpeedTrigger=Replace Speed With Stored Speed Trigger
 triggers.KoseiHelper/ReplaceSpeedWithStoredSpeedTrigger.placements.description.ReplaceSpeedWithStoredSpeedTrigger=The first time the player enters the trigger, it will store the speed.\nThe next time it is entered, it will replace the current speed with the stored speed.
 triggers.KoseiHelper/ReplaceSpeedWithStoredSpeedTrigger.attributes.description.onlyOnce=Whether the trigger should remove itself after replacing the speed once.
@@ -708,6 +709,7 @@ triggers.KoseiHelper/ReplaceSpeedWithStoredSpeedTrigger.attributes.description.f
 triggers.KoseiHelper/ReplaceSpeedWithStoredSpeedTrigger.attributes.description.replacementSfx=The sound that will play when the player enters the trigger and has the speed changed.
 triggers.KoseiHelper/ReplaceSpeedWithStoredSpeedTrigger.attributes.description.factor=The speed used for the replacement is premultiplied by this factor.\nE.g.: Stored speed of 300, Add mode, and factor 0.5, entering the trigger with 100 speed will result in a speed of 100+150.
 triggers.KoseiHelper/ReplaceSpeedWithStoredSpeedTrigger.attributes.description.storeFirstSpeedOnly=Whether it should store only the speed when first entered, instead of updating it every time it is entered.
+triggers.KoseiHelper/ReplaceSpeedWithStoredSpeedTrigger.attributes.description.flag=The flag required for this trigger to replace the speed (this does not affect speed storage).\nLeave empty for no flag required.
 
 # Restart Game Trigger
 triggers.KoseiHelper/RestartGameTrigger.placements.name.RestartGameTrigger=Restart Game Trigger

@@ -105,10 +105,13 @@ public class Goomba : Actor
         deathAnimation = data.Bool("deathAnimation", false);
         flagOnDeath = data.Attr("flagOnDeath", "");
         Add(sine = new SineWave(2f, 0f));
-        sprite.OnFinish = anim =>
+        if (speedX != 0)
         {
-            CeasedToExist();
-        };
+            sprite.OnFinish = anim =>
+            {
+                CeasedToExist();
+            };
+        }
     }
     // this ctor is used for the minigoombas when a goomba can spawn minis
     public Goomba(Vector2 position, float newSpeed, bool newOutline, bool newIsWide, bool newIsWinged, bool newCanBeBounced) : base(position)
@@ -133,21 +136,22 @@ public class Goomba : Actor
         Add(sprite = GFX.SpriteBank.Create("koseiHelper_goomba"));
         sprite.Play("idle");
         sprite.Scale = new Vector2(0.5f, 0.5f);
-        sprite.OnFinish = anim =>
+        if (speedX != 0)
+        {
+            sprite.OnFinish = anim =>
         {
             CeasedToExist();
         };
-    }
-
-    public override void Awake(Scene scene)
-    {
-        base.Awake(scene);
+        }
     }
 
     public override void Added(Scene scene)
     {
         base.Added(scene);
         Level level = SceneAs<Level>();
+        previousTimeRate = Engine.TimeRate;
+        previousGameRate = Distort.GameRate;
+        previousAnxiety = Distort.Anxiety;
         Add(rotateWiggler = Wiggler.Create(0.5f, 4f, (float v) =>
         {
             sprite.Rotation = v * 30f * (MathF.PI / 180f);
@@ -182,9 +186,6 @@ public class Goomba : Actor
                 target = 1f;
                 number3 = 0f;
             }
-            previousTimeRate = Engine.TimeRate;
-            previousGameRate = Distort.GameRate;
-            previousAnxiety = Distort.Anxiety;
             Engine.TimeRate = Calc.Approach(Engine.TimeRate, target, 4f * Engine.DeltaTime);
             Distort.GameRate = Calc.Approach(Distort.GameRate, Calc.Map(Engine.TimeRate, 0.5f, 1f), Engine.DeltaTime * 2f);
             Distort.Anxiety = Calc.Approach(Distort.Anxiety, (0.5f + randomAnxietyOffset) * number3, 8f * Engine.DeltaTime);
@@ -351,7 +352,6 @@ public class Goomba : Actor
     {
         dead = true;
         Session session = SceneAs<Level>().Session;
-        this.RemoveSelf();
         if (slowdown)
         {
             Engine.TimeRate = previousTimeRate;
@@ -360,6 +360,7 @@ public class Goomba : Actor
         }
         if (!string.IsNullOrEmpty(flagOnDeath))
             session.SetFlag(flagOnDeath, true);
+        this.RemoveSelf();
     }
 
     private void OnPlayer(Player player)
@@ -472,6 +473,7 @@ public class Goomba : Actor
 
     public void Killed(Player player, Level level)
     {
+        
         if (!isBaby)
         {
             Audio.Play(deathSound, Position);

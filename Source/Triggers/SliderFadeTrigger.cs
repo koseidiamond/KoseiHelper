@@ -12,6 +12,7 @@ public class SliderFadeTrigger : Trigger
     public bool onlyOnce;
     public string direction;
     public string sliderName;
+    public string flag;
     public SliderFadeTrigger(EntityData data, Vector2 offset) : base(data, offset)
     {
         sliderName = data.Attr("sliderName", "");
@@ -19,6 +20,7 @@ public class SliderFadeTrigger : Trigger
         direction = data.Attr("positionMode");
         fadeFrom = data.Float("fadeFrom", 0f);
         fadeTo = data.Float("fadeTo", 0.5f);
+        flag = data.Attr("flag", "");
         if (!string.IsNullOrEmpty(direction) && Enum.TryParse<PositionModes>(direction.ToString(), ignoreCase: true, out var result))
             positionMode = result;
     }
@@ -28,7 +30,8 @@ public class SliderFadeTrigger : Trigger
         base.OnStay(player);
         Level level = SceneAs<Level>();
         float positionLerp = GetPositionLerp(player, positionMode);
-        level.Session.SetSlider(sliderName, MathHelper.Lerp(fadeFrom, fadeTo, positionLerp));
+        if (string.IsNullOrEmpty(flag) || level.Session.GetFlag(flag))
+            level.Session.SetSlider(sliderName, MathHelper.Lerp(fadeFrom, fadeTo, positionLerp));
     }
 
     public override void OnLeave(Player player)

@@ -13,9 +13,11 @@ public class ReplaceSpeedWithStoredSpeedTrigger : Trigger
     public string firstSfx, replacementSfx;
     public float factor;
     public bool storeFirstSpeedOnly;
+    public string flag;
 
     private float storedXA, storedXB, storedYA, storedYB;
     private bool storingCycle, hasStored, hasAltered, dontNeedToStore;
+
     public enum SpeedAxis
     {
         SpeedX,
@@ -36,11 +38,13 @@ public class ReplaceSpeedWithStoredSpeedTrigger : Trigger
         replacementSfx = data.Attr("replacementSfx", "event:/none");
         factor = data.Float("factor", 1f);
         storeFirstSpeedOnly = data.Bool("storeFirstSpeedOnly", false);
+        flag = data.Attr("flag", "");
     }
 
     public override void OnEnter(Player player)
     {
         base.OnEnter(player);
+        Level level = SceneAs<Level>();
 
         if (!string.IsNullOrEmpty(firstSfx))
         {
@@ -51,7 +55,7 @@ public class ReplaceSpeedWithStoredSpeedTrigger : Trigger
         }
         if (!dontNeedToStore)
             Store(player, storingCycle);
-        if (hasStored)
+        if (hasStored && (string.IsNullOrEmpty(flag) || level.Session.GetFlag(flag)))
             Replace(player, storingCycle);
         hasStored = true;
     }

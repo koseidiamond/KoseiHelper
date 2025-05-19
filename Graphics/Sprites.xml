@@ -2,7 +2,7 @@
 <Sprites>
     <koseiHelper_goomba path="objects/KoseiHelper/Goomba/" start="idle">
         <Justify x="0.5" y="0.5" />
-        <Anim id="idle" path="idle" delay="0.1" frames="00" />
+        <Loop id="idle" path="idle" delay="0.1" frames="00" />
 		<Loop id="walk" path="walk" delay="0.1" frames="00-01" />
 		
 		<Anim id="wideidle" path="wideidle" delay="0.1" frames="00" />

@@ -9,7 +9,8 @@ SliderFadeTrigger.placements = {
 		onlyOnce = false,
 		fadeFrom = 0,
 		fadeTo = 0.5,
-		positionMode = "NoEffect"
+		positionMode = "NoEffect",
+		flag = ""
     }
 }
 
