@@ -80,6 +80,10 @@ SpawnController.placements = {
 		dictKeys = "",
 		dictValues = "",
 		noNode = false
+		
+		-- Secret attributes
+		-- ignoreJustRespawned,
+		-- noCollider
 		}
 	}
 }

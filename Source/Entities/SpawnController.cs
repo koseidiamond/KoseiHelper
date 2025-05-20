@@ -164,6 +164,7 @@ public class SpawnController : Entity
     private bool isWinged;
     private bool isMoon;
     private bool noNode;
+    private bool ignoreJustRespawned;
 
     //Custom Entity Fields
     private string entityPath;
@@ -173,7 +174,8 @@ public class SpawnController : Entity
     public SpawnController(EntityData data, Vector2 offset) : base(data.Position + offset)
     {
         Add(new PostUpdateHook(() => { }));
-        Collider = new Hitbox(8, 8, -4, -4);
+        if (!data.Bool("noCollider",false))
+            Collider = new Hitbox(8, 8, -4, -4);
         // General attributes
         offsetX = data.Int("offsetX", 0);
         offsetY = data.Int("offsetY", 8);
@@ -203,6 +205,7 @@ public class SpawnController : Entity
         everyXDashes = data.Int("everyXDashes", 1);
         poofWhenDisappearing = data.Bool("poofWhenDisappearing", true);
         noNode = data.Bool("noNode", false);
+        ignoreJustRespawned = data.Bool("ignoreJustRespawned", false);
         dashCount = 0;
         if (persistency)
             base.Tag = Tags.Persistent;
@@ -314,7 +317,7 @@ public class SpawnController : Entity
         // If the flag flagToEnableSpawner is true, or if no flag is required, check if the spawn conditions are met
         // (Not to be confused with spawnFlag, this one is just a common requirement, the other is for the Flag Mode)
         if (((flagValue && level.Session.GetFlag(flagToEnableSpawner)) || string.IsNullOrEmpty(flagToEnableSpawner) ||
-            (!flagValue && !level.Session.GetFlag(flagToEnableSpawner))) && player != null && !player.JustRespawned)
+            (!flagValue && !level.Session.GetFlag(flagToEnableSpawner))) && player != null && (!player.JustRespawned || ignoreJustRespawned))
         {
             if (cassetteBlockManager != null)
             {
