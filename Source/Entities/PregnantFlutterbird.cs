@@ -60,6 +60,11 @@ public class PregnantFlutterbird : Actor
     public bool coyote;
     public bool explodes;
 
+    public float chaseSpeedXMult, chaseSpeedYMult;
+
+    public string deathSfx = "event:/game/05_mirror_temple/eyebro_eyemove";
+    public bool blood = true;
+
     private bool baby;
     private float birthCooldown;
     private SoundSource laserSfx;
@@ -67,6 +72,8 @@ public class PregnantFlutterbird : Actor
     public ParticleType explosionParticle;
     private Circle pushRadius;
     private Color birdColor;
+
+    private float colliderWidth = 4f, colliderHeight = 4f, colliderXOffset = -2f, colliderYOffset = -4f;
 
     public PregnantFlutterbird(EntityData data, Vector2 offset, EntityID eid) : base(data.Position + offset)
     {
@@ -77,7 +84,12 @@ public class PregnantFlutterbird : Actor
         Add(flyawaySfx = new SoundSource());
         Add(tweetingSfx = new SoundSource());
         tweetingSfx.Play("event:/game/general/birdbaby_tweet_loop");
-        base.Collider = new Hitbox(4f, 4f, -2f, -4f);
+
+        colliderWidth = data.Float("colliderWidth", 4f);
+        colliderHeight = data.Float("colliderHeight", 4f);
+        colliderXOffset = data.Float("colliderXOffset",-2f);
+        colliderYOffset = data.Float("colliderYOffset", -4f);
+        base.Collider = new Hitbox(colliderWidth, colliderHeight, colliderXOffset, colliderYOffset);
         Add(new PlayerCollider(OnPlayer));
 
         //Read the custom properties from data
@@ -108,6 +120,10 @@ public class PregnantFlutterbird : Actor
         emitLight = data.Bool("emitLight", false);
         Add(sprite = GFX.SpriteBank.Create(spriteID));
         sprite.Color = birdColor = data.HexColor("color", Color.White);
+        chaseSpeedXMult = data.Float("chaseSpeedXMult", 1f);
+        chaseSpeedYMult = data.Float("chaseSpeedYMult", 1f);
+        blood = data.Bool("blood", true);
+        deathSfx = data.Attr("deathSfx", "event:/game/05_mirror_temple/eyebro_eyemove");
 
         if (emitLight)
         {
@@ -217,8 +233,7 @@ public class PregnantFlutterbird : Actor
             noGravityTimer -= Engine.DeltaTime;
         else
             noGravityTimer = 0f;
-
-            float num = 800f;
+        float num = 800f;
         if (Math.Abs(Speed.Y) <= 30f)
         {
             num *= 0.5f;
@@ -363,8 +378,8 @@ public class PregnantFlutterbird : Actor
                     Position = Calc.Approach(Position, player.Position, 1f);
                 else
                 {
-                    MoveTowardsX(player.Position.X, 1f);
-                    MoveTowardsY(player.Position.Y, 0.8f);
+                    MoveTowardsX(player.Position.X, 1f * chaseSpeedXMult);
+                    MoveTowardsY(player.Position.Y, 0.8f * chaseSpeedYMult);
                 }
                 if (player.Position.X < Position.X)
                     sprite.FlipX = true;
@@ -550,8 +565,9 @@ public class PregnantFlutterbird : Actor
         Level level = SceneAs<Level>();
         if (!flyingAway) // doesn't make sense to actually "die" if they are just oob
         {
-            Audio.Play("event:/game/05_mirror_temple/eyebro_eyemove", Position);
-            level.Particles.Emit(deathParticle, Center, Color.Red, -1f);
+            Audio.Play(deathSfx, Position);
+            if (blood)
+                level.Particles.Emit(deathParticle, Center, Color.Red, -1f);
         }
         foreach (Laser laser in level.Tracker.GetEntities<Laser>())
         {
@@ -576,8 +592,9 @@ public class PregnantFlutterbird : Actor
 
     public override void DebugRender(Camera camera)
     {
-        if (chaser && SceneAs<Level>().IsInCamera(Center, 40f))
-            Draw.Line(this.Center, SceneAs<Level>().Tracker.GetEntity<Player>().Center, Color.Red);
+        Player player = SceneAs<Level>().Tracker.GetEntity<Player>();
+        if (player != null && chaser && SceneAs<Level>().IsInCamera(Center, 40f))
+            Draw.Line(this.Center, player.Center, Color.Red);
         base.DebugRender(camera);
     }
 }

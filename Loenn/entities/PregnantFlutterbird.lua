@@ -35,7 +35,15 @@ PregnantFlutterbird.placements = {
 		--hoppingDistance = 8,
 		color = "ffffff",
 		scaredDistance = 48,
-		explodes = false
+		explodes = false,
+		colliderWidth = 4,
+		colliderHeight = 4,
+		colliderXOffset = -2,
+		colliderYOffset = -4,
+		chaseSpeedXMult = 1,
+		chaseSpeedYMult = 1,
+		blood = true,
+		deathSfx = "event:/game/05_mirror_temple/eyebro_eyemove"
 		
 	}
 }
@@ -51,12 +59,15 @@ PregnantFlutterbird.fieldOrder = {
 	"sterilizationFlag",
 	"hopSfx",
 	"birthSfx",
+	"deathSfx",
 	"spriteID",
 	"depth",
 	"color",
 	--"hoppingDistance",
 	"scaredDistance",
 	"partnerID",
+	"chaseSpeedXMult",
+	"chaseSpeedYMult",
 	"bouncy",
 	"chaser",
 	"coyote",
@@ -66,7 +77,8 @@ PregnantFlutterbird.fieldOrder = {
 	"squishable",
 	"emitLight",
 	"polyamorous",
-	"explodes"
+	"explodes",
+	"blood"
 }
 
 PregnantFlutterbird.fieldInformation = {
@@ -111,7 +123,9 @@ function PregnantFlutterbird.ignoredFields(entity)
 	"_id",
 	"partnerID",
 	"hoppingDistance",
-	"scaredDistance"
+	"scaredDistance",
+	"chaseSpeedXMult",
+	"chaseSpeedYMult"
 	}
 	
     local function doNotIgnore(value)
@@ -128,7 +142,10 @@ function PregnantFlutterbird.ignoredFields(entity)
 	if entity.flyAway == true then
 		doNotIgnore("scaredDistance")
 	end
-
+	if entity.chaser == true then
+		doNotIgnore("chaseSpeedXMult")
+		doNotIgnore("chaseSpeedYMult")
+	end
 	return ignored
 end
 

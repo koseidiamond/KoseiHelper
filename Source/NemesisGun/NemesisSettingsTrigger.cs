@@ -24,6 +24,7 @@ public class NemesisGunSettingsTrigger : Trigger
     private int freezeFrames;
     private float horizontalAcceleration = 0f, verticalAcceleration = 0f;
     private int bulletWidth = 6, bulletHeight = 6, bulletXOffset, bulletYOffset;
+    private bool particleDoesntRotate;
 
     public KoseiHelperModuleSettings.NemesisSettings.GunDirections gunDirections;
 
@@ -57,6 +58,7 @@ public class NemesisGunSettingsTrigger : Trigger
         bulletHeight = data.Int("bulletHeight", 6);
         bulletXOffset = data.Int("bulletXOffset", 0);
         bulletYOffset = data.Int("bulletYOffset", 0);
+        particleDoesntRotate = data.Bool("particleDoesntRotate", false);
     }
 
     public override void OnEnter(Player player)
@@ -108,6 +110,7 @@ public class NemesisGunSettingsTrigger : Trigger
         Extensions.bulletHeight = bulletHeight;
         Extensions.bulletXOffset = bulletXOffset;
         Extensions.bulletYOffset = bulletYOffset;
+        Extensions.particleDoesntRotate = particleDoesntRotate;
 
         if (enabled)
         {

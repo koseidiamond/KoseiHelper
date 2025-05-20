@@ -10,7 +10,8 @@ public enum GoombaBehavior
 {
     Chaser,
     Dumb,
-    Smart
+    Smart,
+    SuperSmart
 }
 
 [CustomEntity("KoseiHelper/Goomba")]
@@ -20,7 +21,7 @@ public class Goomba : Actor
     private Sprite sprite;
     private Collider bounceCollider;
     private int walkDirection = 1;
-    private Collision onCollideH = null;
+    private Collision onCollideH;
     private Collision onCollideV = null;
     public float speedX = 50;
     public GoombaBehavior behavior;
@@ -336,6 +337,12 @@ public class Goomba : Actor
                 CeaseToExist();
             }
         };
+    }
+
+    public void OnCollideH(CollisionData data)
+    {
+        if (behavior == GoombaBehavior.SuperSmart)
+            walkDirection = -walkDirection;
     }
 
     private void CeaseToExist()

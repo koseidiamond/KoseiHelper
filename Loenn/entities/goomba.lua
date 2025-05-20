@@ -80,7 +80,8 @@ Goomba.fieldInformation = {
 		options = {
 			"Chaser",
 			"Dumb",
-			"Smart"
+			"Smart",
+			"SuperSmart"
 		},
 		editable = false
 	}

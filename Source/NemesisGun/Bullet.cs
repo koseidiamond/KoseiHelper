@@ -51,6 +51,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
 
         private int colliderxOffset = Extensions.bulletXOffset, collideryOffset = Extensions.bulletYOffset;
         private int colliderWidth = Extensions.bulletWidth, colliderHeight = Extensions.bulletHeight;
+
         public Bullet(Vector2 position, Vector2 velocity, Actor owner)
         {
             base.Collider = new Hitbox(colliderWidth, colliderHeight, colliderxOffset, collideryOffset);
@@ -168,7 +169,10 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
             if (CanDoShit(owner))
             {
                 float angle = (float)Math.Atan2(velocity.Y, velocity.X);
-                bulletTexture.DrawCentered(Position, Color.White, 1, angle);
+                if (Extensions.particleDoesntRotate)
+                    bulletTexture.DrawCentered(Position, Color.White, 1);
+                else
+                    bulletTexture.DrawCentered(Position, Color.White, 1, angle);
             }
         }
 
@@ -286,7 +290,6 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
             if (owner.Scene.CollideFirst<Water>(Hitbox) is Water water && !dead)
             {
                 velocity *= KoseiHelperModule.Settings.GunInteractions.WaterFriction;
-                return;
             }
 
             if (owner.Scene.CollideFirst<TheoCrystal>(Hitbox) is TheoCrystal theo && !dead)
@@ -746,6 +749,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                     !dead && !plutterbird.flyingAway)
                 {
                     plutterbird.Die();
+                    SceneAs<Level>().Session.IncrementCounter("KoseiHelper_PlutterbirdsKilled");
                     DestroyBullet();
                     return;
                 }
