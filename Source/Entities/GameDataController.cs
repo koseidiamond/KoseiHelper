@@ -29,11 +29,14 @@ public class GameDataController : Entity
     public string featherTime;
     public string launched;
     public string transitioning;
-    public string horizontalWindLevel;
+    public string WindLevelX, WindLevelY;
     public string demoDashing;
     public string forceMoveX;
     public string wallSlide;
     public string gliderBoost;
+    public string chainedBerries;
+    public string onTopOfWater;
+    public string totalBerriesCollected;
 
     private static int timesJumpedCounter, timesWallJumped, timesWallbounced;
 
@@ -60,11 +63,15 @@ public class GameDataController : Entity
         featherTime = data.Attr("featherTime", "KoseiHelper_featherTimeSlider");
         launched = data.Attr("launched", "KoseiHelper_launchedFlag");
         transitioning = data.Attr("transitioning", "KoseiHelper_transitioningFlag");
-        horizontalWindLevel = data.Attr("horizontalWindLevel", "KoseiHelper_horizontalWindLevelSlider");
+        WindLevelX = data.Attr("WindLevelX", "KoseiHelper_horizontalWindLevelSlider");
+        WindLevelY = data.Attr("WindLevelY", "KoseiHelper_verticalWindLevelSlider");
         demoDashing = data.Attr("demoDashing", "KoseiHelper_demoDashingFlag");
         forceMoveX = data.Attr("forceMoveX", "KoseiHelper_forceMoveXSlider");
         wallSlide = data.Attr("wallSlide", "KoseiHelper_wallSlideSlider");
         gliderBoost = data.Attr("gliderBoost", "KoseiHelper_gliderBoostFlag");
+        chainedBerries = data.Attr("chainedBerries", "KoseiHelper_chainedBerries");
+        onTopOfWater = data.Attr("onTopOfWater", "KoseiHelper_onTopOfWater");
+        totalBerriesCollected = data.Attr("totalBerriesCollected", "KoseiHelper_totalBerriesCollected");
         base.Tag = Tags.PauseUpdate;
         base.Tag = Tags.TransitionUpdate;
     }
@@ -130,11 +137,16 @@ public class GameDataController : Entity
             session.SetSlider(featherTime, player.starFlyTimer);
             session.SetFlag(launched, player.launched);
             session.SetFlag(transitioning, level.Transitioning);
-            session.SetSlider(horizontalWindLevel, level.VisualWind);
+            session.SetSlider(WindLevelX, level.VisualWind);
             session.SetFlag(demoDashing,player.demoDashed);
             session.SetSlider(forceMoveX,player.forceMoveXTimer);
             session.SetSlider(wallSlide, player.wallSlideTimer);
             session.SetFlag(gliderBoost, player.gliderBoostTimer > 0f ? true : false);
+
+            session.SetCounter(chainedBerries, player.StrawberryCollectIndex);
+            session.SetFlag(onTopOfWater, player._IsOverWater() && !player.SwimUnderwaterCheck());
+            session.SetCounter(totalBerriesCollected, level.strawberriesDisplay.strawberries.amount);
+            session.SetSlider(WindLevelY, level.windController.targetSpeed.Y);
         }
     }
 

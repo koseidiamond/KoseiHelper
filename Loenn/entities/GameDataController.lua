@@ -28,11 +28,15 @@ GameDataController.placements = {
 			featherTime = "KoseiHelper_featherTimeSlider",
 			launched = "KoseiHelper_launchedFlag",
 			transitioning = "KoseiHelper_transitioningFlag",
-			horizontalWindLevel = "KoseiHelper_horizontalWindLevelSlider",
+			windLevelX = "KoseiHelper_horizontalWindLevelSlider",
+			windLevelY = "KoseiHelper_verticalWindLevelSlider",
 			demoDashing = "KoseiHelper_demoDashingFlag",
 			forceMoveX = "KoseiHelper_forceMoveXSlider",
 			wallSlide = "KoseiHelper_wallSlideSlider",
-			gliderBoost = "KoseiHelper_gliderBoostFlag"
+			gliderBoost = "KoseiHelper_gliderBoostFlag",
+			chainedBerries = "KoseiHelper_chainedBerries",
+			onTopOfWater = "KoseiHelper_onTopOfWater",
+			totalBerriesCollected = "KoseiHelper_totalBerriesCollected"
 		}
 	}
 }

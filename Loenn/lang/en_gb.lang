@@ -68,13 +68,15 @@ entities.KoseiHelper/GameDataController.attributes.description.worldPositionY=Th
 entities.KoseiHelper/GameDataController.attributes.description.featherTime=The time left until the player is kicked out of the feather.
 entities.KoseiHelper/GameDataController.attributes.description.launched=Whether the player is currently being launched (e.g. by a puffer).
 entities.KoseiHelper/GameDataController.attributes.description.transitioning=Whether the player is currently transitioning between rooms.\nNote: this flag has very limited uses, since most entities don't update while transitioning.
-entities.KoseiHelper/GameDataController.attributes.description.horizontalWindLevel=The current horizontal wind level.\nVanilla levels oscillate between 0 and 1 (no wind) 399 and 400 (normal wind), 800 (strong), and 1200 (crazy).\nVertical wind does not affect this slider.
+entities.KoseiHelper/GameDataController.attributes.description.WindLevelX=The current horizontal wind level.\nVanilla levels oscillate between 0 and 1 (no wind) 399 and 400 (normal wind), 800 (strong), and 1200 (crazy).\nVertical wind does not affect this slider.
+entities.KoseiHelper/GameDataController.attributes.description.WindLevelY=The current vertical wind level.\nVanilla levels are 300 (Down), -400 (Up) and -600 (Space).\nHorizontal wind does not affect this slider.
 entities.KoseiHelper/GameDataController.attributes.description.demoDashing=Whether the player is currently demo dashing.\nThis only detects demo dashes performed with the demo dash button, not manual ones.
 entities.KoseiHelper/GameDataController.attributes.description.forceMoveX=When the player is forced to move horizontally, this slider has a non-zero value.\nE.g., while climbhopping, this becomes 0.200 during the first frame and decreases towards 0.
 entities.KoseiHelper/GameDataController.attributes.description.wallSlide=Slider depending on the time that the player can slide down a wall (starting at 1.2 seconds).\nThe frame before this slider becomes 0, the player will reach terminal falling speed (160).
 entities.KoseiHelper/GameDataController.attributes.description.gliderBoost=Whether the player is currently able to receive speed from a jellyvator, upright regrab or jelly bump.
-
-
+entities.KoseiHelper/GameDataController.attributes.description.chainedBerries=How many berries the player has collected in a row.\n1UP occurs when the player collects 6 berries.
+entities.KoseiHelper/GameDataController.attributes.description.onTopOfWater=Whether the player is on top of water, but not swimming.
+entities.KoseiHelper/GameDataController.attributes.description.totalBerriesCollected=The total amount of berries collected in this map for the current session.
 
 # Debug Map Controller
 entities.KoseiHelper/DebugMapController.placements.name.DebugMapController=Debug Map Controller
