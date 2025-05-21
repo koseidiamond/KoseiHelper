@@ -44,7 +44,8 @@ PregnantFlutterbird.placements = {
 		chaseSpeedYMult = 1,
 		blood = true,
 		deathSfx = "event:/game/05_mirror_temple/eyebro_eyemove"
-		
+		-- secret attribute intended to be used with nemesis gun:
+		-- health = 1
 	}
 }
 
