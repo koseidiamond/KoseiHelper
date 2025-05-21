@@ -389,6 +389,8 @@ entities.KoseiHelper/CustomOshiroDoor.attributes.description.collisionMode=How w
 entities.KoseiHelper/CustomOshiroDoor.attributes.description.refillDash=If the door should always refill the player dash when bumped.
 entities.KoseiHelper/CustomOshiroDoor.attributes.description.givesCoyote=If bumping (dashing on) the door should give 5 coyote frames.
 entities.KoseiHelper/CustomOshiroDoor.attributes.description.destroyAttached=If entities attached (like spikes) should be destroyed when the door does.\nThe entities will still load if the block doesn't appear due to the enabled flag.
+entities.KoseiHelper/CustomOshiroDoor.attributes.description.depth=The depth at which the Oshiro Door will be rendered.
+
 entities.KoseiHelper/TilesetOshiroDoor.placements.name.TilesetOshiroDoor= Tileset Oshiro Door
 entities.KoseiHelper/TilesetOshiroDoor.placements.description.Tileset Oshiro Door= The bouncy oshiro/ghost block but using a tileset.
 entities.KoseiHelper/TilesetOshiroDoor.attributes.description.bumpSound=The sound that the oshiro block makes when bumped.
@@ -401,6 +403,7 @@ entities.KoseiHelper/TilesetOshiroDoor.attributes.description.tileType=The tiles
 entities.KoseiHelper/TilesetOshiroDoor.attributes.description.giveFreezeFrames=If the oshiro block should give 3 freeze frames like dash blocks do.
 entities.KoseiHelper/TilesetOshiroDoor.attributes.description.debris=If the oshiro block should spawn debris when destroyed.
 entities.KoseiHelper/TilesetOshiroDoor.attributes.description.destroyAttached=If entities attached (like spikes) should be destroyed when the door does.\nThe entities will still load if the block doesn't appear due to the enabled flag.
+entities.KoseiHelper/TilesetOshiroDoor.attributes.description.depth=The depth at which the Oshiro Door will be rendered.
 
 #Bound Refill
 entities.KoseiHelper/BoundRefill.placements.name.boundRefill=Bound Refill

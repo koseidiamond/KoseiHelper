@@ -2,6 +2,9 @@ local drawableRectangle = require("structs.drawable_rectangle")
 local drawableSprite = require("structs.drawable_sprite")
 local utils = require("utils")
 
+local mods = require("mods")
+local depths = mods.requireFromPlugin("libraries.depths")
+
 local CustomOshiroDoor = {}
 
 CustomOshiroDoor.name = "KoseiHelper/CustomOshiroDoor"
@@ -24,10 +27,15 @@ CustomOshiroDoor.placements = {
 			refillDash = false,
 			givesCoyote = false,
 			collisionMode = "Vanilla",
-			destroyAttached = false
+			destroyAttached = false,
+			depth = -9000
 		}
 	}
 }
+
+function CustomOshiroDoor.depth(room,entity)
+	return entity.depth
+end
 
 CustomOshiroDoor.canResize = {false, false}
 
@@ -37,14 +45,19 @@ CustomOshiroDoor.fieldInformation = {
 	wiggleScale = { minimumValue = 0 },
     color = { fieldType = "color" },
 	collisionMode = {
-	options = {
-		"Vanilla",
-		"Rebound",
-		"SideBounce",
-		"PointBounce"
-		},
-	editable = false
-	}
+		options = {
+			"Vanilla",
+			"Rebound",
+			"SideBounce",
+			"PointBounce"
+			},
+		editable = false
+	},
+	depth = {
+        fieldType = "integer",
+        options = depths.addDepths(depths.getDepths(), {}),
+        editable = true
+    }
 }
 
 function CustomOshiroDoor.ignoredFields(entity)

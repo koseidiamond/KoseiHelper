@@ -1,10 +1,17 @@
 local fakeTilesHelper = require("helpers.fake_tiles")
 local utils = require("utils")
 
+local mods = require("mods")
+local depths = mods.requireFromPlugin("libraries.depths")
+
 local ShatterDashBlock = {}
 
 ShatterDashBlock.name = "KoseiHelper/ShatterDashBlock"
 ShatterDashBlock.depth = 0
+
+function ShatterDashBlock.depth(room,entity)
+	return entity.depth
+end
 
 function ShatterDashBlock.placements()
     return {
@@ -25,7 +32,8 @@ function ShatterDashBlock.placements()
 			flagSet = "",
 			substractSpeedMode = "Substract",
 			destroyStaticMovers = false,
-			verticalSpeed = false
+			verticalSpeed = false,
+			depth = -12999
         }
     }
 end
@@ -49,6 +57,13 @@ ShatterDashBlock.fieldInformation = function(entity)
 	orig.SpeedDecrease = {
 		minimumValue = 0
 	}
+	orig.depth = {
+        fieldType = "integer",
+        options = depths.addDepths(depths.getDepths(), {
+		{"ShatterDashBlocks", -12999}
+		}),
+        editable = true
+    }
 	return orig
 end
 
@@ -66,6 +81,7 @@ ShatterDashBlock.fieldOrder= {
 	"ShakeTime",
 	"SpeedDecrease",
 	"SpeedRequirement",
+	"depth",
 	"blendin",
 	"verticalSpeed",
 	"canDash",

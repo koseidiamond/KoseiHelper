@@ -30,6 +30,7 @@ public class CustomOshiroDoor : Solid
     public CustomOshiroDoor(EntityData data, Vector2 offset)
         : base(data.Position + offset, data.Width, data.Height, safe: false)
     {
+        base.Depth = data.Int("depth", -9000);
         Add(sprite = GFX.SpriteBank.Create(data.Attr("sprite", "koseiHelper_CustomOshiroDoor")));
         bumpSound = data.Attr("bumpSound", "event:/game/03_resort/forcefield_bump");
         tint = data.HexColor("color", Color.DarkSlateBlue);

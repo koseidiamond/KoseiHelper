@@ -36,6 +36,7 @@ public class TilesetOshiroDoor : Solid
     public TilesetOshiroDoor(EntityData data, Vector2 offset)
         : base(data.Position + offset, data.Width, data.Height, safe: false)
     {
+        base.Depth = data.Int("depth", -9000);
         bumpSound = data.Attr("bumpSound", "event:/game/03_resort/forcefield_bump");
         singleUse = data.Bool("singleUse", false);
         collisionMode = data.Enum("collisionMode", TilesetOshiroCollisionMode.Vanilla);
