@@ -31,6 +31,7 @@ public class TilesetOshiroDoor : Solid
     private char tileType;
     public bool giveFreezeFrames;
     public bool debris;
+    public bool destroyAttached = true;
 
     public TilesetOshiroDoor(EntityData data, Vector2 offset)
         : base(data.Position + offset, data.Width, data.Height, safe: false)
@@ -40,6 +41,7 @@ public class TilesetOshiroDoor : Solid
         collisionMode = data.Enum("collisionMode", TilesetOshiroCollisionMode.Vanilla);
         flag = data.Attr("flag", "oshiro_resort_talked_1");
         givesCoyote = data.Bool("givesCoyote", false);
+        destroyAttached = data.Bool("destroyAttached", true);
         tileType = data.Char("tiletype", 'a');
         refillDash = data.Bool("refillDash", false);
         giveFreezeFrames = data.Bool("giveFreezeFrames", false);
@@ -89,7 +91,8 @@ public class TilesetOshiroDoor : Solid
             Collidable = false;
             if (giveFreezeFrames)
                 Celeste.Freeze(0.05f);
-            DestroyStaticMovers();
+            if (destroyAttached)
+                DestroyStaticMovers();
             RemoveSelf();
         }
     }

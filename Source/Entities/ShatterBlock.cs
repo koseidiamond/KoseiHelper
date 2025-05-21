@@ -19,7 +19,6 @@ public class ShatterDashBlock : Solid
     private float speedReq;
     private float delay;
 
-    //Temporary Debug Variables, these will be consts by the end of the workload
     private float speedDecrease;
     private float shakeTime;
     private bool canDash = true;

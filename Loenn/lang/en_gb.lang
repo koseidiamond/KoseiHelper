@@ -354,6 +354,7 @@ entities.KoseiHelper/CustomTempleCrackedBlock.attributes.description.tint=The ti
 entities.KoseiHelper/CustomTempleCrackedBlock.attributes.description.breakSound=The sound that will play when the block is broken.
 entities.KoseiHelper/CustomTempleCrackedBlock.attributes.description.prebreakSound=The sound that will play if the health is reduced but the block is not broken yet.
 entities.KoseiHelper/CustomTempleCrackedBlock.attributes.description.health=The number of hits until the block is broken.
+entities.KoseiHelper/CustomTempleCrackedBlock.attributes.description.destroyStaticMovers=Whether entities attached to this block should be destroyed (or not loaded if it was permanently destroyed).
 
 #Shatter Dash Block
 entities.KoseiHelper/ShatterDashBlock.placements.name.ShatterDashBlock=Shatter Dash Block
@@ -370,7 +371,7 @@ entities.KoseiHelper/ShatterDashBlock.attributes.description.givesCoyote=Whether
 entities.KoseiHelper/ShatterDashBlock.attributes.description.requireOnlySpeed=Whether the block can be broken if the speed requirement is met, regardless of the dash state.
 entities.KoseiHelper/ShatterDashBlock.attributes.description.flagSet=The flag that will be set when the block is shattered.
 entities.KoseiHelper/ShatterDashBlock.attributes.description.substractSpeedMode=Whether the player speed should be decreased by substraction, multiplication, or set to a fixed number.
-entities.KoseiHelper/ShatterDashBlock.attributes.description.destroyStaticMovers=Whether entities attached to this block should be destroyed (or not loaded if it was permanently destroyed)
+entities.KoseiHelper/ShatterDashBlock.attributes.description.destroyStaticMovers=Whether entities attached to this block should be destroyed (or not loaded if it was permanently destroyed).
 entities.KoseiHelper/ShatterDashBlock.attributes.description.verticalSpeed=Whether the shatter block should use the vertical speed as a requirement instead of the horizontal speed.
 
 #Oshiro Doors
@@ -399,6 +400,7 @@ entities.KoseiHelper/TilesetOshiroDoor.attributes.description.givesCoyote=If bum
 entities.KoseiHelper/TilesetOshiroDoor.attributes.description.tileType=The tileset id that the oshiro block should use.
 entities.KoseiHelper/TilesetOshiroDoor.attributes.description.giveFreezeFrames=If the oshiro block should give 3 freeze frames like dash blocks do.
 entities.KoseiHelper/TilesetOshiroDoor.attributes.description.debris=If the oshiro block should spawn debris when destroyed.
+entities.KoseiHelper/TilesetOshiroDoor.attributes.description.destroyAttached=If entities attached (like spikes) should be destroyed when the door does.\nThe entities will still load if the block doesn't appear due to the enabled flag.
 
 #Bound Refill
 entities.KoseiHelper/BoundRefill.placements.name.boundRefill=Bound Refill

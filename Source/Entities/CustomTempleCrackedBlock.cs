@@ -1,11 +1,8 @@
-using System.Runtime.CompilerServices;
 using Microsoft.Xna.Framework;
 using Monocle;
 using Celeste.Mod.Entities;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using MonoMod;
 
 namespace Celeste.Mod.KoseiHelper.Entities;
 
@@ -21,8 +18,12 @@ public class CustomTempleCrackedBlock : TempleCrackedBlock
     public new MTexture[,,] tiles;
     public new float frame;
     public new int frames;
+    private bool destroyStaticMovers;
+    private EntityID id;
     public CustomTempleCrackedBlock(EntityData data, Vector2 offset, EntityID id) : base(id, data.Position + offset, data.Width, data.Height, persistent)
     {
+        Depth = data.Int("depth", -9000);
+        this.id = id;
         persistent = data.Bool("persistent", false);
         tint = data.HexColor("tint", Color.White);
         breakSound = data.Attr("breakSound", "event:/none");
@@ -30,6 +31,7 @@ public class CustomTempleCrackedBlock : TempleCrackedBlock
         health = data.Int("health", 1); //Number of times it needs to be hit until it breaks
         texture = data.Attr("texture","objects/KoseiHelper/CustomTempleCrackedBlock/breakBlock");
         debris = data.Char("debris", '1');
+        destroyStaticMovers = data.Bool("destroyStaticMovers", false);
 
         int num = (int)(data.Width / 8f);
         int num2 = (int)(data.Height / 8f);
@@ -50,6 +52,16 @@ public class CustomTempleCrackedBlock : TempleCrackedBlock
         }
     }
 
+    public override void Awake(Scene scene)
+    {
+        base.Awake(scene);
+        if (persistent && KoseiHelperModule.Session.SoftDoNotLoad.Contains(id))
+        {
+            DestroyStaticMovers();
+            RemoveSelf();
+        }
+    }
+
     public static void Load()
     {
         On.Celeste.TempleCrackedBlock.Break += modBreak;
@@ -65,7 +77,8 @@ public class CustomTempleCrackedBlock : TempleCrackedBlock
         if (self is CustomTempleCrackedBlock customTempleCrackedBlock) // == checks if its exactly the same instance; is checks if its of that type
         {
             if (persistent)
-                self.SceneAs<Level>().Session.DoNotLoad.Add(self.eid);
+                KoseiHelperModule.Session.SoftDoNotLoad.Add(self.eid);
+                //self.SceneAs<Level>().Session.DoNotLoad.Add(self.eid);
             customTempleCrackedBlock.health--;
             if (customTempleCrackedBlock.health >0)
                 Audio.Play(customTempleCrackedBlock.breakSound, self.Center);
@@ -75,6 +88,8 @@ public class CustomTempleCrackedBlock : TempleCrackedBlock
                 Audio.Play(customTempleCrackedBlock.breakSound, self.Center);
                 self.broken = true;
                 self.Collidable = false;
+                if (customTempleCrackedBlock.destroyStaticMovers)
+                    customTempleCrackedBlock.DestroyStaticMovers();
                 for (int i = 0; (float)i < self.Width / 8f; i++)
                 {
                     for (int j = 0; (float)j < self.Height / 8f; j++)
@@ -95,7 +110,8 @@ public class CustomTempleCrackedBlock : TempleCrackedBlock
         {
             if (persistent)
             {
-                SceneAs<Level>().Session.DoNotLoad.Add(eid);
+                KoseiHelperModule.Session.SoftDoNotLoad.Add(eid);
+                //SceneAs<Level>().Session.DoNotLoad.Add(eid);
             }
             RemoveSelf();
         }

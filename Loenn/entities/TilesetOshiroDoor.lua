@@ -20,6 +20,7 @@ TilesetOshiroDoor.placements = {
 			givesCoyote = false,
 			collisionMode = "Vanilla",
 			giveFreezeFrames = false,
+			destroyAttached = true,
 			width = 8,
             height = 8
 		}

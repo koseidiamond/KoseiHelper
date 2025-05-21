@@ -1,11 +1,18 @@
 local drawableNinePatch = require("structs.drawable_nine_patch")
 local utils = require("utils")
 
+local mods = require("mods")
+local depths = mods.requireFromPlugin("libraries.depths")
+
 local CustomTempleCrackedBlock = {}
 
 CustomTempleCrackedBlock.name = "KoseiHelper/CustomTempleCrackedBlock"
-CustomTempleCrackedBlock.depth = 0
 CustomTempleCrackedBlock.warnBelowSize = {24, 24}
+
+function CustomTempleCrackedBlock.depth(room,entity)
+	return entity.depth
+end
+
 CustomTempleCrackedBlock.placements = {
     name = "Custom Temple Cracked Block",
     data = {
@@ -17,7 +24,9 @@ CustomTempleCrackedBlock.placements = {
         tint = "d42c19",
         breakSound = "event:/game/05_mirror_temple/crackedwall_vanish",
 		prebreakSound = "event:/KoseiHelper/crackedwall_prebreak",
-        health = 1
+        health = 1,
+		destroyStaticMovers = false,
+		depth = -9000
     }
 }
 
@@ -28,7 +37,12 @@ CustomTempleCrackedBlock.fieldInformation = {
 	health = {
 		fieldType = "integer",
 		minimumValue = 1
-	}
+	},
+	depth = {
+        fieldType = "integer",
+        options = depths.addDepths(depths.getDepths(), {}),
+        editable = true
+    }
 }
 
 local function hexToRGB(hex)
