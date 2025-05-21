@@ -259,11 +259,19 @@ public class Goomba : Actor
             noGravityTimer -= Engine.DeltaTime;
         else
             speedY = Calc.Approach(speedY, 200f, num * Engine.DeltaTime);
-        if (behavior == GoombaBehavior.Smart)
+        if (behavior == GoombaBehavior.Smart || behavior == GoombaBehavior.SuperSmart)
         {
             if (CollidingWithGround(Position + new Vector2(0, 2)) && 
                 (walkDirection > 0 && !CollidingWithGround(Position + new Vector2(10, 2)) || walkDirection < 0 && !CollidingWithGround(Position + new Vector2(-10, 2))))
                 walkDirection = -walkDirection;
+        }
+        if (behavior == GoombaBehavior.SuperSmart)
+        {
+            if (level.CollideCheck<Solid>(CenterLeft + new Vector2(-1,0)) ||
+                level.CollideCheck<Solid>(CenterRight))
+            {
+                walkDirection = -walkDirection;
+            }
         }
         if (player != null)
         {
@@ -337,12 +345,6 @@ public class Goomba : Actor
                 CeaseToExist();
             }
         };
-    }
-
-    public void OnCollideH(CollisionData data)
-    {
-        if (behavior == GoombaBehavior.SuperSmart)
-            walkDirection = -walkDirection;
     }
 
     private void CeaseToExist()
