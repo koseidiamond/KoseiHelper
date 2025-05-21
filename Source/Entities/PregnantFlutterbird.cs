@@ -495,7 +495,7 @@ public class PregnantFlutterbird : Actor
             Audio.Play(birthSfx, Center);
             SceneAs<Level>().Particles.Emit(ParticleTypes.SparkyDust, Position, Color.Pink);
             Scene.Add(new PregnantFlutterbird(Position, childrenCount, timeToGiveBirth, chaser, gender, orientation, shootLasers, killOnContact, bouncy, flyAway, flyAwayFlag,
-                sterilizationFlag, squishable, hopSfx, birthSfx, spriteID, Depth, emitLight, coyote, hoppingDistance, scaredDistance, sprite.Color, explodes,
+                sterilizationFlag, squishable, hopSfx, birthSfx, spriteID, customDepth, emitLight, coyote, hoppingDistance, scaredDistance, sprite.Color, explodes,
                 chaseSpeedXMult, chaseSpeedYMult, blood, deathSfx, health, colliderWidth, colliderHeight, colliderXOffset, colliderYOffset));
         }
     }

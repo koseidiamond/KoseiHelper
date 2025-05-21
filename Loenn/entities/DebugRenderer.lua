@@ -176,9 +176,16 @@ function DebugRenderer.draw(room, entity)
     elseif entity.shape == "Text" then
         love.graphics.print(entity.message or "Text", entity.x, entity.y)
     elseif entity.shape == "Image" then
-		love.graphics.print("?", entity.x , entity.y, 0, 4, 4)
+		love.graphics.setColor(1, 1, 1)
+		--love.graphics.print("?", entity.x , entity.y, 0, 4, 4)
 	end
 	 love.graphics.setColor(1, 1, 1)
+end
+
+function DebugRenderer.texture(room, entity)
+	if entity.shape == "Image" then
+		return entity.imagePath
+	end
 end
 
 function DebugRenderer.nodeSprite() end

@@ -1,10 +1,7 @@
 using Celeste.Mod.Entities;
 using Monocle;
-using System;
 using Microsoft.Xna.Framework;
 using System.Collections;
-using System.Reflection.Metadata;
-using static Celeste.Session;
 
 namespace Celeste.Mod.KoseiHelper.Entities;
 
@@ -37,7 +34,7 @@ public class DefrostableBlock : Solid
     public override void Update()
     {
         Level level = SceneAs<Level>();
-        if (CollideCheck<Shot>() || fireMode)
+        if (CollideCheck<Shot>() || CollideCheck<Laser>() || fireMode)
             defrosting = true;
         if (defrosting)
             Add(new Coroutine(Defrost()));
