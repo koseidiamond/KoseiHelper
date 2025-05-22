@@ -1,12 +1,6 @@
 using Microsoft.Xna.Framework;
 using Monocle;
-using Celeste;
 using Celeste.Mod.Entities;
-using ExtendedVariants.Variants;
-using Iced.Intel;
-using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Reflection.Metadata;
 
 namespace Celeste.Mod.KoseiHelper.Entities;
 

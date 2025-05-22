@@ -11,6 +11,8 @@ MaryBlock.placements = {
 			affectTheo = false,
 			oneUse = true,
 			maryType = "Idle",
+			shutUp = false,
+			spriteID = "koseiHelper_maryBlock"
 		}
 	}
 }
@@ -28,6 +30,26 @@ MaryBlock.fieldInformation = {
 		editable = false
 	}
 }
+
+function MaryBlock.ignoredFields(entity)
+	local ignored = {
+	"_name",
+    "_id",
+	"shutUp"
+	}
+    local function doNotIgnore(value)
+        for i = #ignored, 1, -1 do
+            if ignored[i] == value then
+                table.remove(ignored, i)
+                return
+            end
+        end
+    end
+	if entity.maryType == "Bald" then
+		doNotIgnore("shutUp")
+	end
+	return ignored
+end
 
 function MaryBlock.selection(room, entity)
     local width, height = 16, 16

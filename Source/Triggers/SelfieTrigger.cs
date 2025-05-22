@@ -16,7 +16,6 @@ public class SelfieTrigger : Trigger
     private float timeToOpen;
     private TriggerMode triggerMode;
     private bool interactable;
-    private TalkComponent talker;
     private bool showingRoutine = false;
 
     public SelfieTrigger(EntityData data, Vector2 offset) : base(data, offset)
@@ -35,7 +34,7 @@ public class SelfieTrigger : Trigger
 
         if (interactable)
         {
-            Add(talker = new TalkComponent(new Rectangle(0, 0, (int)Width, (int)Height), new Vector2(data.Int("talkBubbleX", (int)Width / 2),
+            Add(new TalkComponent(new Rectangle(0, 0, (int)Width, (int)Height), new Vector2(data.Int("talkBubbleX", (int)Width / 2),
                 data.Int("talkBubbleY", 0)), (player) => {}) {PlayerMustBeFacing = false});
         }
     }
@@ -80,6 +79,7 @@ public class SelfieTrigger : Trigger
             player.StateMachine.Locked = false;
             player.StateMachine.State = 0;
         }
+
         if (interactable && oneUse)
             base.RemoveSelf();
         yield return 0.2f;

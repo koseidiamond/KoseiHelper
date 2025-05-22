@@ -313,6 +313,8 @@ entities.KoseiHelper/MaryBlock.placements.description.Mary Block=These flowers b
 entities.KoseiHelper/MaryBlock.attributes.description.maryType=Potted Mary launches the player like puffers/bumpers but without freeze frames.\nIdle Mary launches the player like springs.\nBubble Mary puts the player in a bubble and forces them to return to their position moments ago.\nMary Mary forces the player to do a super.\nDark Mary slows down time when close.\nBald Mary makes you bald.
 entities.KoseiHelper/MaryBlock.attributes.description.outline=If the sprite should be rendered with an outline.
 entities.KoseiHelper/MaryBlock.attributes.description.affectTheo=If Theo should be able to bounce (if potted) or destroy Mary.\nIf Mary is dark, she will kill Theo.
+entities.KoseiHelper/MaryBlock.attributes.description.shutUp=Whether bald Mary should not be talkative.
+entities.KoseiHelper/MaryBlock.attributes.description.spriteID=The ID or tag of the sprite in your Sprites.xml.
 
 # Falling Platform
 entities.KoseiHelper/FallingPlatform.placements.name.FallingPlatform=Falling Platform

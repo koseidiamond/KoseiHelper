@@ -14,8 +14,8 @@ public class MaryBlock : Entity
     private Sprite sprite;
     public bool potted;
     private int direction = -1;
-    public static ParticleType maryParticle = SwitchGate.P_Behind;
-    public static ParticleType darkMaryParticle = maryParticle;
+    public static ParticleType maryParticle;
+    public static ParticleType darkMaryParticle;
     public bool outline;
     public bool affectTheo;
 
@@ -39,6 +39,7 @@ public class MaryBlock : Entity
     // baldmary variables
     private float baldTimer = 0f;
     private bool playerIsBald;
+    private bool shutUp;
 
     public enum MaryType
     {
@@ -53,19 +54,17 @@ public class MaryBlock : Entity
 
     public MaryBlock(EntityData data, Vector2 offset) : base(data.Position + offset)
     {
+        // 
         Depth = -9500;
         outline = data.Bool("outline", false);
         affectTheo = data.Bool("affectTheo", false);
         oneUse = data.Bool("oneUse", true);
         potted = data.Bool("potted", false); // legacy
         maryType = data.Enum("maryType", MaryType.Idle);
-        darkMaryParticle.Color = Color.Purple;
-        darkMaryParticle.Color2 = Color.DarkViolet;
-        maryParticle.Color = Color.Yellow;
-        maryParticle.Color2 = Color.Orange;
+        shutUp = data.Bool("shutUp", false);
         if (potted) // legacy
             maryType = MaryType.Potted;
-        Add(sprite = GFX.SpriteBank.Create("koseiHelper_maryBlock"));
+        Add(sprite = GFX.SpriteBank.Create(data.Attr("spriteID","koseiHelper_maryBlock")));
         if (maryType == MaryType.Potted)
         {
             sprite.Play("potted");
@@ -114,6 +113,21 @@ public class MaryBlock : Entity
         Add(bloom = new BloomPoint(0.2f, 12f));
         Add(light = new VertexLight(Color.LightYellow, 0.3f, 12, 32));
         Add(new PlayerCollider(OnPlayer));
+    }
+
+    public override void Added(Scene scene)
+    {
+        base.Added(scene);
+        maryParticle = new ParticleType(SwitchGate.P_Behind)
+        {
+            Color = Color.Yellow,
+            Color2 = Color.Orange
+        };
+        darkMaryParticle = new ParticleType(SwitchGate.P_Behind)
+        {
+            Color = Color.Purple,
+            Color2 = Color.DarkViolet
+        };
     }
 
     private void RenderDisplacement()
@@ -206,7 +220,8 @@ public class MaryBlock : Entity
             Vector2 bubblePosition = GetPositionFromHistory();
             if (maryType == MaryType.Bald && !playerIsBald)
             {
-                Scene.Add(new MiniTextbox("KoseiHelper_MaryBlock_Bald"));
+                if (!shutUp)
+                    Scene.Add(new MiniTextbox("KoseiHelper_MaryBlock_Bald"));
                 player.StateMachine.State = StBald;
                 baldTimer = 0f;
                 playerIsBald = true;
