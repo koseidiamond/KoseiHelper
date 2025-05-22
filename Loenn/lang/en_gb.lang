@@ -699,6 +699,9 @@ triggers.KoseiHelper/SelfieTrigger.attributes.description.buttonTexture=The path
 triggers.KoseiHelper/SelfieTrigger.attributes.description.flag=The flag required for this trigger to be activated.\nLeave empty for no flag required.
 triggers.KoseiHelper/SelfieTrigger.attributes.description.triggerMode=Whether the trigger should activate when the player enters or exits it.
 triggers.KoseiHelper/SelfieTrigger.attributes.description.oneUse=Whether the trigger should delete itself after the selfie is displayed.
+triggers.KoseiHelper/SelfieTrigger.attributes.description.interactable=Whether the trigger requires interaction instead of just touching it.
+triggers.KoseiHelper/SelfieTrigger.attributes.description.talkBubbleX=The horizontal position of the talk icon, relative to the topleft corner of the trigger.
+triggers.KoseiHelper/SelfieTrigger.attributes.description.talkBubbleY=The vertical position of the talk icon, relative to the topleft corner of the trigger.
 
 # Slider Fade Trigger
 triggers.KoseiHelper/SliderFadeTrigger.placements.name.SliderFadeTrigger=Slider Fade Trigger

@@ -15,9 +15,13 @@ public class SelfieTrigger : Trigger
     private string image, buttonTexture, photoInSound, photoOutSound, inputSound, flag;
     private float timeToOpen;
     private TriggerMode triggerMode;
+    private bool interactable;
+    private TalkComponent talker;
+    private bool showingRoutine = false;
 
     public SelfieTrigger(EntityData data, Vector2 offset) : base(data, offset)
     {
+        interactable = data.Bool("interactable", false);
         image = data.Attr("image", "selfieCampfire");
         photoInSound = data.Attr("photoInSound", "event:/game/02_old_site/theoselfie_photo_in");
         photoOutSound = data.Attr("photoOutSound", "event:/game/02_old_site/theoselfie_photo_out");
@@ -28,13 +32,19 @@ public class SelfieTrigger : Trigger
         flag = data.Attr("flag", "");
         triggerMode = data.Enum("triggerMode", TriggerMode.OnEnter);
         oneUse = data.Bool("oneUse", true);
+
+        if (interactable)
+        {
+            Add(talker = new TalkComponent(new Rectangle(0, 0, (int)Width, (int)Height), new Vector2(data.Int("talkBubbleX", (int)Width / 2),
+                data.Int("talkBubbleY", 0)), (player) => {}) {PlayerMustBeFacing = false});
+        }
     }
 
     public override void OnEnter(Player player)
     {
         base.OnEnter(player);
         Level level = SceneAs<Level>();
-        if (triggerMode == TriggerMode.OnEnter && player.Scene != null && (string.IsNullOrEmpty(flag) || level.Session.GetFlag(flag)))
+        if (!interactable && triggerMode == TriggerMode.OnEnter && player.Scene != null && (string.IsNullOrEmpty(flag) || level.Session.GetFlag(flag)))
             Add(new Coroutine(AddSelfie()));
     }
 
@@ -42,12 +52,20 @@ public class SelfieTrigger : Trigger
     {
         base.OnEnter(player);
         Level level = SceneAs<Level>();
-        if (triggerMode == TriggerMode.OnLeave && player.Scene != null && (string.IsNullOrEmpty(flag) || level.Session.GetFlag(flag)))
+        if (!interactable && triggerMode == TriggerMode.OnLeave && player.Scene != null && (string.IsNullOrEmpty(flag) || level.Session.GetFlag(flag)))
+            Add(new Coroutine(AddSelfie()));
+    }
+
+    public override void OnStay(Player player)
+    {
+        base.OnStay(player);
+        if (interactable && Input.Talk.Pressed && !showingRoutine)
             Add(new Coroutine(AddSelfie()));
     }
 
     public IEnumerator AddSelfie()
     {
+        showingRoutine = true;
         Level level = SceneAs<Level>();
         Player player = level.Tracker.GetEntity<Player>();
         if (player != null)
@@ -62,7 +80,10 @@ public class SelfieTrigger : Trigger
             player.StateMachine.Locked = false;
             player.StateMachine.State = 0;
         }
+        if (interactable && oneUse)
+            base.RemoveSelf();
         yield return 0.2f;
+        showingRoutine = false;
         if (oneUse)
             RemoveSelf();
     }

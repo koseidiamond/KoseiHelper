@@ -16,7 +16,10 @@ SelfieTrigger.placements = {
 		timeToOpen = 0.5,
 		flag = "",
 		triggerMode = "OnEnter",
-		oneUse = true
+		oneUse = true,
+		interactable = false,
+		talkBubbleX = 0,
+		talkBubbleY = 0
 		}
 	}
 }
@@ -29,8 +32,33 @@ SelfieTrigger.fieldInformation = function (entity) return {
 		"OnLeave"
 		},
 		editable = false
-	}
+	},
+	talkBubbleX = { fieldType = "integer" },
+	talkBubbleY = { fieldType = "integer" }
 }
+end
+
+function SelfieTrigger.ignoredFields(entity)
+	local ignored = {
+	"_name",
+	"_id",
+	"talkBubbleX",
+	"talkBubbleY"
+	}
+    local function doNotIgnore(value)
+        for i = #ignored, 1, -1 do
+            if ignored[i] == value then
+                table.remove(ignored, i)
+                return
+            end
+        end
+    end
+
+	if entity.interactable == true then
+		doNotIgnore("talkBubbleX")
+		doNotIgnore("talkBubbleY")
+	end
+	return ignored
 end
 
 return SelfieTrigger
