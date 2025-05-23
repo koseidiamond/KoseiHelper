@@ -2,6 +2,7 @@ using Celeste.Mod.Entities;
 using Celeste.Mod.MaxHelpingHand.Entities;
 using IL.Monocle;
 using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
 
 namespace Celeste.Mod.KoseiHelper.Triggers;
@@ -151,11 +152,18 @@ public class StylegroundModifierTrigger : Trigger
         switch (identificationMode)
         {
             case IdentificationMode.Texture:
-                throw new System.Exception("The Texture feature is not implemented yet!");
-                break;
+                throw new Exception($"Not implemented yet");
             case IdentificationMode.Tag:
-                throw new System.Exception("The Tag feature is not implemented yet!");
-                break;
+                foreach (Backdrop bd in level.Background.Backdrops)
+                {
+                    if (bd.Tags?.Contains(tag) == true)
+                    {
+                        backdrop = bd;
+                        ModifyBackdrop(backdrop);
+                        return;
+                    }
+                }
+                throw new Exception($"No backdrops found with tag: {tag}");
             default: // Index
                 backdrop = level.Background.Backdrops[index];
                 ModifyBackdrop(backdrop);
@@ -456,14 +464,16 @@ public class StylegroundModifierTrigger : Trigger
                         break;
                 }
                 break;
-            default: // Color (oh fun)
+            default: // Color
                 switch (valueType)
                 {
                     case ValueType.Counter: // Gradually changes the color from minColor to maxColor which correspond to minValue and maxValue each
+                        float normalizedCounter = MathHelper.Clamp((session.GetCounter(linkedCounter) - minValue) / (maxValue - minValue), 0f, 1f);
                         backdrop.Color = Color.Lerp(minColor, maxColor, MathHelper.Lerp(minValue, maxValue, session.GetSlider(linkedCounter)));
                         break;
                     case ValueType.Slider: // Gradually changes the color from minColor to maxColor which correspond to minValue and maxValue each
-                        backdrop.Color = Color.Lerp(minColor, maxColor, MathHelper.Lerp(minValue, maxValue, session.GetSlider(linkedSlider)));
+                        float normalizedSlider = MathHelper.Clamp((session.GetSlider(linkedSlider) - minValue) / (maxValue - minValue), 0f, 1f);
+                        backdrop.Color = Color.Lerp(minColor, maxColor, normalizedSlider);
                         break;
                     case ValueType.Flag:
                         if (session.GetFlag(linkedFlag))

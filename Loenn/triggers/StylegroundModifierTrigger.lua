@@ -64,8 +64,9 @@ StylegroundModifierTrigger.fieldInformation = function (entity) return {
 	identificationMode = {
 		options = {
 		"Index",
-		"Tag",
-		"Texture"
+		"Tag"
+		-- To be implemented:
+		--"Texture"
 		},
 		editable = false
 	},
@@ -90,7 +91,8 @@ StylegroundModifierTrigger.fieldInformation = function (entity) return {
 		"SpeedX",
 		"SpeedY",
 		"Alpha",
-		"FadeIn",
+		-- To be implemented:
+		--"FadeIn",
 		"FlipX",
 		"FlipY",
 		"InstantIn",
