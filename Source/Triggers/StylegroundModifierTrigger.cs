@@ -1,4 +1,6 @@
 using Celeste.Mod.Entities;
+using Celeste.Mod.MaxHelpingHand.Entities;
+using IL.Monocle;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 
@@ -10,8 +12,7 @@ public class StylegroundModifierTrigger : Trigger
 {
     public bool onlyOnce;
     public TriggerMode triggerMode;
-    public string linkedSlider, linkedCounter;
-    public float sliderFinal;
+    public string linkedSlider, linkedCounter, linkedFlag;
     public float multiplier;
 
     public Backdrop backdrop;
@@ -68,21 +69,29 @@ public class StylegroundModifierTrigger : Trigger
     public bool instantIn, instantOut;
     public bool loopX, loopY;
 
+    public float minValue, maxValue, valueWhileTrue, valueWhileFalse;
+    public Color minColor, maxColor, colorWhileTrue, colorWhileFalse;
+
     public StylegroundModifierTrigger(EntityData data, Vector2 offset) : base(data, offset)
     {
+        // General trigger settings
         onlyOnce = data.Bool("onlyOnce", false);
         triggerMode = data.Enum("triggerMode", TriggerMode.OnEnter);
-        linkedSlider = data.Attr("slider", "");
-        linkedCounter = data.Attr("counter", "");
-        multiplier = data.Float("multiplier", 1f);
 
+        // Identification settings
         identificationMode = data.Enum("identificationMode", IdentificationMode.Index);
         index = data.Int("index", 0);
         tag = data.Attr("tag", "");
         texture = data.Attr("texture", "");
 
+        // Value type settings (link to a flag/counter/slider or direct input)
         valueType = data.Enum("valueType", ValueType.DirectValue);
+        linkedSlider = data.Attr("linkedSlider", "");
+        linkedCounter = data.Attr("linkedCounter", "");
+        linkedFlag = data.Attr("linkedFlag", "");
+        multiplier = data.Float("multiplier", 1f);
 
+        // Bg field settings
         fieldToModify = data.Enum("fieldToModify", FieldToModify.Color);
         flag = data.Attr("flag", "");
         notFlag = data.Attr("notFlag", "");
@@ -101,6 +110,16 @@ public class StylegroundModifierTrigger : Trigger
         instantOut = data.Bool("instantOut", false);
         loopX = data.Bool("loopX", false);
         loopY = data.Bool("loopY", false);
+
+        // Parsing settings while linking to flag/counter/slider
+        minValue = data.Float("minValue", 0f);
+        maxValue = data.Float("maxValue", 1f);
+        minColor = data.HexColor("minColor", Color.White);
+        maxColor = data.HexColor("maxColor", Color.Black);
+        colorWhileTrue = data.HexColor("colorWhileTrue", Color.White);
+        colorWhileFalse = data.HexColor("colorWhileFalse", Color.Black);
+        valueWhileTrue = data.Float("valueWhileTrue", 1f);
+        valueWhileFalse = data.Float("valueWhileFalse", 0f);
     }
     public override void OnEnter(Player player)
     {
@@ -148,8 +167,6 @@ public class StylegroundModifierTrigger : Trigger
     {
         Session session = SceneAs<Level>().Session;
 
-        DetermineValueType();
-
         switch (fieldToModify)
         {
             case FieldToModify.Flag:
@@ -159,85 +176,307 @@ public class StylegroundModifierTrigger : Trigger
                 backdrop.OnlyIfNotFlag = notFlag;
                 break;
             case FieldToModify.PositionX:
-                if (string.IsNullOrEmpty(linkedSlider))
-                    backdrop.Position.X = positionX;
-                else
-                    backdrop.Position.X = sliderFinal;
-                    break;
+                switch (valueType)
+                {
+                    case ValueType.Counter:
+                        backdrop.Position.X = session.GetCounter(linkedCounter) * multiplier;
+                        break;
+                    case ValueType.Slider:
+                        backdrop.Position.X = session.GetSlider(linkedSlider) * multiplier;
+                        break;
+                    case ValueType.Flag:
+                        if (session.GetFlag(linkedFlag))
+                            backdrop.Position.X = valueWhileTrue;
+                        else
+                            backdrop.Position.X = valueWhileFalse;
+                        break;
+                    default: // DirectValue
+                        backdrop.Position.X = positionX;
+                        break;
+                }
+                break;
             case FieldToModify.PositionY:
-                if (string.IsNullOrEmpty(linkedSlider))
-                    backdrop.Position.Y = positionY;
-                else
-                    backdrop.Position.Y = sliderFinal;
+                switch (valueType)
+                {
+                    case ValueType.Counter:
+                        backdrop.Position.Y = session.GetCounter(linkedCounter) * multiplier;
+                        break;
+                    case ValueType.Slider:
+                        backdrop.Position.Y = session.GetSlider(linkedSlider) * multiplier;
+                        break;
+                    case ValueType.Flag:
+                        if (session.GetFlag(linkedFlag))
+                            backdrop.Position.Y = valueWhileTrue;
+                        else
+                            backdrop.Position.Y = valueWhileFalse;
+                        break;
+                    default: // DirectValue
+                        backdrop.Position.Y = positionY;
+                        break;
+                }
                 break;
             case FieldToModify.ScrollX:
-                if (string.IsNullOrEmpty(linkedSlider))
-                    backdrop.Scroll.X = scrollX;
-                else
-                    backdrop.Scroll.X = sliderFinal;
-                    break;
+                switch (valueType)
+                {
+                    case ValueType.Counter:
+                        backdrop.Scroll.X = session.GetCounter(linkedCounter) * multiplier;
+                        break;
+                    case ValueType.Slider:
+                        backdrop.Scroll.X = session.GetSlider(linkedSlider) * multiplier;
+                        break;
+                    case ValueType.Flag:
+                        if (session.GetFlag(linkedFlag))
+                            backdrop.Scroll.X = valueWhileTrue;
+                        else
+                            backdrop.Scroll.X = valueWhileFalse;
+                        break;
+                    default: // DirectValue
+                        backdrop.Scroll.X = scrollX;
+                        break;
+                }
+                break;
             case FieldToModify.ScrollY:
-                if (string.IsNullOrEmpty(linkedSlider))
-                    backdrop.Scroll.Y = scrollY;
-                else
-                    backdrop.Scroll.Y = sliderFinal;
-                    break;
+                switch (valueType)
+                {
+                    case ValueType.Counter:
+                        backdrop.Scroll.Y = session.GetCounter(linkedCounter) * multiplier;
+                        break;
+                    case ValueType.Slider:
+                        backdrop.Scroll.Y = session.GetSlider(linkedSlider) * multiplier;
+                        break;
+                    case ValueType.Flag:
+                        if (session.GetFlag(linkedFlag))
+                            backdrop.Scroll.Y = valueWhileTrue;
+                        else
+                            backdrop.Scroll.Y = valueWhileFalse;
+                        break;
+                    default: // DirectValue
+                        backdrop.Scroll.Y = scrollY;
+                        break;
+                }
+                break;
             case FieldToModify.SpeedX:
-                if (string.IsNullOrEmpty(linkedSlider))
-                    backdrop.Speed.X = speedX;
-                else
-                    backdrop.Speed.X = sliderFinal;
-                    break;
+                switch (valueType)
+                {
+                    case ValueType.Counter:
+                        backdrop.Speed.X = session.GetCounter(linkedCounter) * multiplier;
+                        break;
+                    case ValueType.Slider:
+                        backdrop.Speed.X = session.GetSlider(linkedSlider) * multiplier;
+                        break;
+                    case ValueType.Flag:
+                        if (session.GetFlag(linkedFlag))
+                            backdrop.Speed.X = valueWhileTrue;
+                        else
+                            backdrop.Speed.X = valueWhileFalse;
+                        break;
+                    default: // DirectValue
+                        backdrop.Speed.X = speedX;
+                        break;
+                }
+                break;
+            case FieldToModify.SpeedY:
+                switch (valueType)
+                {
+                    case ValueType.Counter:
+                        backdrop.Speed.Y = session.GetCounter(linkedCounter) * multiplier;
+                        break;
+                    case ValueType.Slider:
+                        backdrop.Speed.Y = session.GetSlider(linkedSlider) * multiplier;
+                        break;
+                    case ValueType.Flag:
+                        if (session.GetFlag(linkedFlag))
+                            backdrop.Speed.Y = valueWhileTrue;
+                        else
+                            backdrop.Speed.Y = valueWhileFalse;
+                        break;
+                    default: // DirectValue
+                        backdrop.Speed.Y = speedY;
+                        break;
+                }
+                break;
             case FieldToModify.Alpha:
-                if (string.IsNullOrEmpty(linkedSlider))
-                    backdrop.FadeAlphaMultiplier = alpha;
-                else
-                    backdrop.FadeAlphaMultiplier = sliderFinal;
-                    break;
+                switch (valueType)
+                {
+                    case ValueType.Counter:
+                        backdrop.FadeAlphaMultiplier = session.GetCounter(linkedCounter) * multiplier;
+                        break;
+                    case ValueType.Slider:
+                        backdrop.FadeAlphaMultiplier = session.GetSlider(linkedSlider) * multiplier;
+                        break;
+                    case ValueType.Flag:
+                        if (session.GetFlag(linkedFlag))
+                            backdrop.FadeAlphaMultiplier = valueWhileTrue;
+                        else
+                            backdrop.FadeAlphaMultiplier = valueWhileFalse;
+                        break;
+                    default: // DirectValue
+                        backdrop.FadeAlphaMultiplier = alpha;
+                        break;
+                }
+                break;
             case FieldToModify.FadeIn:
                 throw new System.Exception("The FadeIn feature is not implemented yet!");
                 break;
             case FieldToModify.FlipX:
-                backdrop.FlipX = flipX;
+                switch (valueType)
+                {
+                    case ValueType.Counter:
+                        if (session.GetCounter(linkedCounter) <= minValue)
+                            backdrop.FlipX = false;
+                        if (session.GetCounter(linkedCounter) >= maxValue)
+                            backdrop.FlipX = true;
+                        break;
+                    case ValueType.Slider:
+                        if (session.GetSlider(linkedSlider) <= minValue)
+                            backdrop.FlipX = false;
+                        if (session.GetSlider(linkedSlider) >= maxValue)
+                            backdrop.FlipX = true;
+                        break;
+                    case ValueType.Flag:
+                            backdrop.FlipX = session.GetFlag(linkedFlag);
+                        break;
+                    default: // DirectValue
+                        backdrop.FlipX = flipX;
+                        break;
+                }
                 break;
             case FieldToModify.FlipY:
-                backdrop.FlipY = flipY;
+                switch (valueType)
+                {
+                    case ValueType.Counter:
+                        if (session.GetCounter(linkedCounter) <= minValue)
+                            backdrop.FlipY = false;
+                        if (session.GetCounter(linkedCounter) >= maxValue)
+                            backdrop.FlipY = true;
+                        break;
+                    case ValueType.Slider:
+                        if (session.GetSlider(linkedSlider) <= minValue)
+                            backdrop.FlipY = false;
+                        if (session.GetSlider(linkedSlider) >= maxValue)
+                            backdrop.FlipY = true;
+                        break;
+                    case ValueType.Flag:
+                        backdrop.FlipY = session.GetFlag(linkedFlag);
+                        break;
+                    default: // DirectValue
+                        backdrop.FlipY = flipY;
+                        break;
+                }
                 break;
             case FieldToModify.InstantIn:
-                backdrop.InstantIn = instantIn;
+                switch (valueType)
+                {
+                    case ValueType.Counter:
+                        if (session.GetCounter(linkedCounter) <= minValue)
+                            backdrop.InstantIn = false;
+                        if (session.GetCounter(linkedCounter) >= maxValue)
+                            backdrop.InstantIn = true;
+                        break;
+                    case ValueType.Slider:
+                        if (session.GetSlider(linkedSlider) <= minValue)
+                            backdrop.InstantIn = false;
+                        if (session.GetSlider(linkedSlider) >= maxValue)
+                            backdrop.InstantIn = true;
+                        break;
+                    case ValueType.Flag:
+                        backdrop.InstantIn = session.GetFlag(linkedFlag);
+                        break;
+                    default: // DirectValue
+                        backdrop.InstantIn = instantIn;
+                        break;
+                }
                 break;
             case FieldToModify.InstantOut:
-                backdrop.InstantOut = instantOut;
+                switch (valueType)
+                {
+                    case ValueType.Counter:
+                        if (session.GetCounter(linkedCounter) <= minValue)
+                            backdrop.InstantOut = false;
+                        if (session.GetCounter(linkedCounter) >= maxValue)
+                            backdrop.InstantOut = true;
+                        break;
+                    case ValueType.Slider:
+                        if (session.GetSlider(linkedSlider) <= minValue)
+                            backdrop.InstantOut = false;
+                        if (session.GetSlider(linkedSlider) >= maxValue)
+                            backdrop.InstantOut = true;
+                        break;
+                    case ValueType.Flag:
+                        backdrop.InstantOut = session.GetFlag(linkedFlag);
+                        break;
+                    default: // DirectValue
+                        backdrop.InstantOut = instantOut;
+                        break;
+                }
                 break;
             case FieldToModify.LoopX:
-                backdrop.LoopX = loopX;
+                switch (valueType)
+                {
+                    case ValueType.Counter:
+                        if (session.GetCounter(linkedCounter) <= minValue)
+                            backdrop.LoopX = false;
+                        if (session.GetCounter(linkedCounter) >= maxValue)
+                            backdrop.LoopX = true;
+                        break;
+                    case ValueType.Slider:
+                        if (session.GetSlider(linkedSlider) <= minValue)
+                            backdrop.LoopX = false;
+                        if (session.GetSlider(linkedSlider) >= maxValue)
+                            backdrop.LoopX = true;
+                        break;
+                    case ValueType.Flag:
+                        backdrop.LoopX = session.GetFlag(linkedFlag);
+                        break;
+                    default: // DirectValue
+                        backdrop.LoopX = loopX;
+                        break;
+                }
                 break;
             case FieldToModify.LoopY:
-                backdrop.LoopY = loopY;
+                switch (valueType)
+                {
+                    case ValueType.Counter:
+                        if (session.GetCounter(linkedCounter) <= minValue)
+                            backdrop.LoopY = false;
+                        if (session.GetCounter(linkedCounter) >= maxValue)
+                            backdrop.LoopY = true;
+                        break;
+                    case ValueType.Slider:
+                        if (session.GetSlider(linkedSlider) <= minValue)
+                            backdrop.LoopY = false;
+                        if (session.GetSlider(linkedSlider) >= maxValue)
+                            backdrop.LoopY = true;
+                        break;
+                    case ValueType.Flag:
+                        backdrop.LoopY = session.GetFlag(linkedFlag);
+                        break;
+                    default: // DirectValue
+                        backdrop.LoopY = loopY;
+                        break;
+                }
                 break;
-            default: // Color
-                backdrop.Color = color;
+            default: // Color (oh fun)
+                switch (valueType)
+                {
+                    case ValueType.Counter: // Gradually changes the color from minColor to maxColor which correspond to minValue and maxValue each
+                        backdrop.Color = Color.Lerp(minColor, maxColor, MathHelper.Lerp(minValue, maxValue, session.GetSlider(linkedCounter)));
+                        break;
+                    case ValueType.Slider: // Gradually changes the color from minColor to maxColor which correspond to minValue and maxValue each
+                        backdrop.Color = Color.Lerp(minColor, maxColor, MathHelper.Lerp(minValue, maxValue, session.GetSlider(linkedSlider)));
+                        break;
+                    case ValueType.Flag:
+                        if (session.GetFlag(linkedFlag))
+                            backdrop.Color = colorWhileTrue;
+                        else
+                            backdrop.Color = colorWhileFalse;
+                            break;
+                    default: // DirectValue
+                        backdrop.Color = color;
+                        break;
+                }
                 break;
         }
-    }
-
-    public ValueType DetermineValueType()
-    {
-        Session session = SceneAs<Level>().Session;
-        switch (valueType)
-        {
-            case ValueType.Flag:
-                break;
-            case ValueType.Counter:
-                sliderFinal = session.GetCounter(linkedCounter) * multiplier;
-                break;
-            case ValueType.Slider:
-                sliderFinal = session.GetSlider(linkedSlider) * multiplier;
-                break;
-            default: // DirectValue
-                break;
-        }
-        return null;
     }
 
     private void Remove()

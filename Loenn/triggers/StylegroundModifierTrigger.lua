@@ -45,7 +45,7 @@ StylegroundModifierTrigger.placements = {
 		minColor = "FFFFFF",
 		maxColor = "000000",
 		colorWhileTrue = "FFFFFF",
-		colorWhileFalse = "FFFFFF",
+		colorWhileFalse = "000000",
 		valueWhileTrue = 1,
 		valueWhileFalse = 0
 		}
@@ -308,7 +308,6 @@ function StylegroundModifierTrigger.ignoredFields(entity)
 			doNotIgnore("colorWhileFalse")
 		end
 	end
-	
 	return ignored
 end
 
