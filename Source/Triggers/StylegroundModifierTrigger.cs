@@ -1,9 +1,6 @@
 using Celeste.Mod.Entities;
-using Celeste.Mod.MaxHelpingHand.Entities;
-using IL.Monocle;
 using Microsoft.Xna.Framework;
 using System;
-using System.Collections.Generic;
 
 namespace Celeste.Mod.KoseiHelper.Triggers;
 
@@ -157,14 +154,13 @@ public class StylegroundModifierTrigger : Trigger
             case IdentificationMode.Texture:
                 foreach (Backdrop bd in level.Background.Backdrops)
                 {
-                    if (bd.Name == texture)
+                    if (bd.Name.Contains(texture))
                     {
                         backdrop = bd;
                         ModifyBackdrop(backdrop);
-                        return;
                     }
                 }
-                throw new Exception($"No backdrop found with texture name: {texture}");
+                break;
             case IdentificationMode.Tag:
                 foreach (Backdrop bd in level.Background.Backdrops)
                 {
@@ -172,9 +168,9 @@ public class StylegroundModifierTrigger : Trigger
                     {
                         backdrop = bd;
                         ModifyBackdrop(backdrop);
-                        return;
                     }
                 }
+                break;
                 throw new Exception($"No backdrops found with tag: {tag}");
             default: // Index
                 backdrop = level.Background.Backdrops[index];
