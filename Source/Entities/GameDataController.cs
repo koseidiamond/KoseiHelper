@@ -1,9 +1,6 @@
 using Celeste.Mod.Entities;
 using Monocle;
-using System;
 using Microsoft.Xna.Framework;
-using System.Collections;
-using FrostHelper;
 
 namespace Celeste.Mod.KoseiHelper.Entities;
 
@@ -37,6 +34,8 @@ public class GameDataController : Entity
     public string chainedBerries;
     public string onTopOfWater;
     public string totalBerriesCollected;
+    public string timeRate;
+    public string anxiety;
 
     private static int timesJumpedCounter, timesWallJumped, timesWallbounced;
 
@@ -72,6 +71,8 @@ public class GameDataController : Entity
         chainedBerries = data.Attr("chainedBerries", "KoseiHelper_chainedBerries");
         onTopOfWater = data.Attr("onTopOfWater", "KoseiHelper_onTopOfWater");
         totalBerriesCollected = data.Attr("totalBerriesCollected", "KoseiHelper_totalBerriesCollected");
+        timeRate = data.Attr("timeRate", "KoseiHelper_timeRateSlider");
+        anxiety = data.Attr("anxiety", "KoseiHelper_anxietySlider");
         base.Tag = Tags.PauseUpdate;
         base.Tag = Tags.TransitionUpdate;
     }
@@ -147,6 +148,8 @@ public class GameDataController : Entity
             session.SetFlag(onTopOfWater, player._IsOverWater() && !player.SwimUnderwaterCheck());
             session.SetCounter(totalBerriesCollected, level.strawberriesDisplay.strawberries.amount);
             session.SetSlider(WindLevelY, level.windController.targetSpeed.Y);
+            session.SetSlider(timeRate, Engine.TimeRate);
+            session.SetSlider(anxiety, Distort.Anxiety);
         }
     }
 

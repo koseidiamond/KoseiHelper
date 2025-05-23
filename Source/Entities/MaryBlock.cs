@@ -197,11 +197,15 @@ public class MaryBlock : Entity
                     distortionVector = new Vector2(
                         (float)(Math.Sin(oscillationPhase) * 0.3f + 0.1f));
                 }
-                float anxietyDistance = Vector2.DistanceSquared(player.Center, Center) / 1.5f;
-                float darkEffectTarget = (!(anxietyDistance >= 0f) ? 1f : Calc.ClampedMap(anxietyDistance, 256f, 4096f, 0.5f));
-                Distort.AnxietyOrigin = new Vector2((player.Center.X - Position.X) / 320f, (player.Center.Y - Position.Y) / 180f);
-                Engine.TimeRate = Calc.Approach(Engine.TimeRate, darkEffectTarget, 4f * Engine.DeltaTime);
-                Distort.GameRate = Calc.Approach(Distort.GameRate, Calc.Map(Engine.TimeRate, 0.5f, 1f), Engine.DeltaTime * 2f);
+                float anxietyDistance;
+                if (player != null)
+                {
+                    anxietyDistance = Vector2.DistanceSquared(player.Center, Center) / 1.5f;
+                    float darkEffectTarget = (!(anxietyDistance >= 0f) ? 1f : Calc.ClampedMap(anxietyDistance, 256f, 4096f, 0.5f));
+                    Distort.AnxietyOrigin = new Vector2((player.Center.X - Position.X) / 320f, (player.Center.Y - Position.Y) / 180f);
+                    Engine.TimeRate = Calc.Approach(Engine.TimeRate, darkEffectTarget, 4f * Engine.DeltaTime);
+                    Distort.GameRate = Calc.Approach(Distort.GameRate, Calc.Map(Engine.TimeRate, 0.5f, 1f), Engine.DeltaTime * 2f);
+                }
             }
             else
                 distortionAlpha = 0f;

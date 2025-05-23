@@ -36,7 +36,9 @@ GameDataController.placements = {
 			gliderBoost = "KoseiHelper_gliderBoostFlag",
 			chainedBerries = "KoseiHelper_chainedBerries",
 			onTopOfWater = "KoseiHelper_onTopOfWater",
-			totalBerriesCollected = "KoseiHelper_totalBerriesCollected"
+			totalBerriesCollected = "KoseiHelper_totalBerriesCollected",
+			timeRate= "KoseiHelper_timeRateSlider",
+			anxiety = "KoseiHelper_anxietySlider"
 		}
 	}
 }
