@@ -752,6 +752,44 @@ triggers.KoseiHelper/ReverseDepthsTrigger.attributes.description.flag=The trigge
 triggers.KoseiHelper/StylegroundModifierTrigger.placements.name.StylegroundModifierTrigger=Styleground Modifier Trigger
 triggers.KoseiHelper/StylegroundModifierTrigger.placements.description.StylegroundModifierTrigger=Modifies a specific value of a given styleground or links it to a counter/slider.
 triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.onlyOnce=Whether the trigger should remove itself once used.
+triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.triggerMode=Whether this trigger should have effect when the player enters/exits it, or while inside.
+triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.identificationMode=Index: The styleground that appears behind everything else has the index 0, each one above increases the index by one.\nTag:All stylegrounds with the tag specified will be affected.\nSave and reopen if you change the identification mode to specify your styleground(s).
+triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.index=The styleground that appears behind everything else has the index 0, each one above increases the index by one.
+triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.tag=All stylegrounds with the tag specified will be affected. Make sure it's not empty!
+triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.texture=All stylegrounds that contain this string in their path will be affected. NOT IMPLEMENTED YET.
+triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.valueType=Specify the value of the field directly, or link the field to a slider/counter/flag.\nSupports linking fields of different value types (e.g. linking the Color to a slider).\nSave and reopen to see the new options.
+triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.linkedSlider=The name of the slider that will control the field of this styleground.
+triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.linkedCounter=The name of the counter that will control the field of this styleground.
+triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.linkedFlag=The name of the flag that will control the field of this styleground.
+triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.multiplier=The slider/counter is premultiplied by this factor before modifying the field.\nE.g: a multiplier of 0.1 linked to a Stamina slider (Game Data Controller) will change the values up to 11 when stamina is full.
+triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.fieldToModify=The field of the styleground that you want to modify or link.
+triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.flag=Flag to make the styleground visible. Leave empty to disable.
+triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.notFlag=Flag to make the styleground not visible. Leave empty to disable. Overrides the Flag field if set.
+triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.color=Using hex colour code, the code tints a styleground that colour.
+triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.positionX=Changes the position of the styleground's appearance on screen in-game on the X axis.\nLinking it to a slider that follows an entity's position can make it look "attached" to it since it overrides the original position.
+triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.positionY=Changes the position of the styleground's appearance on screen in-game on the Y axis.\nLinking it to a slider that follows an entity's position can make it look "attached" to it since it overrides the original position.
+triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.scrollX=Determines the parallax scrolling of a styleground along the X axis.
+triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.scrollY=Determines the parallax scrolling of a styleground along the Y axis.
+triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.speedX=Automatically moves the styleground along the X axis in-game.
+triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.speedY=Automatically moves the styleground along the Y axis in-game.
+triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.alpha=Determines opacity between 0 (translucent) and 1 (opaque).
+triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.fadeIn=Determines whether the styleground should fade in when transitioning to it.
+triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.flipX=Flips the styleground on the X axis.
+triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.flipY=Flips the styleground on the Y axis.
+triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.instantIn=Determines whether the styleground should instantly fade in when transitioning to it.
+triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.instantOut=Determines whether the styleground should instantly fade out when transitioning away from it.
+triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.loopX=Loops the styleground on the X axis.
+triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.loopY=Loops the styleground on the Y axis.
+triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.absoluteValue=Whether the values of the slider/counter will always be considered positive or not.
+triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.minValue=The minimum value of the slider/counter.\nEverything below this will be considered the same as the min value.
+triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.maxValue=The maximum value of the slider/counter.\nEverything above this will be considered the same as the max value.
+triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.minColor=The color while the slider/counter is at its minimum value (or below).
+triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.maxColor=The color while the slider/counter is at its maximum value (or above).
+triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.colorWhileTrue=The color while the flag is true.
+triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.colorWhileFalse=The color while the flag is false.
+triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.valueWhileTrue=The value while the flag is true.
+triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.valueWhileFalse=The value while the flag is false.
+
 
 # Nemesis Gun Triggers
 

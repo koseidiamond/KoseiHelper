@@ -70,6 +70,8 @@ public class StylegroundModifierTrigger : Trigger
     public bool instantIn, instantOut;
     public bool loopX, loopY;
 
+    public bool absoluteValue;
+
     public float minValue, maxValue, valueWhileTrue, valueWhileFalse;
     public Color minColor, maxColor, colorWhileTrue, colorWhileFalse;
 
@@ -111,6 +113,7 @@ public class StylegroundModifierTrigger : Trigger
         instantOut = data.Bool("instantOut", false);
         loopX = data.Bool("loopX", false);
         loopY = data.Bool("loopY", false);
+        absoluteValue = data.Bool("absoluteValue", false);
 
         // Parsing settings while linking to flag/counter/slider
         minValue = data.Float("minValue", 0f);
@@ -187,10 +190,16 @@ public class StylegroundModifierTrigger : Trigger
                 switch (valueType)
                 {
                     case ValueType.Counter:
-                        backdrop.Position.X = session.GetCounter(linkedCounter) * multiplier;
+                            if (absoluteValue)
+                            backdrop.Position.X = Math.Abs(session.GetCounter(linkedCounter)) * multiplier;
+                        else
+                            backdrop.Position.X = session.GetCounter(linkedCounter) * multiplier;
                         break;
                     case ValueType.Slider:
-                        backdrop.Position.X = session.GetSlider(linkedSlider) * multiplier;
+                        if (absoluteValue)
+                            backdrop.Position.X = Math.Abs(session.GetSlider(linkedSlider)) * multiplier;
+                        else
+                            backdrop.Position.X = session.GetSlider(linkedSlider) * multiplier;
                         break;
                     case ValueType.Flag:
                         if (session.GetFlag(linkedFlag))
@@ -207,10 +216,16 @@ public class StylegroundModifierTrigger : Trigger
                 switch (valueType)
                 {
                     case ValueType.Counter:
-                        backdrop.Position.Y = session.GetCounter(linkedCounter) * multiplier;
+                        if (absoluteValue)
+                            backdrop.Position.Y = Math.Abs(session.GetCounter(linkedCounter)) * multiplier;
+                        else
+                            backdrop.Position.Y = session.GetCounter(linkedCounter) * multiplier;
                         break;
                     case ValueType.Slider:
-                        backdrop.Position.Y = session.GetSlider(linkedSlider) * multiplier;
+                        if (absoluteValue)
+                            backdrop.Position.Y = Math.Abs(session.GetSlider(linkedSlider)) * multiplier;
+                        else
+                            backdrop.Position.Y = session.GetSlider(linkedSlider) * multiplier;
                         break;
                     case ValueType.Flag:
                         if (session.GetFlag(linkedFlag))
@@ -227,10 +242,16 @@ public class StylegroundModifierTrigger : Trigger
                 switch (valueType)
                 {
                     case ValueType.Counter:
-                        backdrop.Scroll.X = session.GetCounter(linkedCounter) * multiplier;
+                        if (absoluteValue)
+                            backdrop.Scroll.X = Math.Abs(session.GetCounter(linkedCounter)) * multiplier;
+                        else
+                            backdrop.Scroll.X = session.GetCounter(linkedCounter) * multiplier;
                         break;
                     case ValueType.Slider:
-                        backdrop.Scroll.X = session.GetSlider(linkedSlider) * multiplier;
+                        if (absoluteValue)
+                            backdrop.Scroll.X = Math.Abs(session.GetSlider(linkedSlider)) * multiplier;
+                        else
+                            backdrop.Scroll.X = session.GetSlider(linkedSlider) * multiplier;
                         break;
                     case ValueType.Flag:
                         if (session.GetFlag(linkedFlag))
@@ -247,10 +268,16 @@ public class StylegroundModifierTrigger : Trigger
                 switch (valueType)
                 {
                     case ValueType.Counter:
-                        backdrop.Scroll.Y = session.GetCounter(linkedCounter) * multiplier;
+                        if (absoluteValue)
+                            backdrop.Scroll.Y = Math.Abs(session.GetCounter(linkedCounter)) * multiplier;
+                        else
+                            backdrop.Scroll.Y = session.GetCounter(linkedCounter) * multiplier;
                         break;
                     case ValueType.Slider:
-                        backdrop.Scroll.Y = session.GetSlider(linkedSlider) * multiplier;
+                        if (absoluteValue)
+                            backdrop.Scroll.Y = Math.Abs(session.GetSlider(linkedSlider)) * multiplier;
+                        else
+                            backdrop.Scroll.Y = session.GetSlider(linkedSlider) * multiplier;
                         break;
                     case ValueType.Flag:
                         if (session.GetFlag(linkedFlag))
@@ -267,10 +294,16 @@ public class StylegroundModifierTrigger : Trigger
                 switch (valueType)
                 {
                     case ValueType.Counter:
-                        backdrop.Speed.X = session.GetCounter(linkedCounter) * multiplier;
+                        if (absoluteValue)
+                            backdrop.Speed.X = Math.Abs(session.GetCounter(linkedCounter)) * multiplier;
+                        else
+                            backdrop.Speed.X = session.GetCounter(linkedCounter) * multiplier;
                         break;
                     case ValueType.Slider:
-                        backdrop.Speed.X = session.GetSlider(linkedSlider) * multiplier;
+                        if (absoluteValue)
+                            backdrop.Speed.X = Math.Abs(session.GetSlider(linkedSlider)) * multiplier;
+                        else
+                            backdrop.Speed.X = session.GetSlider(linkedSlider) * multiplier;
                         break;
                     case ValueType.Flag:
                         if (session.GetFlag(linkedFlag))
@@ -287,10 +320,16 @@ public class StylegroundModifierTrigger : Trigger
                 switch (valueType)
                 {
                     case ValueType.Counter:
-                        backdrop.Speed.Y = session.GetCounter(linkedCounter) * multiplier;
+                        if (absoluteValue)
+                            backdrop.Speed.Y = Math.Abs(session.GetCounter(linkedCounter)) * multiplier;
+                        else
+                            backdrop.Speed.Y = session.GetCounter(linkedCounter) * multiplier;
                         break;
                     case ValueType.Slider:
-                        backdrop.Speed.Y = session.GetSlider(linkedSlider) * multiplier;
+                        if (absoluteValue)
+                            backdrop.Speed.Y = Math.Abs(session.GetSlider(linkedSlider)) * multiplier;
+                        else
+                            backdrop.Speed.Y = session.GetSlider(linkedSlider) * multiplier;
                         break;
                     case ValueType.Flag:
                         if (session.GetFlag(linkedFlag))
@@ -307,10 +346,16 @@ public class StylegroundModifierTrigger : Trigger
                 switch (valueType)
                 {
                     case ValueType.Counter:
-                        backdrop.FadeAlphaMultiplier = session.GetCounter(linkedCounter) * multiplier;
+                        if (absoluteValue)
+                            backdrop.FadeAlphaMultiplier = Math.Abs(session.GetCounter(linkedCounter)) * multiplier;
+                        else
+                            backdrop.FadeAlphaMultiplier = session.GetCounter(linkedCounter) * multiplier;
                         break;
                     case ValueType.Slider:
-                        backdrop.FadeAlphaMultiplier = session.GetSlider(linkedSlider) * multiplier;
+                        if (absoluteValue)
+                            backdrop.FadeAlphaMultiplier = Math.Abs(session.GetSlider(linkedSlider)) * multiplier;
+                        else
+                            backdrop.FadeAlphaMultiplier = session.GetSlider(linkedSlider) * multiplier;
                         break;
                     case ValueType.Flag:
                         if (session.GetFlag(linkedFlag))
@@ -330,15 +375,15 @@ public class StylegroundModifierTrigger : Trigger
                 switch (valueType)
                 {
                     case ValueType.Counter:
-                        if (session.GetCounter(linkedCounter) <= minValue)
+                        if ((!absoluteValue && session.GetCounter(linkedCounter) <= minValue) || (absoluteValue && Math.Abs(session.GetCounter(linkedCounter)) <= minValue))
                             backdrop.FlipX = false;
-                        if (session.GetCounter(linkedCounter) >= maxValue)
+                        if ((!absoluteValue && session.GetCounter(linkedCounter) >= maxValue) || (absoluteValue && Math.Abs(session.GetCounter(linkedCounter)) >= maxValue))
                             backdrop.FlipX = true;
                         break;
                     case ValueType.Slider:
-                        if (session.GetSlider(linkedSlider) <= minValue)
+                        if ((!absoluteValue && session.GetSlider(linkedSlider) <= minValue) || (absoluteValue && Math.Abs(session.GetSlider(linkedSlider)) <= minValue))
                             backdrop.FlipX = false;
-                        if (session.GetSlider(linkedSlider) >= maxValue)
+                        if ((!absoluteValue && session.GetSlider(linkedSlider) >= maxValue) || (absoluteValue && Math.Abs(session.GetSlider(linkedSlider)) >= maxValue))
                             backdrop.FlipX = true;
                         break;
                     case ValueType.Flag:
@@ -353,15 +398,15 @@ public class StylegroundModifierTrigger : Trigger
                 switch (valueType)
                 {
                     case ValueType.Counter:
-                        if (session.GetCounter(linkedCounter) <= minValue)
+                        if ((!absoluteValue && session.GetCounter(linkedCounter) <= minValue) || (absoluteValue && Math.Abs(session.GetCounter(linkedCounter)) <= minValue))
                             backdrop.FlipY = false;
-                        if (session.GetCounter(linkedCounter) >= maxValue)
+                        if ((!absoluteValue && session.GetCounter(linkedCounter) >= maxValue) || (absoluteValue && Math.Abs(session.GetCounter(linkedCounter)) >= maxValue))
                             backdrop.FlipY = true;
                         break;
                     case ValueType.Slider:
-                        if (session.GetSlider(linkedSlider) <= minValue)
+                        if ((!absoluteValue && session.GetSlider(linkedSlider) <= minValue) || (absoluteValue && Math.Abs(session.GetSlider(linkedSlider)) <= minValue))
                             backdrop.FlipY = false;
-                        if (session.GetSlider(linkedSlider) >= maxValue)
+                        if ((!absoluteValue && session.GetSlider(linkedSlider) >= maxValue) || (absoluteValue && Math.Abs(session.GetSlider(linkedSlider)) >= maxValue))
                             backdrop.FlipY = true;
                         break;
                     case ValueType.Flag:
@@ -376,15 +421,15 @@ public class StylegroundModifierTrigger : Trigger
                 switch (valueType)
                 {
                     case ValueType.Counter:
-                        if (session.GetCounter(linkedCounter) <= minValue)
+                        if ((!absoluteValue && session.GetCounter(linkedCounter) <= minValue) || (absoluteValue && Math.Abs(session.GetCounter(linkedCounter)) <= minValue))
                             backdrop.InstantIn = false;
-                        if (session.GetCounter(linkedCounter) >= maxValue)
+                        if ((!absoluteValue && session.GetCounter(linkedCounter) >= maxValue) || (absoluteValue && Math.Abs(session.GetCounter(linkedCounter)) >= maxValue))
                             backdrop.InstantIn = true;
                         break;
                     case ValueType.Slider:
-                        if (session.GetSlider(linkedSlider) <= minValue)
+                        if ((!absoluteValue && session.GetSlider(linkedSlider) <= minValue) || (absoluteValue && Math.Abs(session.GetSlider(linkedSlider)) <= minValue))
                             backdrop.InstantIn = false;
-                        if (session.GetSlider(linkedSlider) >= maxValue)
+                        if ((!absoluteValue && session.GetSlider(linkedSlider) >= maxValue) || (absoluteValue && Math.Abs(session.GetSlider(linkedSlider)) >= maxValue))
                             backdrop.InstantIn = true;
                         break;
                     case ValueType.Flag:
@@ -399,15 +444,15 @@ public class StylegroundModifierTrigger : Trigger
                 switch (valueType)
                 {
                     case ValueType.Counter:
-                        if (session.GetCounter(linkedCounter) <= minValue)
+                        if ((!absoluteValue && session.GetCounter(linkedCounter) <= minValue) || (absoluteValue && Math.Abs(session.GetCounter(linkedCounter)) <= minValue))
                             backdrop.InstantOut = false;
-                        if (session.GetCounter(linkedCounter) >= maxValue)
+                        if ((!absoluteValue && session.GetCounter(linkedCounter) >= maxValue) || (absoluteValue && Math.Abs(session.GetCounter(linkedCounter)) >= maxValue))
                             backdrop.InstantOut = true;
                         break;
                     case ValueType.Slider:
-                        if (session.GetSlider(linkedSlider) <= minValue)
+                        if ((!absoluteValue && session.GetSlider(linkedSlider) <= minValue) || (absoluteValue && Math.Abs(session.GetSlider(linkedSlider)) <= minValue))
                             backdrop.InstantOut = false;
-                        if (session.GetSlider(linkedSlider) >= maxValue)
+                        if ((!absoluteValue && session.GetSlider(linkedSlider) >= maxValue) || (absoluteValue && Math.Abs(session.GetSlider(linkedSlider)) >= maxValue))
                             backdrop.InstantOut = true;
                         break;
                     case ValueType.Flag:
@@ -422,15 +467,15 @@ public class StylegroundModifierTrigger : Trigger
                 switch (valueType)
                 {
                     case ValueType.Counter:
-                        if (session.GetCounter(linkedCounter) <= minValue)
+                        if ((!absoluteValue && session.GetCounter(linkedCounter) <= minValue) || (absoluteValue && Math.Abs(session.GetCounter(linkedCounter)) <= minValue))
                             backdrop.LoopX = false;
-                        if (session.GetCounter(linkedCounter) >= maxValue)
+                        if ((!absoluteValue && session.GetCounter(linkedCounter) >= maxValue) || (absoluteValue && Math.Abs(session.GetCounter(linkedCounter)) >= maxValue))
                             backdrop.LoopX = true;
                         break;
                     case ValueType.Slider:
-                        if (session.GetSlider(linkedSlider) <= minValue)
+                        if ((!absoluteValue && session.GetSlider(linkedSlider) <= minValue) || (absoluteValue && Math.Abs(session.GetSlider(linkedSlider)) <= minValue))
                             backdrop.LoopX = false;
-                        if (session.GetSlider(linkedSlider) >= maxValue)
+                        if ((!absoluteValue && session.GetSlider(linkedSlider) >= maxValue) || (absoluteValue && Math.Abs(session.GetSlider(linkedSlider)) >= maxValue))
                             backdrop.LoopX = true;
                         break;
                     case ValueType.Flag:
@@ -445,15 +490,15 @@ public class StylegroundModifierTrigger : Trigger
                 switch (valueType)
                 {
                     case ValueType.Counter:
-                        if (session.GetCounter(linkedCounter) <= minValue)
+                        if ((!absoluteValue && session.GetCounter(linkedCounter) <= minValue) || (absoluteValue && Math.Abs(session.GetCounter(linkedCounter)) <= minValue))
                             backdrop.LoopY = false;
-                        if (session.GetCounter(linkedCounter) >= maxValue)
+                        if ((!absoluteValue && session.GetCounter(linkedCounter) >= maxValue) || (absoluteValue && Math.Abs(session.GetCounter(linkedCounter)) >= maxValue))
                             backdrop.LoopY = true;
                         break;
                     case ValueType.Slider:
-                        if (session.GetSlider(linkedSlider) <= minValue)
+                        if ((!absoluteValue && session.GetSlider(linkedSlider) <= minValue) || (absoluteValue && Math.Abs(session.GetSlider(linkedSlider)) <= minValue))
                             backdrop.LoopY = false;
-                        if (session.GetSlider(linkedSlider) >= maxValue)
+                        if ((!absoluteValue && session.GetSlider(linkedSlider) >= maxValue) || (absoluteValue && Math.Abs(session.GetSlider(linkedSlider)) >= maxValue))
                             backdrop.LoopY = true;
                         break;
                     case ValueType.Flag:
@@ -468,11 +513,19 @@ public class StylegroundModifierTrigger : Trigger
                 switch (valueType)
                 {
                     case ValueType.Counter: // Gradually changes the color from minColor to maxColor which correspond to minValue and maxValue each
-                        float normalizedCounter = MathHelper.Clamp((session.GetCounter(linkedCounter) - minValue) / (maxValue - minValue), 0f, 1f);
+                        float normalizedCounter;
+                        if (absoluteValue)
+                            normalizedCounter = MathHelper.Clamp((Math.Abs(session.GetCounter(linkedCounter)) - minValue) / (maxValue - minValue), 0f, 1f);
+                        else
+                            normalizedCounter = MathHelper.Clamp((session.GetCounter(linkedCounter) - minValue) / (maxValue - minValue), 0f, 1f);
                         backdrop.Color = Color.Lerp(minColor, maxColor, MathHelper.Lerp(minValue, maxValue, session.GetSlider(linkedCounter)));
                         break;
                     case ValueType.Slider: // Gradually changes the color from minColor to maxColor which correspond to minValue and maxValue each
-                        float normalizedSlider = MathHelper.Clamp((session.GetSlider(linkedSlider) - minValue) / (maxValue - minValue), 0f, 1f);
+                        float normalizedSlider;
+                        if (absoluteValue)
+                            normalizedSlider = MathHelper.Clamp((Math.Abs(session.GetSlider(linkedSlider)) - minValue) / (maxValue - minValue), 0f, 1f);
+                        else
+                            normalizedSlider = MathHelper.Clamp((session.GetSlider(linkedSlider) - minValue) / (maxValue - minValue), 0f, 1f);
                         backdrop.Color = Color.Lerp(minColor, maxColor, normalizedSlider);
                         break;
                     case ValueType.Flag:

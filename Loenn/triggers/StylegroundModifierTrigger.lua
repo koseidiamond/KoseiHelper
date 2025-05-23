@@ -40,6 +40,8 @@ StylegroundModifierTrigger.placements = {
 		loopX = false,
 		loopY = false,
 		
+		absoluteValue = false,
+		
 		minValue = 0,
 		maxValue = 1,
 		minColor = "FFFFFF",
@@ -178,6 +180,8 @@ function StylegroundModifierTrigger.ignoredFields(entity)
 	"loopX",
 	"loopY",
 	
+	"absoluteValue",
+	
 	"minValue",
 	"maxValue",
 	"minColor",
@@ -261,6 +265,7 @@ function StylegroundModifierTrigger.ignoredFields(entity)
 	end
 	if entity.valueType == "Slider" then
 		doNotIgnore("linkedSlider")
+		doNotIgnore("absoluteValue")
 		-- Float from float
 		if entity.fieldToModify == "PositionX" or entity.fieldToModify == "PositionY" or entity.fieldToModify == "ScrollX" or entity.fieldToModify == "ScrollY" or entity.fieldToModify == "SpeedX" or entity.fieldToModify == "SpeedY" or entity.fieldToModify == "Alpha" then
 			doNotIgnore("multiplier")
@@ -280,6 +285,7 @@ function StylegroundModifierTrigger.ignoredFields(entity)
 	end
 	if entity.valueType == "Counter" then
 		doNotIgnore("linkedCounter")
+		doNotIgnore("absoluteValue")
 		-- Float from int
 		if entity.fieldToModify == "PositionX" or entity.fieldToModify == "PositionY" or entity.fieldToModify == "ScrollX" or entity.fieldToModify == "ScrollY" or entity.fieldToModify == "SpeedX" or entity.fieldToModify == "SpeedY" or entity.fieldToModify == "Alpha" then
 			doNotIgnore("multiplier")
