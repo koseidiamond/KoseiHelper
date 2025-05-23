@@ -1,6 +1,9 @@
 using Celeste.Mod.Entities;
 using Microsoft.Xna.Framework;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using static Celeste.Mod.KoseiHelper.Triggers.StylegroundModifierTrigger;
 
 namespace Celeste.Mod.KoseiHelper.Triggers;
 
@@ -12,6 +15,13 @@ public class StylegroundModifierTrigger : Trigger
     public TriggerMode triggerMode;
     public string linkedSlider, linkedCounter, linkedFlag;
     public float multiplier;
+    public enum StylegroundDepth
+    {
+        Background,
+        Foreground,
+        Both
+    };
+    public StylegroundDepth stylegroundDepth;
 
     public Backdrop backdrop;
 
@@ -77,9 +87,10 @@ public class StylegroundModifierTrigger : Trigger
         // General trigger settings
         onlyOnce = data.Bool("onlyOnce", false);
         triggerMode = data.Enum("triggerMode", TriggerMode.OnEnter);
+        stylegroundDepth = data.Enum("stylegroundDepth", StylegroundDepth.Background);
 
-        // Identification settings
-        identificationMode = data.Enum("identificationMode", IdentificationMode.Index);
+    // Identification settings
+    identificationMode = data.Enum("identificationMode", IdentificationMode.Index);
         index = data.Int("index", 0);
         tag = data.Attr("tag", "");
         texture = data.Attr("texture", "");
@@ -126,7 +137,7 @@ public class StylegroundModifierTrigger : Trigger
     {
         base.OnEnter(player);
         if (triggerMode == TriggerMode.OnEnter)
-            FindBackdrop();
+            PreFindBackdrop();
         Remove();
     }
 
@@ -134,7 +145,7 @@ public class StylegroundModifierTrigger : Trigger
     {
         base.OnLeave(player);
         if (triggerMode == TriggerMode.OnLeave)
-            FindBackdrop();
+            PreFindBackdrop();
         Remove();
     }
 
@@ -142,40 +153,51 @@ public class StylegroundModifierTrigger : Trigger
     {
         base.OnStay(player);
         if (triggerMode == TriggerMode.OnStay)
-            FindBackdrop();
+            PreFindBackdrop();
         Remove();
     }
 
-    private void FindBackdrop()
+    private void PreFindBackdrop()
+    {
+        if (stylegroundDepth != StylegroundDepth.Background)
+            FindBackdrop(level => level.Foreground.Backdrops);
+        if (stylegroundDepth != StylegroundDepth.Foreground)
+            FindBackdrop(level => level.Background.Backdrops);
+    }
+
+    private void FindBackdrop(Func <Level, IEnumerable<Backdrop>> getBackdrops)
     {
         Level level = SceneAs<Level>();
-        switch (identificationMode)
+        IEnumerable<Backdrop> backdrops = getBackdrops(level);
+        if (index < 0 || index >= backdrops.Count())
         {
-            case IdentificationMode.Texture:
-                foreach (Backdrop bd in level.Background.Backdrops)
-                {
-                    if (bd.Name.Contains(texture))
-                    {
-                        backdrop = bd;
-                        ModifyBackdrop(backdrop);
-                    }
-                }
-                break;
-            case IdentificationMode.Tag:
-                foreach (Backdrop bd in level.Background.Backdrops)
-                {
-                    if (bd.Tags?.Contains(tag) == true)
-                    {
-                        backdrop = bd;
-                        ModifyBackdrop(backdrop);
-                    }
-                }
-                break;
-                throw new Exception($"No backdrops found with tag: {tag}");
-            default: // Index
-                backdrop = level.Background.Backdrops[index];
+            Logger.Log(LogLevel.Error, "KoseiHelper", "A Styleground Modifier is trying to find a styleground with a non-valid index!");
+            return;
+        }
+        foreach (Backdrop bd in backdrops)
+        {
+            bool match = false;
+            switch (identificationMode)
+            {
+                case IdentificationMode.Texture:
+                    match = bd.Name.Contains(texture);
+                    break;
+                case IdentificationMode.Tag:
+                    match = bd.Tags?.Contains(tag) == true;
+                    break;
+                default:
+                    if (stylegroundDepth == StylegroundDepth.Background)
+                        match = bd == level.Background.Backdrops.ElementAtOrDefault(index);
+                    else if (stylegroundDepth == StylegroundDepth.Foreground)
+                        match = bd == level.Foreground.Backdrops.ElementAtOrDefault(index);
+                    break;
+            }
+            if (match)
+            {
+                backdrop = bd;
                 ModifyBackdrop(backdrop);
                 break;
+            }
         }
     }
 

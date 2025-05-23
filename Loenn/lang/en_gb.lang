@@ -755,6 +755,7 @@ triggers.KoseiHelper/StylegroundModifierTrigger.placements.name.StylegroundModif
 triggers.KoseiHelper/StylegroundModifierTrigger.placements.description.StylegroundModifierTrigger=Modifies a specific value of a given styleground or links it to a counter/slider.
 triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.onlyOnce=Whether the trigger should remove itself once used.
 triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.triggerMode=Whether this trigger should have effect when the player enters/exits it, or while inside.
+triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.stylegroundDepth=Whether it should affect background, foreground, or all stylegrounds with the specified tag/texture/index.
 triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.identificationMode=Index: The styleground that appears behind everything else has the index 0, each one above increases the index by one.\nTag:All stylegrounds with the tag specified will be affected.\nTexture: All stylegrounds that contain the specified texture as part of their path will be affected.\nSave and reopen if you change the identification mode to specify your styleground(s)!
 triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.index=The styleground that appears behind everything else has the index 0, each one above increases the index by one.
 triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.tag=All stylegrounds with the tag specified will be affected. Make sure it's not empty!

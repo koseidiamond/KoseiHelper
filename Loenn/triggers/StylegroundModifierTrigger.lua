@@ -9,7 +9,7 @@ StylegroundModifierTrigger.placements = {
 		data = {
 		onlyOnce = false,
 		triggerMode = "OnEnter",
-		
+		stylegroundDepth = "Background",
 		identificationMode = "Index",
 		index = 0,
 		tag = "",
@@ -60,6 +60,14 @@ StylegroundModifierTrigger.fieldInformation = function (entity) return {
 		"OnEnter",
 		"OnLeave",
 		"OnStay"
+		},
+		editable = false
+	},
+	stylegroundDepth = {
+		options = {
+		"Background",
+		"Foreground",
+		"Both"
 		},
 		editable = false
 	},
@@ -134,6 +142,7 @@ StylegroundModifierTrigger.fieldOrder= {
 	"y",
 	"width",
 	"height",
+	"stylegroundDepth",
 	"identificationMode",
 	"index",
 	"tag",
