@@ -1,9 +1,10 @@
 #ENTITIES
 
 # Pregnant Flutterbird
-entities.KoseiHelper/SpecialFlutterbird.placements.name.PregnantFlutterbird=Special Flutterbird
+entities.KoseiHelper/SpecialFlutterbird.placements.name.PregnantFlutterbird="Special" Flutterbird
 entities.KoseiHelper/SpecialFlutterbird.placements.name.SpecialFlutterbird=Pregnant Flutterbird
 entities.KoseiHelper/SpecialFlutterbird.placements.description.PregnantFlutterbird=Flutterbirds that can spawn babies when the conditions are met.\nThey can also be used for gameplay.
+entities.KoseiHelper/SpecialFlutterbird.placements.description.SpecialFlutterbird=Flutterbirds that can spawn babies when the conditions are met.\nThey can also be used for gameplay.
 entities.KoseiHelper/SpecialFlutterbird.attributes.description.birthSfx=The sound when a baby is spawned.
 entities.KoseiHelper/SpecialFlutterbird.attributes.description.childrenCount=The maximum number of children that can be spawned from this bird.
 entities.KoseiHelper/SpecialFlutterbird.attributes.description.gender=The gender of the bird. Determines who it can reproduce with.\nThe bird with the lowest entity ID has the dominant genes, regardless of gender.
@@ -419,12 +420,13 @@ entities.KoseiHelper/TilesetOshiroDoor.attributes.description.depth=The depth at
 entities.KoseiHelper/BoundRefill.placements.name.BoundRefill=Bound Refill
 entities.KoseiHelper/BoundRefill.placements.name.OOBRefill=OOB Refill
 entities.KoseiHelper/BoundRefill.placements.description.BoundRefill=OutBound refills allow the player to never transition and be outside of the current room (and force the camera to follow the player).\nInBound refills allow the player to immediately transition to the room they are in ("bounded" again).
+entities.KoseiHelper/BoundRefill.placements.description.OOBRefill==OutBound refills allow the player to never transition and be outside of the current room (and force the camera to follow the player).\nInBound refills allow the player to immediately transition to the room they are in ("bounded" again).
 entities.KoseiHelper/BoundRefill.attributes.description.outBound=If this is true, this will be an OutBound refill. These are generally placed inside a room.\nIf it's false, it will be an InBound refill. These are generally placed out of bounds, overlapping with a different room.
 entities.KoseiHelper/BoundRefill.attributes.description.climbFix=In vanilla, the player can't climb if they are to the left/right of the current screen.\nNot recommended to disable.\n(The refill with the highest ID determines if the player can climb outside the current room or not).
 entities.KoseiHelper/BoundRefill.attributes.description.oneUse=If the bound refill should reappear after 2.5 seconds or only on room reload.
 
 #Tile Refill
-entities.KoseiHelper/TileRefill.placements.name.tileRefill=Tile Refill
+entities.KoseiHelper/TileRefill.placements.name.TileRefill=Tile Refill
 entities.KoseiHelper/TileRefill.placements.description.TileRefill=Tile refills enable or disable foreground tiles on the room.
 entities.KoseiHelper/TileRefill.attributes.description.collidable=If the refill should affect collidability of tiles.
 entities.KoseiHelper/TileRefill.attributes.description.visible=If the refill should affect visibility of tiles.
@@ -561,8 +563,8 @@ entities.KoseiHelper/FlagRefillController.attributes.description.decrease=Counte
 # Spawn Controller - General attributes
 entities.KoseiHelper/SpawnController.placements.name.SpawnController=Spawn Controller
 entities.KoseiHelper/SpawnController.placements.name.Spawner=Spawner
-entities.KoseiHelper/SpawnController.placements.description.SpawnController=This controller spawns something on a button press.\nCertain entities may have custom attributes!
-entities.KoseiHelper/SpawnController.placements.description.Spawner=This controller spawns something on a button press.\nCertain entities may have custom attributes!
+entities.KoseiHelper/SpawnController.placements.description.SpawnController=This controller can spawn any entities when the conditions are met.\nAll attributes are highly customizable!
+entities.KoseiHelper/SpawnController.placements.description.Spawner=This controller can spawn any entities when the conditions are met.\nAll attributes are highly customizable!
 entities.KoseiHelper/SpawnController.attributes.description.offsetX=Horizontal offset relative to the player position where the entity will spawn.\n(Can be negative for the opposite side)
 entities.KoseiHelper/SpawnController.attributes.description.offsetY=Vertical offset relative to the player position where the entity will spawn.\n(Can be negative for the opposite side)
 entities.KoseiHelper/SpawnController.attributes.description.entityToSpawn=The type of entity that you want to spawn.\nSave and reopen to see the specific entity attributes. Some notes:\n-Core entities change on the core mode and don't appear on "None" core mode (including bumpers).\n-Dash blocks don't freeze the game for 3f when broken/poofing, unlike vanilla.\n-Seekers can't patrol, they will stay in their original spawn point.\n-Solid blocks can, and will, interact with entities that can normally be attached.\n-Swap blocks can crash the game if their node is set to the spawn position (this is vanilla behavior).\n-Flag "spawns" (sets to true) the flag koseiFlagN, where N is a number (starting at 1) that will increase each time it is "spawned".\n-CustomEntity allows you to spawn any entity with EntityData constructors! Get Mapping Utils, read the KoseiHelper Github, or ask a coder.

@@ -204,6 +204,7 @@ public class StylegroundModifierTrigger : Trigger
     private void ModifyBackdrop(Backdrop backdrop)
     {
         Session session = SceneAs<Level>().Session;
+        // TODO add special compatibility for effects, like, backdrop as Tentacles or whatever
         switch (fieldToModify)
         {
             case FieldToModify.Flag:
