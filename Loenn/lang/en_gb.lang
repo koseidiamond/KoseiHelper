@@ -749,9 +749,9 @@ triggers.KoseiHelper/ReverseDepthsTrigger.attributes.description.reverseEntities
 triggers.KoseiHelper/ReverseDepthsTrigger.attributes.description.flag=The trigger will only activate once this flag is true.\nLeave empty for no flag required.
 
 # Styleground Modifier Trigger
-triggers.KoseiHelper.StylegroundModifierTrigger.placements.name.StylegroundModifierTrigger=Styleground Modifier Trigger
-triggers.KoseiHelper.StylegroundModifierTrigger.placements.description.StylegroundModifierTrigger=Modifies a specific value of a given styleground or links it to a counter/slider.
-triggers.KoseiHelper.StylegroundModifierTrigger.attributes.description.onlyOnce=Whether the trigger should remove itself once used.
+triggers.KoseiHelper/StylegroundModifierTrigger.placements.name.StylegroundModifierTrigger=Styleground Modifier Trigger
+triggers.KoseiHelper/StylegroundModifierTrigger.placements.description.StylegroundModifierTrigger=Modifies a specific value of a given styleground or links it to a counter/slider.
+triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.onlyOnce=Whether the trigger should remove itself once used.
 
 # Nemesis Gun Triggers
 

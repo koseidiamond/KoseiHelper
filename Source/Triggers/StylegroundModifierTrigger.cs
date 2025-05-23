@@ -10,7 +10,7 @@ public class StylegroundModifierTrigger : Trigger
 {
     public bool onlyOnce;
     public TriggerMode triggerMode;
-    public string slider;
+    public string linkedSlider, linkedCounter;
     public float sliderFinal;
     public float multiplier;
 
@@ -26,6 +26,15 @@ public class StylegroundModifierTrigger : Trigger
     public int index;
     public string tag;
     public string texture;
+
+    public enum ValueType
+    {
+        DirectValue,
+        Slider,
+        Counter,
+        Flag
+    };
+    public ValueType valueType;
 
     public enum FieldToModify
     {
@@ -63,13 +72,16 @@ public class StylegroundModifierTrigger : Trigger
     {
         onlyOnce = data.Bool("onlyOnce", false);
         triggerMode = data.Enum("triggerMode", TriggerMode.OnEnter);
-        slider = data.Attr("slider", "");
+        linkedSlider = data.Attr("slider", "");
+        linkedCounter = data.Attr("counter", "");
         multiplier = data.Float("multiplier", 1f);
 
         identificationMode = data.Enum("identificationMode", IdentificationMode.Index);
         index = data.Int("index", 0);
         tag = data.Attr("tag", "");
         texture = data.Attr("texture", "");
+
+        valueType = data.Enum("valueType", ValueType.DirectValue);
 
         fieldToModify = data.Enum("fieldToModify", FieldToModify.Color);
         flag = data.Attr("flag", "");
@@ -135,8 +147,8 @@ public class StylegroundModifierTrigger : Trigger
     private void ModifyBackdrop(Backdrop backdrop)
     {
         Session session = SceneAs<Level>().Session;
-        if (!string.IsNullOrEmpty(slider))
-            sliderFinal = session.GetSlider(slider) * multiplier;
+
+        DetermineValueType();
 
         switch (fieldToModify)
         {
@@ -147,37 +159,37 @@ public class StylegroundModifierTrigger : Trigger
                 backdrop.OnlyIfNotFlag = notFlag;
                 break;
             case FieldToModify.PositionX:
-                if (string.IsNullOrEmpty(slider))
+                if (string.IsNullOrEmpty(linkedSlider))
                     backdrop.Position.X = positionX;
                 else
                     backdrop.Position.X = sliderFinal;
                     break;
             case FieldToModify.PositionY:
-                if (string.IsNullOrEmpty(slider))
+                if (string.IsNullOrEmpty(linkedSlider))
                     backdrop.Position.Y = positionY;
                 else
                     backdrop.Position.Y = sliderFinal;
                 break;
             case FieldToModify.ScrollX:
-                if (string.IsNullOrEmpty(slider))
+                if (string.IsNullOrEmpty(linkedSlider))
                     backdrop.Scroll.X = scrollX;
                 else
                     backdrop.Scroll.X = sliderFinal;
                     break;
             case FieldToModify.ScrollY:
-                if (string.IsNullOrEmpty(slider))
+                if (string.IsNullOrEmpty(linkedSlider))
                     backdrop.Scroll.Y = scrollY;
                 else
                     backdrop.Scroll.Y = sliderFinal;
                     break;
             case FieldToModify.SpeedX:
-                if (string.IsNullOrEmpty(slider))
+                if (string.IsNullOrEmpty(linkedSlider))
                     backdrop.Speed.X = speedX;
                 else
                     backdrop.Speed.X = sliderFinal;
                     break;
             case FieldToModify.Alpha:
-                if (string.IsNullOrEmpty(slider))
+                if (string.IsNullOrEmpty(linkedSlider))
                     backdrop.FadeAlphaMultiplier = alpha;
                 else
                     backdrop.FadeAlphaMultiplier = sliderFinal;
@@ -207,6 +219,25 @@ public class StylegroundModifierTrigger : Trigger
                 backdrop.Color = color;
                 break;
         }
+    }
+
+    public ValueType DetermineValueType()
+    {
+        Session session = SceneAs<Level>().Session;
+        switch (valueType)
+        {
+            case ValueType.Flag:
+                break;
+            case ValueType.Counter:
+                sliderFinal = session.GetCounter(linkedCounter) * multiplier;
+                break;
+            case ValueType.Slider:
+                sliderFinal = session.GetSlider(linkedSlider) * multiplier;
+                break;
+            default: // DirectValue
+                break;
+        }
+        return null;
     }
 
     private void Remove()
