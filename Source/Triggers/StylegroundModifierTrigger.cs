@@ -155,7 +155,16 @@ public class StylegroundModifierTrigger : Trigger
         switch (identificationMode)
         {
             case IdentificationMode.Texture:
-                throw new Exception($"Not implemented yet");
+                foreach (Backdrop bd in level.Background.Backdrops)
+                {
+                    if (bd.Name == texture)
+                    {
+                        backdrop = bd;
+                        ModifyBackdrop(backdrop);
+                        return;
+                    }
+                }
+                throw new Exception($"No backdrop found with texture name: {texture}");
             case IdentificationMode.Tag:
                 foreach (Backdrop bd in level.Background.Backdrops)
                 {
@@ -177,7 +186,6 @@ public class StylegroundModifierTrigger : Trigger
     private void ModifyBackdrop(Backdrop backdrop)
     {
         Session session = SceneAs<Level>().Session;
-
         switch (fieldToModify)
         {
             case FieldToModify.Flag:
