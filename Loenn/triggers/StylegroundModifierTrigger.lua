@@ -1,17 +1,17 @@
-local ModifyStylegroundTrigger = {}
+local StylegroundModifierTrigger = {}
 
-ModifyStylegroundTrigger.name = "KoseiHelper/ModifyStylegroundTrigger"
-ModifyStylegroundTrigger.depth = 100
+StylegroundModifierTrigger.name = "KoseiHelper/StylegroundModifierTrigger"
+StylegroundModifierTrigger.depth = 100
 
-ModifyStylegroundTrigger.placements = {
+StylegroundModifierTrigger.placements = {
 	{
-		name = "ModifyStylegroundTrigger",
+		name = "StylegroundModifierTrigger",
 		alternativeName = "StylegroundModifierTrigger",
 		data = {
 		onlyOnce = false,
 		triggerMode = "OnEnter",
 		slider = "",
-		sliderMultiplier = 1,
+		multiplier = 1,
 		
 		identificationMode = "Index",
 		index = 0,
@@ -40,7 +40,7 @@ ModifyStylegroundTrigger.placements = {
 	}
 }
 
-ModifyStylegroundTrigger.fieldInformation = function (entity) return {
+StylegroundModifierTrigger.fieldInformation = function (entity) return {
 	triggerMode = {
 		options = {
 		"OnEnter",
@@ -93,7 +93,7 @@ ModifyStylegroundTrigger.fieldInformation = function (entity) return {
 }
 end
 
-ModifyStylegroundTrigger.fieldOrder= {
+StylegroundModifierTrigger.fieldOrder= {
 	"x",
 	"y",
 	"width",
@@ -105,15 +105,15 @@ ModifyStylegroundTrigger.fieldOrder= {
 	"fieldToModify",
 	"triggerMode",
 	"slider",
-	"sliderMultiplier"
+	"multiplier"
 }
 
-function ModifyStylegroundTrigger.ignoredFields(entity)
+function StylegroundModifierTrigger.ignoredFields(entity)
 	local ignored = {
 	"_name",
 	"_id",
 	"slider",
-	"sliderMultiplier",
+	"multiplier",
 	
 	"index",
 	"tag",
@@ -210,10 +210,10 @@ function ModifyStylegroundTrigger.ignoredFields(entity)
 	if entity.fieldToModify == "PositionX" or entity.fieldToModify == "PositionY" or entity.fieldToModify == "ScrollX" or entity.fieldToModify == "ScrollY"
 	or entity.fieldToModify == "SpeedX" or entity.fieldToModify == "SpeedY" or entity.fieldToModify == "Alpha" then
 		doNotIgnore("slider")
-		doNotIgnore("sliderMultiplier")
+		doNotIgnore("multiplier")
 	end
 	
 	return ignored
 end
 
-return ModifyStylegroundTrigger
+return StylegroundModifierTrigger

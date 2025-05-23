@@ -5,14 +5,14 @@ using System.Collections.Generic;
 namespace Celeste.Mod.KoseiHelper.Triggers;
 
 
-[CustomEntity("KoseiHelper/ModifyStylegroundTrigger")]
-public class ModifyStylegroundTrigger : Trigger
+[CustomEntity("KoseiHelper/StylegroundModifierTrigger")]
+public class StylegroundModifierTrigger : Trigger
 {
     public bool onlyOnce;
     public TriggerMode triggerMode;
     public string slider;
     public float sliderFinal;
-    public float sliderMultiplier;
+    public float multiplier;
 
     public Backdrop backdrop;
 
@@ -59,12 +59,12 @@ public class ModifyStylegroundTrigger : Trigger
     public bool instantIn, instantOut;
     public bool loopX, loopY;
 
-    public ModifyStylegroundTrigger(EntityData data, Vector2 offset) : base(data, offset)
+    public StylegroundModifierTrigger(EntityData data, Vector2 offset) : base(data, offset)
     {
         onlyOnce = data.Bool("onlyOnce", false);
         triggerMode = data.Enum("triggerMode", TriggerMode.OnEnter);
         slider = data.Attr("slider", "");
-        sliderMultiplier = data.Float("sliderMultiplier", 1f);
+        multiplier = data.Float("multiplier", 1f);
 
         identificationMode = data.Enum("identificationMode", IdentificationMode.Index);
         index = data.Int("index", 0);
@@ -117,7 +117,6 @@ public class ModifyStylegroundTrigger : Trigger
     private void FindBackdrop()
     {
         Level level = SceneAs<Level>();
-        // Example: SceneAs<Level>().Background.Backdrops[index].Color = Color.Red;
         switch (identificationMode)
         {
             case IdentificationMode.Texture:
@@ -137,7 +136,7 @@ public class ModifyStylegroundTrigger : Trigger
     {
         Session session = SceneAs<Level>().Session;
         if (!string.IsNullOrEmpty(slider))
-            sliderFinal = session.GetSlider(slider) * sliderMultiplier;
+            sliderFinal = session.GetSlider(slider) * multiplier;
 
         switch (fieldToModify)
         {
