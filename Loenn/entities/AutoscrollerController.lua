@@ -4,7 +4,7 @@ AutoscrollerController.name = "KoseiHelper/AutoscrollerController"
 AutoscrollerController.depth = -9500
 AutoscrollerController.placements = {
 	{
-		name = "Autoscroller Controller",
+		name = "AutoscrollerController",
 		data = {
 		speed = 60,
 		cameraDirection = "Right",

@@ -12,7 +12,7 @@ CustomOshiroDoor.depth = 0
 
 CustomOshiroDoor.placements = {
 	{
-		name = "Custom Oshiro Door (Sprite)",
+		name = "CustomOshiroDoorSprite",
 		data = {
 			sprite = "koseiHelper_CustomOshiroDoor",
 			bumpSound = "event:/game/03_resort/forcefield_bump",

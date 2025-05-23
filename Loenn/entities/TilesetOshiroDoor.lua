@@ -12,7 +12,7 @@ TilesetOshiroDoor.depth = 0
 
 TilesetOshiroDoor.placements = {
 	{
-		name = "Custom Oshiro Door (Tileset)",
+		name = "CustomOshiroDoorTileset",
 		data = {
 			tiletype = fakeTilesHelper.getPlacementMaterial(),
 			bumpSound = "event:/game/03_resort/forcefield_bump",

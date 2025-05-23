@@ -395,7 +395,27 @@ public class StylegroundModifierTrigger : Trigger
                 }
                 break;
             case FieldToModify.FadeIn:
-                throw new System.Exception("The FadeIn feature is not implemented yet!");
+                switch (valueType)
+                {
+                    case ValueType.Counter:
+                        if ((!absoluteValue && session.GetCounter(linkedCounter) <= minValue) || (absoluteValue && Math.Abs(session.GetCounter(linkedCounter)) <= minValue))
+                            (backdrop as Parallax).DoFadeIn = false;
+                        if ((!absoluteValue && session.GetCounter(linkedCounter) >= maxValue) || (absoluteValue && Math.Abs(session.GetCounter(linkedCounter)) >= maxValue))
+                            (backdrop as Parallax).DoFadeIn = true;
+                        break;
+                    case ValueType.Slider:
+                        if ((!absoluteValue && session.GetSlider(linkedSlider) <= minValue) || (absoluteValue && Math.Abs(session.GetSlider(linkedSlider)) <= minValue))
+                            (backdrop as Parallax).DoFadeIn = false;
+                        if ((!absoluteValue && session.GetSlider(linkedSlider) >= maxValue) || (absoluteValue && Math.Abs(session.GetSlider(linkedSlider)) >= maxValue))
+                            (backdrop as Parallax).DoFadeIn = true;
+                        break;
+                    case ValueType.Flag:
+                        (backdrop as Parallax).DoFadeIn = session.GetFlag(linkedFlag);
+                        break;
+                    default: // DirectValue
+                        (backdrop as Parallax).DoFadeIn = true;
+                        break;
+                }
                 break;
             case FieldToModify.FlipX:
                 switch (valueType)

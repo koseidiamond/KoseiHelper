@@ -8,7 +8,7 @@ WingedKey.texture = "collectables/key/KoseiHelper/wingedKey00"
 WingedKey.placements =
 {
     {
-        name = "Winged Key",
+        name = "WingedKey",
 		data = { flapSpeed = 200 }
     }
 }

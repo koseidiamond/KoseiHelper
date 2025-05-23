@@ -603,7 +603,7 @@ public class PregnantFlutterbird : Actor
         }
         else
         {
-            sprite.Color = Color.Red; // TODO
+            sprite.Color = Color.Red;
             blinkTimer = 0.1f;
             if (!flyingAway) 
             {

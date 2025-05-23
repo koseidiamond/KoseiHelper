@@ -5,7 +5,7 @@ MaryBlock.depth = -9500
 
 MaryBlock.placements = {
 	{
-		name = "Mary Block",
+		name = "MaryBlock",
 		data = {
 			outline = false,
 			affectTheo = false,

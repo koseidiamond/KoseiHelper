@@ -27,9 +27,6 @@ public class CounterRefill : Entity
     private SineWave sine;
     private bool twoDashes;
     private bool oneUse;
-    private ParticleType p_shatter;
-    private ParticleType p_regen;
-    private ParticleType p_glow;
     private float respawnTimer;
     private string str;
 
@@ -40,9 +37,6 @@ public class CounterRefill : Entity
         base.Add(new PlayerCollider(new Action<Player>(this.OnPlayer), null, null));
         this.oneUse = oneUse;
         str = "objects/KoseiHelper/Refills/CounterRefill/";
-        this.p_shatter = Refill.P_Shatter;
-        this.p_regen = Refill.P_Regen;
-        this.p_glow = Refill.P_Glow;
         base.Add(this.outline = new Image(GFX.Game[str + "outline"]));
         this.outline.CenterOrigin();
         this.outline.Visible = false;
@@ -77,9 +71,6 @@ public class CounterRefill : Entity
         this.oneUse = data.Bool("oneUse", false);
         this.decrease = data.Bool("decrease", false);
         str = data.Attr("sprite", "objects/KoseiHelper/Refills/CounterRefill/");
-        this.p_shatter = Refill.P_Shatter;
-        this.p_regen = Refill.P_Regen;
-        this.p_glow = Refill.P_Glow;
         base.Add(this.outline = new Image(GFX.Game[str + "outline"]));
         this.outline.CenterOrigin();
         this.outline.Visible = false;
@@ -184,9 +175,9 @@ public class CounterRefill : Entity
             if (!KoseiHelperModule.Session.counterRefillWhenUsed)
             {
                 if (!decrease)
-                    level.Session.IncrementCounter("KoseiHelper_CounterRefill");
+                    level.Session.IncrementCounter(KoseiHelperModule.Session.counterRefillCounter);
                 else
-                    level.Session.SetCounter("KoseiHelper_CounterRefill", level.Session.GetCounter("KoseiHelper_CounterRefill") - 1);
+                    level.Session.SetCounter(KoseiHelperModule.Session.counterRefillCounter, level.Session.GetCounter(KoseiHelperModule.Session.counterRefillCounter) - 1);
             }
             this.respawnTimer = 2.5f;
         }
@@ -255,9 +246,9 @@ public class CounterRefill : Entity
             if (KoseiHelperModule.Session.counterRefillWhenUsed)
             {
                 if (!KoseiHelperModule.Session.counterRefillDecrease)
-                    self.SceneAs<Level>().Session.IncrementCounter("KoseiHelper_CounterRefill");
+                    self.SceneAs<Level>().Session.IncrementCounter(KoseiHelperModule.Session.counterRefillCounter);
                 else
-                    self.SceneAs<Level>().Session.SetCounter("KoseiHelper_CounterRefill", self.SceneAs<Level>().Session.GetCounter("KoseiHelper_CounterRefill")-1);
+                    self.SceneAs<Level>().Session.SetCounter(KoseiHelperModule.Session.counterRefillCounter, self.SceneAs<Level>().Session.GetCounter(KoseiHelperModule.Session.counterRefillCounter) -1);
             }
             CounterEndDelayCoroutine?.Cancel();
             CounterEndDelayCoroutine?.RemoveSelf();

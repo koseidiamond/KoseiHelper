@@ -14,7 +14,7 @@ function CustomTempleCrackedBlock.depth(room,entity)
 end
 
 CustomTempleCrackedBlock.placements = {
-    name = "Custom Temple Cracked Block",
+    name = "CustomTempleCrackedBlock",
     data = {
         width = 24,
         height = 24,

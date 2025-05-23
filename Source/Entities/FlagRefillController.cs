@@ -9,6 +9,7 @@ public class FlagRefillController : Entity
 {
     private Color flagRefillHairColor, counterRefillHairColor;
     private string flagRefillCustomFlag;
+    private string counterRefillCustomCounter;
 
     private bool counterRefillDecrease, counterRefillWhenUsed;
     private bool persistent;
@@ -17,6 +18,7 @@ public class FlagRefillController : Entity
         flagRefillHairColor = data.HexColor("flagHairColor", Color.FromNonPremultiplied(230, 0, 30, 255));
         counterRefillHairColor = data.HexColor("counterHairColor", Color.FromNonPremultiplied(30, 0, 230, 255));
         flagRefillCustomFlag = data.Attr("flagName", "KoseiHelper_FlagRefill");
+        counterRefillCustomCounter = data.Attr("counterName", "KoseiHelper_CounterRefill");
 
         counterRefillDecrease = data.Bool("decrease", false);
         counterRefillWhenUsed = data.Bool("countWhenUsed", false);

@@ -27,9 +27,6 @@ public class FlagRefill : Entity
     private SineWave sine;
     private bool twoDashes;
     private bool oneUse;
-    private ParticleType p_shatter;
-    private ParticleType p_regen;
-    private ParticleType p_glow;
     private float respawnTimer;
     private string str;
     public FlagRefill(Vector2 position, bool oneUse) : base(position)
@@ -38,9 +35,6 @@ public class FlagRefill : Entity
         base.Add(new PlayerCollider(new Action<Player>(this.OnPlayer), null, null));
         this.oneUse = oneUse;
         str = "objects/KoseiHelper/Refills/FlagRefill/";
-        this.p_shatter = Refill.P_Shatter;
-        this.p_regen = Refill.P_Regen;
-        this.p_glow = Refill.P_Glow;
         base.Add(this.outline = new Image(GFX.Game[str + "outline"]));
         this.outline.CenterOrigin();
         this.outline.Visible = false;
@@ -74,9 +68,6 @@ public class FlagRefill : Entity
         base.Add(new PlayerCollider(new Action<Player>(this.OnPlayer), null, null));
         this.oneUse = data.Bool("oneUse", false);
         str = data.Attr("sprite", "objects/KoseiHelper/Refills/FlagRefill/");
-        this.p_shatter = Refill.P_Shatter;
-        this.p_regen = Refill.P_Regen;
-        this.p_glow = Refill.P_Glow;
         base.Add(this.outline = new Image(GFX.Game[str + "outline"]));
         this.outline.CenterOrigin();
         this.outline.Visible = false;

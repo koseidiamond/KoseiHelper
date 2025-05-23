@@ -11,6 +11,7 @@ FlagRefillController.placements = {
 			flagHairColor = "e6001e",
 			counterHairColor = "1e00e6",
 			flagName = "KoseiHelper_FlagRefill",
+			counterName="KoseiHelper_CounterRefill",
 			persistent = false,
 			decrease = false,
 			countWhenUsed = false
@@ -23,6 +24,7 @@ FlagRefillController.fieldOrder = {
 	"y",
 	"flagHairColor",
 	"flagName",
+	"counterName",
 	"counterHairColor",
 	"decrease",
 	"countWhenUsed",

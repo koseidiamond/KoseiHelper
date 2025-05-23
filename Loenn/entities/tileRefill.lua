@@ -5,7 +5,7 @@ TileRefill.depth = 8999
 
 TileRefill.placements = {
 	{
-		name = "Tile Refill",
+		name = "TileRefill",
 		data = {
 			collidable = true,
 			visible = true,

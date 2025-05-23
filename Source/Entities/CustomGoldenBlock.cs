@@ -163,7 +163,7 @@ public class CustomGoldenBlock : Solid
         }
         if (sinkTimer > 0f)
         {
-            yLerp = Calc.Approach(yLerp, 1f, 1f * Engine.DeltaTime); // TODO test
+            yLerp = Calc.Approach(yLerp, 1f, 1f * Engine.DeltaTime);
         }
         else
         {

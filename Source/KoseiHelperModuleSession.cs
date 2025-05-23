@@ -19,6 +19,7 @@ public class KoseiHelperModuleSession : EverestModuleSession {
     public Color FlagDashColor = Color.FromNonPremultiplied(230, 0, 30, 255);
     public Color CounterDashColor = Color.FromNonPremultiplied(30, 0, 230, 255);
     public string flagRefillFlag = "KoseiHelper_FlagRefill";
+    public string counterRefillCounter = "KoseiHelper_CounterRefill";
     // Counter Refill Controller options
     public bool counterRefillDecrease = false;
     public bool counterRefillWhenUsed = false;

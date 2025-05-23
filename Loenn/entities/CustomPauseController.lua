@@ -5,7 +5,7 @@ CustomPauseController.depth = -9500
 CustomPauseController.texture = "objects/KoseiHelper/Controllers/CustomPauseController"
 CustomPauseController.placements = {
 	{
-		name = "Custom Pause Controller",
+		name = "CustomPauseController",
 		data = {
 		canPause = true,
 		canRetry = true,

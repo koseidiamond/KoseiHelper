@@ -5,7 +5,7 @@ CustomPlayerSeeker.depth = -100
 
 CustomPlayerSeeker.placements = {
 	{
-		name = "Custom Player Seeker",
+		name = "CustomPlayerSeeker",
 		data = {
 			nextRoom = "c-00",
 			colorgrade = "templevoid",

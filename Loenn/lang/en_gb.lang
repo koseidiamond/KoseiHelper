@@ -80,6 +80,10 @@ entities.KoseiHelper/GameDataController.attributes.description.totalBerriesColle
 entities.KoseiHelper/GameDataController.attributes.description.timeRate=Slider depending on the time rate of the game.
 entities.KoseiHelper/GameDataController.attributes.description.anxiety=Slider depending on the current anxiety effects.
 
+#Flag Counter Slider Translator
+entities.KoseiHelper/FlagCounterSliderTranslator.placements.name.FlagCounterSliderTranslator=Flag Counter Slider Translator
+entities.KoseiHelper/FlagCounterSliderTranslator.placements.description.FlagCounterSliderTranslator=Translates values of flags, counters and sliders into another of them.\nYou only need to place one in the map.\nCURRENTLY NOT IMPLEMENTED.
+
 # Debug Map Controller
 entities.KoseiHelper/DebugMapController.placements.name.DebugMapController=Debug Map Controller
 entities.KoseiHelper/DebugMapController.placements.description.DebugMapController=Modifies the way the Debug Map is rendered. Persistent controller.\nYou should have only one of these in your map.
@@ -310,8 +314,8 @@ entities.KoseiHelper/TriggerSpinner.attributes.description.customPathIndicator=D
 entities.KoseiHelper/TriggerSpinner.attributes.description.sound=The sound that the trigger spinners make when popping out.
 
 # Mary Pot
-entities.KoseiHelper/MaryBlock.placements.name.maryblock=Mary
-entities.KoseiHelper/MaryBlock.placements.description.Mary Block=These flowers bounce the player from both sides, like a spring but with less strength.
+entities.KoseiHelper/MaryBlock.placements.name.MaryBlock=Mary
+entities.KoseiHelper/MaryBlock.placements.description.MaryBlock=These flowers bounce the player from both sides, like a spring but with less strength.
 entities.KoseiHelper/MaryBlock.attributes.description.maryType=Potted Mary launches the player like puffers/bumpers but without freeze frames.\nIdle Mary launches the player like springs.\nBubble Mary puts the player in a bubble and forces them to return to their position moments ago.\nMary Mary forces the player to do a super.\nDark Mary slows down time when close.\nBald Mary makes you bald.
 entities.KoseiHelper/MaryBlock.attributes.description.outline=If the sprite should be rendered with an outline.
 entities.KoseiHelper/MaryBlock.attributes.description.affectTheo=If Theo should be able to bounce (if potted) or destroy Mary.\nIf Mary is dark, she will kill Theo.
@@ -352,7 +356,7 @@ entities.KoseiHelper/DefrostableBlock.attributes.description.sound=The sound whe
 
 # Custom Temple Cracked Block
 entities.KoseiHelper/CustomTempleCrackedBlock.placements.name.CustomTempleCrackedBlock= Custom Temple Cracked Block
-entities.KoseiHelper/CustomTempleCrackedBlock.placements.description.Custom Temple Cracked Block=An improved version of the red temple cracked blocks, supporting custom visuals, audio and health.
+entities.KoseiHelper/CustomTempleCrackedBlock.placements.description.CustomTempleCrackedBlock=An improved version of the red temple cracked blocks, supporting custom visuals, audio and health.
 entities.KoseiHelper/CustomTempleCrackedBlock.attributes.description.persistent=If the block should reappear or be broken permanently.
 entities.KoseiHelper/CustomTempleCrackedBlock.attributes.description.debris=The character that represents the debris, in the folder Gameplay/debris/.
 entities.KoseiHelper/CustomTempleCrackedBlock.attributes.description.texture=The path to your custom texture.
@@ -381,8 +385,8 @@ entities.KoseiHelper/ShatterDashBlock.attributes.description.destroyStaticMovers
 entities.KoseiHelper/ShatterDashBlock.attributes.description.verticalSpeed=Whether the shatter block should use the vertical speed as a requirement instead of the horizontal speed.
 
 #Oshiro Doors
-entities.KoseiHelper/CustomOshiroDoor.placements.name.CustomOshiroDoor= Custom Oshiro Door
-entities.KoseiHelper/CustomOshiroDoor.placements.description.Custom Oshiro Door= The bouncy oshiro/ghost door but more customizable.
+entities.KoseiHelper/CustomOshiroDoor.placements.name.CustomOshiroDoorSprite= Custom Oshiro Door (Sprite)
+entities.KoseiHelper/CustomOshiroDoor.placements.description.CustomOshiroDoorSprite= The bouncy oshiro/ghost door but more customizable.
 entities.KoseiHelper/CustomOshiroDoor.attributes.description.bumpSound=The sound that the oshiro door makes when bumped.
 entities.KoseiHelper/CustomOshiroDoor.attributes.description.sprite=The sprite tag that the oshiro door should use.\nYou can copy the one from vanilla as a reference.
 entities.KoseiHelper/CustomOshiroDoor.attributes.description.color=The tint that will be applied on top of the sprite.
@@ -397,8 +401,8 @@ entities.KoseiHelper/CustomOshiroDoor.attributes.description.givesCoyote=If bump
 entities.KoseiHelper/CustomOshiroDoor.attributes.description.destroyAttached=If entities attached (like spikes) should be destroyed when the door does.\nThe entities will still load if the block doesn't appear due to the enabled flag.
 entities.KoseiHelper/CustomOshiroDoor.attributes.description.depth=The depth at which the Oshiro Door will be rendered.
 
-entities.KoseiHelper/TilesetOshiroDoor.placements.name.TilesetOshiroDoor= Tileset Oshiro Door
-entities.KoseiHelper/TilesetOshiroDoor.placements.description.Tileset Oshiro Door= The bouncy oshiro/ghost block but using a tileset.
+entities.KoseiHelper/TilesetOshiroDoor.placements.name.CustomOshiroDoorTileset= Custom Oshiro Door (Tileset)
+entities.KoseiHelper/TilesetOshiroDoor.placements.description.CustomOshiroDoorTileset= The bouncy oshiro/ghost block but using a tileset.
 entities.KoseiHelper/TilesetOshiroDoor.attributes.description.bumpSound=The sound that the oshiro block makes when bumped.
 entities.KoseiHelper/TilesetOshiroDoor.attributes.description.singleUse=If the oshiro block should be destroyed after being bumped.
 entities.KoseiHelper/TilesetOshiroDoor.attributes.description.flag=The flag that needs to be enabled to make the block disappear.\nNeeds a room reload (respawn, transition, etc).
@@ -412,23 +416,23 @@ entities.KoseiHelper/TilesetOshiroDoor.attributes.description.destroyAttached=If
 entities.KoseiHelper/TilesetOshiroDoor.attributes.description.depth=The depth at which the Oshiro Door will be rendered.
 
 #Bound Refill
-entities.KoseiHelper/BoundRefill.placements.name.boundRefill=Bound Refill
+entities.KoseiHelper/BoundRefill.placements.name.BoundRefill=Bound Refill
 entities.KoseiHelper/BoundRefill.placements.name.OOBRefill=OOB Refill
-entities.KoseiHelper/BoundRefill.placements.description.Bound Refill=OutBound refills allow the player to never transition and be outside of the current room (and force the camera to follow the player).\nInBound refills allow the player to immediately transition to the room they are in ("bounded" again).
+entities.KoseiHelper/BoundRefill.placements.description.BoundRefill=OutBound refills allow the player to never transition and be outside of the current room (and force the camera to follow the player).\nInBound refills allow the player to immediately transition to the room they are in ("bounded" again).
 entities.KoseiHelper/BoundRefill.attributes.description.outBound=If this is true, this will be an OutBound refill. These are generally placed inside a room.\nIf it's false, it will be an InBound refill. These are generally placed out of bounds, overlapping with a different room.
 entities.KoseiHelper/BoundRefill.attributes.description.climbFix=In vanilla, the player can't climb if they are to the left/right of the current screen.\nNot recommended to disable.\n(The refill with the highest ID determines if the player can climb outside the current room or not).
 entities.KoseiHelper/BoundRefill.attributes.description.oneUse=If the bound refill should reappear after 2.5 seconds or only on room reload.
 
 #Tile Refill
 entities.KoseiHelper/TileRefill.placements.name.tileRefill=Tile Refill
-entities.KoseiHelper/TileRefill.placements.description.Tile Refill=Tile refills enable or disable foreground tiles on the room.
+entities.KoseiHelper/TileRefill.placements.description.TileRefill=Tile refills enable or disable foreground tiles on the room.
 entities.KoseiHelper/TileRefill.attributes.description.collidable=If the refill should affect collidability of tiles.
 entities.KoseiHelper/TileRefill.attributes.description.visible=If the refill should affect visibility of tiles.
 entities.KoseiHelper/TileRefill.attributes.description.oneUse=If the refill can respawn.
 
 # Custom Player Seeker
 entities.KoseiHelper/CustomPlayerSeeker.placements.name.CustomPlayerSeeker= Custom Player Seeker
-entities.KoseiHelper/CustomPlayerSeeker.placements.description.Custom Player Seeker= An improved version of the Player Seeker used in that one room of 5A.\nIt has unique interactions with several entities.
+entities.KoseiHelper/CustomPlayerSeeker.placements.description.CustomPlayerSeeker= An improved version of the Player Seeker used in that one room of 5A.\nIt has unique interactions with several entities.
 entities.KoseiHelper/CustomPlayerSeeker.attributes.description.nextRoom= If the seeker kills Madeline, the player will be teleported to the room name specified.
 entities.KoseiHelper/CustomPlayerSeeker.attributes.description.colorgrade= The colorgrade that will be set once the room with a Player Seeker is entered.\nLeave this field empty if you don't want any changes.
 entities.KoseiHelper/CustomPlayerSeeker.attributes.description.sprite= The sprite that the Player Seeker will use.\nYou can copy the xml entry if you want to reskin it and give it the new tag here.
@@ -440,7 +444,7 @@ entities.KoseiHelper/CustomPlayerSeeker.attributes.description.canSwitchCharacte
 
 #Winged Key
 entities.KoseiHelper/WingedKey.placements.name.WingedKey= Winged Key
-entities.KoseiHelper/WingedKey.placements.description.Winged Key= A key that will fly away like winged strawberries if the player dashes.\nIt will follow as normal keys upon collection, and will lose its wings if the player dies. (Cosmetic effect)
+entities.KoseiHelper/WingedKey.placements.description.WingedKey= A key that will fly away like winged strawberries if the player dashes.\nIt will follow as normal keys upon collection, and will lose its wings if the player dies. (Cosmetic effect)
 entities.KoseiHelper/WingedKey.attributes.description.flapSpeed=The speed used when the key flies away.
 
 #Brick
@@ -450,7 +454,7 @@ entities.KoseiHelper/Brick.attributes.description.type=Normal: Can be broken fro
 
 #Spring Ball
 entities.KoseiHelper/SpringBall.placements.name.SpringBall= Spring Ball
-entities.KoseiHelper/SpringBall.placements.description.Spring Ball=Spring balls (snowball+spring) will appear on the screen.\n(The position determines where they spawn for the first time,\ne.g. during a transition)
+entities.KoseiHelper/SpringBall.placements.description.SpringBall=Spring balls (snowball+spring) will appear on the screen.\n(The position determines where they spawn for the first time,\ne.g. during a transition)
 entities.KoseiHelper/SpringBall.attributes.description.speed=The speed the balls will be travelling at.\n(Positive speed: right-to-left or bottom-to-top)\n(Negative speed: left-to-right or top-to-bottom)
 entities.KoseiHelper/SpringBall.attributes.description.orientation=The orientation of the spring ball.\n(WallLeft = the spring faces right, and WallRight = the spring faces left!)
 entities.KoseiHelper/SpringBall.attributes.description.sineLength=The length of the sine.
@@ -464,7 +468,7 @@ entities.KoseiHelper/SpringBall.attributes.description.flag=The flag that needs 
 
 #Puffer Ball
 entities.KoseiHelper/PufferBall.placements.name.PufferBall= Puffer Ball
-entities.KoseiHelper/PufferBall.placements.description.Puffer Ball=Puffer balls (snowball+puffer) will appear on the screen.\n(The position determines where they spawn for the first time,\ne.g. during a transition)
+entities.KoseiHelper/PufferBall.placements.description.PufferBall=Puffer balls (snowball+puffer) will appear on the screen.\n(The position determines where they spawn for the first time,\ne.g. during a transition)
 entities.KoseiHelper/PufferBall.attributes.description.speed=The speed the puffers will be travelling at.\n(Positive speed: right-to-left or bottom-to-top)\n(Negative speed: left-to-right or top-to-bottom)
 entities.KoseiHelper/PufferBall.attributes.description.sineLength=The length of the sine.
 entities.KoseiHelper/PufferBall.attributes.description.sineSpeed=The speed of the sine.
@@ -498,7 +502,7 @@ entities.KoseiHelper/CounterRefill.attributes.description.decrease=If the counte
 
 #Autoscroller Controller
 entities.KoseiHelper/AutoscrollerController.placements.name.AutoscrollerController=Autoscroller Controller
-entities.KoseiHelper/AutoscrollerController.placements.description.Autoscroller Controller=The camera will autoscroll in the direction chosen until reaching the end of the room, as soon as the player starts moving.\nIt's recommended to leave a camera offset of 0 for the axis that is going to be scrolled.\nMultiple controllers on the same screen are not supported.
+entities.KoseiHelper/AutoscrollerController.placements.description.AutoscrollerController=The camera will autoscroll in the direction chosen until reaching the end of the room, as soon as the player starts moving.\nIt's recommended to leave a camera offset of 0 for the axis that is going to be scrolled.\nMultiple controllers on the same screen are not supported.
 entities.KoseiHelper/AutoscrollerController.attributes.description.speed=The speed that the camera will scroll at, in pixels per second. \nYou might want to increase the Camera Catchup Speed or adjust the offsets if you change the speed.
 entities.KoseiHelper/AutoscrollerController.attributes.description.pushMode=SafePush: The player will be pushed (or bounce if the camera is moving upwards) without dying, possibly getting stuck inside solids.\nPushNCrush: The player will be pushed, but will be crushed and die if there is a solid. Other Actors (like holdables) will be pushed too.\nImmediateDeath: The player will die if they are behind the screen.
 entities.KoseiHelper/AutoscrollerController.attributes.description.cameraDirection=The direction that the camera will move towards.
@@ -533,7 +537,7 @@ entities.KoseiHelper/SleepyController.attributes.description.cassetteSleep=The p
 
 # Custom Pause Controller
 entities.KoseiHelper/CustomPauseController.placements.name.CustomPauseController=Custom Pause Controller
-entities.KoseiHelper/CustomPauseController.placements.description.Custom Pause Controller=This controller can disallow several options regarding the Pause Menu.
+entities.KoseiHelper/CustomPauseController.placements.description.CustomPauseController=This controller can disallow several options regarding the Pause Menu.
 entities.KoseiHelper/CustomPauseController.attributes.description.canPause=If the player should be able to open the Pause Menu.
 entities.KoseiHelper/CustomPauseController.attributes.description.canRetry=If the Retry option should be enabled in the Pause Menu.
 entities.KoseiHelper/CustomPauseController.attributes.description.canSaveAndQuit=If the Save And Quit option should be enabled in the Pause Menu.
@@ -558,6 +562,7 @@ entities.KoseiHelper/FlagRefillController.attributes.description.decrease=Counte
 entities.KoseiHelper/SpawnController.placements.name.SpawnController=Spawn Controller
 entities.KoseiHelper/SpawnController.placements.name.Spawner=Spawner
 entities.KoseiHelper/SpawnController.placements.description.SpawnController=This controller spawns something on a button press.\nCertain entities may have custom attributes!
+entities.KoseiHelper/SpawnController.placements.description.Spawner=This controller spawns something on a button press.\nCertain entities may have custom attributes!
 entities.KoseiHelper/SpawnController.attributes.description.offsetX=Horizontal offset relative to the player position where the entity will spawn.\n(Can be negative for the opposite side)
 entities.KoseiHelper/SpawnController.attributes.description.offsetY=Vertical offset relative to the player position where the entity will spawn.\n(Can be negative for the opposite side)
 entities.KoseiHelper/SpawnController.attributes.description.entityToSpawn=The type of entity that you want to spawn.\nSave and reopen to see the specific entity attributes. Some notes:\n-Core entities change on the core mode and don't appear on "None" core mode (including bumpers).\n-Dash blocks don't freeze the game for 3f when broken/poofing, unlike vanilla.\n-Seekers can't patrol, they will stay in their original spawn point.\n-Solid blocks can, and will, interact with entities that can normally be attached.\n-Swap blocks can crash the game if their node is set to the spawn position (this is vanilla behavior).\n-Flag "spawns" (sets to true) the flag koseiFlagN, where N is a number (starting at 1) that will increase each time it is "spawned".\n-CustomEntity allows you to spawn any entity with EntityData constructors! Get Mapping Utils, read the KoseiHelper Github, or ask a coder.
