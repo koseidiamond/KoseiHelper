@@ -1,7 +1,7 @@
 using Celeste.Mod.Entities;
+using Microsoft.Xna.Framework;
 using Monocle;
 using System;
-using Microsoft.Xna.Framework;
 
 namespace Celeste.Mod.KoseiHelper.Entities
 {
@@ -36,7 +36,7 @@ namespace Celeste.Mod.KoseiHelper.Entities
 
         public override void Update()
         {
-            
+
             base.Update();
             Level level = SceneAs<Level>();
             Player player = level.Tracker.GetEntity<Player>();
@@ -70,7 +70,7 @@ namespace Celeste.Mod.KoseiHelper.Entities
                 }
                 if (cooldown <= 0 && timeToKill >= 0f)
                     player.Die(player.Center);
-            } 
+            }
         }
 
         public override void Render()

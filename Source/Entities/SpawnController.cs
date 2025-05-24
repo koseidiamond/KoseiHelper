@@ -1,12 +1,12 @@
 using Celeste.Mod.Entities;
-using Monocle;
-using Microsoft.Xna.Framework;
-using System.Collections.Generic;
-using System;
-using static Celeste.Session;
-using System.Linq;
 using Celeste.Mod.Helpers;
+using Microsoft.Xna.Framework;
+using Monocle;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
+using static Celeste.Session;
 
 namespace Celeste.Mod.KoseiHelper.Entities;
 
@@ -174,7 +174,7 @@ public class SpawnController : Entity
     public SpawnController(EntityData data, Vector2 offset) : base(data.Position + offset)
     {
         Add(new PostUpdateHook(() => { }));
-        if (!data.Bool("noCollider",false))
+        if (!data.Bool("noCollider", false))
             Collider = new Hitbox(8, 8, -4, -4);
         // General attributes
         offsetX = data.Int("offsetX", 0);
@@ -331,7 +331,7 @@ public class SpawnController : Entity
                     if (player.Bottom < (float)level.Bounds.Bottom && player.Top > (float)level.Bounds.Top + 4 &&
                     player.Left > (float)level.Bounds.Left + 8 && player.Right < (float)level.Bounds.Right - 8)
                     {
-                        
+
                         previousCassetteIndex = cassetteBlockManager.currentIndex;
                         canSpawnFromCassette = true;
                     }
@@ -481,7 +481,7 @@ public class SpawnController : Entity
                         spawnedEntity = new CrushBlock(spawnPosition, blockWidth, blockHeight, crushBlockAxe, crushBlockChillout);
                         break;
                     case EntityType.Water:
-                        spawnedEntity = new Water(spawnPosition,hasTop,hasBottom,blockWidth,blockHeight);
+                        spawnedEntity = new Water(spawnPosition, hasTop, hasBottom, blockWidth, blockHeight);
                         break;
                     case EntityType.Strawberry:
                         EntityData strawberryData = new()
@@ -518,8 +518,8 @@ public class SpawnController : Entity
                             else
                                 RemoveSelf();
                         }
-                            level.Session.SetFlag("koseiFlag" + flagCount, true);
-                            level.Session.SetFlag("koseiFlag" + (flagCount-1), false);
+                        level.Session.SetFlag("koseiFlag" + flagCount, true);
+                        level.Session.SetFlag("koseiFlag" + (flagCount - 1), false);
                         Audio.Play(appearSound, player.Position); //Audio is here because it doesn't actually spawn anything
                         if (spawnCondition == SpawnCondition.OnInterval)
                             spawnCooldown = spawnTime;

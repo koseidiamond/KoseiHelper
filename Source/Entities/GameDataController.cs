@@ -1,6 +1,6 @@
 using Celeste.Mod.Entities;
-using Monocle;
 using Microsoft.Xna.Framework;
+using Monocle;
 
 namespace Celeste.Mod.KoseiHelper.Entities;
 
@@ -48,7 +48,7 @@ public class GameDataController : Entity
         speedX = data.Attr("speedX", "KoseiHelper_SpeedXSlider");
         speedY = data.Attr("speedY", "KoseiHelper_SpeedYSlider");
         onGround = data.Attr("onGround", "KoseiHelper_onGroundFlag");
-        playerState = data.Attr("playerState","KoseiHelper_playerStateCounter");
+        playerState = data.Attr("playerState", "KoseiHelper_playerStateCounter");
         dashAttacking = data.Attr("dashAttacking", "KoseiHelper_dashAttackingFlag");
         startedFromGolden = data.Attr("startedFromGolden", "KoseiHelper_startedFromGoldenFlag");
         carryingGolden = data.Attr("carryingGolden", "KoseiHelper_carryingGoldenFlag");
@@ -139,8 +139,8 @@ public class GameDataController : Entity
             session.SetFlag(launched, player.launched);
             session.SetFlag(transitioning, level.Transitioning);
             session.SetSlider(WindLevelX, level.VisualWind);
-            session.SetFlag(demoDashing,player.demoDashed);
-            session.SetSlider(forceMoveX,player.forceMoveXTimer);
+            session.SetFlag(demoDashing, player.demoDashed);
+            session.SetSlider(forceMoveX, player.forceMoveXTimer);
             session.SetSlider(wallSlide, player.wallSlideTimer);
             session.SetFlag(gliderBoost, player.gliderBoostTimer > 0f ? true : false);
 

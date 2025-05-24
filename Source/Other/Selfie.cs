@@ -1,9 +1,7 @@
-using System;
-using System.Collections;
-using System.Runtime.CompilerServices;
 using Celeste.Mod.Entities;
 using Microsoft.Xna.Framework;
 using Monocle;
+using System.Collections;
 
 namespace Celeste.Mod.KoseiHelper.Entities;
 

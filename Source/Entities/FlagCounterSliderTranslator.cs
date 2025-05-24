@@ -1,6 +1,6 @@
 using Celeste.Mod.Entities;
-using Monocle;
 using Microsoft.Xna.Framework;
+using Monocle;
 using System;
 
 namespace Celeste.Mod.KoseiHelper.Entities;
@@ -120,7 +120,7 @@ public class FlagCounterSliderTranslator : Entity
                             session.SetFlag(flagName, false);
                     }
                 }
-                    break;
+                break;
             case FCS.SliderToFlag:
                 if (absoluteValue)
                 {

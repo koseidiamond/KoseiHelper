@@ -1,6 +1,6 @@
+using Celeste.Mod.Entities;
 using Microsoft.Xna.Framework;
 using Monocle;
-using Celeste.Mod.Entities;
 
 namespace Celeste.Mod.KoseiHelper.Entities;
 
@@ -36,7 +36,7 @@ public class CustomOshiroDoor : Solid
         tint = data.HexColor("color", Color.DarkSlateBlue);
         singleUse = data.Bool("singleUse", false);
         collisionMode = data.Enum("collisionMode", OshiroCollisionMode.Vanilla);
-        wiggleDuration = data.Float("wiggleDuration", 1f) / (5/3);
+        wiggleDuration = data.Float("wiggleDuration", 1f) / (5 / 3);
         wiggleFrequency = data.Float("wiggleFrequency", 1f) * 3;
         wiggleScale = data.Float("wiggleScale", 1f) / 5;
         flag = data.Attr("flag", "oshiro_resort_talked_1");

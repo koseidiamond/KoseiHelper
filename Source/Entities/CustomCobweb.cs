@@ -1,8 +1,8 @@
 using Celeste.Mod.Entities;
+using Celeste.Mod.Helpers;
+using Microsoft.Xna.Framework;
 using Monocle;
 using System;
-using Microsoft.Xna.Framework;
-using Celeste.Mod.Helpers;
 using System.Collections.Generic;
 
 namespace Celeste.Mod.KoseiHelper.Entities;
@@ -27,7 +27,7 @@ public class CustomCobweb : Entity
 
     public CustomCobweb(EntityData data, Vector2 offset) : base(data.Position + offset)
     {
-        Depth = data.Int("depth",-1);
+        Depth = data.Int("depth", -1);
         color = data.HexColor("color", Calc.HexToColor("696a6a"));
         edgeColor = data.HexColor("edgeColor", Calc.HexToColor("0f0e17"));
         edgeColorAlpha = data.Float("edgeColorAlpha", 0.2f);

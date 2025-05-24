@@ -1,7 +1,7 @@
 using Celeste.Mod.Entities;
+using Microsoft.Xna.Framework;
 using Monocle;
 using System;
-using Microsoft.Xna.Framework;
 using System.Collections;
 
 namespace Celeste.Mod.KoseiHelper.Entities;
@@ -260,7 +260,7 @@ public class CounterRefill : Entity
                 if (!KoseiHelperModule.Session.counterRefillDecrease)
                     self.SceneAs<Level>().Session.IncrementCounter(KoseiHelperModule.Session.counterRefillCounter);
                 else
-                    self.SceneAs<Level>().Session.SetCounter(KoseiHelperModule.Session.counterRefillCounter, self.SceneAs<Level>().Session.GetCounter(KoseiHelperModule.Session.counterRefillCounter) -1);
+                    self.SceneAs<Level>().Session.SetCounter(KoseiHelperModule.Session.counterRefillCounter, self.SceneAs<Level>().Session.GetCounter(KoseiHelperModule.Session.counterRefillCounter) - 1);
             }
             CounterEndDelayCoroutine?.Cancel();
             CounterEndDelayCoroutine?.RemoveSelf();

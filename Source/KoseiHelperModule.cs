@@ -1,27 +1,28 @@
-﻿using MonoMod.ModInterop;
+﻿using Celeste.Mod.KoseiHelper.Entities;
+using MonoMod.ModInterop;
 using System;
-using Celeste.Mod.KoseiHelper.Entities;
-using Celeste.Mod.KoseiHelper.Triggers;
 
 namespace Celeste.Mod.KoseiHelper;
 
-public class KoseiHelperModule : EverestModule {
+public class KoseiHelperModule : EverestModule
+{
     public static KoseiHelperModule Instance { get; private set; }
 
     public override Type SettingsType => typeof(KoseiHelperModuleSettings);
-    public static KoseiHelperModuleSettings Settings => (KoseiHelperModuleSettings) Instance._Settings;
+    public static KoseiHelperModuleSettings Settings => (KoseiHelperModuleSettings)Instance._Settings;
 
     public override Type SessionType => typeof(KoseiHelperModuleSession);
-    public static KoseiHelperModuleSession Session => (KoseiHelperModuleSession) Instance._Session;
+    public static KoseiHelperModuleSession Session => (KoseiHelperModuleSession)Instance._Session;
 
     public override Type SaveDataType => typeof(KoseiHelperModuleSaveData);
-    public static KoseiHelperModuleSaveData SaveData => (KoseiHelperModuleSaveData) Instance._SaveData;
+    public static KoseiHelperModuleSaveData SaveData => (KoseiHelperModuleSaveData)Instance._SaveData;
 
     public bool frostHelperLoaded = false;
     public bool collabUtils2Loaded = false;
     public bool helpingHandLoaded = false;
 
-    public KoseiHelperModule() {
+    public KoseiHelperModule()
+    {
         Instance = this;
 #if DEBUG
         // debug builds use verbose logging
@@ -41,7 +42,8 @@ public class KoseiHelperModule : EverestModule {
         public static Func<string, object> GetCurrentVariantValue;
     }
 
-    public override void Load() {
+    public override void Load()
+    {
         typeof(ExtendedVariantImports).ModInterop();
         //TopDownViewController.Load();
         PufferBall.Load();
@@ -64,7 +66,8 @@ public class KoseiHelperModule : EverestModule {
             helpingHandLoaded = true;
     }
 
-    public override void Unload() {
+    public override void Unload()
+    {
         //TopDownViewController.Unload();
         PufferBall.Unload();
         CustomTempleCrackedBlock.Unload();
@@ -78,9 +81,9 @@ public class KoseiHelperModule : EverestModule {
         GameDataController.Unload();
         Everest.Events.Player.OnRegisterStates -= MaryBlock.RegisterBaldState;
 
-            frostHelperLoaded = false;
-            helpingHandLoaded = false;
-            collabUtils2Loaded = false;
+        frostHelperLoaded = false;
+        helpingHandLoaded = false;
+        collabUtils2Loaded = false;
     }
 
     private static bool ClimbCheck(On.Celeste.Player.orig_ClimbBoundsCheck orig, Player self, int dir)

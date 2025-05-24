@@ -1,8 +1,8 @@
-using System;
-using System.Collections;
+using Celeste.Mod.Entities;
 using Microsoft.Xna.Framework;
 using Monocle;
-using Celeste.Mod.Entities;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using static Celeste.Session;
 
@@ -82,7 +82,7 @@ public class CustomPlayerSeeker : Actor
         canSwitchCharacters = data.Bool("canSwitchCharacters", false);
         speedMultiplier = data.Float("speedMultiplier", 1f);
         isFriendly = data.Bool("isFriendly", false);
-        Add(sprite = GFX.SpriteBank.Create(data.Attr("sprite","seeker"))); //IMPORTANT: the sprite needs the tags hatch, flipMouth, flipEyes, idle, spotted, attacking and statue to work
+        Add(sprite = GFX.SpriteBank.Create(data.Attr("sprite", "seeker"))); //IMPORTANT: the sprite needs the tags hatch, flipMouth, flipEyes, idle, spotted, attacking and statue to work
         if (vanillaEffects)
             sprite.Play("statue");
         else
@@ -170,7 +170,7 @@ public class CustomPlayerSeeker : Actor
             Input.Rumble(RumbleStrength.Strong, RumbleLength.FullSecond);
         }
         else
-            level.Camera.Position = Position - new Vector2(180,90);
+            level.Camera.Position = Position - new Vector2(180, 90);
         enabled = true;
         if (vanillaEffects)
         {

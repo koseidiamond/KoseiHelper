@@ -211,9 +211,10 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
         public override void Load()
         {
             On.Celeste.Player.Update += PlayerUpdated;
-            On.Celeste.Player.Render += PlayerRendered; 
+            On.Celeste.Player.Render += PlayerRendered;
 
-            Everest.Events.Level.OnLoadLevel += (level, playerIntro, isFromLoader) => {
+            Everest.Events.Level.OnLoadLevel += (level, playerIntro, isFromLoader) =>
+            {
                 this.level = level;
 
                 GunInput.CursorPosition = new Vector2(1920 / 2, 1080 / 2);
@@ -267,7 +268,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                     if (shotCooldown <= 0 && (self.Dashes > 0 || KoseiHelperModule.Settings.GunSettings.dashBehavior != KoseiHelperModuleSettings.NemesisSettings.DashBehavior.ConsumesDash))
                     {
                         if (self.StateMachine.state != 11 && self.StateMachine.state != 17 && (self.StateMachine.state != 19 || KoseiHelperModule.Settings.GunSettings.CanShootInFeather))
-                        Gunshot(self, CursorPos);
+                            Gunshot(self, CursorPos);
                         if (recoilCooldown <= 0)
                         {
                             if (GetEightDirectionalAim(KoseiHelperModule.Settings.GunSettings.gunDirections).Y < Math.Sqrt(2) / 2 &&
@@ -348,7 +349,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
             {
                 return;
             }
-            Vector2 actualPlayerPos = actor.Center + new Vector2(-3,-1);
+            Vector2 actualPlayerPos = actor.Center + new Vector2(-3, -1);
             if (actor is Player player)
                 facing = player.Facing;
             new Bullet(actualPlayerPos, GetGunVector(actor, cursorPos, facing), actor);

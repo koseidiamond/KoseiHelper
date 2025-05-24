@@ -1,7 +1,7 @@
 using Celeste.Mod.Entities;
+using Microsoft.Xna.Framework;
 using Monocle;
 using System;
-using Microsoft.Xna.Framework;
 using System.Collections;
 
 namespace Celeste.Mod.KoseiHelper.Entities;
@@ -94,7 +94,7 @@ public class Plant : Actor
                 default:
                     Collider = new Hitbox(16, 30, -8, -14);
                     break;
-        }
+            }
             if (plantType == PlantType.Green)
             {
                 if (!canShoot)
@@ -691,7 +691,7 @@ public class Plant : Actor
                 switch (plantDirection)
                 {
                     case PlantDirection.Left:
-                        SceneAs<Level>().Add(Engine.Pooler.Create<Shot>().Init(this, CenterLeft, bulletType, -(float)Math.PI/2));
+                        SceneAs<Level>().Add(Engine.Pooler.Create<Shot>().Init(this, CenterLeft, bulletType, -(float)Math.PI / 2));
                         break;
                     case PlantDirection.Right:
                         SceneAs<Level>().Add(Engine.Pooler.Create<Shot>().Init(this, CenterRight, bulletType, -(float)Math.PI * 1.5f));

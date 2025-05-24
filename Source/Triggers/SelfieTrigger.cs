@@ -1,7 +1,7 @@
 using Celeste.Mod.Entities;
 using Microsoft.Xna.Framework;
-using System.Collections;
 using Monocle;
+using System.Collections;
 
 namespace Celeste.Mod.KoseiHelper.Triggers;
 
@@ -35,7 +35,8 @@ public class SelfieTrigger : Trigger
         if (interactable)
         {
             Add(new TalkComponent(new Rectangle(0, 0, (int)Width, (int)Height), new Vector2(data.Int("talkBubbleX", (int)Width / 2),
-                data.Int("talkBubbleY", 0)), (player) => {}) {PlayerMustBeFacing = false});
+                data.Int("talkBubbleY", 0)), (player) => { })
+            { PlayerMustBeFacing = false });
         }
     }
 

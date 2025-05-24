@@ -1,11 +1,11 @@
 using Celeste.Mod.Entities;
-using Monocle;
 using Microsoft.Xna.Framework;
-using MonoMod.Cil;
-using System.Reflection;
-using System;
 using Mono.Cecil.Cil;
+using Monocle;
+using MonoMod.Cil;
+using System;
 using System.Collections;
+using System.Reflection;
 
 namespace Celeste.Mod.KoseiHelper.Entities;
 
@@ -70,7 +70,8 @@ public class PufferBall : Puffer
             cursor.Emit(OpCodes.Ldarg_0);
             cursor.Emit(OpCodes.Ldarg_0);
             cursor.Emit(OpCodes.Ldfld, typeof(Puffer).GetField("idleSine", BindingFlags.NonPublic | BindingFlags.Instance));
-            cursor.EmitDelegate<Action<Puffer, SineWave>>((self, idleSine) => {
+            cursor.EmitDelegate<Action<Puffer, SineWave>>((self, idleSine) =>
+            {
                 if (self is PufferBall)
                 {
                     idleSine.Reset();

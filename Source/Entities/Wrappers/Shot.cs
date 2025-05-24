@@ -43,7 +43,7 @@ public class Shot : Entity
     public Shot Init(Plant plant, Player target, float angleOffset = 0f) // Fire seeds
     {
         this.plant = plant;
-        anchor = (Position = new Vector2(plant.Center.X, plant.Top +8));
+        anchor = (Position = new Vector2(plant.Center.X, plant.Top + 8));
         this.target = target;
         this.angleOffset = angleOffset;
         dead = (hasBeenInCamera = false);

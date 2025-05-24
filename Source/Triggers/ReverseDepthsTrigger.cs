@@ -1,7 +1,6 @@
 using Celeste.Mod.Entities;
 using Microsoft.Xna.Framework;
 using Monocle;
-using System;
 
 namespace Celeste.Mod.KoseiHelper.Triggers;
 
@@ -126,20 +125,20 @@ public class ReverseDepthsTrigger : Trigger
             player.Depth = 0;
             level.Session.SetFlag("KoseiHelper_ReversedLevel", true);
         }
-            foreach (Entity entity in Scene.Entities)
+        foreach (Entity entity in Scene.Entities)
+        {
+            if (reverseEntities)
+                entity.Depth = -entity.Depth;
+            if (reverseTiles)
             {
-                if (reverseEntities)
-                    entity.Depth = -entity.Depth;
-                if (reverseTiles)
+                if (entity is SolidTiles foregroundTiles)
+                    foregroundTiles.Collidable = isReversed;
+                if (entity is BackgroundTiles backgroundTiles)
                 {
-                    if (entity is SolidTiles foregroundTiles)
-                        foregroundTiles.Collidable = isReversed;
-                    if (entity is BackgroundTiles backgroundTiles)
-                    {
-                        backgroundTiles.Collidable = isReversed;
-                    }
+                    backgroundTiles.Collidable = isReversed;
                 }
             }
+        }
         if (reverseTiles)
             bgSolidTiles.Collidable = !bgSolidTiles.Collidable;
         isReversed = !isReversed;

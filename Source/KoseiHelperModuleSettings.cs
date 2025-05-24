@@ -2,7 +2,8 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Celeste.Mod.KoseiHelper;
 
-public class KoseiHelperModuleSettings : EverestModuleSettings {
+public class KoseiHelperModuleSettings : EverestModuleSettings
+{
     [DefaultButtonBinding(Buttons.LeftShoulder, Keys.Tab)]
     [SettingName("SpawnButton")]
     public ButtonBinding SpawnButton { get; set; }
@@ -25,7 +26,7 @@ public class KoseiHelperModuleSettings : EverestModuleSettings {
         public bool CanShootInFeather { get; set; } = false;
 
         [SettingSubText("How much time until you can shoot again, in frames. Default 8.")]
-        [SettingRange(min: 0, max:999)]
+        [SettingRange(min: 0, max: 999)]
         public int Cooldown { get; set; } = 8;
 
         [SettingSubText("How much time until the bullets expire. Default 600.")]
@@ -44,7 +45,7 @@ public class KoseiHelperModuleSettings : EverestModuleSettings {
         public int FreezeFrames { get; set; } = 0;
 
         [SettingSubText("How fast the bullets should travel at. High values are not recommended.")]
-        [SettingNumberInput(allowNegatives:false, maxLength:10)]
+        [SettingNumberInput(allowNegatives: false, maxLength: 10)]
         [SettingInGame(false)]
         public float SpeedMultiplier { get; set; } = 1f;
 

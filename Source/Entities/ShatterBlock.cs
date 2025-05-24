@@ -1,7 +1,7 @@
-using System;
 using Celeste.Mod.Entities;
-using Monocle;
 using Microsoft.Xna.Framework;
+using Monocle;
+using System;
 
 namespace Celeste.Mod.KoseiHelper.Entities;
 
@@ -37,7 +37,7 @@ public class ShatterDashBlock : Solid
     private SubstractSpeedMode speedAfterShatterMode;
     public ShatterDashBlock(EntityData data, Vector2 offset, EntityID id) : base(data.Position + offset, data.Width, data.Height, true)
     {
-        base.Depth = data.Int("depth",-12999);
+        base.Depth = data.Int("depth", -12999);
         this.id = id;
         permanent = data.Bool("permanent");
         width = data.Width;
@@ -155,7 +155,7 @@ public class ShatterDashBlock : Solid
         if (givesCoyote)
             player.jumpGraceTimer = 0.084f;
         if (!string.IsNullOrEmpty(flagSet))
-            SceneAs<Level>().Session.SetFlag(flagSet,true);
+            SceneAs<Level>().Session.SetFlag(flagSet, true);
 
         if (permanent)
         {

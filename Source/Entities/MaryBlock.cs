@@ -1,7 +1,7 @@
 using Celeste.Mod.Entities;
+using Microsoft.Xna.Framework;
 using Monocle;
 using System;
-using Microsoft.Xna.Framework;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -64,7 +64,7 @@ public class MaryBlock : Entity
         shutUp = data.Bool("shutUp", false);
         if (potted) // legacy
             maryType = MaryType.Potted;
-        Add(sprite = GFX.SpriteBank.Create(data.Attr("spriteID","koseiHelper_maryBlock")));
+        Add(sprite = GFX.SpriteBank.Create(data.Attr("spriteID", "koseiHelper_maryBlock")));
         if (maryType == MaryType.Potted)
         {
             sprite.Play("potted");
@@ -132,7 +132,7 @@ public class MaryBlock : Entity
 
     private void RenderDisplacement()
     {
-        distortionTexture.DrawCentered(Position + new Vector2(0,6), Color.White * 0.8f * distortionAlpha, distortionVector);
+        distortionTexture.DrawCentered(Position + new Vector2(0, 6), Color.White * 0.8f * distortionAlpha, distortionVector);
     }
 
     public override void Update()

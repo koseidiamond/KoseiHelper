@@ -1,3 +1,4 @@
+using Celeste.Mod.Entities;
 using Celeste.Mod.KoseiHelper.Entities;
 using Microsoft.Xna.Framework;
 using Monocle;
@@ -5,7 +6,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
-using Celeste.Mod.Entities;
 using System.Runtime.CompilerServices;
 
 namespace Celeste.Mod.KoseiHelper.NemesisGun
@@ -203,9 +203,9 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
         [MethodImpl(MethodImplOptions.NoInlining)]
         private void CollisionCheckEntity_HelpingHand(Entity entity)
         {
-             if(entity is MaxHelpingHand.Entities.SidewaysJumpThru sidewaysJumpthru && sidewaysJumpthru.Collider.Bounds.Intersects(Hitbox) && !dead &&
-                    KoseiHelperModule.Settings.GunInteractions.CollideWithPlatforms)
-                {
+            if (entity is MaxHelpingHand.Entities.SidewaysJumpThru sidewaysJumpthru && sidewaysJumpthru.Collider.Bounds.Intersects(Hitbox) && !dead &&
+                   KoseiHelperModule.Settings.GunInteractions.CollideWithPlatforms)
+            {
                 if ((sidewaysJumpthru.AllowLeftToRight && velocity.X < 0) || (!sidewaysJumpthru.AllowLeftToRight && velocity.X > 0))
                     DestroyBullet();
                 return;
@@ -225,7 +225,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
         {
             if (entity is CollabUtils2.Entities.SilverBerry silverBerry && silverBerry.Collider.Bounds.Intersects(Hitbox) &&
                     KoseiHelperModule.Settings.GunInteractions.CanKillPlayer && !dead)
-                {
+            {
                 if (owner is Player plSilver)
                     plSilver.Die(Vector2.Zero, true);
                 DestroyBullet();
@@ -321,14 +321,14 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                         }
                         else
                         {
-                            if (theo.Top <= Bottom +1)
+                            if (theo.Top <= Bottom + 1)
                             {
                                 theo.Speed.X *= 0.5f;
                                 theo.Speed.Y = -160f;
                                 theo.noGravityTimer = 0.15f;
                             }
                         }
-                            break;
+                        break;
                 }
                 DestroyBullet();
                 return;
@@ -473,7 +473,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
             {
 
                 if (entity is CoreModeToggle coreModeToggle && coreModeToggle.Collider.Bounds.Intersects(Hitbox) &&
-                    KoseiHelperModule.Settings.GunInteractions.CoreModeToggles &&!dead)
+                    KoseiHelperModule.Settings.GunInteractions.CoreModeToggles && !dead)
                 {
                     if (owner is Player playerCoreModeToggle)
                         coreModeToggle.OnPlayer(playerCoreModeToggle);
@@ -643,7 +643,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                     if (refill.Collidable)
                     {
                         refill.OnPlayer(refill_player);
-                        if (refill.respawnTimer >0)
+                        if (refill.respawnTimer > 0)
                             DestroyBullet();
                     }
                     return;
@@ -821,7 +821,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                                 return;
                             else
                                 DestroyBullet();
-                                return;
+                            return;
                         default: // None
                             DestroyBullet();
                             break;
@@ -833,7 +833,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 {
                     if (owner is Player p_oshirodoor)
                     {
-                            customOshiroDoor.OnDashCollide(p_oshirodoor, customOshiroDoor.Center);
+                        customOshiroDoor.OnDashCollide(p_oshirodoor, customOshiroDoor.Center);
                         DestroyBullet();
                     }
                     return;
@@ -926,7 +926,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
             {
                 for (int i = 0; i < 6; i++)
                 {
-                    (owner.Scene as Level).Particles.Emit(ParticleTypes.Steam, Position + Calc.Random.ShakeVector(), Color.Lerp(Extensions.color1,Color.White,0.5f));
+                    (owner.Scene as Level).Particles.Emit(ParticleTypes.Steam, Position + Calc.Random.ShakeVector(), Color.Lerp(Extensions.color1, Color.White, 0.5f));
                 }
             }
             dead = true;

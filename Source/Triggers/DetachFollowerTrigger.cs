@@ -1,8 +1,8 @@
 using Celeste.Mod.Entities;
 using Microsoft.Xna.Framework;
 using Monocle;
-using System.Collections;
 using System;
+using System.Collections;
 
 namespace Celeste.Mod.KoseiHelper.Triggers;
 
@@ -97,7 +97,7 @@ public class DetachFollowerTrigger : Trigger
         if (global)
         {
             entity.AddTag(Tags.Global);
-            follower.OnGainLeader = (Action)Delegate.Combine(follower.OnGainLeader, (Action)( () =>
+            follower.OnGainLeader = (Action)Delegate.Combine(follower.OnGainLeader, (Action)(() =>
             {
                 entity.RemoveTag(Tags.Global);
             }));

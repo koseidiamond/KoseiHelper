@@ -1,6 +1,6 @@
 using Celeste.Mod.Entities;
-using Monocle;
 using Microsoft.Xna.Framework;
+using Monocle;
 using System.Collections;
 
 namespace Celeste.Mod.KoseiHelper.Entities;
@@ -22,13 +22,13 @@ public class BoundRefill : Entity
     private bool oneUse;
     public float respawnTime = 2.5f;
 
-    public BoundRefill (EntityData data, Vector2 offset) : base(data.Position + offset)
+    public BoundRefill(EntityData data, Vector2 offset) : base(data.Position + offset)
     {
         base.Collider = new Hitbox(16f, 16f, -8f, -8f);
         Add(new PlayerCollider(OnPlayer));
 
         //Read the custom properties from data
-        outBound = data.Bool("outBound",true);
+        outBound = data.Bool("outBound", true);
         respawnTime = data.Float("respawnTime", 2.5f);
         KoseiHelperModule.Session.oobClimbFix = data.Bool("climbFix", false);
         oneUse = data.Bool("oneUse", true);

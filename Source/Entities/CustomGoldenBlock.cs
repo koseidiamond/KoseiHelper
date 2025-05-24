@@ -1,7 +1,7 @@
 using Celeste.Mod.Entities;
+using Microsoft.Xna.Framework;
 using Monocle;
 using System;
-using Microsoft.Xna.Framework;
 
 namespace Celeste.Mod.KoseiHelper.Entities;
 
@@ -33,7 +33,7 @@ public class CustomGoldenBlock : Solid
     };
     private AppearMode appearMode;
 
-    public CustomGoldenBlock(EntityData data, Vector2 offset) : base(data.Position + offset, data.Width, data.Height, data.Bool("safe",false))
+    public CustomGoldenBlock(EntityData data, Vector2 offset) : base(data.Position + offset, data.Width, data.Height, data.Bool("safe", false))
     {
         sinkOffset = data.Float("sinkOffset", 12f);
         appearDistance = data.Float("appearDistance", 80f);

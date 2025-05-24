@@ -1,11 +1,5 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using Celeste;
 using Microsoft.Xna.Framework;
 using Monocle;
-using static MonoMod.InlineRT.MonoModRule;
 
 namespace Celeste.Mod.KoseiHelper.Entities;
 

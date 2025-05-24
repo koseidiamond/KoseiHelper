@@ -1,7 +1,7 @@
 using Celeste.Mod.Entities;
+using Microsoft.Xna.Framework;
 using Monocle;
 using System;
-using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 
 namespace Celeste.Mod.KoseiHelper.Entities;
@@ -81,7 +81,7 @@ public class ReskinnableParallaxDebris : Entity
                         img.Y = sine.Value * sineMult;
                         break;
                 }
-                img.Rotation += (rotationSpeed/10) * f;
+                img.Rotation += (rotationSpeed / 10) * f;
                 float alpha = alphaMin + (alphaMax - alphaMin) * (float)Math.Sin(f * fadeSpeed);
                 img.Color.A = (byte)(MathHelper.Clamp(alpha, 0f, 1f) * 255);
             };

@@ -1,5 +1,6 @@
 namespace Celeste.Mod.KoseiHelper;
 
-public class KoseiHelperModuleSaveData : EverestModuleSaveData {
+public class KoseiHelperModuleSaveData : EverestModuleSaveData
+{
 
 }

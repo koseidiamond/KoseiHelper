@@ -1,8 +1,8 @@
 using Celeste.Mod.Entities;
-using Monocle;
 using Microsoft.Xna.Framework;
-using System.Collections;
+using Monocle;
 using System;
+using System.Collections;
 
 namespace Celeste.Mod.KoseiHelper.Entities;
 
@@ -17,7 +17,7 @@ public class DashLimiterController : Entity
     public string sound = "event:/none";
     public Color indicatorColor = Color.LightSlateGray;
     private enum IndicatorShape
-        {
+    {
         Circle,
         FilledCircle,
         Pixel,
@@ -25,7 +25,7 @@ public class DashLimiterController : Entity
         HollowSquare,
         Number,
         None
-        };
+    };
     private IndicatorShape indicatorShape;
 
     public DashLimiterController(EntityData data, Vector2 offset) : base(data.Position + offset)

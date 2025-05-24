@@ -1,7 +1,7 @@
 using Celeste.Mod.Entities;
+using Microsoft.Xna.Framework;
 using Monocle;
 using System;
-using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 
 namespace Celeste.Mod.KoseiHelper.Entities
@@ -131,7 +131,7 @@ namespace Celeste.Mod.KoseiHelper.Entities
             foreach (Ha ha in has)
             {
                 if (!left)
-                ha.Sprite.Position = Position + new Vector2(ha.Percent * 60f, -10f + (float)(0.0 - Math.Sin(ha.Percent * 13f)) * 4f + ha.Percent * -16f);
+                    ha.Sprite.Position = Position + new Vector2(ha.Percent * 60f, -10f + (float)(0.0 - Math.Sin(ha.Percent * 13f)) * 4f + ha.Percent * -16f);
                 else
                     ha.Sprite.Position = Position + new Vector2(ha.Percent * -60f, -10f + (float)(0.0 - Math.Sin(ha.Percent * 13f)) * 4f + ha.Percent * -16f);
                 ha.Sprite.Render();

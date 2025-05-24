@@ -154,32 +154,32 @@ public class ReplaceSpeedWithStoredSpeedTrigger : Trigger
                     }
                     break;
                 case SpeedAxis.Swapped:
-                        if (addSpeed)
+                    if (addSpeed)
+                    {
+                        if (replacesDirection)
                         {
-                            if (replacesDirection)
-                            {
-                                player.Speed.X += storedYB * factor;
-                                player.Speed.Y += storedXB * factor;
-                            }
-                            else
-                            {
-                                player.Speed.X += storedYB * factor * Math.Sign(player.Speed.Y);
-                                player.Speed.Y += storedXB * factor * Math.Sign(player.Speed.X);
-                            }
+                            player.Speed.X += storedYB * factor;
+                            player.Speed.Y += storedXB * factor;
                         }
                         else
                         {
-                            if (replacesDirection)
-                            {
-                                player.Speed.X = storedYB * factor;
-                                player.Speed.Y = storedXB * factor;
-                            }
-                            else
-                            {
-                                player.Speed.X = storedYB * factor * Math.Sign(player.Speed.Y);
-                                player.Speed.Y = storedXB * factor * Math.Sign(player.Speed.X);
-                            }
+                            player.Speed.X += storedYB * factor * Math.Sign(player.Speed.Y);
+                            player.Speed.Y += storedXB * factor * Math.Sign(player.Speed.X);
                         }
+                    }
+                    else
+                    {
+                        if (replacesDirection)
+                        {
+                            player.Speed.X = storedYB * factor;
+                            player.Speed.Y = storedXB * factor;
+                        }
+                        else
+                        {
+                            player.Speed.X = storedYB * factor * Math.Sign(player.Speed.Y);
+                            player.Speed.Y = storedXB * factor * Math.Sign(player.Speed.X);
+                        }
+                    }
                     break;
                 default: // Both
                     if (addSpeed)

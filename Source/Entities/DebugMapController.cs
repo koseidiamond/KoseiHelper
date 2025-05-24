@@ -1,10 +1,10 @@
-using Celeste.Mod.Entities;
-using Microsoft.Xna.Framework;
 using Celeste.Editor;
-using Monocle;
-using System.Collections.Generic;
+using Celeste.Mod.Entities;
 using Celeste.Mod.Helpers;
+using Microsoft.Xna.Framework;
+using Monocle;
 using MonoMod.Utils;
+using System.Collections.Generic;
 
 namespace Celeste.Mod.KoseiHelper.Entities;
 
@@ -35,7 +35,7 @@ public class DebugMapController : Entity
         Calc.HexToColor("") // Custom color
     };
 
-public DebugMapController(EntityData data, Vector2 offset) : base(data.Position + offset)
+    public DebugMapController(EntityData data, Vector2 offset) : base(data.Position + offset)
     {
         roomsToAffect = data.Attr("roomsToAffect", "");
         renderKeys = !data.Bool("hideKeys", false);
@@ -43,10 +43,10 @@ public DebugMapController(EntityData data, Vector2 offset) : base(data.Position 
         renderBerries = !data.Bool("hideBerries", false);
         renderSpawns = !data.Bool("hideSpawns", false);
         redBlink = data.Bool("redBlink", true);
-        blockDebugMap = data.String("blockDebugMap","");
+        blockDebugMap = data.String("blockDebugMap", "");
         gridColor = data.HexColor("gridColor", new Color(0.1f, 0.1f, 0.1f));
         roomBgColor = data.HexColor("roomBgColor", new Color(0f, 0f, 0f));
-        jumpthruColor = data.HexColor("jumpthruColor", Color.FromNonPremultiplied(255,255,0,255)); // Yellow
+        jumpthruColor = data.HexColor("jumpthruColor", Color.FromNonPremultiplied(255, 255, 0, 255)); // Yellow
         berryColor = data.HexColor("berryColor", Color.FromNonPremultiplied(255, 182, 193, 255)); // LightPink
         checkpointColor = data.HexColor("checkpointColor", Color.FromNonPremultiplied(0, 255, 0, 255)); // Lime
         spawnColor = data.HexColor("spawnColor", Color.FromNonPremultiplied(255, 0, 0, 255)); // Red
@@ -167,25 +167,25 @@ public DebugMapController(EntityData data, Vector2 offset) : base(data.Position 
 
     private static void MapEditorCtor(On.Celeste.Editor.MapEditor.orig_ctor orig, MapEditor self, AreaKey area, bool reloadMapData)
     {
-            orig(self, area, reloadMapData);
-            DynData<MapEditor> mapEditorData = new(self);
-            if (disallowDebugMap && KoseiHelperModule.Session.DebugMapModified)
+        orig(self, area, reloadMapData);
+        DynData<MapEditor> mapEditorData = new(self);
+        if (disallowDebugMap && KoseiHelperModule.Session.DebugMapModified)
+        {
+            List<LevelTemplate> levels = mapEditorData.Get<List<LevelTemplate>>("levels");
+            MapData mapdata = mapEditorData.Get<MapData>("mapData");
+            List<LevelTemplate> levelsToHide = new();
+            foreach (LevelTemplate template in levels)
             {
-                List<LevelTemplate> levels = mapEditorData.Get<List<LevelTemplate>>("levels");
-                MapData mapdata = mapEditorData.Get<MapData>("mapData");
-                List<LevelTemplate> levelsToHide = new();
-                foreach (LevelTemplate template in levels)
+                foreach (LevelData levelData in mapdata.Levels)
                 {
-                    foreach (LevelData levelData in mapdata.Levels)
-                    {
-                        levelsToHide.Add(template);
-                    }
-                }
-                foreach (LevelTemplate template in levelsToHide)
-                {
-                    levels.Remove(template);
+                    levelsToHide.Add(template);
                 }
             }
+            foreach (LevelTemplate template in levelsToHide)
+            {
+                levels.Remove(template);
+            }
+        }
     }
 
     public override void Awake(Scene scene)

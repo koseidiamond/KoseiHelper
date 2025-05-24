@@ -3,7 +3,8 @@ using System.Collections.Generic;
 
 namespace Celeste.Mod.KoseiHelper;
 
-public class KoseiHelperModuleSession : EverestModuleSession {
+public class KoseiHelperModuleSession : EverestModuleSession
+{
 
     public HashSet<EntityID> SoftDoNotLoad { get; set; } = new(); // Used to remove staticMovers from entities that should not load
     public bool HasPufferDash { get; set; } = false;

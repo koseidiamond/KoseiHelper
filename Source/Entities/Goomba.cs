@@ -1,9 +1,9 @@
 using Celeste.Mod.Entities;
+using Celeste.Mod.MaxHelpingHand.Entities;
+using Microsoft.Xna.Framework;
 using Monocle;
 using System;
-using Microsoft.Xna.Framework;
 using System.Collections;
-using Celeste.Mod.MaxHelpingHand.Entities;
 
 namespace Celeste.Mod.KoseiHelper.Entities;
 public enum GoombaBehavior
@@ -61,7 +61,7 @@ public class Goomba : Actor
 
     private float previousTimeRate, previousGameRate, previousAnxiety;
     private bool dead = false;
-    
+
     public Goomba(EntityData data, Vector2 offset) : base(data.Position + offset)
     {
         isBaby = false;
@@ -186,7 +186,7 @@ public class Goomba : Actor
                         number2 = -1f;
                 }
                 // By default clamped to 16^2, 40^2
-                target = (!(number2 >= 0f)) ? 1f : Calc.ClampedMap(number2, (float)Math.Pow(slowdownDistanceMin, 2), (float)Math.Pow(slowdownDistanceMax,2), 0.5f);
+                target = (!(number2 >= 0f)) ? 1f : Calc.ClampedMap(number2, (float)Math.Pow(slowdownDistanceMin, 2), (float)Math.Pow(slowdownDistanceMax, 2), 0.5f);
                 Distort.AnxietyOrigin = new Vector2((player.Center.X - Position.X) / 320f, (player.Center.Y - Position.Y) / 180f);
                 number3 = ((!(-1 >= 0f)) ? 0f : Calc.ClampedMap(-1, 256f, 16384f, 1f, 0f));
             }
@@ -261,13 +261,13 @@ public class Goomba : Actor
             speedY = Calc.Approach(speedY, 200f, num * Engine.DeltaTime);
         if (behavior == GoombaBehavior.Smart || behavior == GoombaBehavior.SuperSmart)
         {
-            if (CollidingWithGround(Position + new Vector2(0, 2)) && 
+            if (CollidingWithGround(Position + new Vector2(0, 2)) &&
                 (walkDirection > 0 && !CollidingWithGround(Position + new Vector2(10, 2)) || walkDirection < 0 && !CollidingWithGround(Position + new Vector2(-10, 2))))
                 walkDirection = -walkDirection;
         }
         if (behavior == GoombaBehavior.SuperSmart)
         {
-            if (level.CollideCheck<Solid>(CenterLeft + new Vector2(-1,0)) ||
+            if (level.CollideCheck<Solid>(CenterLeft + new Vector2(-1, 0)) ||
                 level.CollideCheck<Solid>(CenterRight))
             {
                 walkDirection = -walkDirection;
@@ -490,7 +490,7 @@ public class Goomba : Actor
 
     public void Killed(Player player, Level level)
     {
-        
+
         if (!isBaby)
         {
             Audio.Play(deathSound, Position);

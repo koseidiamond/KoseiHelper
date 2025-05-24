@@ -1,7 +1,7 @@
 using Celeste.Mod.Entities;
+using Microsoft.Xna.Framework;
 using Monocle;
 using System;
-using Microsoft.Xna.Framework;
 using System.Collections;
 
 namespace Celeste.Mod.KoseiHelper.Entities;
@@ -34,7 +34,7 @@ public class TileRefill : Entity
         visible = data.Bool("visible", true);
         oneUse = data.Bool("oneUse", false);
         Add(sprite = GFX.SpriteBank.Create("koseiHelper_tileRefill"));
-            sprite.Play("tiles");
+        sprite.Play("tiles");
         Add(new MirrorReflection());
         Add(bloom = new BloomPoint(0.5f, 16f));
         Add(light = new VertexLight(Color.White, 0.5f, 16, 48));
@@ -55,7 +55,7 @@ public class TileRefill : Entity
         }
     }
 
-public override void Added(Scene scene)
+    public override void Added(Scene scene)
     {
         P_Shatter = new ParticleType(Refill.P_ShatterTwo)
         {

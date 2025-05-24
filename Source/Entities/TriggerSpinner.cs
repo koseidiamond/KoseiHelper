@@ -1,9 +1,8 @@
 using Celeste.Mod.Entities;
-using Monocle;
 using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
+using Monocle;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace Celeste.Mod.KoseiHelper.Entities
 {
@@ -38,15 +37,15 @@ namespace Celeste.Mod.KoseiHelper.Entities
             Collider = new ColliderList(new Circle(6f), new Hitbox(16f, 4f, -8f, -3f));
 
             attachToSolid = data.Bool("attachToSolid", false);
-                if (attachToSolid)
+            if (attachToSolid)
+            {
+                Add(new StaticMover
                 {
-                    Add(new StaticMover
-                    {
-                        OnShake = OnShake,
-                        SolidChecker = IsRiding,
-                        OnDestroy = base.RemoveSelf
-                    });
-                }
+                    OnShake = OnShake,
+                    SolidChecker = IsRiding,
+                    OnDestroy = base.RemoveSelf
+                });
+            }
             color = data.Enum("color", TriggerSpinnerColor.Blue);
             customPathTriggered = data.Attr("customPathTriggered", "");
             customPathIndicator = data.Attr("customPathIndicator", "objects/KoseiHelper/TriggerSpinner/");

@@ -1,8 +1,8 @@
 using Celeste.Mod.Entities;
+using Microsoft.Xna.Framework;
 using Monocle;
 using System;
 using System.Collections.Generic;
-using Microsoft.Xna.Framework;
 using System.IO;
 using System.Linq;
 
@@ -61,10 +61,10 @@ namespace Celeste.Mod.KoseiHelper.Triggers
                 }
                 else
                     //Logger.Debug(nameof(KoseiHelperModule), $"File not found at {filePath}");
-                RemoveSelf();
+                    RemoveSelf();
             }
             //else
-                //Logger.Debug(nameof(KoseiHelperModule), "File path is empty or invalid.");
+            //Logger.Debug(nameof(KoseiHelperModule), "File path is empty or invalid.");
         }
         private void AppendFlagsToFile()
         {

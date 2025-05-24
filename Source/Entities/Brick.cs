@@ -1,8 +1,7 @@
 using Celeste.Mod.Entities;
-using Monocle;
 using Microsoft.Xna.Framework;
+using Monocle;
 using System.Collections;
-using static Celeste.Session;
 
 namespace Celeste.Mod.KoseiHelper.Entities;
 
@@ -106,7 +105,7 @@ public class Brick : Solid
         sprite.Position.Y = Vector2.One.Y - 3f;
         BumpActor();
         yield return 0.1f;
-        sprite.Position.Y = Vector2.One.Y -1f;
+        sprite.Position.Y = Vector2.One.Y - 1f;
         yield return 0.2f;
         tryingToBreak = false;
         yield return null;

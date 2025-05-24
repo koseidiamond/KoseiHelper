@@ -1,7 +1,6 @@
+using Celeste.Mod.Entities;
 using Microsoft.Xna.Framework;
 using Monocle;
-using Celeste.Mod.Entities;
-using System;
 using System.Collections.Generic;
 
 namespace Celeste.Mod.KoseiHelper.Entities;
@@ -29,7 +28,7 @@ public class CustomTempleCrackedBlock : TempleCrackedBlock
         breakSound = data.Attr("breakSound", "event:/none");
         prebreakSound = data.Attr("prebreakSound", "event:/none");
         health = data.Int("health", 1); //Number of times it needs to be hit until it breaks
-        texture = data.Attr("texture","objects/KoseiHelper/CustomTempleCrackedBlock/breakBlock");
+        texture = data.Attr("texture", "objects/KoseiHelper/CustomTempleCrackedBlock/breakBlock");
         debris = data.Char("debris", '1');
         destroyStaticMovers = data.Bool("destroyStaticMovers", false);
 
@@ -78,9 +77,9 @@ public class CustomTempleCrackedBlock : TempleCrackedBlock
         {
             if (persistent)
                 KoseiHelperModule.Session.SoftDoNotLoad.Add(self.eid);
-                //self.SceneAs<Level>().Session.DoNotLoad.Add(self.eid);
+            //self.SceneAs<Level>().Session.DoNotLoad.Add(self.eid);
             customTempleCrackedBlock.health--;
-            if (customTempleCrackedBlock.health >0)
+            if (customTempleCrackedBlock.health > 0)
                 Audio.Play(customTempleCrackedBlock.breakSound, self.Center);
             if (customTempleCrackedBlock.health == 0)
             {
@@ -145,7 +144,7 @@ public class CustomTempleCrackedBlock : TempleCrackedBlock
         {
             for (int j = 0; (float)j < base.Height / 8f; j++)
             {
-                tiles[i, j, num].Draw(Position + new Vector2(i, j) * 8f, Vector2.Zero,tint);
+                tiles[i, j, num].Draw(Position + new Vector2(i, j) * 8f, Vector2.Zero, tint);
             }
         }
     }

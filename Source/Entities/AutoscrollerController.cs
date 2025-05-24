@@ -1,6 +1,6 @@
 using Celeste.Mod.Entities;
-using Monocle;
 using Microsoft.Xna.Framework;
+using Monocle;
 
 namespace Celeste.Mod.KoseiHelper.Entities;
 
@@ -81,7 +81,7 @@ public class AutoscrollerController : Entity
             if (cameraDirection == CameraDirection.Up)
                 target = new Vector2(player.Position.X, player.CenterY - 90);
             if (cameraDirection == CameraDirection.Down)
-                target = new Vector2(player.Position.X, player.CenterY -90);
+                target = new Vector2(player.Position.X, player.CenterY - 90);
             player.CameraAnchorLerp = Vector2.Zero;
             addedBarrier = false;
         }

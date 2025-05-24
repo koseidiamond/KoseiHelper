@@ -1,8 +1,8 @@
 using Celeste.Mod.Entities;
-using Monocle;
 using Microsoft.Xna.Framework;
-using System.Collections;
+using Monocle;
 using System;
+using System.Collections;
 
 namespace Celeste.Mod.KoseiHelper.Entities;
 
@@ -91,7 +91,7 @@ public class PregnantFlutterbird : Actor
 
         colliderWidth = data.Float("colliderWidth", 4f);
         colliderHeight = data.Float("colliderHeight", 4f);
-        colliderXOffset = data.Float("colliderXOffset",-2f);
+        colliderXOffset = data.Float("colliderXOffset", -2f);
         colliderYOffset = data.Float("colliderYOffset", -4f);
         base.Collider = new Hitbox(colliderWidth, colliderHeight, colliderXOffset, colliderYOffset);
         Add(new PlayerCollider(OnPlayer));
@@ -291,7 +291,7 @@ public class PregnantFlutterbird : Actor
                     if (entityID.ID < otherbird.entityID.ID &&
                         ((polyamorous && otherbird.polyamorous) ||
                         (!polyamorous && !otherbird.polyamorous && otherbird.entityID.ID == partnerID && otherbird.partnerID == entityID.ID)))
-                        // the bird with the lowest entity id has the dominant alleles. poly x poly or mono x mono
+                    // the bird with the lowest entity id has the dominant alleles. poly x poly or mono x mono
                     {
                         switch (this.gender)
                         // We make sure they are attracted to each other based on gender/orientation of both of them
@@ -515,7 +515,7 @@ public class PregnantFlutterbird : Actor
                 yield return null;
             }
             if (OnGround(new Vector2(CenterX, CenterY + 2f)))
-                {
+            {
                 if (!chaser)
                     Audio.Play(hopSfx, Position);
                 noGravityTimer = 0.1f;
@@ -605,7 +605,7 @@ public class PregnantFlutterbird : Actor
         {
             sprite.Color = Color.Red;
             blinkTimer = 0.1f;
-            if (!flyingAway) 
+            if (!flyingAway)
             {
                 Audio.Play(deathSfx, Position);
                 if (blood)

@@ -3,7 +3,6 @@ using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using static Celeste.Mod.KoseiHelper.Triggers.StylegroundModifierTrigger;
 
 namespace Celeste.Mod.KoseiHelper.Triggers;
 
@@ -89,8 +88,8 @@ public class StylegroundModifierTrigger : Trigger
         triggerMode = data.Enum("triggerMode", TriggerMode.OnEnter);
         stylegroundDepth = data.Enum("stylegroundDepth", StylegroundDepth.Background);
 
-    // Identification settings
-    identificationMode = data.Enum("identificationMode", IdentificationMode.Index);
+        // Identification settings
+        identificationMode = data.Enum("identificationMode", IdentificationMode.Index);
         index = data.Int("index", 0);
         tag = data.Attr("tag", "");
         texture = data.Attr("texture", "");
@@ -165,7 +164,7 @@ public class StylegroundModifierTrigger : Trigger
             FindBackdrop(level => level.Background.Backdrops);
     }
 
-    private void FindBackdrop(Func <Level, IEnumerable<Backdrop>> getBackdrops)
+    private void FindBackdrop(Func<Level, IEnumerable<Backdrop>> getBackdrops)
     {
         Level level = SceneAs<Level>();
         IEnumerable<Backdrop> backdrops = getBackdrops(level);
@@ -216,7 +215,7 @@ public class StylegroundModifierTrigger : Trigger
                 switch (valueType)
                 {
                     case ValueType.Counter:
-                            if (absoluteValue)
+                        if (absoluteValue)
                             backdrop.Position.X = Math.Abs(session.GetCounter(linkedCounter)) * multiplier;
                         else
                             backdrop.Position.X = session.GetCounter(linkedCounter) * multiplier;
@@ -433,7 +432,7 @@ public class StylegroundModifierTrigger : Trigger
                             backdrop.FlipX = true;
                         break;
                     case ValueType.Flag:
-                            backdrop.FlipX = session.GetFlag(linkedFlag);
+                        backdrop.FlipX = session.GetFlag(linkedFlag);
                         break;
                     default: // DirectValue
                         backdrop.FlipX = flipX;
@@ -579,7 +578,7 @@ public class StylegroundModifierTrigger : Trigger
                             backdrop.Color = colorWhileTrue;
                         else
                             backdrop.Color = colorWhileFalse;
-                            break;
+                        break;
                     default: // DirectValue
                         backdrop.Color = color;
                         break;

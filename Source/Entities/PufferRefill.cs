@@ -1,7 +1,7 @@
 using Celeste.Mod.Entities;
+using Microsoft.Xna.Framework;
 using Monocle;
 using System;
-using Microsoft.Xna.Framework;
 using System.Collections;
 
 namespace Celeste.Mod.KoseiHelper.Entities;
@@ -60,7 +60,7 @@ public class PufferRefill : Entity
         this.UpdateY();
         base.Depth = -100;
     }
-    public PufferRefill(EntityData data, Vector2 offset) : this(data.Position + offset, data.Bool("oneUse", false), data.Float("respawnTime",2.5f))
+    public PufferRefill(EntityData data, Vector2 offset) : this(data.Position + offset, data.Bool("oneUse", false), data.Float("respawnTime", 2.5f))
     {
         base.Collider = new Hitbox(16f, 16f, -8f, -8f);
         base.Add(new PlayerCollider(new Action<Player>(this.OnPlayer), null, null));

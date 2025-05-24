@@ -1,8 +1,6 @@
 using Celeste.Mod.Entities;
-using IL.Monocle;
 using Microsoft.Xna.Framework;
 using System;
-using System.Diagnostics.Tracing;
 
 namespace Celeste.Mod.KoseiHelper.Triggers;
 

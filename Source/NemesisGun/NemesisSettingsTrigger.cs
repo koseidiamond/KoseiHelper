@@ -1,8 +1,7 @@
 using Celeste.Mod.Entities;
-using Monocle;
-using Microsoft.Xna.Framework;
-using Celeste.Mod.KoseiHelper.Triggers;
 using Celeste.Mod.KoseiHelper.Entities;
+using Celeste.Mod.KoseiHelper.Triggers;
+using Microsoft.Xna.Framework;
 
 namespace Celeste.Mod.KoseiHelper.NemesisGun;
 
