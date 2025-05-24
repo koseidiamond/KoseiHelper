@@ -127,6 +127,8 @@ entities.KoseiHelper/EvilHoldableController.attributes.description.timeToKill=If
 entities.KoseiHelper/EvilHoldableController.attributes.description.drainsStamina=Holdables will drain stamina while not grounded.
 entities.KoseiHelper/EvilHoldableController.attributes.description.drainsDash=Holdables will consume a dash when grabbed for the first time.
 entities.KoseiHelper/EvilHoldableController.attributes.description.dropIfNoStamina=If the player runs out of stamina, they will drop the holdable.
+entities.KoseiHelper/EvilHoldableController.attributes.description.sound=The sound that evil holdables do when grabbed.
+entities.KoseiHelper/EvilHoldableController.attributes.description.staminaDrainRate=The speed at which the stamina is drained is multiplied by this factor.
 
 # Dash Limiter Controller
 entities.KoseiHelper/DashLimiterController.placements.name.DashLimiterController=Dash Limiter Controller

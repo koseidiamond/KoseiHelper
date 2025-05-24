@@ -13,6 +13,8 @@ namespace Celeste.Mod.KoseiHelper.Entities
         public bool drainsStamina = true;
         public bool drainsDash = false;
         public bool dropIfNoStamina;
+        public string sound;
+        public float staminaDrainRate;
 
         private bool dashUsed, sounded;
 
@@ -22,7 +24,8 @@ namespace Celeste.Mod.KoseiHelper.Entities
             drainsStamina = data.Bool("drainsStamina", true);
             drainsDash = data.Bool("drainsDash", false);
             dropIfNoStamina = data.Bool("dropIfNoStamina", false);
-            Depth = -11000;
+            sound = data.Attr("sound", "event:/game/05_mirror_temple/eyebro_eyemove");
+            staminaDrainRate = data.Float("staminaDrainRate", 1f);
         }
 
         public override void Added(Scene scene)
@@ -43,16 +46,16 @@ namespace Celeste.Mod.KoseiHelper.Entities
                 {
                     if (!sounded)
                     {
-                        Audio.Play("event:/game/05_mirror_temple/eyebro_eyemove", player.TopCenter);
+                        Audio.Play(sound, player.TopCenter);
                         sounded = true;
                     }
                     if (timeToKill >= 0f)
                         cooldown -= Engine.DeltaTime;
                     if (drainsStamina)
-                        player.Stamina -= 45.4545441f * Engine.DeltaTime;
+                        player.Stamina -= 45.4545441f * Engine.DeltaTime * staminaDrainRate;
                     if (drainsDash && dashUsed == false)
                     {
-                        player.Dashes -= 1;
+                        player.Dashes = Math.Max(0, player.Dashes - 1);
                         dashUsed = true;
                     }
                     if (dropIfNoStamina && player.Stamina <= 0f)
