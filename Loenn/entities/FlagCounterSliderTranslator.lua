@@ -6,6 +6,7 @@ FlagCounterSliderTranslator.texture = "objects/KoseiHelper/Controllers/FlagCount
 FlagCounterSliderTranslator.placements = {
 	{
 		name = "FlagCounterSliderTranslator",
+		alternativeName = "FCSTranslator",
 		data = {
 			mode = "CounterToSlider",
 			flagName = "",
@@ -41,6 +42,14 @@ function FlagCounterSliderTranslator.ignoredFields(entity)
 	local ignored = {
 	"_name",
     "_id",
+	"flagName",
+	"counterName",
+	"sliderName",
+	"valueWhileFalse",
+	"valueWhileTrue",
+	"minValueForFalse",
+	"maxValueForTrue",			
+	"absoluteValue"
 	}
     local function doNotIgnore(value)
         for i = #ignored, 1, -1 do
@@ -50,13 +59,40 @@ function FlagCounterSliderTranslator.ignoredFields(entity)
             end
         end
     end
-	if entity.FlagToCounter == true then
-		doNotIgnore("minisAmount")
-		doNotIgnore("timeToSpawnMinis")
+	if entity.mode == "FlagToCounter" then
+		doNotIgnore("flagName")
+		doNotIgnore("counterName")
+		doNotIgnore("valueWhileTrue")
+		doNotIgnore("valueWhileFalse")
 	end
-	if entity.slowdown == true then
-		doNotIgnore("slowdownDistanceMax")
-		doNotIgnore("slowdownDistanceMin")
+	if entity.mode == "FlagToSlider" then
+		doNotIgnore("flagName")
+		doNotIgnore("sliderName")
+		doNotIgnore("valueWhileTrue")
+		doNotIgnore("valueWhileFalse")
+	end
+	if entity.mode == "CounterToFlag" then
+		doNotIgnore("counterName")
+		doNotIgnore("flagName")
+		doNotIgnore("minValueForFalse")
+		doNotIgnore("maxValueForTrue")
+	end
+	if entity.mode == "CounterToSlider" then
+		doNotIgnore("counterName")
+		doNotIgnore("sliderName")
+	end
+	if entity.mode == "SliderToFlag" then
+		doNotIgnore("sliderName")
+		doNotIgnore("flagName")
+		doNotIgnore("minValueForFalse")
+		doNotIgnore("maxValueForTrue")
+	end
+	if entity.mode == "SliderToCounter" then
+		doNotIgnore("sliderName")
+		doNotIgnore("counterName")
+	end
+	if entity.mode == "CounterToFlag" or entity.mode == "SliderToFlag" or entity.mode == "CounterToSlider" or entity.mode == "SliderToCounter" then
+		doNotIgnore("absoluteValue")
 	end
 	return ignored
 end

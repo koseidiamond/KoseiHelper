@@ -48,7 +48,12 @@ public class FlagCounterSliderTranslator : Entity
         switch (fcs)
         {
             case FCS.FlagToCounter:
+                if (session.GetFlag(flagName))
+                    session.SetCounter(counterName, (int)valueWhileTrue);
+                if (!session.GetFlag(flagName))
+                    session.SetCounter(counterName, (int)valueWhileFalse);
                 break;
+                // rest of cases: todo
             case FCS.FlagToSlider:
                 break;
             case FCS.CounterToFlag:

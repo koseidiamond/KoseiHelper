@@ -83,7 +83,18 @@ entities.KoseiHelper/GameDataController.attributes.description.anxiety=Slider de
 
 #Flag Counter Slider Translator
 entities.KoseiHelper/FlagCounterSliderTranslator.placements.name.FlagCounterSliderTranslator=Flag Counter Slider Translator
-entities.KoseiHelper/FlagCounterSliderTranslator.placements.description.FlagCounterSliderTranslator=Translates values of flags, counters and sliders into another of them.\nYou only need to place one in the map.\nCURRENTLY NOT IMPLEMENTED.
+entities.KoseiHelper/FlagCounterSliderTranslator.placements.name.FCSTranslator=FCS Translator
+entities.KoseiHelper/FlagCounterSliderTranslator.placements.description.FlagCounterSliderTranslator=Translates values of flags, counters and sliders into another of them.\nYou only need to place one in the map.
+entities.KoseiHelper/FlagCounterSliderTranslator.placements.description.FCSTranslator=Translates values of flags, counters and sliders into another of them.\nYou only need to place one in the map.
+entities.KoseiHelper/FlagCounterSliderTranslator.attributes.description.mode=Translate the variable type from a to b.\nSave and reopen the entity to adjust the new options.
+entities.KoseiHelper/FlagCounterSliderTranslator.attributes.description.flagName=The name of the flag (boolean).
+entities.KoseiHelper/FlagCounterSliderTranslator.attributes.description.counterName=The name of the counter (integer).
+entities.KoseiHelper/FlagCounterSliderTranslator.attributes.description.sliderName=The name of the slider (float).
+entities.KoseiHelper/FlagCounterSliderTranslator.attributes.description.valueWhileFalse=The value of this counter/slider while the flag is false.
+entities.KoseiHelper/FlagCounterSliderTranslator.attributes.description.valueWhileTrue=The value of this counter/slider while the flag is true.
+entities.KoseiHelper/FlagCounterSliderTranslator.attributes.description.minValueForFalse=The flag will be turned to false once the counter/slider reaches this value or is below it.
+entities.KoseiHelper/FlagCounterSliderTranslator.attributes.description.maxValueForTrue=The flag will be turned to true once the counter/slider reaches this value or is above it.
+entities.KoseiHelper/FlagCounterSliderTranslator.attributes.description.absoluteValue=Whether the values of this counter/slider will be always considered positive.
 
 # Debug Map Controller
 entities.KoseiHelper/DebugMapController.placements.name.DebugMapController=Debug Map Controller
