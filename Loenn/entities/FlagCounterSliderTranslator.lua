@@ -15,11 +15,12 @@ FlagCounterSliderTranslator.placements = {
 			
 			valueWhileFalse = 0,
 			valueWhileTrue = 1,
-			
 			minValueForFalse = 0,
 			maxValueForTrue = 1,
 			
-			absoluteValue = false
+			absoluteValue = false,
+			reverseValue = false,
+			multiplierFactor = 1
 		}
 	}
 }
@@ -49,7 +50,8 @@ function FlagCounterSliderTranslator.ignoredFields(entity)
 	"valueWhileTrue",
 	"minValueForFalse",
 	"maxValueForTrue",			
-	"absoluteValue"
+	"absoluteValue",
+	"multiplierFactor"
 	}
     local function doNotIgnore(value)
         for i = #ignored, 1, -1 do
@@ -64,12 +66,14 @@ function FlagCounterSliderTranslator.ignoredFields(entity)
 		doNotIgnore("counterName")
 		doNotIgnore("valueWhileTrue")
 		doNotIgnore("valueWhileFalse")
+		doNotIgnore("multiplierFactor")
 	end
 	if entity.mode == "FlagToSlider" then
 		doNotIgnore("flagName")
 		doNotIgnore("sliderName")
 		doNotIgnore("valueWhileTrue")
 		doNotIgnore("valueWhileFalse")
+		doNotIgnore("multiplierFactor")
 	end
 	if entity.mode == "CounterToFlag" then
 		doNotIgnore("counterName")
@@ -80,6 +84,7 @@ function FlagCounterSliderTranslator.ignoredFields(entity)
 	if entity.mode == "CounterToSlider" then
 		doNotIgnore("counterName")
 		doNotIgnore("sliderName")
+		doNotIgnore("multiplierFactor")
 	end
 	if entity.mode == "SliderToFlag" then
 		doNotIgnore("sliderName")
@@ -90,6 +95,7 @@ function FlagCounterSliderTranslator.ignoredFields(entity)
 	if entity.mode == "SliderToCounter" then
 		doNotIgnore("sliderName")
 		doNotIgnore("counterName")
+		doNotIgnore("multiplierFactor")
 	end
 	if entity.mode == "CounterToFlag" or entity.mode == "SliderToFlag" or entity.mode == "CounterToSlider" or entity.mode == "SliderToCounter" then
 		doNotIgnore("absoluteValue")

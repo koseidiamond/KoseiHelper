@@ -95,6 +95,8 @@ entities.KoseiHelper/FlagCounterSliderTranslator.attributes.description.valueWhi
 entities.KoseiHelper/FlagCounterSliderTranslator.attributes.description.minValueForFalse=The flag will be turned to false once the counter/slider reaches this value or is below it.
 entities.KoseiHelper/FlagCounterSliderTranslator.attributes.description.maxValueForTrue=The flag will be turned to true once the counter/slider reaches this value or is above it.
 entities.KoseiHelper/FlagCounterSliderTranslator.attributes.description.absoluteValue=Whether the values of this counter/slider will be always considered positive.
+entities.KoseiHelper/FlagCounterSliderTranslator.attributes.description.reverseValue=Reverts the value after being translated.\nFlags are false when the counter/slider has the max value and true when the counter/slider has the min value.\nCounters/Sliders will have the opposed sign.
+entities.KoseiHelper/FlagCounterSliderTranslator.attributes.description.multiplierFactor=The resulting counter/slider will have the value multiplied by this factor.
 
 # Debug Map Controller
 entities.KoseiHelper/DebugMapController.placements.name.DebugMapController=Debug Map Controller
