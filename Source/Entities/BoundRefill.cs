@@ -1,6 +1,5 @@
 using Celeste.Mod.Entities;
 using Monocle;
-using System;
 using Microsoft.Xna.Framework;
 using System.Collections;
 
@@ -21,6 +20,7 @@ public class BoundRefill : Entity
     public float respawnTimer;
     private Wiggler wiggler;
     private bool oneUse;
+    public float respawnTime = 2.5f;
 
     public BoundRefill (EntityData data, Vector2 offset) : base(data.Position + offset)
     {
@@ -29,6 +29,7 @@ public class BoundRefill : Entity
 
         //Read the custom properties from data
         outBound = data.Bool("outBound",true);
+        respawnTime = data.Float("respawnTime", 2.5f);
         KoseiHelperModule.Session.oobClimbFix = data.Bool("climbFix", false);
         oneUse = data.Bool("oneUse", true);
         Add(sprite = GFX.SpriteBank.Create("koseiHelper_boundRefill"));
@@ -59,18 +60,15 @@ public class BoundRefill : Entity
     {
         base.Update();
         Level level = SceneAs<Level>();
-        bool flag = this.respawnTimer > 0f;
-        if (flag)
+        if (respawnTimer > 0f)
         {
-            this.respawnTimer -= Engine.DeltaTime;
-            bool flag2 = this.respawnTimer <= 0f;
-            if (flag2)
+            respawnTimer -= Engine.DeltaTime;
+            if (respawnTimer <= 0f)
                 Respawn();
         }
         else
         {
-            bool flag3 = base.Scene.OnInterval(0.1f);
-            if (flag3)
+            if (base.Scene.OnInterval(0.1f))
                 level.ParticlesFG.Emit(BadelineBoost.P_Ambience, 1, this.Position, Vector2.One * 5f);
         }
         UpdateY();
@@ -152,6 +150,6 @@ public class BoundRefill : Entity
             player.EnforceLevelBounds = true;
             //Ideally this should check if the refill is not on the level bounds, and set a new spawn, to make filler rooms possible to transition to
         }
-        respawnTimer = 2.5f;
+        respawnTimer = respawnTime;
     }
 }

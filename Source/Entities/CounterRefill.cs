@@ -10,42 +10,40 @@ namespace Celeste.Mod.KoseiHelper.Entities;
 [Tracked]
 public class CounterRefill : Entity
 {
-    private static Coroutine CounterEndDelayCoroutine;
     public static ParticleType P_Shatter;
     public static ParticleType P_Regen;
     public static ParticleType P_Glow;
-    public static ParticleType P_ShatterTwo;
-    public static ParticleType P_RegenTwo;
-    public static ParticleType P_GlowTwo;
+    private static Coroutine CounterEndDelayCoroutine;
     private Sprite sprite;
     private Sprite flash;
     private Image outline;
     private Wiggler wiggler;
     private BloomPoint bloom;
     private VertexLight light;
-    private Level level;
     private SineWave sine;
     private bool twoDashes;
     private bool oneUse;
     private float respawnTimer;
-    private string str;
+    private string texturePath;
+    public float respawnTime;
 
     public bool decrease;
-    public CounterRefill(Vector2 position, bool oneUse) : base(position)
+    public CounterRefill(Vector2 position, bool oneUse, float respawnTime) : base(position)
     {
         base.Collider = new Hitbox(16f, 16f, -8f, -8f);
         base.Add(new PlayerCollider(new Action<Player>(this.OnPlayer), null, null));
         this.oneUse = oneUse;
-        str = "objects/KoseiHelper/Refills/CounterRefill/";
-        base.Add(this.outline = new Image(GFX.Game[str + "outline"]));
+        this.respawnTime = respawnTime;
+        texturePath = "objects/KoseiHelper/Refills/CounterRefill/";
+        base.Add(this.outline = new Image(GFX.Game[texturePath + "outline"]));
         this.outline.CenterOrigin();
         this.outline.Visible = false;
-        base.Add(this.sprite = new Sprite(GFX.Game, str + "idle"));
+        base.Add(this.sprite = new Sprite(GFX.Game, texturePath + "idle"));
         this.sprite.AddLoop("idle", "", 0.1f);
         this.sprite.Play("idle", false, false);
         this.sprite.Visible = false;
         this.sprite.CenterOrigin();
-        base.Add(this.flash = new Sprite(GFX.Game, str + "flash"));
+        base.Add(this.flash = new Sprite(GFX.Game, texturePath + "flash"));
         this.flash.Add("flash", "", 0.05f);
         this.flash.OnFinish = delegate (string anim)
         {
@@ -64,21 +62,22 @@ public class CounterRefill : Entity
         this.UpdateY();
         base.Depth = -100;
     }
-    public CounterRefill(EntityData data, Vector2 offset) : this(data.Position + offset, data.Bool("oneUse", false))
+    public CounterRefill(EntityData data, Vector2 offset) : this(data.Position + offset, data.Bool("oneUse", false), data.Float("respawnTime", 2.5f))
     {
         base.Collider = new Hitbox(16f, 16f, -8f, -8f);
         base.Add(new PlayerCollider(new Action<Player>(this.OnPlayer), null, null));
         this.oneUse = data.Bool("oneUse", false);
+        this.respawnTime = data.Float("respawnTime", 2.5f);
         this.decrease = data.Bool("decrease", false);
-        str = data.Attr("sprite", "objects/KoseiHelper/Refills/CounterRefill/");
-        base.Add(this.outline = new Image(GFX.Game[str + "outline"]));
+        texturePath = data.Attr("sprite", "objects/KoseiHelper/Refills/CounterRefill/");
+        base.Add(this.outline = new Image(GFX.Game[texturePath + "outline"]));
         this.outline.CenterOrigin();
         this.outline.Visible = false;
-        base.Add(this.sprite = new Sprite(GFX.Game, str + "idle"));
+        base.Add(this.sprite = new Sprite(GFX.Game, texturePath + "idle"));
         this.sprite.AddLoop("idle", "", 0.1f);
         this.sprite.Play("idle", false, false);
         this.sprite.CenterOrigin();
-        base.Add(this.flash = new Sprite(GFX.Game, str + "flash"));
+        base.Add(this.flash = new Sprite(GFX.Game, texturePath + "flash"));
         this.flash.Add("flash", "", 0.05f);
         this.flash.OnFinish = delegate (string anim)
         {
@@ -99,8 +98,22 @@ public class CounterRefill : Entity
     }
     public override void Added(Scene scene)
     {
+        P_Shatter = new ParticleType(Refill.P_ShatterTwo)
+        {
+            Color = Color.RoyalBlue,
+            Color2 = Color.DarkBlue
+        };
+        P_Regen = new ParticleType(Refill.P_RegenTwo)
+        {
+            Color = Color.Blue,
+            Color2 = Color.BlueViolet
+        };
+        P_Glow = new ParticleType(Refill.P_Glow)
+        {
+            Color = Color.LightBlue,
+            Color2 = Color.Blue
+        };
         base.Added(scene);
-        this.level = base.SceneAs<Level>();
     }
     public override void Update()
     {
@@ -117,10 +130,9 @@ public class CounterRefill : Entity
         }
         else
         {
-            bool flag3 = base.Scene.OnInterval(0.1f);
-            if (flag3)
+            if (base.Scene.OnInterval(0.1f))
             {
-                this.level.ParticlesFG.Emit(BadelineBoost.P_Ambience, 1, this.Position, Vector2.One * 5f);
+                SceneAs<Level>().ParticlesFG.Emit(P_Glow, 1, this.Position, Vector2.One * 5f);
             }
         }
         this.UpdateY();
@@ -144,7 +156,7 @@ public class CounterRefill : Entity
             base.Depth = -100;
             this.wiggler.Start();
             Audio.Play(this.twoDashes ? "event:/new_content/game/10_farewell/pinkdiamond_return" : "event:/game/general/diamond_return", this.Position);
-            this.level.ParticlesFG.Emit(BadelineBoost.P_Move, 16, this.Position, Vector2.One * 2f);
+            SceneAs<Level>().ParticlesFG.Emit(P_Regen, 16, this.Position, Vector2.One * 2f);
         }
     }
     private void UpdateY()
@@ -175,18 +187,18 @@ public class CounterRefill : Entity
             if (!KoseiHelperModule.Session.counterRefillWhenUsed)
             {
                 if (!decrease)
-                    level.Session.IncrementCounter(KoseiHelperModule.Session.counterRefillCounter);
+                    SceneAs<Level>().Session.IncrementCounter(KoseiHelperModule.Session.counterRefillCounter);
                 else
-                    level.Session.SetCounter(KoseiHelperModule.Session.counterRefillCounter, level.Session.GetCounter(KoseiHelperModule.Session.counterRefillCounter) - 1);
+                    SceneAs<Level>().Session.SetCounter(KoseiHelperModule.Session.counterRefillCounter, SceneAs<Level>().Session.GetCounter(KoseiHelperModule.Session.counterRefillCounter) - 1);
             }
-            this.respawnTimer = 2.5f;
+            this.respawnTimer = respawnTime;
         }
     }
     private IEnumerator RefillRoutine(Player player)
     {
         Celeste.Freeze(0.05f);
         yield return null;
-        this.level.Shake(0.3f);
+        SceneAs<Level>().Shake(0.3f);
         this.sprite.Visible = (this.flash.Visible = false);
         bool flag = !this.oneUse;
         if (flag)
@@ -196,8 +208,8 @@ public class CounterRefill : Entity
         this.Depth = 8999;
         yield return 0.05f;
         float angle = player.Speed.Angle();
-        this.level.ParticlesFG.Emit(Refill.P_ShatterTwo, 5, this.Position, Vector2.One * 4f, angle - 1.5707964f);
-        this.level.ParticlesFG.Emit(Refill.P_ShatterTwo, 5, this.Position, Vector2.One * 4f, angle + 1.5707964f);
+        SceneAs<Level>().ParticlesFG.Emit(P_Shatter, 5, this.Position, Vector2.One * 4f, angle - 1.5707964f);
+        SceneAs<Level>().ParticlesFG.Emit(P_Shatter, 5, this.Position, Vector2.One * 4f, angle + 1.5707964f);
         SlashFx.Burst(this.Position, angle);
         bool flag2 = this.oneUse;
         if (flag2)

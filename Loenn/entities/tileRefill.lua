@@ -9,7 +9,8 @@ TileRefill.placements = {
 		data = {
 			collidable = true,
 			visible = true,
-			oneUse = false
+			oneUse = false,
+			respawnTime = 2.5
 		}
 	}
 }

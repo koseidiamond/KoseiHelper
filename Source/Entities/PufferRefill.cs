@@ -14,42 +14,34 @@ public class PufferRefill : Entity
     public static ParticleType P_Shatter;
     public static ParticleType P_Regen;
     public static ParticleType P_Glow;
-    public static ParticleType P_ShatterTwo;
-    public static ParticleType P_RegenTwo;
-    public static ParticleType P_GlowTwo;
     private Sprite sprite;
     private Sprite flash;
     private Image outline;
     private Wiggler wiggler;
     private BloomPoint bloom;
     private VertexLight light;
-    private Level level;
     private SineWave sine;
     private bool twoDashes;
     private bool oneUse;
-    private ParticleType p_shatter;
-    private ParticleType p_regen;
-    private ParticleType p_glow;
     private float respawnTimer;
-    private string str;
-    public PufferRefill(Vector2 position, bool oneUse) : base(position)
+    private string texturePath;
+    public float respawnTime = 2.5f;
+    public PufferRefill(Vector2 position, bool oneUse, float respawnTime) : base(position)
     {
         base.Collider = new Hitbox(16f, 16f, -8f, -8f);
         base.Add(new PlayerCollider(new Action<Player>(this.OnPlayer), null, null));
         this.oneUse = oneUse;
-        str = "objects/KoseiHelper/Refills/PufferRefill/";
-        this.p_shatter = Refill.P_Shatter;
-        this.p_regen = Refill.P_Regen;
-        this.p_glow = Refill.P_Glow;
-        base.Add(this.outline = new Image(GFX.Game[str + "outline"]));
+        this.respawnTime = respawnTime;
+        texturePath = "objects/KoseiHelper/Refills/PufferRefill/";
+        base.Add(this.outline = new Image(GFX.Game[texturePath + "outline"]));
         this.outline.CenterOrigin();
         this.outline.Visible = false;
-        base.Add(this.sprite = new Sprite(GFX.Game, str + "idle"));
+        base.Add(this.sprite = new Sprite(GFX.Game, texturePath + "idle"));
         this.sprite.AddLoop("idle", "", 0.1f);
         this.sprite.Play("idle", false, false);
         this.sprite.Visible = false;
         this.sprite.CenterOrigin();
-        base.Add(this.flash = new Sprite(GFX.Game, str + "flash"));
+        base.Add(this.flash = new Sprite(GFX.Game, texturePath + "flash"));
         this.flash.Add("flash", "", 0.05f);
         this.flash.OnFinish = delegate (string anim)
         {
@@ -68,23 +60,21 @@ public class PufferRefill : Entity
         this.UpdateY();
         base.Depth = -100;
     }
-    public PufferRefill(EntityData data, Vector2 offset) : this(data.Position + offset, data.Bool("oneUse", false))
+    public PufferRefill(EntityData data, Vector2 offset) : this(data.Position + offset, data.Bool("oneUse", false), data.Float("respawnTime",2.5f))
     {
         base.Collider = new Hitbox(16f, 16f, -8f, -8f);
         base.Add(new PlayerCollider(new Action<Player>(this.OnPlayer), null, null));
         this.oneUse = data.Bool("oneUse", false);
-        str = data.Attr("sprite", "objects/KoseiHelper/Refills/PufferRefill/");
-        this.p_shatter = Refill.P_Shatter;
-        this.p_regen = Refill.P_Regen;
-        this.p_glow = Refill.P_Glow;
-        base.Add(this.outline = new Image(GFX.Game[str + "outline"]));
+        this.respawnTime = data.Float("respawnTime", 2.5f);
+        texturePath = data.Attr("sprite", "objects/KoseiHelper/Refills/PufferRefill/");
+        base.Add(this.outline = new Image(GFX.Game[texturePath + "outline"]));
         this.outline.CenterOrigin();
         this.outline.Visible = false;
-        base.Add(this.sprite = new Sprite(GFX.Game, str + "idle"));
+        base.Add(this.sprite = new Sprite(GFX.Game, texturePath + "idle"));
         this.sprite.AddLoop("idle", "", 0.1f);
         this.sprite.Play("idle", false, false);
         this.sprite.CenterOrigin();
-        base.Add(this.flash = new Sprite(GFX.Game, str + "flash"));
+        base.Add(this.flash = new Sprite(GFX.Game, texturePath + "flash"));
         this.flash.Add("flash", "", 0.05f);
         this.flash.OnFinish = delegate (string anim)
         {
@@ -105,8 +95,22 @@ public class PufferRefill : Entity
     }
     public override void Added(Scene scene)
     {
+        P_Shatter = new ParticleType(Seeker.P_Regen)
+        {
+            Color = Color.Coral,
+            Color2 = Color.Orange
+        };
+        P_Regen = new ParticleType(BadelineBoost.P_Move)
+        {
+            Color = Color.DarkOrange,
+            Color2 = Color.Salmon
+        };
+        P_Glow = new ParticleType(BadelineBoost.P_Ambience)
+        {
+            Color = Color.DarkOrange,
+            Color2 = Color.Orange
+        };
         base.Added(scene);
-        this.level = base.SceneAs<Level>();
     }
     public override void Update()
     {
@@ -126,7 +130,7 @@ public class PufferRefill : Entity
             bool flag3 = base.Scene.OnInterval(0.1f);
             if (flag3)
             {
-                this.level.ParticlesFG.Emit(BadelineBoost.P_Ambience, 1, this.Position, Vector2.One * 5f);
+                SceneAs<Level>().ParticlesFG.Emit(P_Glow, 1, this.Position, Vector2.One * 6f);
             }
         }
         this.UpdateY();
@@ -150,7 +154,7 @@ public class PufferRefill : Entity
             base.Depth = -100;
             this.wiggler.Start();
             Audio.Play(this.twoDashes ? "event:/new_content/game/10_farewell/pinkdiamond_return" : "event:/game/general/diamond_return", this.Position);
-            this.level.ParticlesFG.Emit(BadelineBoost.P_Move, 16, this.Position, Vector2.One * 2f);
+            SceneAs<Level>().ParticlesFG.Emit(P_Regen, 16, this.Position, Vector2.One * 2f);
         }
     }
     private void UpdateY()
@@ -176,14 +180,14 @@ public class PufferRefill : Entity
             base.Add(new Coroutine(this.RefillRoutine(player), true));
             player.UseRefill(false);
             KoseiHelperModule.Session.HasPufferDash = true;
-            this.respawnTimer = 2.5f;
+            this.respawnTimer = respawnTime;
         }
     }
     private IEnumerator RefillRoutine(Player player)
     {
         Celeste.Freeze(0.05f);
         yield return null;
-        this.level.Shake(0.3f);
+        SceneAs<Level>().Shake(0.3f);
         this.sprite.Visible = (this.flash.Visible = false);
         bool flag = !this.oneUse;
         if (flag)
@@ -193,8 +197,8 @@ public class PufferRefill : Entity
         this.Depth = 8999;
         yield return 0.05f;
         float angle = player.Speed.Angle();
-        this.level.ParticlesFG.Emit(Refill.P_ShatterTwo, 5, this.Position, Vector2.One * 4f, angle - 1.5707964f);
-        this.level.ParticlesFG.Emit(Refill.P_ShatterTwo, 5, this.Position, Vector2.One * 4f, angle + 1.5707964f);
+        SceneAs<Level>().ParticlesFG.Emit(P_Shatter, 5, this.Position, Vector2.One * 4f, angle - 1.5707964f);
+        SceneAs<Level>().ParticlesFG.Emit(P_Shatter, 5, this.Position, Vector2.One * 4f, angle + 1.5707964f);
         SlashFx.Burst(this.Position, angle);
         bool flag2 = this.oneUse;
         if (flag2)

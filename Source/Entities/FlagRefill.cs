@@ -10,30 +10,28 @@ namespace Celeste.Mod.KoseiHelper.Entities;
 [Tracked]
 public class FlagRefill : Entity
 {
-    private static Coroutine FlagEndDelayCoroutine;
     public static ParticleType P_Shatter;
     public static ParticleType P_Regen;
     public static ParticleType P_Glow;
-    public static ParticleType P_ShatterTwo;
-    public static ParticleType P_RegenTwo;
-    public static ParticleType P_GlowTwo;
+    private static Coroutine FlagEndDelayCoroutine;
     private Sprite sprite;
     private Sprite flash;
     private Image outline;
     private Wiggler wiggler;
     private BloomPoint bloom;
     private VertexLight light;
-    private Level level;
     private SineWave sine;
     private bool twoDashes;
     private bool oneUse;
     private float respawnTimer;
     private string str;
-    public FlagRefill(Vector2 position, bool oneUse) : base(position)
+    public float respawnTime = 2.5f;
+    public FlagRefill(Vector2 position, bool oneUse, float respawnTime) : base(position)
     {
         base.Collider = new Hitbox(16f, 16f, -8f, -8f);
         base.Add(new PlayerCollider(new Action<Player>(this.OnPlayer), null, null));
         this.oneUse = oneUse;
+        this.respawnTime = respawnTime;
         str = "objects/KoseiHelper/Refills/FlagRefill/";
         base.Add(this.outline = new Image(GFX.Game[str + "outline"]));
         this.outline.CenterOrigin();
@@ -62,11 +60,12 @@ public class FlagRefill : Entity
         this.UpdateY();
         base.Depth = -100;
     }
-    public FlagRefill(EntityData data, Vector2 offset) : this(data.Position + offset, data.Bool("oneUse", false))
+    public FlagRefill(EntityData data, Vector2 offset) : this(data.Position + offset, data.Bool("oneUse", false), data.Float("respawnTime", 2.5f))
     {
         base.Collider = new Hitbox(16f, 16f, -8f, -8f);
         base.Add(new PlayerCollider(new Action<Player>(this.OnPlayer), null, null));
         this.oneUse = data.Bool("oneUse", false);
+        this.respawnTime = data.Float("respawnTime", 2.5f);
         str = data.Attr("sprite", "objects/KoseiHelper/Refills/FlagRefill/");
         base.Add(this.outline = new Image(GFX.Game[str + "outline"]));
         this.outline.CenterOrigin();
@@ -96,8 +95,22 @@ public class FlagRefill : Entity
     }
     public override void Added(Scene scene)
     {
+        P_Shatter = new ParticleType(Refill.P_ShatterTwo)
+        {
+            Color = Color.Red,
+            Color2 = Color.HotPink
+        };
+        P_Regen = new ParticleType(Refill.P_RegenTwo)
+        {
+            Color = Color.Red,
+            Color2 = Color.MediumVioletRed
+        };
+        P_Glow = new ParticleType(Refill.P_Glow)
+        {
+            Color = Color.IndianRed,
+            Color2 = Color.Magenta
+        };
         base.Added(scene);
-        this.level = base.SceneAs<Level>();
     }
     public override void Update()
     {
@@ -114,10 +127,9 @@ public class FlagRefill : Entity
         }
         else
         {
-            bool flag3 = base.Scene.OnInterval(0.1f);
-            if (flag3)
+            if (base.Scene.OnInterval(0.1f))
             {
-                this.level.ParticlesFG.Emit(BadelineBoost.P_Ambience, 1, this.Position, Vector2.One * 5f);
+                SceneAs<Level>().ParticlesFG.Emit(P_Glow, 1, this.Position, Vector2.One * 5f);
             }
         }
         this.UpdateY();
@@ -141,7 +153,7 @@ public class FlagRefill : Entity
             base.Depth = -100;
             this.wiggler.Start();
             Audio.Play(this.twoDashes ? "event:/new_content/game/10_farewell/pinkdiamond_return" : "event:/game/general/diamond_return", this.Position);
-            this.level.ParticlesFG.Emit(BadelineBoost.P_Move, 16, this.Position, Vector2.One * 2f);
+            SceneAs<Level>().ParticlesFG.Emit(P_Regen, 16, this.Position, Vector2.One * 2f);
         }
     }
     private void UpdateY()
@@ -169,15 +181,15 @@ public class FlagRefill : Entity
             base.Add(new Coroutine(this.RefillRoutine(player), true));
             player.UseRefill(false);
             KoseiHelperModule.Session.HasFlagDash = true;
-            level.Session.SetFlag(KoseiHelperModule.Session.flagRefillFlag, true);
-            this.respawnTimer = 2.5f;
+            SceneAs<Level>().Session.SetFlag(KoseiHelperModule.Session.flagRefillFlag, true);
+            this.respawnTimer = respawnTime;
         }
     }
     private IEnumerator RefillRoutine(Player player)
     {
         Celeste.Freeze(0.05f);
         yield return null;
-        this.level.Shake(0.3f);
+        SceneAs<Level>().Shake(0.3f);
         this.sprite.Visible = (this.flash.Visible = false);
         bool flag = !this.oneUse;
         if (flag)
@@ -187,8 +199,8 @@ public class FlagRefill : Entity
         this.Depth = 8999;
         yield return 0.05f;
         float angle = player.Speed.Angle();
-        this.level.ParticlesFG.Emit(Refill.P_ShatterTwo, 5, this.Position, Vector2.One * 4f, angle - 1.5707964f);
-        this.level.ParticlesFG.Emit(Refill.P_ShatterTwo, 5, this.Position, Vector2.One * 4f, angle + 1.5707964f);
+        SceneAs<Level>().ParticlesFG.Emit(P_Shatter, 5, this.Position, Vector2.One * 4f, angle - 1.5707964f);
+        SceneAs<Level>().ParticlesFG.Emit(P_Shatter, 5, this.Position, Vector2.One * 4f, angle + 1.5707964f);
         SlashFx.Burst(this.Position, angle);
         bool flag2 = this.oneUse;
         if (flag2)

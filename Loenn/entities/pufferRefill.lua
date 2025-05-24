@@ -8,7 +8,8 @@ PufferRefill.placements = {
 		name = "PufferRefill",
 		data = {
 			oneUse = false,
-			sprite = "objects/KoseiHelper/Refills/PufferRefill/"
+			sprite = "objects/KoseiHelper/Refills/PufferRefill/",
+			respawnTime = 2.5
 		}
 	}
 }

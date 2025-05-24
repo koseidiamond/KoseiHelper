@@ -10,7 +10,8 @@ BoundRefill.placements = {
 		data = {
 			outBound = true,
 			climbFix = true,
-			oneUse = true
+			oneUse = true,
+			respawnTime = 2.5
 		}
 	}
 }

@@ -9,7 +9,8 @@ CounterRefill.placements = {
 		data = {
 			oneUse = false,
 			sprite = "objects/KoseiHelper/Refills/CounterRefill/",
-			decrease = false
+			decrease = false,
+			respawnTime = 2.5
 		}
 	}
 }

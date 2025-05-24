@@ -8,7 +8,8 @@ FlagRefill.placements = {
 		name = "FlagRefill",
 		data = {
 			oneUse = false,
-			sprite = "objects/KoseiHelper/Refills/FlagRefill/"
+			sprite = "objects/KoseiHelper/Refills/FlagRefill/",
+			respawnTime = 2.5
 		}
 	}
 }

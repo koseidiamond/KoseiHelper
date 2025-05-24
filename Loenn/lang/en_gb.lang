@@ -439,13 +439,17 @@ entities.KoseiHelper/BoundRefill.placements.description.OOBRefill==OutBound refi
 entities.KoseiHelper/BoundRefill.attributes.description.outBound=If this is true, this will be an OutBound refill. These are generally placed inside a room.\nIf it's false, it will be an InBound refill. These are generally placed out of bounds, overlapping with a different room.
 entities.KoseiHelper/BoundRefill.attributes.description.climbFix=In vanilla, the player can't climb if they are to the left/right of the current screen.\nNot recommended to disable.\n(The refill with the highest ID determines if the player can climb outside the current room or not).
 entities.KoseiHelper/BoundRefill.attributes.description.oneUse=If the bound refill should reappear after 2.5 seconds or only on room reload.
+entities.KoseiHelper/BoundRefill.attributes.description.respawnTime=The time that the refill takes to reappear after being consumed.
 
 #Tile Refill
 entities.KoseiHelper/TileRefill.placements.name.TileRefill=Tile Refill
 entities.KoseiHelper/TileRefill.placements.description.TileRefill=Tile refills enable or disable foreground tiles on the room.
+entities.KoseiHelper/TileRefill.attributes.name.collidable=Collidability
+entities.KoseiHelper/TileRefill.attributes.name.visible=Visibility
 entities.KoseiHelper/TileRefill.attributes.description.collidable=If the refill should affect collidability of tiles.
 entities.KoseiHelper/TileRefill.attributes.description.visible=If the refill should affect visibility of tiles.
 entities.KoseiHelper/TileRefill.attributes.description.oneUse=If the refill can respawn.
+entities.KoseiHelper/TileRefill.attributes.description.respawnTime=The time that the refill takes to reappear after being consumed.
 
 # Custom Player Seeker
 entities.KoseiHelper/CustomPlayerSeeker.placements.name.CustomPlayerSeeker= Custom Player Seeker
@@ -500,12 +504,14 @@ entities.KoseiHelper/PufferRefill.placements.name.PufferRefill=Puffer Refill
 entities.KoseiHelper/PufferRefill.placements.description.PufferRefill=The player will be launched in the same direction they dash towards.
 entities.KoseiHelper/PufferRefill.attributes.description.sprite=The path to your custom sprite.\nIt needs flash and idle animations, an an outline image.
 entities.KoseiHelper/PufferRefill.attributes.description.oneUse=If the refill should be consumed upon use or respawn after a while.
+entities.KoseiHelper/PufferRefill.attributes.description.respawnTime=The time that the refill takes to reappear after being consumed.
 
 #Flag Refill
 entities.KoseiHelper/FlagRefill.placements.name.FlagRefill=Flag Refill
 entities.KoseiHelper/FlagRefill.placements.description.FlagRefill=A flag will be enabled when the player collects the refill.\nThis flag will be reset if the player dashes or dies, as some sort of "temporary powerup".
 entities.KoseiHelper/FlagRefill.attributes.description.sprite=The path to your custom sprite.\nIt needs flash and idle animations, an an outline image.
 entities.KoseiHelper/FlagRefill.attributes.description.oneUse=If the refill should be consumed upon use or respawn after a while.
+entities.KoseiHelper/FlagRefill.attributes.description.respawnTime=The time that the refill takes to reappear after being consumed.
 
 #Counter Refill
 entities.KoseiHelper/CounterRefill.placements.name.CounterRefill=Counter Refill
@@ -513,6 +519,7 @@ entities.KoseiHelper/CounterRefill.placements.description.CounterRefill=The coun
 entities.KoseiHelper/CounterRefill.attributes.description.sprite=The path to your custom sprite.\nIt needs flash and idle animations, an an outline image.
 entities.KoseiHelper/CounterRefill.attributes.description.oneUse=If the refill should be consumed upon use or respawn after a while.
 entities.KoseiHelper/CounterRefill.attributes.description.decrease=If the counter should be decreased instead of increased.
+entities.KoseiHelper/CounterRefill.attributes.description.respawnTime=The time that the refill takes to reappear after being consumed.
 
 #CONTROLLERS
 

@@ -25,6 +25,22 @@ FlagCounterSliderTranslator.placements = {
 	}
 }
 
+FlagCounterSliderTranslator.fieldOrder = {
+	"x",
+	"y",
+	"mode",
+	"flagName",
+	"counterName",
+	"sliderName",
+	"valueWhileFalse",
+	"valueWhileTrue",
+	"minValueForFalse",
+	"maxValueForTrue",
+	"multiplierFactor",
+	"absoluteValue",
+	"reverseValue"
+}
+
 FlagCounterSliderTranslator.fieldInformation = {
 	mode = {
 		options = {

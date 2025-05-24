@@ -24,8 +24,8 @@ FlagRefillController.fieldOrder = {
 	"y",
 	"flagHairColor",
 	"flagName",
-	"counterName",
 	"counterHairColor",
+	"counterName",
 	"decrease",
 	"countWhenUsed",
 	"persistent"

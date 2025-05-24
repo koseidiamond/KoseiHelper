@@ -9,9 +9,9 @@ namespace Celeste.Mod.KoseiHelper.Entities;
 [CustomEntity("KoseiHelper/TileRefill")]
 public class TileRefill : Entity
 {
-    public static ParticleType P_Shatter = Refill.P_ShatterTwo;
-    public static ParticleType P_Regen = Refill.P_RegenTwo;
-    public static ParticleType P_Glow = Refill.P_GlowTwo;
+    public static ParticleType P_Shatter;
+    public static ParticleType P_Regen;
+    public static ParticleType P_Glow;
     private readonly BloomPoint bloom;
     private readonly VertexLight light;
     private readonly SineWave sine;
@@ -21,6 +21,7 @@ public class TileRefill : Entity
     public bool collidable;
     public bool visible;
     public bool oneUse;
+    public float respawnTime = 2.5f;
 
     public TileRefill(EntityData data, Vector2 offset) : base(data.Position + offset)
     {
@@ -28,6 +29,7 @@ public class TileRefill : Entity
         Add(new PlayerCollider(OnPlayer));
 
         //Read the custom properties from data
+        respawnTime = data.Float("respawnTime", 2.5f);
         collidable = data.Bool("collidable", true);
         visible = data.Bool("visible", true);
         oneUse = data.Bool("oneUse", false);
@@ -55,6 +57,21 @@ public class TileRefill : Entity
 
 public override void Added(Scene scene)
     {
+        P_Shatter = new ParticleType(Refill.P_ShatterTwo)
+        {
+            Color = Color.DimGray,
+            Color2 = Color.DarkGray
+        };
+        P_Regen = new ParticleType(Refill.P_RegenTwo)
+        {
+            Color = Color.LightGray,
+            Color2 = Color.Gray
+        };
+        P_Glow = new ParticleType(Refill.P_Glow)
+        {
+            Color = Color.LightGray,
+            Color2 = Color.Gray
+        };
         base.Added(scene);
     }
 
@@ -70,47 +87,27 @@ public override void Added(Scene scene)
                 Respawn();
             }
         }
-        if (base.Scene.OnInterval(0.1f))
+        else
         {
-            level.ParticlesFG.Emit(P_Glow, 1, Position, Vector2.One * 5f);
+            if (base.Scene.OnInterval(0.1f))
+                level.ParticlesFG.Emit(P_Glow, 1, Position, Vector2.One * 5f);
         }
         UpdateY();
         light.Alpha = Calc.Approach(light.Alpha, sprite.Visible ? 1f : 0f, 4f * Engine.DeltaTime);
         bloom.Alpha = light.Alpha * 0.8f;
     }
 
-    private void UpdateY()
+    private void Respawn()
     {
-        Sprite obj = sprite;
-        float num = (bloom.Y = sine.Value * 2f);
-        float y = (obj.Y = num);
-        obj.Y = y;
-    }
-
-    public override void Render()
-    {
-        if (sprite.Visible && outline)
-        {
-            sprite.DrawOutline();
-        }
-        base.Render();
-    }
-
-    private void OnPlayer(Player player)
-    {
-        Collidable = false;
         Level level = SceneAs<Level>();
-        Audio.Play("event:/new_content/game/10_farewell/pinkdiamond_touch", Position);
-        Input.Rumble(RumbleStrength.Medium, RumbleLength.Medium);
-        sprite.Visible = false;
-        Add(new Coroutine(RefillRoutine(player)));
-        respawnTimer = 2.5f;
-        foreach (SolidTiles solid in level.Entities.FindAll<SolidTiles>())
+        if (!Collidable)
         {
-            if (collidable)
-                solid.Collidable = !solid.Collidable;
-            if (visible)
-                solid.Visible = !solid.Visible;
+            Collidable = true;
+            sprite.Visible = true;
+            outline = false;
+            base.Depth = -100;
+            Audio.Play("event:/new_content/game/10_farewell/pinkdiamond_return", Position);
+            level.ParticlesFG.Emit(P_Regen, 16, Position, Vector2.One * 2f);
         }
     }
 
@@ -133,17 +130,29 @@ public override void Added(Scene scene)
             RemoveSelf();
     }
 
-    private void Respawn()
+    private void UpdateY()
     {
+        Sprite obj = sprite;
+        float num = (bloom.Y = sine.Value * 2f);
+        float y = (obj.Y = num);
+        obj.Y = y;
+    }
+
+    private void OnPlayer(Player player)
+    {
+        Collidable = false;
         Level level = SceneAs<Level>();
-        if (!Collidable)
+        Audio.Play("event:/new_content/game/10_farewell/pinkdiamond_touch", Position);
+        Input.Rumble(RumbleStrength.Medium, RumbleLength.Medium);
+        sprite.Visible = false;
+        Add(new Coroutine(RefillRoutine(player)));
+        respawnTimer = respawnTime;
+        foreach (SolidTiles solid in level.Entities.FindAll<SolidTiles>())
         {
-            Collidable = true;
-            sprite.Visible = true;
-            outline = false;
-            base.Depth = -100;
-            Audio.Play("event:/new_content/game/10_farewell/pinkdiamond_return", Position);
-            level.ParticlesFG.Emit(P_Regen, 16, Position, Vector2.One * 2f);
+            if (collidable)
+                solid.Collidable = !solid.Collidable;
+            if (visible)
+                solid.Visible = !solid.Visible;
         }
     }
 }
