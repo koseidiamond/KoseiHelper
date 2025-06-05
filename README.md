@@ -1,5 +1,6 @@
 # KoseiHelper
 Celeste mod with several new mechanics and customizable versions of vanilla entities.
+Available here: https://gamebanana.com/mods/556401
 
 Code contributors:
 
