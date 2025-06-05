@@ -71,6 +71,10 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
             if (CanDoShit(owner))
                 (owner.Scene as Level).Add(this);
             (owner.Scene as Level).Session.SetFlag("KoseiHelper_playerIsShooting", true);
+
+            Tracker.AddTypeToTracker(typeof(BadelineBoost));
+            Tracker.AddTypeToTracker(typeof(FlingBird));
+            Tracker.Refresh();
         }
 
         public override void Added(Scene scene)
@@ -397,7 +401,6 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
             {
                 CollisionCheck_FrostHelper();
             }
-
             if (owner.Scene.CollideFirst<BadelineBoost>(Hitbox) is BadelineBoost badelineBoost && !dead && owner is Player playerBadelineBoost)
             {
                 badelineBoost.OnPlayer(playerBadelineBoost);

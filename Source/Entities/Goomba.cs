@@ -105,7 +105,7 @@ public class Goomba : Actor
         Add(new PlayerCollider(OnPlayer));
         Add(new PlayerCollider(OnPlayerBounce, bounceCollider));
         spriteID = data.Attr("spriteID", "koseiHelper_goomba");
-        Add(sprite = GFX.SpriteBank.Create("koseiHelper_goomba"));
+        Add(sprite = GFX.SpriteBank.Create(spriteID));
         sprite.Color = color;
         sprite.Play("idle");
         deathAnimation = data.Bool("deathAnimation", false);
@@ -167,6 +167,7 @@ public class Goomba : Actor
     {
         Level level = SceneAs<Level>();
         Player player = level.Tracker.GetEntity<Player>();
+        sprite.Scale.X = Math.Sign(walkDirection);
         if (slowdown)
         {
             if (base.Scene.OnInterval(0.05f))
@@ -263,7 +264,9 @@ public class Goomba : Actor
         {
             if (CollidingWithGround(Position + new Vector2(0, 2)) &&
                 (walkDirection > 0 && !CollidingWithGround(Position + new Vector2(10, 2)) || walkDirection < 0 && !CollidingWithGround(Position + new Vector2(-10, 2))))
+            {
                 walkDirection = -walkDirection;
+            }
         }
         if (behavior == GoombaBehavior.SuperSmart)
         {
