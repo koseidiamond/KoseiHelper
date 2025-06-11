@@ -14,24 +14,6 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
     [Tracked]
     public class Bullet : Entity
     {
-        //bits&bolts fix:
-        /*[OnLoad]
-        public static void Load()
-        {
-            On.Monocle.Tracker.Initialize += TrackerInitialize;
-        }
-
-        [OnUnload]
-        public static void Unload()
-        {
-            On.Monocle.Tracker.Initialize -= TrackerInitialize;
-        }
-
-        private static void TrackerInitialize(On.Monocle.Tracker.orig_Initialize orig)
-        {
-            orig();
-            MonocleExt.TrackEntity<BadelineBoost>(inherited: true);
-        }*/
 
         public Rectangle Hitbox => new Rectangle((int)Position.X + Extensions.bulletXOffset, (int)Position.Y + Extensions.bulletYOffset, Extensions.bulletWidth, Extensions.bulletHeight);
         private Vector2 velocity, startVelocity;

@@ -27,7 +27,8 @@ Goomba.placements = {
 			color = "FFFFFF",
 			particleColor = "ff6def", -- Player.P_Split.Color
 			slowdownDistanceMax = 40,
-			slowdownDistanceMin = 16
+			slowdownDistanceMin = 16,
+			instantFlagOnDeath = false
 		}
 	}
 }
@@ -39,7 +40,8 @@ function Goomba.ignoredFields(entity)
 	"minisAmount",
 	"timeToSpawnMinis",
 	"slowdownDistanceMax",
-	"slowdownDistanceMin"
+	"slowdownDistanceMin",
+	"instantFlagOnDeath"
 	}
     local function doNotIgnore(value)
         for i = #ignored, 1, -1 do
@@ -56,6 +58,9 @@ function Goomba.ignoredFields(entity)
 	if entity.slowdown == true then
 		doNotIgnore("slowdownDistanceMax")
 		doNotIgnore("slowdownDistanceMin")
+	end
+	if entity.flagOnDeath ~= nil and entity.flagOnDeath ~= '' then
+		doNotIgnore("instantFlagOnDeath")
 	end
 	return ignored
 end

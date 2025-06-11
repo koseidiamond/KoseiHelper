@@ -1,13 +1,22 @@
+local mods = require("mods")
+local depths = mods.requireFromPlugin("libraries.depths")
+
 local Brick = {}
 
 Brick.name = "KoseiHelper/Brick"
-Brick.depth = -10000
+Brick.depth = -1000
+
+function Brick.depth(room,entity)
+	return entity.depth
+end
 
 Brick.placements = {
 	{
 		name = "Brick",
 		data = {
-			type = "Normal"
+			type = "Normal",
+			sprite = "koseiHelper_Brick",
+			depth = -1000
 		}
 	}
 }
@@ -21,6 +30,16 @@ Brick.fieldInformation = {
 		},
 		editable = false
 	}
+}
+
+Brick.fieldInformation = {
+	depth = {
+        fieldType = "integer",
+        options = depths.addDepths(depths.getDepths(), {
+		{"Bricks", -1000}
+		}),
+        editable = true
+    }
 }
 
 function Brick.selection(room, entity)

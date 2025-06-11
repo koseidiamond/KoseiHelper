@@ -56,6 +56,7 @@ public class Goomba : Actor
     public string spriteID;
     public bool deathAnimation;
     public string flagOnDeath;
+    public bool instantFlagOnDeath;
     public Color color;
     public Color particleColor;
 
@@ -110,6 +111,7 @@ public class Goomba : Actor
         sprite.Play("idle");
         deathAnimation = data.Bool("deathAnimation", false);
         flagOnDeath = data.Attr("flagOnDeath", "");
+        instantFlagOnDeath = data.Bool("instantFlagOnDeath", false);
         Add(sine = new SineWave(2f, 0f));
         sprite.OnFinish = anim =>
         {
@@ -378,7 +380,7 @@ public class Goomba : Actor
             Distort.GameRate = previousGameRate;
             Distort.Anxiety = previousAnxiety;
         }
-        if (!string.IsNullOrEmpty(flagOnDeath))
+        if (!string.IsNullOrEmpty(flagOnDeath) && !instantFlagOnDeath)
             session.SetFlag(flagOnDeath, true);
         this.RemoveSelf();
     }
@@ -396,6 +398,8 @@ public class Goomba : Actor
         player.Bounce(base.Top - 2f);
         if (!isBaby)
             Audio.Play(deathSound, Position);
+        if (instantFlagOnDeath)
+            level.Session.SetFlag(flagOnDeath, true);
         CeaseToExist();
         float angle = player.Speed.Angle();
         level.ParticlesFG.Emit(goombaParticle, 5, Position, Vector2.One * 4f, angle - (float)Math.PI / 2f);

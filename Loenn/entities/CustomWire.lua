@@ -75,7 +75,7 @@ function CustomWire.sprite(room, entity)
 
     local points = drawing.getSimpleCurve(start, stop, control)
 
-    return drawableLine.fromPoints(points, color, 1)
+    return drawableLine.fromPoints(points, color, entity.thickness)
 end
 
 function CustomWire.selection(room, entity)

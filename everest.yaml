@@ -1,9 +1,9 @@
 - Name: KoseiHelper
-  Version: 1.14.0.0
+  Version: 1.14.0.2
   DLL: bin/KoseiHelper.dll
   Dependencies:
     - Name: EverestCore
-      Version: 1.5326.0
+      Version: 1.5509.0
   OptionalDependencies:
     - Name: ExtendedVariantMode
       Version: 0.39.2

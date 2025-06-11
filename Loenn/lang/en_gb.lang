@@ -308,13 +308,14 @@ entities.KoseiHelper/Goomba.attributes.description.flyAway=If the winged goombas
 entities.KoseiHelper/Goomba.attributes.description.timeToSpawnMinis=Time that needs to pass after a minigoomba is spawned.
 entities.KoseiHelper/Goomba.attributes.description.behavior=Chaser: The goomba walks towards the player.\nDumb: The goomba moves always in the same direction, determined by the speed sign.\nSmart: The goomba moves in the same direction, but changes its mind before falling if it detects a hole.\nSuperSmart: Similar to Smart, but it also changes direction before bumping into a wall.
 entities.KoseiHelper/Goomba.attributes.description.gravityMultiplier=The vertical speed will be affected by this multiplier.
-entities.KoseiHelper/Goomba.attributes.description.canEnableTouchSwitches=If the Goomba can turn on vanilla touch switches.
+entities.KoseiHelper/Goomba.attributes.description.canEnableTouchSwitches=If the Goomba can turn on vanilla (or Helping Hand's) touch switches.
 entities.KoseiHelper/Goomba.attributes.description.minisAmount=If the goomba can spawn minigoombas, this limits the max number of minis per goomba.\n(Number not reset if a mini is killed)
 entities.KoseiHelper/Goomba.attributes.description.slowdown=Whether the goomba should have a slowdown effect when the player is too close, like Oshiro or seekers.
 entities.KoseiHelper/Goomba.attributes.description.deathSound=The sound to play when the goomba is killed (e.g. bounced on).
 entities.KoseiHelper/Goomba.attributes.description.spriteID=The ID or tag of the sprite in your Sprites.xml.\nYou can copy the default sprite from KoseiHelper/Graphics/Sprites.xml.
 entities.KoseiHelper/Goomba.attributes.description.deathAnimation=Whether the goomba should play the "dead" animation when killed.\nIf using slowdown or flags, those will have effect after the animation finishes playing.
-entities.KoseiHelper/Goomba.attributes.description.flagOnDeath=The flag that will be set to true when the goomba dies.
+entities.KoseiHelper/Goomba.attributes.description.flagOnDeath=The flag that will be set to true when the goomba dies.\nMini goombas cannot set flags.
+entities.KoseiHelper/Goomba.attributes.description.instantFlagOnDeath=Whether the flag is set on the same frame the goomba is killed, or after the "dead" animation finishes playing.\n(With the default sprites, this is 0.1 seconds of delay)
 entities.KoseiHelper/Goomba.attributes.description.color=The sprite will be tinted with this color.
 entities.KoseiHelper/Goomba.attributes.description.particleColor=The color of the particles when the goomba ceases to exist.
 entities.KoseiHelper/Goomba.attributes.description.slowdownDistanceMax=The distance at which the goomba will start to apply the slowdown effect.
@@ -470,8 +471,10 @@ entities.KoseiHelper/WingedKey.attributes.description.flapSpeed=The speed used w
 
 #Brick
 entities.KoseiHelper/Brick.placements.name.Brick=Brick
-entities.KoseiHelper/Brick.placements.description.Brick=16x16 blocks that can be broken only from below while no crouched. 3 variants available.
+entities.KoseiHelper/Brick.placements.description.Brick=16x16 blocks that can be broken only from below while not crouched. 3 variants available.
 entities.KoseiHelper/Brick.attributes.description.type=Normal: Can be broken from below. No need to dash, but Madeline can't be "small" (crouched/feather).\nIce: Like normal blocks, but they can also be broken with a Plant bullet / Hot Core Mode.\nFortress: Can be broken only with a summit launch (Badeline orb), red booster, or setting the flag KoseiHelper_BreakFortressBrick.
+entities.KoseiHelper/Brick.attributes.description.sprite=The ID or tag of the sprite in your Sprites.xml.\nYou can copy the default sprite from KoseiHelper/Graphics/Sprites.xml.
+entities.KoseiHelper/Brick.attributes.description.depth=The depth at which the brick will be rendered.
 
 #Spring Ball
 entities.KoseiHelper/SpringBall.placements.name.SpringBall= Spring Ball

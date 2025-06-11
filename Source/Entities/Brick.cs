@@ -22,7 +22,7 @@ public class Brick : Solid
     private bool fireMode;
     public Brick(EntityData data, Vector2 offset) : base(data.Position + offset, 16, 16, true)
     {
-        Depth = -1000;
+        Depth = data.Int("depth",-1000);
         brickType = data.Enum("type", BrickType.Normal);
         spriteID = data.Attr("sprite", "koseiHelper_Brick");
         Add(sprite = GFX.SpriteBank.Create(spriteID));
@@ -101,7 +101,7 @@ public class Brick : Solid
     private IEnumerator TryBreak()
     {
         tryingToBreak = true;
-        Audio.Play("event:/KoseiHelper/brickBump", Position);
+        Audio.Play("event:/KoseiHelper/brickBump", Center);
         sprite.Position.Y = Vector2.One.Y - 3f;
         BumpActor();
         yield return 0.1f;
@@ -114,7 +114,7 @@ public class Brick : Solid
     private IEnumerator Break()
     {
         breaking = true;
-        Audio.Play("event:/KoseiHelper/brickBreak", Position);
+        Audio.Play("event:/KoseiHelper/brickBreak", Center);
         BumpActor();
         if (brickType == BrickType.Ice)
         {
