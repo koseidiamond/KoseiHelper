@@ -92,7 +92,7 @@ namespace Celeste.Mod.KoseiHelper.Entities
             groupsSize = data.Int("groupSize", 3);
             left = data.Bool("left", false);
             distance = data.Float("distance", 60f);
-            sineAmplitude = data.Float("sineAmplitude", 10f);
+            sineAmplitude = data.Float("sineAmplitude", 1f);
             synchronizedSfx = data.Bool("synchronizedSfx", false);
             vertical = data.Bool("vertical", false);
             tint = data.HexColor("tint", Color.White);
