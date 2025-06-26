@@ -18,11 +18,12 @@ CustomHahaha.placements = {
 		timeForHa = 0.6,
 		timeForSfx = 0.4,
 		distance = 60,
-		sineAmplitude = 10,
+		sineAmplitude = 1,
 		depth = -10001,
 		left = false,
 		vertical = false,
-		groupSize = 3
+		groupSize = 3,
+		tint = "FFFFFF"
     }
 }
 
@@ -32,6 +33,9 @@ end
 
 CustomHahaha.fieldInformation = {
 	depth = { fieldType = "integer" },
+	tint = {
+        fieldType = "color"
+    },
 	groupSize = { fieldType = "integer" },
 	depth = {
         fieldType = "integer",
@@ -55,7 +59,6 @@ CustomHahaha.fieldInformation = {
 	}
 }
 
-local texture = "characters/oldlady/ha00"
 local spriteOffsets = {
     {-11, -1},
     {0, 0},
@@ -64,7 +67,7 @@ local spriteOffsets = {
 
 function CustomHahaha.sprite(room, entity)
     local sprites = {}
-
+	local texture = entity.sprite .. "ha00"
     for _, offset in ipairs(spriteOffsets) do
         local sprite = drawableSprite.fromTexture(texture, entity)
 

@@ -246,6 +246,7 @@ entities.KoseiHelper/CustomHahaha.attributes.description.groupSize=How many Has 
 entities.KoseiHelper/CustomHahaha.attributes.description.distance=The maximum distance the group of has will reach in a certain amount of time.
 entities.KoseiHelper/CustomHahaha.attributes.description.sineAmplitude=How much the Has should wave. It is a multiplier.
 entities.KoseiHelper/CustomHahaha.attributes.description.vertical=Whether the Has should move vertically.
+entities.KoseiHelper/CustomHahaha.attributes.description.description.tint=The color of the Hahaha.
 entities.KoseiHelper/CustomHahaha.attributes.name.left=Reverse
 
 # Custom Seeker Statue

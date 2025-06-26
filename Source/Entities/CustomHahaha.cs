@@ -15,12 +15,13 @@ namespace Celeste.Mod.KoseiHelper.Entities
             public float Percent;
             public float Duration;
 
-            public Ha(string spritePath)
+            public Ha(string spritePath, Color tint)
             {
                 Sprite = new Sprite(GFX.Game, spritePath);
                 Sprite.Add("normal", "ha", 0.15f, 0, 1, 0, 1, 0, 1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9);
                 Sprite.Play("normal");
                 Sprite.JustifyOrigin(0.5f, 0.5f);
+                Sprite.Color = tint;
                 Duration = (float)Sprite.CurrentAnimationTotalFrames * 0.15f;
             }
         }
@@ -39,6 +40,7 @@ namespace Celeste.Mod.KoseiHelper.Entities
         public float sineAmplitude;
         public int groupsSize;
         public bool vertical;
+        public Color tint;
 
         public bool Enabled
         {
@@ -67,6 +69,7 @@ namespace Celeste.Mod.KoseiHelper.Entities
             sineAmplitude = data.Float("sineAmplitude", 10f);
             synchronizedSfx = data.Bool("synchronizedSfx", false);
             vertical = data.Bool("vertical", false);
+            tint = data.HexColor("tint", Color.White);
             base.Depth = data.Int("depth", -10001);
             this.flag = data.Attr("flag", "");
             if (data.Bool("synchronizedSfx", false))
@@ -93,7 +96,7 @@ namespace Celeste.Mod.KoseiHelper.Entities
                 {
                     if (synchronizedSfx)
                         Audio.Play(audioPath, Center);
-                    has.Add(new Ha(spritePath));
+                    has.Add(new Ha(spritePath, tint));
                     counter++;
                     if (counter >= groupsSize)
                     {
@@ -128,7 +131,6 @@ namespace Celeste.Mod.KoseiHelper.Entities
                 Enabled = true;
             if (string.IsNullOrEmpty(flag) || !(base.Scene as Level).Session.GetFlag(flag))
                 Enabled = false;
-
             base.Update();
         }
 
