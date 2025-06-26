@@ -13,6 +13,9 @@ CustomHahaha.placements = {
         flag = "VivHelper/IsPlayerAlive",
         synchronizedSfx = false,
 		sprite = "characters/oldlady/KoseiHelper/",
+		spriteFileName = "ha",
+		spriteCount = 2,
+		spriteDelay = 0.15,
 		sound = "event:/KoseiHelper/laugh_oneho",
 		timeForHahaha = 1.5,
 		timeForHa = 0.6,
@@ -23,7 +26,8 @@ CustomHahaha.placements = {
 		left = false,
 		vertical = false,
 		groupSize = 3,
-		tint = "FFFFFF"
+		tint = "FFFFFF",
+		noDisappearAnim = false
     }
 }
 
@@ -36,6 +40,7 @@ CustomHahaha.fieldInformation = {
 	tint = {
         fieldType = "color"
     },
+	spriteCount = { fieldType = "integer" },
 	groupSize = { fieldType = "integer" },
 	depth = {
         fieldType = "integer",
@@ -45,14 +50,14 @@ CustomHahaha.fieldInformation = {
 	sound = {
 		options = {
 			"event:/KoseiHelper/laugh_oneho",
-			"event:/char/granny/laugh_oneha"
+			"event:/char/granny/laugh_oneha",
+			"event:/none"
 		},
 		editable = true
 	},
 	sprite = {
 		options = {
 			"characters/oldlady/KoseiHelper/",
-			"characters/oldlady/KoseiHelper/infiniteha/",
 			"characters/oldlady/"
 		},
 		editable = true
@@ -67,7 +72,7 @@ local spriteOffsets = {
 
 function CustomHahaha.sprite(room, entity)
     local sprites = {}
-	local texture = entity.sprite .. "ha00"
+	local texture = entity.sprite .. entity.spriteFileName .. "00"
     for _, offset in ipairs(spriteOffsets) do
         local sprite = drawableSprite.fromTexture(texture, entity)
 

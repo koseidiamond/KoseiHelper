@@ -235,8 +235,12 @@ entities.KoseiHelper/CustomHahaha.placements.name.CustomHahaha=Custom Hahaha
 entities.KoseiHelper/CustomHahaha.placements.description.CustomHahaha=Granny's laugh but the sprite and sound can be customized.
 entities.KoseiHelper/CustomHahaha.attributes.description.flag=The flag that needs to be set for the hahaha to appear.
 entities.KoseiHelper/CustomHahaha.attributes.description.triggerLaughSfx=If the sound should play.
-entities.KoseiHelper/CustomHahaha.attributes.description.sprite=The path to your custom animation, which should be called ha.\nIt uses 10 frames, 00-01 for blinking and 02-09 for disappearing.
-entities.KoseiHelper/CustomHahaha.attributes.description.sound=The sound that should play when laughing.\nThe vanilla sound is "event:/char/granny/laugh_oneha".
+entities.KoseiHelper/CustomHahaha.attributes.description.sprite=The path to your custom animation, excluding the name of the files themselves.
+entities.KoseiHelper/CustomHahaha.attributes.description.spriteFileName=The name of the files used for the animation.\nBy default (Sprite Count = 2) it needs 10 frames, 00-01 for blinking and 02-09 for disappearing.
+entities.KoseiHelper/CustomHahaha.attributes.description.spriteDelay=The time in seconds between each frame of the animation.
+entities.KoseiHelper/CustomHahaha.attributes.description.spriteCount=The number of files that are used for the "blinking" (normal) animation, before it starts disappearing.\nAnother 8 frames are needed for the disappear anim.
+entities.KoseiHelper/CustomHahaha.attributes.description.noDisappearAnim=Whether the sprite used will use 8 extra frames for a disappearing animation.
+entities.KoseiHelper/CustomHahaha.attributes.description.sound=The sound that should play when laughing.
 entities.KoseiHelper/CustomHahaha.attributes.description.timeForHahaha=The time that needs to pass until a group of Has is spawned.
 entities.KoseiHelper/CustomHahaha.attributes.description.timeForHa=The time that needs to pass for each Ha in the group to spawn.
 entities.KoseiHelper/CustomHahaha.attributes.description.timeForSfx=The time that needs to pass until the sfx is played again.
@@ -246,8 +250,9 @@ entities.KoseiHelper/CustomHahaha.attributes.description.groupSize=How many Has 
 entities.KoseiHelper/CustomHahaha.attributes.description.distance=The maximum distance the group of has will reach in a certain amount of time.
 entities.KoseiHelper/CustomHahaha.attributes.description.sineAmplitude=How much the Has should wave. It is a multiplier.
 entities.KoseiHelper/CustomHahaha.attributes.description.vertical=Whether the Has should move vertically.
-entities.KoseiHelper/CustomHahaha.attributes.description.description.tint=The color of the Hahaha.
+entities.KoseiHelper/CustomHahaha.attributes.description.tint=The color of the Hahaha.
 entities.KoseiHelper/CustomHahaha.attributes.name.left=Reverse
+entities.KoseiHelper/CustomHahaha.attributes.name.sprite=Sprite Path
 
 # Custom Seeker Statue
 entities.KoseiHelper/CustomSeekerStatue.placements.name.CustomSeekerStatue=Custom Seeker Statue
