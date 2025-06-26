@@ -235,14 +235,18 @@ entities.KoseiHelper/CustomHahaha.placements.name.CustomHahaha=Custom Hahaha
 entities.KoseiHelper/CustomHahaha.placements.description.CustomHahaha=Granny's laugh but the sprite and sound can be customized.
 entities.KoseiHelper/CustomHahaha.attributes.description.flag=The flag that needs to be set for the hahaha to appear.
 entities.KoseiHelper/CustomHahaha.attributes.description.triggerLaughSfx=If the sound should play.
-entities.KoseiHelper/CustomHahaha.attributes.description.sprite=The path to your custom animation, which should be called ha.
+entities.KoseiHelper/CustomHahaha.attributes.description.sprite=The path to your custom animation, which should be called ha.\nIt uses 10 frames, 00-01 for blinking and 02-09 for disappearing.
 entities.KoseiHelper/CustomHahaha.attributes.description.sound=The sound that should play when laughing.\nThe vanilla sound is "event:/char/granny/laugh_oneha".
 entities.KoseiHelper/CustomHahaha.attributes.description.timeForHahaha=The time that needs to pass until a group of Has is spawned.
 entities.KoseiHelper/CustomHahaha.attributes.description.timeForHa=The time that needs to pass for each Ha in the group to spawn.
 entities.KoseiHelper/CustomHahaha.attributes.description.timeForSfx=The time that needs to pass until the sfx is played again.
-entities.KoseiHelper/CustomHahaha.attributes.description.left=If the Hahaha should move towards the left instead of right.
+entities.KoseiHelper/CustomHahaha.attributes.description.left=If the Hahaha should move towards the left instead of right (or upwards if vertical is set).
 entities.KoseiHelper/CustomHahaha.attributes.description.synchronizedSfx=If the sound should play with each spawned Ha instead of on a fixed interval.
 entities.KoseiHelper/CustomHahaha.attributes.description.groupSize=How many Has should be in each group.
+entities.KoseiHelper/CustomHahaha.attributes.description.distance=The maximum distance the group of has will reach in a certain amount of time.
+entities.KoseiHelper/CustomHahaha.attributes.description.sineAmplitude=How much the Has should wave. It is a multiplier.
+entities.KoseiHelper/CustomHahaha.attributes.description.vertical=Whether the Has should move vertically.
+entities.KoseiHelper/CustomHahaha.attributes.name.left=Reverse
 
 # Custom Seeker Statue
 entities.KoseiHelper/CustomSeekerStatue.placements.name.CustomSeekerStatue=Custom Seeker Statue

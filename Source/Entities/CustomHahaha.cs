@@ -35,7 +35,10 @@ namespace Celeste.Mod.KoseiHelper.Entities
         public float timeForHahaha, timeForHa, timeToSfx;
         public bool synchronizedSfx;
         public bool left;
+        public float distance;
+        public float sineAmplitude;
         public int groupsSize;
+        public bool vertical;
 
         public bool Enabled
         {
@@ -60,7 +63,10 @@ namespace Celeste.Mod.KoseiHelper.Entities
             timeToSfx = data.Float("timeToSfx", 0.4f);
             groupsSize = data.Int("groupSize", 3);
             left = data.Bool("left", false);
+            distance = data.Float("distance", 60f);
+            sineAmplitude = data.Float("sineAmplitude", 10f);
             synchronizedSfx = data.Bool("synchronizedSfx", false);
+            vertical = data.Bool("vertical", false);
             base.Depth = data.Int("depth", -10001);
             this.flag = data.Attr("flag", "");
             if (data.Bool("synchronizedSfx", false))
@@ -131,10 +137,20 @@ namespace Celeste.Mod.KoseiHelper.Entities
             foreach (Ha ha in has)
             {
                 if (!left)
-                    ha.Sprite.Position = Position + new Vector2(ha.Percent * 60f, -10f + (float)(0.0 - Math.Sin(ha.Percent * 13f)) * 4f + ha.Percent * -16f);
+                {
+                    if (vertical)
+                        ha.Sprite.Position = Position + new Vector2(-10f + (float)(0.0 - Math.Sin(ha.Percent * 13f)) * 4f * sineAmplitude + ha.Percent * -16f, ha.Percent * distance);
+                    else
+                        ha.Sprite.Position = Position + new Vector2(ha.Percent * distance, -10f + (float)(0.0 - Math.Sin(ha.Percent * 13f)) * 4f * sineAmplitude + ha.Percent * -16f);
+                }
                 else
-                    ha.Sprite.Position = Position + new Vector2(ha.Percent * -60f, -10f + (float)(0.0 - Math.Sin(ha.Percent * 13f)) * 4f + ha.Percent * -16f);
-                ha.Sprite.Render();
+                {
+                    if (vertical)
+                        ha.Sprite.Position = Position + new Vector2(-10f + (float)(0.0 - Math.Sin(ha.Percent * 13f)) * 4f * sineAmplitude + ha.Percent * -16f, ha.Percent * -distance);
+                    else
+                        ha.Sprite.Position = Position + new Vector2(ha.Percent * -distance, -10f + (float)(0.0 - Math.Sin(ha.Percent * 13f)) * 4f * sineAmplitude + ha.Percent * -16f);
+                }
+                    ha.Sprite.Render();
             }
         }
     }

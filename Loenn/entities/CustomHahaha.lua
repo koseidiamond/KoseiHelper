@@ -17,8 +17,11 @@ CustomHahaha.placements = {
 		timeForHahaha = 1.5,
 		timeForHa = 0.6,
 		timeForSfx = 0.4,
+		distance = 60,
+		sineAmplitude = 10,
 		depth = -10001,
 		left = false,
+		vertical = false,
 		groupSize = 3
     }
 }
@@ -34,7 +37,22 @@ CustomHahaha.fieldInformation = {
         fieldType = "integer",
         options = depths.addDepths(depths.getDepths(), {}),
         editable = true
-    }
+    },
+	sound = {
+		options = {
+			"event:/KoseiHelper/laugh_oneho",
+			"event:/char/granny/laugh_oneha"
+		},
+		editable = true
+	},
+	sprite = {
+		options = {
+			"characters/oldlady/KoseiHelper/",
+			"characters/oldlady/KoseiHelper/infiniteha/",
+			"characters/oldlady/"
+		},
+		editable = true
+	}
 }
 
 local texture = "characters/oldlady/ha00"
