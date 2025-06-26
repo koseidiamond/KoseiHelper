@@ -58,10 +58,10 @@ public class ReskinnableParallaxDebris : Entity
             img.Scale = new Vector2(scale, scale);
             SineWave sine = new SineWave(sineSpeed / 2.5f, 0f);
             sine.Randomize();
-            sine.OnUpdate = (float f) =>
+            sine.OnUpdate = (float number) =>
             {
-                img.Y += (float)Math.Sin(f * Math.PI * secondSineHeight * bounceSpeed);
-                img.X += (float)Math.Sin(f * Math.PI * secondSineWidth * bounceSpeed);
+                img.Y += (float)Math.Sin(number * Math.PI * secondSineHeight * bounceSpeed);
+                img.X += (float)Math.Sin(number * Math.PI * secondSineWidth * bounceSpeed);
                 switch (direction)
                 {
                     case Direction.Horizontal:
@@ -81,8 +81,8 @@ public class ReskinnableParallaxDebris : Entity
                         img.Y = sine.Value * sineMult;
                         break;
                 }
-                img.Rotation += (rotationSpeed / 10) * f;
-                float alpha = alphaMin + (alphaMax - alphaMin) * (float)Math.Sin(f * fadeSpeed);
+                img.Rotation += (rotationSpeed / 10) * number;
+                float alpha = alphaMin + (alphaMax - alphaMin) * (float)Math.Sin(number * fadeSpeed);
                 img.Color.A = (byte)(MathHelper.Clamp(alpha, 0f, 1f) * 255);
             };
             Add(sine);

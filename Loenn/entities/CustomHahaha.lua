@@ -7,8 +7,6 @@ local CustomHahaha = {}
 
 CustomHahaha.name = "KoseiHelper/CustomHahaha"
 CustomHahaha.depth = -10001
-CustomHahaha.nodeLineRenderType = "line"
-CustomHahaha.nodeLimits = {1, 1}
 CustomHahaha.placements = {
     name = "CustomHahaha",
     data = {

@@ -32,7 +32,7 @@ public class StylegroundModifierTrigger : Trigger
     };
     public IdentificationMode identificationMode;
     public int index;
-    public string tag;
+    public new string tag;
     public string texture;
 
     public enum ValueType
