@@ -75,7 +75,8 @@ public class Brick : Solid
                     }
                     else
                     {
-                        if (CollideCheck(player, BottomCenter + new Vector2(0, -6)) && !breaking && player.Speed.Y <= 0 ||
+                        if (CollideCheck(player, BottomCenter + new Vector2(0, -6)) && !breaking && player.Speed.Y <= 0 &&
+                            player.StateMachine.state != 5 && player.StateMachine.state != 10 && !player.Ducking &&
                             level.Session.GetFlag("KoseiHelper_BreakFortressBrick"))
                             Add(new Coroutine(Break()));
                     }

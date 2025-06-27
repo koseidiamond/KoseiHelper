@@ -22,6 +22,13 @@ Brick.placements = {
 }
 
 Brick.fieldInformation = {
+	depth = {
+        fieldType = "integer",
+        options = depths.addDepths(depths.getDepths(), {
+		{"Bricks", -1000}
+		}),
+        editable = true
+    },
 	type = {
 		options = {
 			"Normal",
@@ -30,16 +37,6 @@ Brick.fieldInformation = {
 		},
 		editable = false
 	}
-}
-
-Brick.fieldInformation = {
-	depth = {
-        fieldType = "integer",
-        options = depths.addDepths(depths.getDepths(), {
-		{"Bricks", -1000}
-		}),
-        editable = true
-    }
 }
 
 function Brick.selection(room, entity)
