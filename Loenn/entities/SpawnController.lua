@@ -29,6 +29,7 @@ SpawnController.placements = {
 		persistent = false,
 		absoluteCoords = false,
 		poofWhenDisappearing = true,
+		ignoreJustRespawned = false,
 		--Spawn conditions
 		spawnFlag = "koseiHelper_spawn",
 		spawnFlagValue = true,
@@ -82,7 +83,6 @@ SpawnController.placements = {
 		noNode = false
 		
 		-- Secret attributes
-		-- ignoreJustRespawned,
 		-- noCollider
 		}
 	}
@@ -434,7 +434,8 @@ SpawnController.fieldOrder =  {
 	"entityPath",
 	"dictKeys",
 	"dictValues",
-	"poofWhenDisappearing"
+	"poofWhenDisappearing",
+	"ignoreJustRespawned"
 }
 
 function SpawnController.texture(room, entity)

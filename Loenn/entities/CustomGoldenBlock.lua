@@ -32,7 +32,8 @@ CustomGoldenBlock.placements = {
 		appearDistance = 80,
 		safe = false,
 		blockTint = "FFFFFF",
-		iconTint = "FFFFFF"
+		iconTint = "FFFFFF",
+		flag = "KoseiHelper_GoldenBlock"
     }
 }
 
@@ -55,8 +56,10 @@ CustomGoldenBlock.fieldInformation = {
 		options = {
 			"GoldenBerry",
 			"AllBerries",
+			"NonGoldenBerries",
 			"BerriesAndKeys",
-			"OnlyKeys"
+			"OnlyKeys",
+			"Flag"
 		},
 		editable = false
 	},
@@ -92,6 +95,26 @@ CustomGoldenBlock.fieldInformation = {
 	}
 }
 
+function CustomGoldenBlock.ignoredFields(entity)
+	local ignored = {
+	"_name",
+    "_id",
+	"flag"
+	}
+    local function doNotIgnore(value)
+        for i = #ignored, 1, -1 do
+            if ignored[i] == value then
+                table.remove(ignored, i)
+                return
+            end
+        end
+    end
+	if entity.appearMode == "Flag" then
+		doNotIgnore("flag")
+	end
+	return ignored
+end
+
 local ninePatchOptions = {
     mode = "fill",
     borderMode = "repeat",
@@ -111,6 +134,7 @@ CustomGoldenBlock.fieldOrder = {
 	"depth",
 	"surfaceSoundIndex",
 	"appearMode",
+	"flag",
 	"blockTint",
 	"iconTint",
 	"allBerryTypes",

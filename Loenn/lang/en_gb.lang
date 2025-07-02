@@ -285,10 +285,11 @@ entities.KoseiHelper/CustomGoldenBlock.attributes.description.blockTexture=The p
 entities.KoseiHelper/CustomGoldenBlock.attributes.description.surfaceSoundIndex=The sound that the block should do when grabbed/stepped on.
 entities.KoseiHelper/CustomGoldenBlock.attributes.description.depth=The depth of the block.
 entities.KoseiHelper/CustomGoldenBlock.attributes.description.occludesLight=Whether the light should be able to go through the block.
-entities.KoseiHelper/CustomGoldenBlock.attributes.description.appearMode=Whether the block should appear if the player is carrying a golden, any berry, a key, or any.
+entities.KoseiHelper/CustomGoldenBlock.attributes.description.appearMode=Whether the block should appear if the player is carrying a golden, any berry, a key, any followers, or when a flag is set.\nThe condition is checked when the player first enters the screen.
 entities.KoseiHelper/CustomGoldenBlock.attributes.description.drawOutline=Whether the block should have a black outline.
 entities.KoseiHelper/CustomGoldenBlock.attributes.description.appearDistance=The block will appear when the player is a certain amount of pixels close to its center.\nNot recommended to lower the appear distance below the width of the blocks.
 entities.KoseiHelper/CustomGoldenBlock.attributes.description.safe=Whether the block is considered "safe ground" (the player can collect berries).
+entities.KoseiHelper/CustomGoldenBlock.attributes.description.flag=The flag that must be set for the block to appear.
 
 # Flag Fake Berry
 entities.KoseiHelper/FlagFakeBerry.placements.name.FlagFakeBerry=Flag Fake Berry
@@ -625,6 +626,7 @@ entities.KoseiHelper/SpawnController.attributes.description.spawnLimit=The maxim
 entities.KoseiHelper/SpawnController.attributes.description.persistent=If the controller should persist across rooms.
 entities.KoseiHelper/SpawnController.attributes.description.absoluteCoords=If this option is enabled, the entity will spawn at the position of the controller,\ninstead of relative to the player's position.
 entities.KoseiHelper/SpawnController.attributes.description.poofWhenDisappearing=If the entity has a TTL (time to live), this determines whether a poof particle should appear.
+entities.KoseiHelper/SpawnController.attributes.description.ignoreJustRespawned=Whether the entity should spawn even before the player starts moving, if conditions are met.
 
 #Spawn Controller - specific entity attributes
 entities.KoseiHelper/SpawnController.attributes.description.blockWidth=Width of the block.

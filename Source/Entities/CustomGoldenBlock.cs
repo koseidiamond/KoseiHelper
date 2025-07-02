@@ -28,10 +28,13 @@ public class CustomGoldenBlock : Solid
     {
         GoldenBerry,
         AllBerries,
+        NonGoldenBerries,
         BerriesAndKeys,
-        OnlyKeys
+        OnlyKeys,
+        Flag
     };
     private AppearMode appearMode;
+    public string customFlag;
 
     public CustomGoldenBlock(EntityData data, Vector2 offset) : base(data.Position + offset, data.Width, data.Height, data.Bool("safe", false))
     {
@@ -47,6 +50,7 @@ public class CustomGoldenBlock : Solid
         drawOutline = data.Bool("drawOutline", true);
         blockTint = data.HexColor("blockTint", Color.White);
         iconTint = data.HexColor("iconTint", Color.White);
+        customFlag = data.Attr("flag", "KoseiHelper_GoldenBlock");
 
         startY = Y;
         berry = new Image(GFX.Game[iconTexture]);
@@ -111,6 +115,20 @@ public class CustomGoldenBlock : Solid
                 foreach (Key key in scene.Entities.FindAll<Key>())
                 {
                     if (key.follower.Leader != null)
+                    {
+                        flag = true;
+                        break;
+                    }
+                }
+                break;
+            case AppearMode.Flag:
+                if (SceneAs<Level>().Session.GetFlag(customFlag))
+                    flag = true;
+                break;
+            case AppearMode.NonGoldenBerries:
+                foreach (Strawberry berry in scene.Entities.FindAll<Strawberry>())
+                {
+                    if (!berry.Golden && berry.Follower.Leader != null)
                     {
                         flag = true;
                         break;
