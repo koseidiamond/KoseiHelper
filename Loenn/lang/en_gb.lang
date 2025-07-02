@@ -274,6 +274,7 @@ entities.KoseiHelper/CustomTrapdoor.attributes.description.sfxBottom=The sound t
 entities.KoseiHelper/CustomTrapdoor.attributes.description.depth=The visual depth of the trapdoor.
 entities.KoseiHelper/CustomTrapdoor.attributes.description.spriteID=The ID or tag of the sprite in your Sprites.xml.
 entities.KoseiHelper/CustomTrapdoor.attributes.description.occludesLight=If the light should be able to pass through the trapdoor.
+entities.KoseiHelper/CustomTrapdoor.attributes.description.tint=The tint applied to your custom sprite. Works better on sprites with low saturation.
 
 # Custom Golden Block
 entities.KoseiHelper/CustomGoldenBlock.placements.name.CustomGoldenBlock=Custom Golden Block

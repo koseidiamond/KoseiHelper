@@ -25,6 +25,7 @@ public class CustomTrapdoor : Entity
         Add(sprite = GFX.SpriteBank.Create(data.Attr("spriteID", "trapdoor")));
         sprite.Play("idle");
         sprite.Y = 6f;
+        sprite.Color = data.HexColor("tint", Color.White);
         base.Collider = new Hitbox(24f, 4f, 0f, 6f);
         Add(playerCollider = new PlayerCollider(Open));
         if (occludesLight)

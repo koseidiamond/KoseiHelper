@@ -18,7 +18,8 @@ CustomTrapdoor.placements = {
 		sfxBottom = "event:/game/03_resort/trapdoor_frombottom",
 		occludesLight = true,
 		spriteID = "trapdoor",
-		depth = 8999
+		depth = 8999,
+		tint = "FFFFFF"
 	}
 }
 
@@ -27,6 +28,17 @@ CustomTrapdoor.fieldInformation = {
         fieldType = "integer",
         options = depths.addDepths(depths.getDepths(), {}),
         editable = true
+    },
+	spriteID = {
+        fieldType = "string",
+        options = {
+			"trapdoor",
+			"KoseiHelper_whitetrapdoor"
+		},
+        editable = true
+    },
+	tint = {
+        fieldType = "color"
     }
 }
 

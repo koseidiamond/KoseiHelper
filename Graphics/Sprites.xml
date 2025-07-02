@@ -94,6 +94,13 @@
 	<Loop id="Fortress" path="Fortress" delay="0.1" frames="00-03, 00*8, 00-03, 00-03, 0*8, 00-03, 00*12"/>
   </koseiHelper_Brick>
   
+  <KoseiHelper_whitetrapdoor path="objects/KoseiHelper/Trapdoor/">
+	<Justify x="0" y="0" />
+    <Loop id="idle" path="trap" delay="0.1" frames="0"/>
+    <Anim id="open" path="trap" delay="0.05" frames="0,1,2,3,3,4,5,6,7"/>
+    <Anim id="open_partial" path="trap" delay="0.05" frames="0,1,2,3,4"/>
+  </KoseiHelper_whitetrapdoor>
+  
   <koseiHelper_player path="characters/player/KoseiHelper/">
     <Origin x="16" y="32" />
     <Anim id="sleepy_zeroDashes" path="sleepy_zeroDashes" frames="0" />
