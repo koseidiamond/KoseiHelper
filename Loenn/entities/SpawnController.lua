@@ -22,6 +22,7 @@ SpawnController.placements = {
 		relativeToPlayerFacing = true,
 		nodeRelativeToPlayerFacing = true,
 		timeToLive = 0,
+		flagToLive = "KoseiHelper_despawnEntity",
 		appearSound = "event:/KoseiHelper/spawn",
 		disappearSound = "event:/game/general/assist_dash_aim",
 		flag = "",
@@ -37,6 +38,7 @@ SpawnController.placements = {
 		spawnLimit = -1,
 		everyXDashes = 1,
 		cassetteColor = "Any",
+		despawnMethod = "TTL",
 		-- Entity-specific attributes
 		nodeX = 0,
 		nodeY = 0,
@@ -131,6 +133,14 @@ SpawnController.fieldInformation = function (entity) return {
 		"Rose",
 		"BrightSun",
 		"Malachite"
+		},
+		editable = false
+	},
+	despawnMethod = {
+		options = {
+		"None",
+		"TTL",
+		"Flag"
 		},
 		editable = false
 	},
@@ -236,6 +246,8 @@ function SpawnController.ignoredFields(entity)
 	"nodeRelativeToPlayerFacing",
 	"boosterRed",
 	"dummyFix",
+	"timeToLive",
+	"flagToLive",
 	"cloudFragile",
 	"featherShielded",
 	"featherSingleUse",
@@ -287,6 +299,12 @@ function SpawnController.ignoredFields(entity)
 	if entity.spawnCondition == "OnFlagEnabled" then
 		doNotIgnore("spawnFlag")
 		doNotIgnore("spawnFlagValue")
+	end
+	if entity.despawnMethod == "TTL" then
+		doNotIgnore("timeToLive")
+	end
+	if entity.despawnMethod == "Flag" then
+		doNotIgnore("flagToLive")
 	end
 	if entity.spawnCondition == "OnSpeedX" then
 		doNotIgnore("spawnSpeed")
@@ -408,6 +426,7 @@ SpawnController.fieldOrder =  {
 	"y",
 	"entityToSpawn",
 	"spawnCondition",
+	"despawnMethod",
 	"offsetX",
 	"offsetY",
 	"nodeX",
@@ -415,6 +434,7 @@ SpawnController.fieldOrder =  {
 	"appearSound",
 	"disappearSound",
 	"timeToLive",
+	"flagToLive",
 	"spawnCooldown",
 	"spawnLimit",
 	"spawnSpeed",

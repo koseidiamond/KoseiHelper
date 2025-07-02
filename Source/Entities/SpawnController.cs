@@ -68,6 +68,13 @@ public enum CassetteColor
     Malachite
 }
 
+public enum DespawnMethod
+{
+    None,
+    TTL,
+    Flag
+}
+
 [CustomEntity("KoseiHelper/SpawnController")]
 public class SpawnController : Entity
 {
@@ -79,12 +86,14 @@ public class SpawnController : Entity
     public bool relativeToPlayerFacing, nodeRelativeToPlayerFacing;
     public SpawnCondition spawnCondition;
     public CassetteColor cassetteColor;
+    public DespawnMethod despawnMethod;
     public string spawnFlag;
     public bool spawnFlagValue;
     public float spawnSpeed;
     public int spawnLimit;
     public bool persistency;
     public float timeToLive;
+    public string flagToLive;
     public string appearSound;
     public string disappearSound;
     public int dashCount, everyXDashes;
@@ -191,12 +200,14 @@ public class SpawnController : Entity
         relativeToPlayerFacing = data.Bool("relativeToPlayerFacing", true);
         nodeRelativeToPlayerFacing = data.Bool("nodeRelativeToPlayerFacing", true);
         timeToLive = data.Float("timeToLive", 0f);
+        flagToLive = data.Attr("flagToLive", "KoseiHelper_despawnEntity");
         appearSound = data.Attr("appearSound", "event:/KoseiHelper/spawn");
         disappearSound = data.Attr("disappearSound", "event:/game/general/assist_dash_aim");
         flagToEnableSpawner = data.Attr("flag", "");
         flagValue = data.Bool("flagValue", true);
         spawnCondition = data.Enum("spawnCondition", SpawnCondition.OnCustomButtonPress);
         cassetteColor = data.Enum("cassetteColor", CassetteColor.Any);
+        despawnMethod = data.Enum("despawnMethod", DespawnMethod.TTL);
         spawnFlag = data.Attr("spawnFlag", "koseiHelper_spawn");
         spawnFlagValue = data.Bool("spawnFlagValue", true);
         spawnSpeed = data.Float("spawnSpeed", 300f);
@@ -352,6 +363,8 @@ public class SpawnController : Entity
                 SpawnCondition.OnJump => playerIsJumping,
                 _ => false
             };
+            if (despawnMethod == DespawnMethod.Flag && level.Session.GetFlag(flagToLive))
+                conditionMet = false;
             playerIsJumping = false;
             if (conditionMet && spawnLimit != 0 && spawnCooldown == 0 && player != null)
             {
@@ -390,6 +403,7 @@ public class SpawnController : Entity
                         nodePosition = new Vector2(player.Position.X + nodeX - blockWidth, player.Position.Y + nodeY);
                 }
                 float entityTTL = timeToLive;
+                string entityFTL = flagToLive;
                 switch (entityToSpawn)
                 { // If relativeToPlayerFacing is true, a positive X value will spawn in front of the player, and a negative X value will spawn behind the player
                     case EntityType.Puffer:
@@ -543,7 +557,7 @@ public class SpawnController : Entity
                 if (spawnedEntity != null && player != null)
                 { // If the entity has been spawned successfully:
                     Scene.Add(spawnedEntity);
-                    spawnedEntitiesWithTTL.Add(new EntityWithTTL(spawnedEntity, entityTTL));
+                    spawnedEntitiesWithTTL.Add(new EntityWithTTL(spawnedEntity, entityTTL, entityFTL));
                     spawnCooldown = spawnTime;
                     hasSpawnedFromSpeed = true;
                     Audio.Play(appearSound, player.Position);
@@ -567,38 +581,80 @@ public class SpawnController : Entity
                 }
 
             }
-            if (wrapper.TimeToLive <= 0) // The instance of the entity will (literally) make poof
+            switch (despawnMethod)
             {
-                Audio.Play(disappearSound, wrapper.Entity.Position);
-                if (timeToLive > 0 && poofWhenDisappearing)
-                    level.ParticlesFG.Emit(poofParticle, 5, wrapper.Entity.Center, Vector2.One * 4f, 0 - (float)Math.PI / 2f);
-                if (wrapper.Entity is BadelineBoost && player.StateMachine.State == 11) //Fixes being stuck in StDummy if the player touches Badeline as she's poofing
-                    player.StateMachine.State = 0;
-                if (wrapper.Entity is IceBlock iceBlock) // Removes solids from iceBlocks
-                {
-                    var solidToRemove = iceBlock.solid;
-                    if (solidToRemove != null)
+                case DespawnMethod.None:
+                    break;
+                case DespawnMethod.Flag: // This does not work if the flag was true when the entity was first spawned ???
+                    if (level.Session.GetFlag(wrapper.TTLFlag))
                     {
-                        Scene.Remove(solidToRemove);
-                        iceBlock.solid = null;
+                        Audio.Play(disappearSound, wrapper.Entity.Position);
+                        if (poofWhenDisappearing)
+                            level.ParticlesFG.Emit(poofParticle, 5, wrapper.Entity.Center, Vector2.One * 4f, 0 - (float)Math.PI / 2f);
+                        if (wrapper.Entity is BadelineBoost && player.StateMachine.State == 11) //Fixes being stuck in StDummy if the player touches Badeline as she's poofing
+                            player.StateMachine.State = 0;
+                        if (wrapper.Entity is IceBlock iceBlock) // Removes solids from iceBlocks
+                        {
+                            var solidToRemove = iceBlock.solid;
+                            if (solidToRemove != null)
+                            {
+                                Scene.Remove(solidToRemove);
+                                iceBlock.solid = null;
+                            }
+                        }
+                        if (wrapper.Entity is FireBarrier fireBarrier) // FIX: Remove solids from fireBarriers
+                        {
+                            var solidToRemove = fireBarrier.solid;
+                            if (solidToRemove != null)
+                            {
+                                Scene.Remove(solidToRemove);
+                                fireBarrier.solid = null;
+                            }
+                        }
+                        Scene.Remove(wrapper.Entity);
+                        toRemove.Add(wrapper);
+                        if (dummyFix)
+                        {
+                            foreach (var badelineDummy in level.Entities.OfType<BadelineDummy>())
+                                Scene.Remove(badelineDummy);
+                        }
                     }
-                }
-                if (wrapper.Entity is FireBarrier fireBarrier) // FIX: Remove solids from fireBarriers
-                {
-                    var solidToRemove = fireBarrier.solid;
-                    if (solidToRemove != null)
+                    break;
+                default: // TTL
+                    if (wrapper.TimeToLive <= 0)
                     {
-                        Scene.Remove(solidToRemove);
-                        fireBarrier.solid = null;
+                        Audio.Play(disappearSound, wrapper.Entity.Position);
+                        if (timeToLive > 0 && poofWhenDisappearing)
+                            level.ParticlesFG.Emit(poofParticle, 5, wrapper.Entity.Center, Vector2.One * 4f, 0 - (float)Math.PI / 2f);
+                        if (wrapper.Entity is BadelineBoost && player.StateMachine.State == 11) //Fixes being stuck in StDummy if the player touches Badeline as she's poofing
+                            player.StateMachine.State = 0;
+                        if (wrapper.Entity is IceBlock iceBlock) // Removes solids from iceBlocks
+                        {
+                            var solidToRemove = iceBlock.solid;
+                            if (solidToRemove != null)
+                            {
+                                Scene.Remove(solidToRemove);
+                                iceBlock.solid = null;
+                            }
+                        }
+                        if (wrapper.Entity is FireBarrier fireBarrier) // FIX: Remove solids from fireBarriers
+                        {
+                            var solidToRemove = fireBarrier.solid;
+                            if (solidToRemove != null)
+                            {
+                                Scene.Remove(solidToRemove);
+                                fireBarrier.solid = null;
+                            }
+                        }
+                        Scene.Remove(wrapper.Entity);
+                        toRemove.Add(wrapper);
+                        if (dummyFix)
+                        {
+                            foreach (var badelineDummy in level.Entities.OfType<BadelineDummy>())
+                                Scene.Remove(badelineDummy);
+                        }
                     }
-                }
-                Scene.Remove(wrapper.Entity);
-                toRemove.Add(wrapper);
-                if (dummyFix)
-                {
-                    foreach (var badelineDummy in level.Entities.OfType<BadelineDummy>())
-                        Scene.Remove(badelineDummy);
-                }
+                    break;
             }
         }
         // Remove the entities from the list after they have been removed from the scene
