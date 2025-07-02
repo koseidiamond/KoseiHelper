@@ -38,6 +38,7 @@ public enum EntityType
     CrushBlock,
     Water,
     Strawberry,
+    Player,
     Decal,
     Flag,
     Counter,
@@ -175,6 +176,8 @@ public class SpawnController : Entity
     private bool noNode;
     private bool ignoreJustRespawned;
 
+    private PlayerSpriteMode playerSpriteMode;
+
     //Custom Entity Fields
     private string entityPath;
     private List<string> dictionaryKeys;
@@ -220,6 +223,8 @@ public class SpawnController : Entity
         dashCount = 0;
         if (persistency)
             base.Tag = Tags.Persistent;
+        if (data.Bool("transitionUpdate",false) || entityToSpawn == EntityType.Player)
+            base.Tag = Tags.TransitionUpdate;
 
         //Entity specific attributes
 
@@ -278,6 +283,8 @@ public class SpawnController : Entity
 
         isWinged = data.Bool("winged", false);
         isMoon = data.Bool("moon", false);
+
+        playerSpriteMode = data.Enum("playerSpriteMode", PlayerSpriteMode.Madeline);
 
         //Custom Entities
         entityPath = data.Attr("entityPath");
@@ -516,6 +523,9 @@ public class SpawnController : Entity
                             Vector2.Zero,
                             strawberryID
                         );
+                        break;
+                    case EntityType.Player:
+                        spawnedEntity = new Player(spawnPosition, playerSpriteMode);
                         break;
                     case EntityType.Decal:
                         if (player.Facing == Facings.Left)

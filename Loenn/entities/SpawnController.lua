@@ -31,6 +31,7 @@ SpawnController.placements = {
 		absoluteCoords = false,
 		poofWhenDisappearing = true,
 		ignoreJustRespawned = false,
+		
 		--Spawn conditions
 		spawnFlag = "koseiHelper_spawn",
 		spawnFlagValue = true,
@@ -70,6 +71,7 @@ SpawnController.placements = {
 		hasBottom = false,
 		winged = false,
 		moon = false,
+		playerSpriteMode = "Madeline",
 		decalTexture = "10-farewell/creature_f00",
 		decalDepth = 9000,
 		flagCycleAt = 9999,
@@ -84,8 +86,9 @@ SpawnController.placements = {
 		dictValues = "",
 		noNode = false
 		
-		-- Secret attributes
+		-- Secret attributes that no one should use unless they have a good reason (if you're lurking here you know what you're doing):
 		-- noCollider
+		-- transitionUpdate
 		}
 	}
 }
@@ -119,6 +122,7 @@ SpawnController.fieldInformation = function (entity) return {
 		"Kevin",
 		"Water",
 		"Strawberry",
+		"Player",
 		"Decal",
 		"Flag",
 		"Counter",
@@ -216,6 +220,16 @@ SpawnController.fieldInformation = function (entity) return {
 	jumpthruTexture = {
         options = textures
     },
+	playerSpriteMode = {
+		options = {
+		"Madeline",
+		"MadelineNoBackPack",
+		"Badeline",
+		"MadelineAsBadeline",
+		"Playback"
+		},
+		editable = false
+	},
 	flagCycleAt = { fieldType = "integer" },
 	minCounterCap = { fieldType = "integer" },
 	maxCounterCap = { fieldType = "integer" },
@@ -273,6 +287,7 @@ function SpawnController.ignoredFields(entity)
 	"hasBottom",
 	"winged",
 	"moon",
+	"playerSpriteMode",
 	"everyXDashes",
 	"cassetteColor",
 	"decalTexture",
@@ -376,6 +391,9 @@ function SpawnController.ignoredFields(entity)
 		doNotIgnore("winged")
 		doNotIgnore("moon")
 	end
+	if entity.entityToSpawn == "Player" then
+		doNotIgnore("playerSpriteMode")
+	end
 	if entity.entityToSpawn == "Decal" then
 		doNotIgnore("decalTexture")
 		doNotIgnore("decalDepth")
@@ -443,6 +461,9 @@ SpawnController.fieldOrder =  {
 	"blockHeight",
 	"blockTileType",
 	"flag",
+	"entityPath",
+	"dictKeys",
+	"dictValues",
 	"flagValue",
 	"spawnFlagValue",
 	"removeDash",
@@ -451,11 +472,10 @@ SpawnController.fieldOrder =  {
 	"nodeRelativeToPlayerFacing",
 	"persistent",
 	"absoluteCoords",
-	"entityPath",
-	"dictKeys",
-	"dictValues",
 	"poofWhenDisappearing",
-	"ignoreJustRespawned"
+	"ignoreJustRespawned",
+	--"transitionUpdate",
+	"noNode"
 }
 
 function SpawnController.texture(room, entity)
@@ -518,6 +538,8 @@ function SpawnController.texture(room, entity)
 		return "objects/KoseiHelper/Controllers/SpawnController/Flag"
 	elseif entityToSpawn == "Counter" then
 		return "objects/KoseiHelper/Controllers/SpawnController/Counter"
+	elseif entityToSpawn == "Player" then
+		return "objects/KoseiHelper/Controllers/SpawnController/Player"
 	else
 		return "objects/KoseiHelper/Controllers/SpawnController/Broken"
     end
