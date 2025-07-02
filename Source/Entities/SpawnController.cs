@@ -612,7 +612,7 @@ public class SpawnController : Entity
                                 iceBlock.solid = null;
                             }
                         }
-                        if (wrapper.Entity is FireBarrier fireBarrier) // FIX: Remove solids from fireBarriers
+                        if (wrapper.Entity is FireBarrier fireBarrier) // Removes solids from fireBarriers
                         {
                             var solidToRemove = fireBarrier.solid;
                             if (solidToRemove != null)
