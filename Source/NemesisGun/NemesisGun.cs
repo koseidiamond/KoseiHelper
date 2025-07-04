@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Celeste.Mod;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Monocle;
 using System;
@@ -268,7 +269,12 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                     if (shotCooldown <= 0 && (self.Dashes > 0 || KoseiHelperModule.Settings.GunSettings.dashBehavior != KoseiHelperModuleSettings.NemesisSettings.DashBehavior.ConsumesDash))
                     {
                         if (self.StateMachine.state != 11 && self.StateMachine.state != 17 && (self.StateMachine.state != 19 || KoseiHelperModule.Settings.GunSettings.CanShootInFeather))
-                            Gunshot(self, CursorPos);
+                        {
+                            if (KoseiHelperModule.Instance.celesteNetLoaded &&
+                                KoseiHelperModule.Settings.GunSettings.celesteNetBehavior != KoseiHelperModuleSettings.NemesisSettings.CelesteNetBehavior.None)
+                                CelesteNetSendGunshot(self);
+                                Gunshot(self, CursorPos);
+                        }
                         if (recoilCooldown <= 0)
                         {
                             if (GetEightDirectionalAim(KoseiHelperModule.Settings.GunSettings.gunDirections).Y < Math.Sqrt(2) / 2 &&
@@ -354,6 +360,33 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 facing = player.Facing;
             new Bullet(actualPlayerPos, GetGunVector(actor, cursorPos, facing), actor);
             Audio.Play(Extensions.gunshotSound, actualPlayerPos);
+        }
+
+        private void CelesteNetSendGunshot(Player self)
+        {
+            Logger.Debug(nameof(KoseiHelperModule), $"Another player has been shot!");
+            CelesteNet.Client.CelesteNetClientModule.Instance.Context?.Client?.Send(new BulletData()
+            {
+                Player = CelesteNet.Client.CelesteNetClientModule.Instance?.Client?.PlayerInfo,
+                CursorPos = CursorPos,
+                Facing = (int)self.Facing
+            });
+        }
+
+        public void Handle(CelesteNet.CelesteNetConnection con, BulletData bulletData)
+        {
+            CelesteNet.Client.CelesteNetClientModule.Instance.Context.Main.Ghosts.TryGetValue(bulletData.Player.ID, out CelesteNet.Client.Entities.Ghost ghost);
+
+            if (KoseiHelperModule.Settings.GunSettings.GunEnabled && ghost != null &&
+                bulletData.Player.ID != CelesteNet.Client.CelesteNetClientModule.Instance.Client.PlayerInfo.ID && !level.Paused && level.Overlay == null)
+            {
+                Gunshot(ghost, bulletData.CursorPos);
+            }
+        }
+
+        public void OnCelesteNetInit(CelesteNet.Client.CelesteNetClientContext ctx)
+        {
+            ctx.Client.Data.RegisterHandlersIn(this);
         }
     }
 }

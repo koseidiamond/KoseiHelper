@@ -59,6 +59,16 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
             Tracker.Refresh();
         }
 
+        public static void Load()
+        {
+            On.Celeste.Player.Update += PlayerUpdate;
+        }
+
+        public static void Unload()
+        {
+            On.Celeste.Player.Update -= PlayerUpdate;
+        }
+
         public override void Added(Scene scene)
         {
             base.Added(scene);
@@ -159,6 +169,18 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                     bulletTexture.DrawCentered(Position, Color.White, 1);
                 else
                     bulletTexture.DrawCentered(Position, Color.White, 1, angle);
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        private void CollisionCheck_CelesteNet()
+        {
+            if (owner.Scene.CollideFirst<CelesteNet.Client.Entities.Ghost>(Hitbox) is CelesteNet.Client.Entities.Ghost ghost && !dead)
+            {
+                ghost.Dead = true;
+                ghost.HandleDeath();
+                DestroyBullet();
+                return;
             }
         }
 
@@ -382,6 +404,10 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
             if (KoseiHelperModule.Instance.frostHelperLoaded)
             {
                 CollisionCheck_FrostHelper();
+            }
+            if (KoseiHelperModule.Instance.celesteNetLoaded)
+            {
+                CollisionCheck_CelesteNet();
             }
             if (owner.Scene.CollideFirst<BadelineBoost>(Hitbox) is BadelineBoost badelineBoost && !dead && owner is Player playerBadelineBoost)
             {
@@ -929,5 +955,16 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
 
         public static bool CanDoShit(Actor owner)
             => owner != null && owner.Scene != null && owner.Scene.Tracker != null;
+
+        private static void PlayerUpdate(On.Celeste.Player.orig_Update orig, Player self)
+        {
+            orig.Invoke(self);
+            CNetUpdate();
+        }
+
+        public static void CNetUpdate()
+        {
+            BulletComponent.Update();
+        }
     }
 }

@@ -30,6 +30,12 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Reference Include="CelesteNet.Client">
+        <HintPath>..\..\Cache\CelesteNet.Client.CelesteNet.Client.dll</HintPath>
+      </Reference>
+      <Reference Include="CelesteNet.Shared">
+        <HintPath>..\..\Cache\CelesteNet.Client.CelesteNet.Shared.dll</HintPath>
+      </Reference>
       <Reference Include="CollabUtils2">
         <HintPath>..\lib\CollabUtils2.dll</HintPath>
       </Reference>

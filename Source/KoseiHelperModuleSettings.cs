@@ -19,8 +19,21 @@ public class KoseiHelperModuleSettings : EverestModuleSettings
     [SettingSubMenu]
     public class NemesisSettings
     {
-        [SettingSubText("Enables the Nemesis Gun on maps that don't use it. Default off.")]
+        [SettingSubText("Enables the Nemesis Gun on maps that don't use it. Default off.\n" +
+            "Specific maps might override this behavior.")]
         public bool GunEnabled { get; set; } = false;
+
+        public enum CelesteNetBehavior
+        {
+            None,
+            Kill
+        }
+
+        [SettingSubText("Whether the gun should kill other players while playing on CelesteNet. Default None.\n" +
+            "Other options might come in the future.")]
+        [SettingName("KoseiHelper_NemesisSettings_CelesteNetBehavior")]
+        public CelesteNetBehavior celesteNetBehavior { get; set; } = CelesteNetBehavior.None;
+
 
         [SettingSubText("Whether you can shoot while in the feather state. Default off.")]
         public bool CanShootInFeather { get; set; } = false;

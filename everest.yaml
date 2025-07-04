@@ -1,5 +1,5 @@
 - Name: KoseiHelper
-  Version: 1.14.1.0
+  Version: 1.15.0.0
   DLL: bin/KoseiHelper.dll
   Dependencies:
     - Name: EverestCore
@@ -11,3 +11,5 @@
       Version: 1.33.6
     - Name: FrostHelper
       Version: 1.66.0
+    - Name: CelesteNet.Client
+      Version: 2.4.2

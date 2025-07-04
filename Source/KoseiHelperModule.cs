@@ -20,6 +20,7 @@ public class KoseiHelperModule : EverestModule
     public bool frostHelperLoaded = false;
     public bool collabUtils2Loaded = false;
     public bool helpingHandLoaded = false;
+    public bool celesteNetLoaded = false;
 
     public KoseiHelperModule()
     {
@@ -64,6 +65,9 @@ public class KoseiHelperModule : EverestModule
             collabUtils2Loaded = true;
         if (!helpingHandLoaded && Everest.Loader.DependencyLoaded(new EverestModuleMetadata { Name = "MaxHelpingHand", Version = new Version(1, 33, 6) }))
             helpingHandLoaded = true;
+        if (!celesteNetLoaded && Everest.Loader.DependencyLoaded(new EverestModuleMetadata { Name = "CelesteNet.Client", Version = new Version(2, 4, 2) }))
+            celesteNetLoaded = true;
+
     }
 
     public override void Unload()
@@ -84,6 +88,7 @@ public class KoseiHelperModule : EverestModule
         frostHelperLoaded = false;
         helpingHandLoaded = false;
         collabUtils2Loaded = false;
+        celesteNetLoaded = false;
     }
 
     private static bool ClimbCheck(On.Celeste.Player.orig_ClimbBoundsCheck orig, Player self, int dir)

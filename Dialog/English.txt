@@ -1,3 +1,4 @@
+KoseiHelper_NemesisSettings_CelesteNetBehavior=CelesteNet Behavior
 KoseiHelper_NemesisSettings_GunDirections=Gun Directions
 KoseiHelper_NemesisSettings_DashBehavior=Dash Behavior
 KoseiHelper_NemesisSettings_TheoBehavior=Theo Behavior
