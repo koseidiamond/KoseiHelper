@@ -355,3 +355,5 @@ MigrationBackup/
 # JetBrains Rider
 .idea
 
+# Dlls
+lib/
