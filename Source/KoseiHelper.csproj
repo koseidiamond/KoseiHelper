@@ -40,7 +40,7 @@
         <HintPath>..\lib\ExtendedVariantMode.dll</HintPath>
       </Reference>
       <Reference Include="FNA">
-        <HintPath>..\lib\FNA.dll</HintPath>
+        <HintPath>..\..\..\FNA.dll</HintPath>
       </Reference>
       <Reference Include="FrostTempleHelper">
         <HintPath>..\lib\FrostTempleHelper.dll</HintPath>
@@ -52,10 +52,10 @@
         <HintPath>..\lib\MaxHelpingHand.dll</HintPath>
       </Reference>
       <Reference Include="MMHOOK_Celeste">
-        <HintPath>..\lib\MMHOOK_Celeste.dll</HintPath>
+        <HintPath>..\..\..\MMHOOK_Celeste.dll</HintPath>
       </Reference>
       <Reference Include="YamlDotNet">
-        <HintPath>..\lib\YamlDotNet.dll</HintPath>
+        <HintPath>..\..\..\YamlDotNet.dll</HintPath>
       </Reference>
     </ItemGroup>
 
