@@ -84,14 +84,18 @@ entities.KoseiHelper/GameDataController.attributes.description.anxiety=Slider de
 # Set Flag On Berry Collection Controller
 entities.KoseiHelper/SetFlagOnBerryCollectionController.placements.name.SetFlagOnBerryCollectionController=Set Flag On Berry Collection Controller
 entities.KoseiHelper/SetFlagOnBerryCollectionController.placements.description.SetFlagOnBerryCollectionController=Sets a flag (or counter) when a berry of a certain type is collected.
-entities.KoseiHelper/SetFlagOnBerryCollectionController.placements.description.flag=The name of the flag that will be set.\nLeave empty if you don't want to set any flags.
-entities.KoseiHelper/SetFlagOnBerryCollectionController.placements.description.counter=The name of the counter that will be increased by one.\nLeave empty if you don't want to increase any counters.
-entities.KoseiHelper/SetFlagOnBerryCollectionController.placements.description.reactToGoldens=Whether the flag should be set regardless of Golden (Default),\nonly for Goldens (React), or only for non-Goldens (Ignore).
-entities.KoseiHelper/SetFlagOnBerryCollectionController.placements.description.reactToReds=Whether the flag should be set regardless of Red (Default),\nonly for Reds (React), or only for non-Reds (Ignore).
-entities.KoseiHelper/SetFlagOnBerryCollectionController.placements.description.reactToMoons=Whether the flag should be set regardless of Moon (Default),\nonly for Moons (React), or only for non-Moons (Ignore).
-entities.KoseiHelper/SetFlagOnBerryCollectionController.placements.description.reactToWingeds=Whether the flag should be set regardless of Winged (Default),\nonly for Wingeds (React), or only for non-Wingeds (Ignore).
-entities.KoseiHelper/SetFlagOnBerryCollectionController.placements.description.reactToGhosts=Whether the flag should be set regardless of Ghost (Default),\nonly for Ghosts (React), or only for non-Ghosts (Ignore).
-entities.KoseiHelper/SetFlagOnBerryCollectionController.placements.description.global=Whether this controller should be loaded for the entire map.
+entities.KoseiHelper/SetFlagOnBerryCollectionController.attributes.name.flag=Flag To Set
+entities.KoseiHelper/SetFlagOnBerryCollectionController.attributes.description.flag=The name of the flag that will be set.
+entities.KoseiHelper/SetFlagOnBerryCollectionController.attributes.name.counter=Total Berries Counter
+entities.KoseiHelper/SetFlagOnBerryCollectionController.attributes.description.counter=The name of the counter that matches the total number of strawberries (regardless of type) collected in this map.
+entities.KoseiHelper/SetFlagOnBerryCollectionController.attributes.description.reactToGoldens=Whether the flag should be set regardless of Golden-ness (Default),\nonly for Goldens (React), or only for non-Goldens (Ignore).\nOther attributes can mess with this setting!\nFor example, a ghost golden will be flagged if it's set to Ignore Goldens but doesn't Ignore Ghosts!
+entities.KoseiHelper/SetFlagOnBerryCollectionController.attributes.description.reactToSilvers=Whether the flag should be set regardless of Silver-ness from Collab Utils 2 (Default),\nonly for Silvers (React), or only for non-Silvers (Ignore).\nOther attributes can mess with this setting!\nFor example, a ghost silver will be flagged if it's set to Ignore Silvers but doesn't Ignore Ghosts!\nNOTE: Silvers are considered a type of Golden!
+entities.KoseiHelper/SetFlagOnBerryCollectionController.attributes.description.reactToReds=Whether the flag should be set regardless of Red-ness (Default),\nonly for Reds (React), or only for non-Reds (Ignore).\nOther attributes can mess with this setting!\nFor example, a ghost red berry will be flagged if it's set to Ignore Reds but doesn't Ignore Ghosts!
+entities.KoseiHelper/SetFlagOnBerryCollectionController.attributes.description.reactToMoons=Whether the flag should be set regardless of Moon-ness (Default),\nonly for Moons (React), or only for non-Moons (Ignore).\nOther attributes can mess with this setting!\nFor example, a moon ghost will be flagged if it's set to Ignore Moons but doesn't Ignore Ghosts!
+entities.KoseiHelper/SetFlagOnBerryCollectionController.attributes.description.reactToWingeds=Whether the flag should be set regardless of Winged-ness (Default),\nonly for Wingeds (React), or only for non-Wingeds (Ignore).\nOther attributes can mess with this setting!\nFor example, a winged ghost will be flagged if it's set to Ignore Wingeds but doesn't Ignore Ghosts!
+entities.KoseiHelper/SetFlagOnBerryCollectionController.attributes.description.reactToGhosts=Whether the flag should be set regardless of Ghost-ness (Default),\nonly for Ghosts (React), or only for non-Ghosts (Ignore).\nOther attributes can mess with this setting!\nFor example, a winged ghost will be flagged if it's set to Ignore Ghosts but doesn't Ignore Wingeds!
+entities.KoseiHelper/SetFlagOnBerryCollectionController.attributes.description.global=Whether this controller should be loaded for the entire map.
+entities.KoseiHelper/SetFlagOnBerryCollectionController.attributes.description.flagValue=The value of the flag that will be set when the conditions are met.
 
 #Flag Counter Slider Translator
 entities.KoseiHelper/FlagCounterSliderTranslator.placements.name.FlagCounterSliderTranslator=Flag Counter Slider Translator

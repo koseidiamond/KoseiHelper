@@ -1,6 +1,8 @@
+using Celeste.Mod.CollabUtils2.Entities;
 using Celeste.Mod.Entities;
 using Microsoft.Xna.Framework;
 using Monocle;
+using System.Runtime.CompilerServices;
 
 namespace Celeste.Mod.KoseiHelper.Entities
 {
@@ -8,6 +10,7 @@ namespace Celeste.Mod.KoseiHelper.Entities
     public class SetFlagOnBerryCollectionController : Entity
     {
         private string flag;
+        private bool flagValue;
         private string counter;
         private enum BerryType
         {
@@ -21,16 +24,19 @@ namespace Celeste.Mod.KoseiHelper.Entities
         private BerryType reactToMoons;
         private BerryType reactToWingeds;
         private BerryType reactToGhosts;
+        private BerryType reactToSilvers;
 
         public SetFlagOnBerryCollectionController(EntityData data, Vector2 offset) : base(data.Position + offset)
         {
             flag = data.Attr("flag", "KoseiHelper_BerryCollected");
+            flagValue = data.Bool("flagValue", true);
             counter = data.Attr("counter", "KoseiHelper_BerriesCollected");
             reactToGoldens = data.Enum("reactToGoldens", BerryType.Default);
             reactToReds = data.Enum("reactToReds", BerryType.Default);
             reactToMoons = data.Enum("reactToMoons", BerryType.Default);
             reactToWingeds = data.Enum("reactToWingeds", BerryType.Default);
             reactToGhosts = data.Enum("reactToGhosts", BerryType.Default);
+            reactToSilvers = data.Enum("reactToSilvers", BerryType.Default);
             if (data.Bool("global", false))
                 Tag = Tags.Global;
         }
@@ -63,12 +69,18 @@ namespace Celeste.Mod.KoseiHelper.Entities
                         (reactToGhosts == BerryType.React && berry.isGhostBerry) ||
                         (reactToGhosts == BerryType.Ignore && !berry.isGhostBerry));
 
-                    if (golden && red && moon && winged && ghost)
+                    bool silver = true;
+                    if (KoseiHelperModule.Instance.collabUtils2Loaded)
+                    {
+                        silver = CollabUtils2_Silver(berry);
+                    }
+
+                    if (golden && red && moon && winged && ghost && silver)
                     {
                         if (!string.IsNullOrEmpty(flag))
-                            session.SetFlag(flag, true);
+                            session.SetFlag(flag, flagValue);
                         if (!string.IsNullOrEmpty(counter))
-                            session.IncrementCounter(counter);
+                            session.SetCounter(counter, session.Strawberries.Count);
                         break;
                     }
                 }
@@ -76,12 +88,12 @@ namespace Celeste.Mod.KoseiHelper.Entities
             base.Update();
         }
 
-        public void SetFlag(Session session)
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        private bool CollabUtils2_Silver(Entity berry)
         {
-            // random funny stuff
-            //level.strawberriesDisplay.strawberries.Color = Color.Green;
-            //level.Tracker.GetEntity<Player>().Leader.Followers.Count
-            //Logger.Debug(nameof(KoseiHelperModule), $"total berries: {session.Strawberries.Count}");
+            return ((reactToSilvers == BerryType.Default) ||
+                (reactToSilvers == BerryType.React && berry is SilverBerry) ||
+                (reactToSilvers == BerryType.Ignore && berry is not SilverBerry));
         }
     }
 }

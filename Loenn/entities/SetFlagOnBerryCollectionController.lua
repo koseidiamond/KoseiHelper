@@ -10,17 +10,27 @@ SetFlagOnBerryCollectionController.placements = {
 		flag = "KoseiHelper_BerryCollected",
 		counter = "KoseiHelper_BerriesCollected",
 		reactToGoldens = "Default",
+		reactToSilvers = "Default",
 		reactToReds = "Default",
 		reactToMoons = "Default",
 		reactToWingeds = "Default",
 		reactToGhosts = "Default",
-		global = false
+		global = false,
+		flagValue = true,
 		}
 	}
 }
 
 SetFlagOnBerryCollectionController.fieldInformation = {
 	reactToGoldens = {
+		options = {
+			"Default",
+			"React",
+			"Ignore",
+		},
+		editable = false
+	},
+	reactToSilvers = {
 		options = {
 			"Default",
 			"React",
@@ -60,6 +70,21 @@ SetFlagOnBerryCollectionController.fieldInformation = {
 		},
 		editable = false
 	}
+}
+
+SetFlagOnBerryCollectionController.fieldOrder = {
+	"x",
+	"y",
+	"flag",
+	"counter",
+	"reactToGoldens",
+	"reactToSilvers",
+	"reactToReds",
+	"reactToWingeds",
+	"reactToMoons",
+	"reactToGhosts",
+	"flagValue",
+	"global"
 }
 
 return SetFlagOnBerryCollectionController
