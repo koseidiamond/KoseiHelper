@@ -81,6 +81,18 @@ entities.KoseiHelper/GameDataController.attributes.description.totalBerriesColle
 entities.KoseiHelper/GameDataController.attributes.description.timeRate=Slider depending on the time rate of the game.
 entities.KoseiHelper/GameDataController.attributes.description.anxiety=Slider depending on the current anxiety effects.
 
+# Set Flag On Berry Collection Controller
+entities.KoseiHelper/SetFlagOnBerryCollectionController.placements.name.SetFlagOnBerryCollectionController=Set Flag On Berry Collection Controller
+entities.KoseiHelper/SetFlagOnBerryCollectionController.placements.description.SetFlagOnBerryCollectionController=Sets a flag (or counter) when a berry of a certain type is collected.
+entities.KoseiHelper/SetFlagOnBerryCollectionController.placements.description.flag=The name of the flag that will be set.\nLeave empty if you don't want to set any flags.
+entities.KoseiHelper/SetFlagOnBerryCollectionController.placements.description.counter=The name of the counter that will be increased by one.\nLeave empty if you don't want to increase any counters.
+entities.KoseiHelper/SetFlagOnBerryCollectionController.placements.description.reactToGoldens=Whether the flag should be set regardless of Golden (Default),\nonly for Goldens (React), or only for non-Goldens (Ignore).
+entities.KoseiHelper/SetFlagOnBerryCollectionController.placements.description.reactToReds=Whether the flag should be set regardless of Red (Default),\nonly for Reds (React), or only for non-Reds (Ignore).
+entities.KoseiHelper/SetFlagOnBerryCollectionController.placements.description.reactToMoons=Whether the flag should be set regardless of Moon (Default),\nonly for Moons (React), or only for non-Moons (Ignore).
+entities.KoseiHelper/SetFlagOnBerryCollectionController.placements.description.reactToWingeds=Whether the flag should be set regardless of Winged (Default),\nonly for Wingeds (React), or only for non-Wingeds (Ignore).
+entities.KoseiHelper/SetFlagOnBerryCollectionController.placements.description.reactToGhosts=Whether the flag should be set regardless of Ghost (Default),\nonly for Ghosts (React), or only for non-Ghosts (Ignore).
+entities.KoseiHelper/SetFlagOnBerryCollectionController.placements.description.global=Whether this controller should be loaded for the entire map.
+
 #Flag Counter Slider Translator
 entities.KoseiHelper/FlagCounterSliderTranslator.placements.name.FlagCounterSliderTranslator=Flag Counter Slider Translator
 entities.KoseiHelper/FlagCounterSliderTranslator.placements.name.FCSTranslator=FCS Translator
@@ -368,13 +380,13 @@ entities.KoseiHelper/FallingPlatform.attributes.description.activatedByActors=If
 # Plants
 entities.KoseiHelper/Plant.placements.name.Plant=Plant
 entities.KoseiHelper/Plant.placements.description.Plant=Mario Bros plants, coming in different shapes.
-entities.KoseiHelper/Plant.attributes.description.plantType=Black plants are small and are functionally similar to a spinner but they are affected by gravity and collisions.\nJumping plants are small and jump if you're above them.\nGreen plants move up and down in a cycle.\nRed plants move up only when the player is close.
+entities.KoseiHelper/Plant.attributes.description.plantType=Black plants are small and are functionally similar to a spinner but they are affected by gravity and collisions.\nJumping plants are small and jump if you're above them.\nGreen plants move up and down in a cycle.\nRed plants move up only when the player is close.\nMelon plants always shoot upwards (in groups of 5 seeds) regardless of the player position.
 entities.KoseiHelper/Plant.attributes.description.canShoot=If the plant can shoot. This also determines their sprite variant.
 entities.KoseiHelper/Plant.attributes.description.shootSpeed=A bullet will be shot every x seconds.
 entities.KoseiHelper/Plant.attributes.description.distance=How close in pixels the player needs to be so the plants react (Reds or Jumping ones).
 entities.KoseiHelper/Plant.attributes.description.direction=If the plant should be affected by a different type of gravity or coming from a different direction.
 entities.KoseiHelper/Plant.attributes.description.movingSpeed=A multiplier for the speed at which the plant will move.
-entities.KoseiHelper/Plant.attributes.description.cycleOffset=If the plant is green, this determines whether the plant should wait 2 seconds before moving for the first time.
+entities.KoseiHelper/Plant.attributes.description.cycleOffset=If the plant is green or red, this determines whether the plant should wait 2 seconds before moving for the first time.
 
 #Defrostable Block
 entities.KoseiHelper/DefrostableBlock.placements.name.Defrostable Block=Defrostable Block
@@ -409,6 +421,7 @@ entities.KoseiHelper/ShatterDashBlock.attributes.description.ShakeTime=The time 
 entities.KoseiHelper/ShatterDashBlock.attributes.description.givesCoyote=Whether the block should give 5 coyote frames when shattering.
 entities.KoseiHelper/ShatterDashBlock.attributes.description.requireOnlySpeed=Whether the block can be broken if the speed requirement is met, regardless of the dash state.
 entities.KoseiHelper/ShatterDashBlock.attributes.description.flagSet=The flag that will be set when the block is shattered.
+entities.KoseiHelper/ShatterDashBlock.attributes.name.substractSpeedMode=Speed Mode
 entities.KoseiHelper/ShatterDashBlock.attributes.description.substractSpeedMode=Whether the player speed should be decreased by substraction, multiplication, or set to a fixed number.
 entities.KoseiHelper/ShatterDashBlock.attributes.description.destroyStaticMovers=Whether entities attached to this block should be destroyed (or not loaded if it was permanently destroyed).
 entities.KoseiHelper/ShatterDashBlock.attributes.description.verticalSpeed=Whether the shatter block should use the vertical speed as a requirement instead of the horizontal speed.

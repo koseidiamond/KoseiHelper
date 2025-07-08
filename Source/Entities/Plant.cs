@@ -402,7 +402,7 @@ public class Plant : Actor
 
         if (player != null && canShoot && !player.JustRespawned && !player.IsIntroState)
         {
-            if (plantType == PlantType.Green && isWaitingAtTop)
+            if (plantType == PlantType.Green && (isWaitingAtTop || movingSpeed == 0))
             {
                 if (!isShooting)
                 {
@@ -410,7 +410,7 @@ public class Plant : Actor
                     Add(new Coroutine(ShootCycle()));
                 }
             }
-            if (plantType == PlantType.Red && isWaitingAtTop)
+            if (plantType == PlantType.Red && (isWaitingAtTop || movingSpeed == 0))
             {
                 if (!isShooting)
                 {
