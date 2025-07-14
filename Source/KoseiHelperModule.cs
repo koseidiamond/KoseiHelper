@@ -1,4 +1,5 @@
-﻿using Celeste.Mod.KoseiHelper.Entities;
+﻿using Celeste.Mod.KoseiHelper.DecalRegistry;
+using Celeste.Mod.KoseiHelper.Entities;
 using MonoMod.ModInterop;
 using System;
 
@@ -64,6 +65,8 @@ public class KoseiHelperModule : EverestModule
             collabUtils2Loaded = true;
         if (!helpingHandLoaded && Everest.Loader.DependencyLoaded(new EverestModuleMetadata { Name = "MaxHelpingHand", Version = new Version(1, 33, 6) }))
             helpingHandLoaded = true;
+
+        Mod.DecalRegistry.AddPropertyHandler<KillDecalRegistryHandler>();
     }
 
     public override void Unload()
@@ -91,10 +94,6 @@ public class KoseiHelperModule : EverestModule
         if (KoseiHelperModule.Session.oobClimbFix)
             return true;
         else
-        {
-            if (self.Left + (float)(dir * 2) >= (float)self.level.Bounds.Left)
-                return self.Right + (float)(dir * 2) < (float)self.level.Bounds.Right;
-        }
-        return false;
+            return orig(self, dir);
     }
 }

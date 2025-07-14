@@ -144,7 +144,8 @@ SpawnController.fieldInformation = function (entity) return {
 		options = {
 		"None",
 		"TTL",
-		"Flag"
+		"Flag",
+		"TTLFlag"
 		},
 		editable = false
 	},
@@ -315,10 +316,10 @@ function SpawnController.ignoredFields(entity)
 		doNotIgnore("spawnFlag")
 		doNotIgnore("spawnFlagValue")
 	end
-	if entity.despawnMethod == "TTL" then
+	if entity.despawnMethod == "TTL" or entity.despawnMethod == "TTLFlag" then
 		doNotIgnore("timeToLive")
 	end
-	if entity.despawnMethod == "Flag" then
+	if entity.despawnMethod == "Flag" or entity.despawnMethod == "TTLFlag" then
 		doNotIgnore("flagToLive")
 	end
 	if entity.spawnCondition == "OnSpeedX" then
@@ -483,11 +484,19 @@ function SpawnController.texture(room, entity)
     if entityToSpawn == "Puffer" then
         return "objects/KoseiHelper/Controllers/SpawnController/Puffer"
     elseif entityToSpawn == "Cloud" then
-        return "objects/KoseiHelper/Controllers/SpawnController/Cloud"
+	if entity.cloudFragile == true then
+			return "objects/KoseiHelper/Controllers/SpawnController/CloudFragile"
+		else
+			return "objects/KoseiHelper/Controllers/SpawnController/Cloud"
+		end
     elseif entityToSpawn == "BadelineBoost" then
         return "objects/KoseiHelper/Controllers/SpawnController/BadelineBoost"
     elseif entityToSpawn == "Booster" then
-        return "objects/KoseiHelper/Controllers/SpawnController/Booster"
+		if entity.boosterRed == true then
+			return "objects/KoseiHelper/Controllers/SpawnController/Booster"
+		else
+			return "objects/KoseiHelper/Controllers/SpawnController/BoosterGreen"
+		end
 	elseif entityToSpawn == "Bumper" then
         return "objects/KoseiHelper/Controllers/SpawnController/Bumper"
 	elseif entityToSpawn == "IceBlock" then
@@ -517,7 +526,11 @@ function SpawnController.texture(room, entity)
 	elseif entityToSpawn == "BounceBlock" then
 		return "objects/KoseiHelper/Controllers/SpawnController/BounceBlock"
 	elseif entityToSpawn == "Refill" then
-		return "objects/KoseiHelper/Controllers/SpawnController/Refill"
+	if entity.refillTwoDashes == true then
+			return "objects/KoseiHelper/Controllers/SpawnController/RefillPink"
+		else
+			return "objects/KoseiHelper/Controllers/SpawnController/Refill"
+		end
 	elseif entityToSpawn == "GlassBlock" then
 		return "objects/KoseiHelper/Controllers/SpawnController/GlassBlock"
 	elseif entityToSpawn == "JumpthruPlatform" then
