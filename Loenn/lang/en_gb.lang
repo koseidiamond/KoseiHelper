@@ -96,6 +96,7 @@ entities.KoseiHelper/SetFlagOnBerryCollectionController.attributes.description.r
 entities.KoseiHelper/SetFlagOnBerryCollectionController.attributes.description.reactToGhosts=Whether the flag should be set regardless of Ghost-ness (Default),\nonly for Ghosts (React), or only for non-Ghosts (Ignore).\nOther attributes can mess with this setting!\nFor example, a winged ghost will be flagged if it's set to Ignore Ghosts but doesn't Ignore Wingeds!
 entities.KoseiHelper/SetFlagOnBerryCollectionController.attributes.description.global=Whether this controller should be loaded for the entire map.
 entities.KoseiHelper/SetFlagOnBerryCollectionController.attributes.description.flagValue=The value of the flag that will be set when the conditions are met.
+entities.KoseiHelper/SetFlagOnBerryCollectionController.attributes.description.berryID=The entity ID of a specific berry, regardless of this type.\nIf you want to check for a type of berry instead of a specific berry, leave it at 0.\nThe berry ID will check for that one berry regardless of other conditions.
 
 #Flag Counter Slider Translator
 entities.KoseiHelper/FlagCounterSliderTranslator.placements.name.FlagCounterSliderTranslator=Flag Counter Slider Translator

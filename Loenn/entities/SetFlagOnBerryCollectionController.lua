@@ -17,6 +17,7 @@ SetFlagOnBerryCollectionController.placements = {
 		reactToGhosts = "Default",
 		global = false,
 		flagValue = true,
+		berryID = 0
 		}
 	}
 }
@@ -69,7 +70,8 @@ SetFlagOnBerryCollectionController.fieldInformation = {
 			"Ignore",
 		},
 		editable = false
-	}
+	},
+	berryID = { fieldType = "integer" }
 }
 
 SetFlagOnBerryCollectionController.fieldOrder = {
@@ -77,6 +79,7 @@ SetFlagOnBerryCollectionController.fieldOrder = {
 	"y",
 	"flag",
 	"counter",
+	"berryID",
 	"reactToGoldens",
 	"reactToSilvers",
 	"reactToReds",
