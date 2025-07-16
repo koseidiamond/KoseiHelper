@@ -13,6 +13,8 @@ FlagCounterSliderTranslator.placements = {
 			counterName = "",
 			sliderName = "",
 			
+			flagSuffix = false,
+			
 			valueWhileFalse = 0,
 			valueWhileTrue = 1,
 			minValueForFalse = 0,
@@ -37,6 +39,7 @@ FlagCounterSliderTranslator.fieldOrder = {
 	"minValueForFalse",
 	"maxValueForTrue",
 	"multiplierFactor",
+	"flagSuffix",
 	"absoluteValue",
 	"reverseValue"
 }
@@ -65,7 +68,8 @@ function FlagCounterSliderTranslator.ignoredFields(entity)
 	"valueWhileFalse",
 	"valueWhileTrue",
 	"minValueForFalse",
-	"maxValueForTrue",			
+	"maxValueForTrue",
+	"flagSuffix",	
 	"absoluteValue",
 	"multiplierFactor"
 	}
@@ -96,6 +100,7 @@ function FlagCounterSliderTranslator.ignoredFields(entity)
 		doNotIgnore("flagName")
 		doNotIgnore("minValueForFalse")
 		doNotIgnore("maxValueForTrue")
+		doNotIgnore("flagSuffix")
 	end
 	if entity.mode == "CounterToSlider" then
 		doNotIgnore("counterName")
@@ -107,6 +112,7 @@ function FlagCounterSliderTranslator.ignoredFields(entity)
 		doNotIgnore("flagName")
 		doNotIgnore("minValueForFalse")
 		doNotIgnore("maxValueForTrue")
+		doNotIgnore("flagSuffix")
 	end
 	if entity.mode == "SliderToCounter" then
 		doNotIgnore("sliderName")

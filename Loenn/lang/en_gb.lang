@@ -111,6 +111,7 @@ entities.KoseiHelper/FlagCounterSliderTranslator.attributes.description.valueWhi
 entities.KoseiHelper/FlagCounterSliderTranslator.attributes.description.valueWhileTrue=The value of this counter/slider while the flag is true.
 entities.KoseiHelper/FlagCounterSliderTranslator.attributes.description.minValueForFalse=The flag will be turned to false once the counter/slider reaches this value or is below it.
 entities.KoseiHelper/FlagCounterSliderTranslator.attributes.description.maxValueForTrue=The flag will be turned to true once the counter/slider reaches this value or is above it.
+entities.KoseiHelper/FlagCounterSliderTranslator.attributes.description.flagSuffix=If a suffix is used, the flag name will include the counter/slider (no decimals) value after the name.\nFor example, if the counter is 5 and the flag is "hi", the flag set will be "hi5".\nThen, when counter increases to 6, the flag "hi5" will stay true and the flag "hi6" will also be true.
 entities.KoseiHelper/FlagCounterSliderTranslator.attributes.description.absoluteValue=Whether the values of this counter/slider will be always considered positive.
 entities.KoseiHelper/FlagCounterSliderTranslator.attributes.description.reverseValue=Reverts the value after being translated.\nFlags are false when the counter/slider has the max value and true when the counter/slider has the min value.\nCounters/Sliders will have the opposed sign.
 entities.KoseiHelper/FlagCounterSliderTranslator.attributes.description.multiplierFactor=The resulting counter/slider will have the value multiplied by this factor.

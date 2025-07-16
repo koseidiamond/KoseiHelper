@@ -30,9 +30,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Reference Include="Celeste">
-        <HintPath>..\..\..\Celeste.dll</HintPath>
-      </Reference>
       <Reference Include="CollabUtils2">
         <HintPath>..\lib\CollabUtils2.dll</HintPath>
       </Reference>

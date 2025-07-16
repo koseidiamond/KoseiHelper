@@ -27,6 +27,7 @@ public class FlagCounterSliderTranslator : Entity
     public float minValueForFalse, maxValueForTrue;
     public bool absoluteValue, reverseValue;
     public float multiplierFactor;
+    public bool flagSuffix;
     public FlagCounterSliderTranslator(EntityData data, Vector2 offset) : base(data.Position + offset)
     {
         base.Tag = Tags.Global;
@@ -35,6 +36,8 @@ public class FlagCounterSliderTranslator : Entity
         flagName = data.Attr("flagName", "");
         counterName = data.Attr("counterName", "");
         sliderName = data.Attr("sliderName", "");
+
+        flagSuffix = data.Bool("flagSuffix", false);
 
         valueWhileFalse = data.Float("valueWhileFalse", 0f);
         valueWhileTrue = data.Float("valueWhileTrue", 1f);
@@ -86,6 +89,11 @@ public class FlagCounterSliderTranslator : Entity
                 }
                 break;
             case FCS.CounterToFlag:
+                if (flagSuffix)
+                {
+                    session.SetFlag(flagName + session.GetCounter(counterName).ToString(), true);
+                    break;
+                }
                 if (absoluteValue)
                 {
                     if (Math.Abs(session.GetCounter(counterName)) <= minValueForFalse)
@@ -122,6 +130,11 @@ public class FlagCounterSliderTranslator : Entity
                 }
                 break;
             case FCS.SliderToFlag:
+                if (flagSuffix)
+                {
+                    session.SetFlag(flagName + session.GetSlider(sliderName).ToString(), true);
+                    break;
+                }
                 if (absoluteValue)
                 {
                     if (Math.Abs(session.GetSlider(sliderName)) <= minValueForFalse)
