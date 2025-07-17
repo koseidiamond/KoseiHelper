@@ -15,7 +15,7 @@ public class DebugMapController : Entity
     private static bool renderBerries, renderSpawns;
     private static bool renderKeys = true;
     private static bool redBlink, ignoreDummy;
-    private static Color gridColor, jumpthruColor, berryColor, checkpointColor, spawnColor, bgTileColor, fgTileColor, levelColor, keyColor, roomBgColor, fillerOutlineColor;
+    private static Color gridColor, jumpthruColor, berryColor, checkpointColor, spawnColor, bgTileColor, fgTileColor, levelColor, keyColor, roomBgColor;
     private static bool disallowDebugMap;
     private static string blockDebugMap;
     private static string roomsToAffect;
@@ -52,7 +52,6 @@ public class DebugMapController : Entity
         spawnColor = data.HexColor("spawnColor", Color.FromNonPremultiplied(255, 0, 0, 255)); // Red
         bgTileColor = data.HexColor("bgTileColor", Color.FromNonPremultiplied(47, 79, 79, 255)); // DarkSlateGray
         fgTileColor = data.HexColor("fgTileColor", Color.FromNonPremultiplied(255, 255, 255, 255)); // White
-        fillerOutlineColor = data.HexColor("fillerOutlineColor", Color.FromNonPremultiplied(255, 165, 0, 255)); // Orange
         keyColor = data.HexColor("keyColor", Color.FromNonPremultiplied(255, 215, 0, 255)); // Gold (not done)
         levelColor = Color.LightGray; // I don't know where is this color used
     }
@@ -160,7 +159,7 @@ public class DebugMapController : Entity
                 return;
             }
             Draw.Rect(self.X, self.Y, self.Width, self.Height, levelColor);
-            Draw.Rect((float)(self.X + self.Width) - self.resizeHoldSize.X, (float)(self.Y + self.Height) - self.resizeHoldSize.Y, self.resizeHoldSize.X, self.resizeHoldSize.Y, fillerOutlineColor);
+            Draw.Rect((float)(self.X + self.Width) - self.resizeHoldSize.X, (float)(self.Y + self.Height) - self.resizeHoldSize.Y, self.resizeHoldSize.X, self.resizeHoldSize.Y, Color.Orange);
         }
         else
             orig(self, camera, allLevels);
