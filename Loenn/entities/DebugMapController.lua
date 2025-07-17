@@ -21,6 +21,7 @@ DebugMapController.placements = {
 		bgTileColor = "2F4F4F", -- DarkSlateGray
 		fgTileColor = "FFFFFF",
 		roomBgColor = "000000",
+		fillerOutlineColor = "FFA500",
 		ignoreDummy = false,
 		roomsToAffect = ""
 		}
@@ -52,6 +53,8 @@ DebugMapController.fieldOrder = {
 	"fgTileColor",
 	"roomBgColor",
 	"gridColor",
+	"fillerOutlineColor",
+	"roomsToAffect",
 	"redBlink",
 	"ignoreDummy",
 	"hideBerries",
