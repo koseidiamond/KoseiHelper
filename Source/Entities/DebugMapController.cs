@@ -151,7 +151,7 @@ public class DebugMapController : Entity
                     if (h > self.Height - y)
                         h = self.Height - y;
 
-                    //if (w > 0 && h > 0)
+                    if (w > 0 && h > 0)
                     {
                         DebugMapTile debugTile = new DebugMapTile(entity_data, Vector2.Zero);
                         Rectangle rect = new Rectangle(self.X + x, self.Y + y, w, h);

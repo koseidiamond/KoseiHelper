@@ -57,7 +57,7 @@ entities.KoseiHelper/DebugMapTile.attributes.description.message=The text that w
 entities.KoseiHelper/DebugMapTile.attributes.description.texture=The path to your image, relative to Gameplay/.\nIf the path ends with a number, it needs the number too, since images can't be animated.
 entities.KoseiHelper/DebugMapTile.attributes.description.scaleX=The horizontal scale of the image.
 entities.KoseiHelper/DebugMapTile.attributes.description.scaleY=The vertical scale of the image.
-entities.KoseiHelper/DebugMapTile.attributes.description.rotation=The rotation of the image, in degrees.
+entities.KoseiHelper/DebugMapTile.attributes.description.rotation=The rotation of the image, in radians.
 
 # Game Data Controller
 entities.KoseiHelper/GameDataController.placements.name.GameDataController=Game Data Controller
@@ -819,8 +819,8 @@ triggers.KoseiHelper/RestartGameTrigger.placements.description.RestartGameTrigge
 # Set Window Size Trigger
 triggers.KoseiHelper/SetWindowSizeTrigger.placements.name.SetWindowSizeTrigger=Set Window Size Trigger
 triggers.KoseiHelper/SetWindowSizeTrigger.placements.description.SetWindowSizeTrigger=Forces Celeste.exe to be resized to the specified size in the screen.
-triggers.KoseiHelper/SetWindowSizeTrigger.attributes.description.windowWidth=The width of the game.
-triggers.KoseiHelper/SetWindowSizeTrigger.attributes.description.windowHeight=The height of the game.
+triggers.KoseiHelper/SetWindowSizeTrigger.attributes.description.windowWidth=The width of the game, in pixels.
+triggers.KoseiHelper/SetWindowSizeTrigger.attributes.description.windowHeight=The height of the game, in pixels.
 triggers.KoseiHelper/SetWindowSizeTrigger.attributes.description.onLeave=Whether the trigger should have effect when the player leaves the trigger.
 triggers.KoseiHelper/SetWindowSizeTrigger.attributes.description.fullScreen=Whether the trigger should force the game to be full screen instead of windowed.
 

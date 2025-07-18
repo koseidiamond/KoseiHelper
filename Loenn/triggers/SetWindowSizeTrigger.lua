@@ -5,10 +5,10 @@ SetWindowSizeTrigger.name = "KoseiHelper/SetWindowSizeTrigger"
 SetWindowSizeTrigger.placements = {
     name = "SetWindowSizeTrigger",
     data = {
-		widthFrom = 100,
-		heightFrom = 100,
-		widthTo = 100,
-		heightTo = 100,
+		widthFrom = 1920,
+		heightFrom = 1080,
+		widthTo = 1920,
+		heightTo = 1080,
 		fullScreen = false,
 		positionMode = "NoEffect"
     }

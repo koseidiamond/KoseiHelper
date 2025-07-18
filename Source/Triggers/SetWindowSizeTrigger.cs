@@ -13,10 +13,10 @@ public class SetWindowSizeTrigger : Trigger
     private string direction;
     public SetWindowSizeTrigger(EntityData data, Vector2 offset) : base(data, offset)
     {
-        windowWidthFrom = data.Int("widthFrom", 100);
-        windowHeightFrom = data.Int("heightFrom", 100);
-        windowWidthTo = data.Int("widthTo", 100);
-        windowHeightTo = data.Int("heightTo", 100);
+        windowWidthFrom = data.Int("widthFrom", 1920);
+        windowHeightFrom = data.Int("heightFrom", 1080);
+        windowWidthTo = data.Int("widthTo", 1920);
+        windowHeightTo = data.Int("heightTo", 1080);
         fullScreen = data.Bool("fullScreen", false);
         direction = data.Attr("positionMode");
         if (!string.IsNullOrEmpty(direction) && Enum.TryParse<PositionModes>(direction.ToString(), ignoreCase: true, out var result))
