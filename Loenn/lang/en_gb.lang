@@ -45,6 +45,11 @@ entities.KoseiHelper/DebugRenderer.attributes.description.scaled=If the custom i
 entities.KoseiHelper/DebugRenderer.attributes.description.nonDebug=If the shape should also be displayed while not using debug.\nWARNING: Circles display as a rhombus in this mode.
 entities.KoseiHelper/DebugRenderer.attributes.description.depth=The depth at which the Renderer appears in Lönn. Debug always appears above everything else in-game.
 
+# Debug Map Tile
+entities.KoseiHelper/DebugRenderer.placements.name.DebugMapTile=Debug Map Tile
+entities.KoseiHelper/DebugRenderer.placements.description.DebugMapTile=Displays colored tiles on the debug map (when pressing F6).\nNote that they only work inside room bounds.
+entities.KoseiHelper/DebugRenderer.attributes.description.color=The color
+
 # Game Data Controller
 entities.KoseiHelper/GameDataController.placements.name.GameDataController=Game Data Controller
 entities.KoseiHelper/GameDataController.placements.description.GameDataController=Sets and updates several useful flags (bools), counters (ints) and sliders (floats).\nIt is recommended to use Mapping Utils to check these values in game.
@@ -118,7 +123,7 @@ entities.KoseiHelper/FlagCounterSliderTranslator.attributes.description.multipli
 
 # Debug Map Controller
 entities.KoseiHelper/DebugMapController.placements.name.DebugMapController=Debug Map Controller
-entities.KoseiHelper/DebugMapController.placements.description.DebugMapController=Modifies the way the Debug Map is rendered. Persistent controller.\nYou should have only one of these in your map.
+entities.KoseiHelper/DebugMapController.placements.description.DebugMapController=Modifies the way the Debug Map is rendered. Persistent controller.\nWARNING: You should have only one of these in your map.\nIf you need this controller only for Debug Map Tiles, you can set the Rooms To Affect field to a nonexisting name.
 entities.KoseiHelper/DebugMapController.attributes.description.hideKeys=Whether the keys should be hidden in the Debug Map.
 entities.KoseiHelper/DebugMapController.attributes.description.hideBerries=Whether the berries should be hidden in the Debug Map.\nPlayers can still know where they are if they hold the Q key.
 entities.KoseiHelper/DebugMapController.attributes.description.hideSpawns=Whether the spawns should be hidden in the Debug Map.

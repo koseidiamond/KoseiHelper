@@ -57,12 +57,34 @@ public class DebugMapController : Entity
     }
 
     public static int EditorColorIndex;
+    private static Dictionary<LevelTemplate, List<ColoredRectangle>> dict_levels = new Dictionary<LevelTemplate, List<ColoredRectangle>>();
+    public struct ColoredRectangle
+    {
+        public Rectangle Rectangle { get; }
+        public Color Color { get; }
+
+        public ColoredRectangle(Rectangle rectangle, Color color)
+        {
+            Rectangle = rectangle;
+            Color = color;
+        }
+    }
+
+    private static Color GetTileColorFromEntity(EntityData entity_data)
+    {
+        DebugMapTile debugTile = new DebugMapTile(entity_data, Vector2.Zero);
+        return debugTile.color;
+    }
 
     public static void Load()
     {
-        On.Celeste.Editor.MapEditor.RenderKeys += RenderKeys;
-        On.Celeste.Editor.LevelTemplate.RenderContents += RenderLevels;
-        On.Celeste.Editor.MapEditor.ctor += MapEditorCtor;
+        //On.Celeste.Editor.MapEditor.RenderKeys += RenderKeys;
+        //On.Celeste.Editor.LevelTemplate.RenderContents += RenderLevels;
+        //On.Celeste.Editor.MapEditor.ctor += MapEditorCtor;
+
+        dict_levels = new Dictionary<LevelTemplate, List<ColoredRectangle>>();
+        On.Celeste.Editor.LevelTemplate.ctor_LevelData += OnLevelTemplate_ctor;
+        On.Celeste.Editor.LevelTemplate.RenderContents += OnLevelTemplate_RenderContents;
         //On.Celeste.Editor.LevelTemplate.ctor_LevelData += LevelTemplate_ctor;
     }
 
@@ -71,7 +93,72 @@ public class DebugMapController : Entity
         On.Celeste.Editor.MapEditor.RenderKeys -= RenderKeys;
         On.Celeste.Editor.LevelTemplate.RenderContents -= RenderLevels;
         On.Celeste.Editor.MapEditor.ctor -= MapEditorCtor;
+
+        // These two hooks are mostly copied from EvaHelper!
+        On.Celeste.Editor.LevelTemplate.ctor_LevelData -= OnLevelTemplate_ctor;
+        On.Celeste.Editor.LevelTemplate.RenderContents -= OnLevelTemplate_RenderContents;
+
         //On.Celeste.Editor.LevelTemplate.ctor_LevelData -= LevelTemplate_ctor;
+    }
+
+    private static void OnLevelTemplate_RenderContents(On.Celeste.Editor.LevelTemplate.orig_RenderContents orig,
+            LevelTemplate self, Camera camera, List<LevelTemplate> allLevels)
+    {
+        orig(self, camera, allLevels);
+        if (dict_levels.TryGetValue(self, out List<ColoredRectangle> coloredRectangles))
+        {
+            foreach (ColoredRectangle coloredRect in coloredRectangles)
+            {
+                //ActiveFont.Draw("hello", new Vector2(coloredRect.Rectangle.X, coloredRect.Rectangle.Y), Vector2.Zero, new Vector2(0.1f,0.1f), coloredRect.Color);
+                //Draw.Circle(coloredRect.Rectangle.X, coloredRect.Rectangle.Y, coloredRect.Rectangle.Width, coloredRect.Color, 99);
+                Draw.Rect(coloredRect.Rectangle.X, coloredRect.Rectangle.Y, coloredRect.Rectangle.Width, coloredRect.Rectangle.Height, coloredRect.Color);
+            }
+        }
+    }
+
+    private static void OnLevelTemplate_ctor(On.Celeste.Editor.LevelTemplate.orig_ctor_LevelData orig, LevelTemplate self, LevelData data)
+    {
+        orig(self, data);
+        if (!dict_levels.ContainsKey(self))
+        {
+            List<EntityData> list_entities = data.Entities.FindAll(t => t.Name.StartsWith("KoseiHelper/DebugMapTile"));
+            if (list_entities.Count > 0)
+            {
+                Logger.Debug(nameof(KoseiHelperModule), $"This map contains Debug Map Tiles!");
+                List<ColoredRectangle> list_coloredRectangles = new List<ColoredRectangle>();
+                List<Rectangle> list_rectangles = [];
+                foreach (EntityData entity_data in list_entities)
+                {
+                    int x = (int)entity_data.Position.X / 8;
+                    int y = (int)entity_data.Position.Y / 8;
+                    int w = entity_data.Width / 8;
+                    int h = entity_data.Height / 8;
+                    if (x < 0)
+                    {
+                        w += x;
+                        x = 0;
+                    }
+                    if (y < 0)
+                    {
+                        h += y;
+                        y = 0;
+                    }
+
+                    if (w > self.Width - x)
+                        w = self.Width - x;
+                    if (h > self.Height - y)
+                        h = self.Height - y;
+                    
+                    if (w > 0 && h > 0)
+                    {
+                        Color tileColor = GetTileColorFromEntity(entity_data);
+                        Rectangle rect = new Rectangle(self.X + x, self.Y + y, w, h);
+                        list_coloredRectangles.Add(new ColoredRectangle(rect, tileColor));
+                    }
+                }
+                dict_levels[self] = list_coloredRectangles;
+            }
+        }
     }
 
     /*private static void LevelTemplate_ctor(On.Celeste.Editor.LevelTemplate.orig_ctor_LevelData orig, LevelTemplate self, LevelData data)
