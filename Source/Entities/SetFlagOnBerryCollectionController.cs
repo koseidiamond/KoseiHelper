@@ -2,7 +2,6 @@ using Celeste.Mod.CollabUtils2.Entities;
 using Celeste.Mod.Entities;
 using Microsoft.Xna.Framework;
 using Monocle;
-using System;
 using System.Runtime.CompilerServices;
 
 namespace Celeste.Mod.KoseiHelper.Entities

@@ -224,7 +224,7 @@ public class SpawnController : Entity
         dashCount = 0;
         if (persistency)
             base.Tag = Tags.Persistent;
-        if (data.Bool("transitionUpdate",false) || entityToSpawn == EntityType.Player)
+        if (data.Bool("transitionUpdate", false) || entityToSpawn == EntityType.Player)
             base.Tag = Tags.TransitionUpdate;
 
         //Entity specific attributes

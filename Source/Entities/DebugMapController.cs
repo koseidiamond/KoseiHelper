@@ -57,23 +57,23 @@ public class DebugMapController : Entity
     }
 
     public static int EditorColorIndex;
-    private static Dictionary<LevelTemplate, List<ColoredRectangle>> dict_levels = new Dictionary<LevelTemplate, List<ColoredRectangle>>();
-    public struct ColoredRectangle
+    private static Dictionary<LevelTemplate, List<CustomShape>> dict_levels = new Dictionary<LevelTemplate, List<CustomShape>>();
+    public struct CustomShape
     {
-        public Rectangle Rectangle { get; }
-        public Color Color { get; }
+        public DebugMapTile.Shape shape;
+        public Rectangle rect { get; }
+        public Color color { get; }
+        public float textSize { get; }
+        public string message { get; }
 
-        public ColoredRectangle(Rectangle rectangle, Color color)
+        public CustomShape(DebugMapTile.Shape shape, Rectangle rect, Color color, float textSize, string message)
         {
-            Rectangle = rectangle;
-            Color = color;
+            this.shape = shape;
+            this.rect = rect;
+            this.color = color;
+            this.textSize = textSize;
+            this.message = message;
         }
-    }
-
-    private static Color GetTileColorFromEntity(EntityData entity_data)
-    {
-        DebugMapTile debugTile = new DebugMapTile(entity_data, Vector2.Zero);
-        return debugTile.color;
     }
 
     public static void Load()
@@ -82,7 +82,7 @@ public class DebugMapController : Entity
         //On.Celeste.Editor.LevelTemplate.RenderContents += RenderLevels;
         //On.Celeste.Editor.MapEditor.ctor += MapEditorCtor;
 
-        dict_levels = new Dictionary<LevelTemplate, List<ColoredRectangle>>();
+        dict_levels = new Dictionary<LevelTemplate, List<CustomShape>>();
         On.Celeste.Editor.LevelTemplate.ctor_LevelData += OnLevelTemplate_ctor;
         On.Celeste.Editor.LevelTemplate.RenderContents += OnLevelTemplate_RenderContents;
         //On.Celeste.Editor.LevelTemplate.ctor_LevelData += LevelTemplate_ctor;
@@ -105,13 +105,33 @@ public class DebugMapController : Entity
             LevelTemplate self, Camera camera, List<LevelTemplate> allLevels)
     {
         orig(self, camera, allLevels);
-        if (dict_levels.TryGetValue(self, out List<ColoredRectangle> coloredRectangles))
+        if (dict_levels.TryGetValue(self, out List<CustomShape> coloredRectangles))
         {
-            foreach (ColoredRectangle coloredRect in coloredRectangles)
+            foreach (CustomShape debugShape in coloredRectangles)
             {
-                //ActiveFont.Draw("hello", new Vector2(coloredRect.Rectangle.X, coloredRect.Rectangle.Y), Vector2.Zero, new Vector2(0.1f,0.1f), coloredRect.Color);
-                //Draw.Circle(coloredRect.Rectangle.X, coloredRect.Rectangle.Y, coloredRect.Rectangle.Width, coloredRect.Color, 99);
-                Draw.Rect(coloredRect.Rectangle.X, coloredRect.Rectangle.Y, coloredRect.Rectangle.Width, coloredRect.Rectangle.Height, coloredRect.Color);
+                DebugMapTile debugTile = new DebugMapTile(new Vector2(debugShape.rect.X, debugShape.rect.Y),
+                    debugShape.color, debugShape.rect.Width, debugShape.rect.Height, debugShape.shape, debugShape.textSize, debugShape.message);
+                switch (debugTile.shape)
+                {
+                    case DebugMapTile.Shape.Circle:
+                        Draw.Circle(debugShape.rect.X, debugShape.rect.Y, debugShape.rect.Width, debugShape.color, 5, 99);
+                        break;
+                    case DebugMapTile.Shape.Decal:
+                        Image image = new Image(GFX.Game["characters/bird/Recover03"]);
+                        image.Color = debugShape.color;
+                        image.Position = new Vector2(debugShape.rect.X, debugShape.rect.Y);
+                        image.Render();
+                        break;
+                    case DebugMapTile.Shape.Text:
+                        ActiveFont.Draw(debugShape.message, new Vector2(debugShape.rect.X, debugShape.rect.Y), Vector2.Zero,
+                            new Vector2(debugShape.textSize / 10, debugShape.textSize / 10), debugShape.color);
+                        break;
+                    default: //Tile
+                        Draw.Rect(debugShape.rect.X, debugShape.rect.Y, debugShape.rect.Width, debugShape.rect.Height, debugShape.color);
+                        break;
+                }
+
+
             }
         }
     }
@@ -125,7 +145,7 @@ public class DebugMapController : Entity
             if (list_entities.Count > 0)
             {
                 Logger.Debug(nameof(KoseiHelperModule), $"This map contains Debug Map Tiles!");
-                List<ColoredRectangle> list_coloredRectangles = new List<ColoredRectangle>();
+                List<CustomShape> list_coloredRectangles = new List<CustomShape>();
                 List<Rectangle> list_rectangles = [];
                 foreach (EntityData entity_data in list_entities)
                 {
@@ -148,35 +168,19 @@ public class DebugMapController : Entity
                         w = self.Width - x;
                     if (h > self.Height - y)
                         h = self.Height - y;
-                    
+
                     if (w > 0 && h > 0)
                     {
-                        Color tileColor = GetTileColorFromEntity(entity_data);
+                        DebugMapTile debugTile = new DebugMapTile(entity_data, Vector2.Zero);
                         Rectangle rect = new Rectangle(self.X + x, self.Y + y, w, h);
-                        list_coloredRectangles.Add(new ColoredRectangle(rect, tileColor));
+                        CustomShape customShape = new CustomShape(debugTile.shape, rect, debugTile.color, debugTile.textSize, debugTile.message);
+                        list_coloredRectangles.Add(customShape);
                     }
                 }
                 dict_levels[self] = list_coloredRectangles;
             }
         }
     }
-
-    /*private static void LevelTemplate_ctor(On.Celeste.Editor.LevelTemplate.orig_ctor_LevelData orig, LevelTemplate self, LevelData data)
-    {
-        orig(self, data);
-        bool controllerFound = false;
-        foreach (EntityData entity in data.Entities)
-        {
-            if (entity.Name != "KoseiHelper/DebugMapController")
-                continue;
-
-            if (controllerFound)
-                throw new InvalidOperationException($"Found more than one Debug Map Controller in room {data.Name}.");
-
-            // "and just... do your magic" - Snip
-            controllerFound = true;
-        }
-    }*/
 
     private static void RenderKeys(On.Celeste.Editor.MapEditor.orig_RenderKeys orig, MapEditor self)
     {
@@ -289,4 +293,21 @@ public class DebugMapController : Entity
         if (!string.IsNullOrEmpty(blockDebugMap) && KoseiHelperModule.Session.DebugMapModified)
             disallowDebugMap = SceneAs<Level>().Session.GetFlag(blockDebugMap);
     }
+
+    /*private static void LevelTemplate_ctor(On.Celeste.Editor.LevelTemplate.orig_ctor_LevelData orig, LevelTemplate self, LevelData data)
+{
+    orig(self, data);
+    bool controllerFound = false;
+    foreach (EntityData entity in data.Entities)
+    {
+        if (entity.Name != "KoseiHelper/DebugMapController")
+            continue;
+
+        if (controllerFound)
+            throw new InvalidOperationException($"Found more than one Debug Map Controller in room {data.Name}.");
+
+        // "and just... do your magic" - Snip
+        controllerFound = true;
+    }
+}*/
 }

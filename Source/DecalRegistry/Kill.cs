@@ -1,7 +1,7 @@
-using System.Xml;
 using Celeste.Mod.Registry.DecalRegistryHandlers;
 using Microsoft.Xna.Framework;
 using Monocle;
+using System.Xml;
 
 namespace Celeste.Mod.KoseiHelper.DecalRegistry;
 
@@ -37,7 +37,7 @@ internal class KillDecalRegistryHandler : DecalRegistryHandler
 
         public override void EntityAwake()
         {
-            
+
             Player player = SceneAs<Level>().Tracker.GetEntity<Player>();
             base.EntityAwake();
         }

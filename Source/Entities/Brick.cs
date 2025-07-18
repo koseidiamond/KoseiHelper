@@ -22,7 +22,7 @@ public class Brick : Solid
     private bool fireMode;
     public Brick(EntityData data, Vector2 offset) : base(data.Position + offset, 16, 16, true)
     {
-        Depth = data.Int("depth",-1000);
+        Depth = data.Int("depth", -1000);
         brickType = data.Enum("type", BrickType.Normal);
         spriteID = data.Attr("sprite", "koseiHelper_Brick");
         Add(sprite = GFX.SpriteBank.Create(spriteID));

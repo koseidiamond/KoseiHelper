@@ -35,7 +35,7 @@ namespace Celeste.Mod.KoseiHelper.Entities
                 }
                 int[] frameArray = frames.ToArray();
 
-                
+
                 Sprite.Add("normal", spriteFileName, spriteDelay, frameArray);
                 //Sprite.Add("normal", "ha", 0.15f, 0, 1, 0, 1, 0, 1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9);
                 Sprite.Play("normal");
@@ -178,7 +178,7 @@ namespace Celeste.Mod.KoseiHelper.Entities
                     else
                         ha.Sprite.Position = Position + new Vector2(ha.Percent * -distance, -10f + (float)(0.0 - Math.Sin(ha.Percent * 13f)) * 4f * sineAmplitude + ha.Percent * -16f);
                 }
-                    ha.Sprite.Render();
+                ha.Sprite.Render();
             }
         }
     }
