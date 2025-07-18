@@ -22,7 +22,7 @@ DebugMapController.placements = {
 		fgTileColor = "FFFFFF",
 		roomBgColor = "000000",
 		ignoreDummy = false,
-		roomsToAffect = ""
+		roomsToAffect = "NonePlease"
 		}
 	}
 }

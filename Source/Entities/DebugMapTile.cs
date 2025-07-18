@@ -14,7 +14,8 @@ public class DebugMapTile : Entity
         Tile,
         Circle,
         Text,
-        Decal
+        Decal,
+        Line
     };
     public Shape shape;
     public float thickness;

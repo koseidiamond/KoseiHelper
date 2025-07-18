@@ -119,45 +119,6 @@ public class DebugMapController : Entity
         //On.Celeste.Editor.LevelTemplate.ctor_LevelData -= LevelTemplate_ctor;
     }
 
-    private static void OnLevelTemplate_RenderContents(On.Celeste.Editor.LevelTemplate.orig_RenderContents orig,
-            LevelTemplate self, Camera camera, List<LevelTemplate> allLevels)
-    {
-        orig(self, camera, allLevels);
-        if (dict_levels.TryGetValue(self, out List<CustomShape> coloredRectangles))
-        {
-            foreach (CustomShape debugShape in coloredRectangles)
-            {
-                DebugMapTile debugTile = new DebugMapTile(new Vector2(debugShape.rect.X, debugShape.rect.Y),
-                    debugShape.color, debugShape.rect.Width, debugShape.rect.Height, debugShape.shape,
-                    debugShape.thickness, debugShape.resolution,
-                    debugShape.textSize, debugShape.message,
-                    debugShape.texture, debugShape.scaleX, debugShape.scaleY, debugShape.rotation);
-                switch (debugTile.shape)
-                {
-                    case DebugMapTile.Shape.Circle:
-                        Draw.Circle(debugShape.rect.Center.X, debugShape.rect.Center.Y, debugShape.rect.Width / 2f, debugShape.color,
-                            debugShape.thickness / 10, debugShape.resolution);
-                        break;
-                    case DebugMapTile.Shape.Decal:
-                        Image image = new Image(GFX.Game["characters/bird/Recover03"]);
-                        image.Color = debugShape.color;
-                        image.Position = new Vector2(debugShape.rect.X, debugShape.rect.Y);
-                        image.Render();
-                        break;
-                    case DebugMapTile.Shape.Text:
-                        ActiveFont.Draw(debugShape.message, new Vector2(debugShape.rect.X, debugShape.rect.Y), Vector2.Zero,
-                            new Vector2(debugShape.textSize / 10, debugShape.textSize / 10), debugShape.color);
-                        break;
-                    default: //Tile
-                        Draw.Rect(debugShape.rect.X, debugShape.rect.Y, debugShape.rect.Width, debugShape.rect.Height, debugShape.color);
-                        break;
-                }
-
-
-            }
-        }
-    }
-
     private static void OnLevelTemplate_ctor(On.Celeste.Editor.LevelTemplate.orig_ctor_LevelData orig, LevelTemplate self, LevelData data)
     {
         orig(self, data);
@@ -200,6 +161,56 @@ public class DebugMapController : Entity
                     }
                 }
                 dict_levels[self] = list_coloredRectangles;
+            }
+        }
+    }
+
+    private static void OnLevelTemplate_RenderContents(On.Celeste.Editor.LevelTemplate.orig_RenderContents orig,
+            LevelTemplate self, Camera camera, List<LevelTemplate> allLevels)
+    {
+        orig(self, camera, allLevels);
+        if (dict_levels.TryGetValue(self, out List<CustomShape> coloredRectangles))
+        {
+            
+            foreach (CustomShape debugShape in coloredRectangles)
+            {
+                DebugMapTile debugTile = new DebugMapTile(new Vector2(debugShape.rect.X, debugShape.rect.Y),
+                    debugShape.color, debugShape.rect.Width, debugShape.rect.Height, debugShape.shape,
+                    debugShape.thickness, debugShape.resolution,
+                    debugShape.textSize, debugShape.message,
+                    debugShape.texture, debugShape.scaleX, debugShape.scaleY, debugShape.rotation);
+                switch (debugTile.shape)
+                {
+                    case DebugMapTile.Shape.Circle:
+                        Draw.Circle(debugShape.rect.Center.X, debugShape.rect.Center.Y, debugShape.rect.Width / 2f, debugShape.color,
+                            debugShape.thickness / 10, debugShape.resolution);
+                        break;
+                    case DebugMapTile.Shape.Decal:
+                        Image image = new Image(GFX.Game[debugShape.texture]);
+                        image.Color = debugShape.color;
+                        // Idk why I'm dividing by 16 but if it works it works
+                        image.Position = new Vector2(debugShape.rect.X - (image.Width * debugShape.scaleX) /16,
+                            debugShape.rect.Y - (image.Height *debugShape.scaleY)/16);
+                        image.Scale = new Vector2(debugShape.scaleX/8, debugShape.scaleY/8);
+                        image.Rotation = debugShape.rotation;
+                        image.Render();
+                        break;
+                    // TODO make angle and length attributes and render properly in plugin too
+                    case DebugMapTile.Shape.Line:
+                        Logger.Debug(nameof(KoseiHelperModule), $"The debug lines are not fully implemented yet!");
+                        Draw.LineAngle(new Vector2(debugShape.rect.X, debugShape.rect.Y),
+                            debugShape.rect.Width, debugShape.rect.Height, debugShape.color);
+                        break;
+                    case DebugMapTile.Shape.Text:
+                        ActiveFont.Draw(debugShape.message, new Vector2(debugShape.rect.X, debugShape.rect.Y), Vector2.Zero,
+                            new Vector2(debugShape.textSize / 10, debugShape.textSize / 10), debugShape.color);
+                        break;
+                    default: //Tile (rectangle)
+                        Draw.Rect(debugShape.rect.X, debugShape.rect.Y, debugShape.rect.Width, debugShape.rect.Height, debugShape.color);
+                        break;
+                }
+
+
             }
         }
     }

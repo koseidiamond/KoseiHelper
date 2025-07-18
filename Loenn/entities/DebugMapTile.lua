@@ -4,6 +4,7 @@ local drawableSprite = require("structs.drawable_sprite")
 local DebugMapTile = {}
 DebugMapTile.name = "KoseiHelper/DebugMapTile"
 DebugMapTile.depth = 1
+
 DebugMapTile.placements = {
     name = "DebugMapTile",
     data = {
@@ -15,12 +16,13 @@ DebugMapTile.placements = {
 		resolution = 500,
 		textSize = 1,
 		message = "hello",
-		texture = "characters/bird/Recover03",
+		texture = "decals/1-forsakencity/flag00",
 		scaleX = 1,
 		scaleY = 1,
 		rotation = 0
     }
 }
+
 DebugMapTile.fieldInformation = {
     color = {
         fieldType = "color"
@@ -138,6 +140,12 @@ function DebugMapTile.canResize(room, entity)
 		return {true,false}
 	elseif entity.shape == "Tile" then
 		return {true,true}
+	end
+end
+
+function onResize(room, entity, offsetX, offsetY, directionX, directionY)
+	if entity.shape == "Circle" then
+		entity.height = entity.width
 	end
 end
 
