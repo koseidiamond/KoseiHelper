@@ -63,16 +63,34 @@ public class DebugMapController : Entity
         public DebugMapTile.Shape shape;
         public Rectangle rect { get; }
         public Color color { get; }
+        public float thickness { get; }
+        public int resolution { get; }
         public float textSize { get; }
         public string message { get; }
+        public string texture { get; }
+        public float scaleX { get; }
+        public float scaleY { get; }
+        public float rotation { get; }
 
-        public CustomShape(DebugMapTile.Shape shape, Rectangle rect, Color color, float textSize, string message)
+        public CustomShape(DebugMapTile.Shape shape, Rectangle rect, Color color,
+            float thickness, int resolution,
+            float textSize, string message,
+            string texture, float scaleX, float scaleY, float rotation)
         {
             this.shape = shape;
             this.rect = rect;
             this.color = color;
+
+            this.thickness = thickness;
+            this.resolution = resolution;
+
             this.textSize = textSize;
             this.message = message;
+
+            this.texture = texture;
+            this.scaleX = scaleX;
+            this.scaleY = scaleY;
+            this.rotation = rotation;
         }
     }
 
@@ -110,11 +128,15 @@ public class DebugMapController : Entity
             foreach (CustomShape debugShape in coloredRectangles)
             {
                 DebugMapTile debugTile = new DebugMapTile(new Vector2(debugShape.rect.X, debugShape.rect.Y),
-                    debugShape.color, debugShape.rect.Width, debugShape.rect.Height, debugShape.shape, debugShape.textSize, debugShape.message);
+                    debugShape.color, debugShape.rect.Width, debugShape.rect.Height, debugShape.shape,
+                    debugShape.thickness, debugShape.resolution,
+                    debugShape.textSize, debugShape.message,
+                    debugShape.texture, debugShape.scaleX, debugShape.scaleY, debugShape.rotation);
                 switch (debugTile.shape)
                 {
                     case DebugMapTile.Shape.Circle:
-                        Draw.Circle(debugShape.rect.X, debugShape.rect.Y, debugShape.rect.Width, debugShape.color, 5, 99);
+                        Draw.Circle(debugShape.rect.Center.X, debugShape.rect.Center.Y, debugShape.rect.Width / 2f, debugShape.color,
+                            debugShape.thickness / 10, debugShape.resolution);
                         break;
                     case DebugMapTile.Shape.Decal:
                         Image image = new Image(GFX.Game["characters/bird/Recover03"]);
@@ -144,7 +166,6 @@ public class DebugMapController : Entity
             List<EntityData> list_entities = data.Entities.FindAll(t => t.Name.StartsWith("KoseiHelper/DebugMapTile"));
             if (list_entities.Count > 0)
             {
-                Logger.Debug(nameof(KoseiHelperModule), $"This map contains Debug Map Tiles!");
                 List<CustomShape> list_coloredRectangles = new List<CustomShape>();
                 List<Rectangle> list_rectangles = [];
                 foreach (EntityData entity_data in list_entities)
@@ -169,11 +190,12 @@ public class DebugMapController : Entity
                     if (h > self.Height - y)
                         h = self.Height - y;
 
-                    if (w > 0 && h > 0)
+                    //if (w > 0 && h > 0)
                     {
                         DebugMapTile debugTile = new DebugMapTile(entity_data, Vector2.Zero);
                         Rectangle rect = new Rectangle(self.X + x, self.Y + y, w, h);
-                        CustomShape customShape = new CustomShape(debugTile.shape, rect, debugTile.color, debugTile.textSize, debugTile.message);
+                        CustomShape customShape = new CustomShape(debugTile.shape, rect, debugTile.color, debugTile.thickness, debugTile.resolution,
+                            debugTile.textSize, debugTile.message, debugTile.texture, debugTile.scaleX, debugTile.scaleY, debugTile.rotation);
                         list_coloredRectangles.Add(customShape);
                     }
                 }

@@ -45,11 +45,19 @@ entities.KoseiHelper/DebugRenderer.attributes.description.scaled=If the custom i
 entities.KoseiHelper/DebugRenderer.attributes.description.nonDebug=If the shape should also be displayed while not using debug.\nWARNING: Circles display as a rhombus in this mode.
 entities.KoseiHelper/DebugRenderer.attributes.description.depth=The depth at which the Renderer appears in Lönn. Debug always appears above everything else in-game.
 
-# Debug Map Tile
-entities.KoseiHelper/DebugRenderer.placements.name.DebugMapTile=Debug Map Tile
-entities.KoseiHelper/DebugRenderer.placements.description.DebugMapTile=Displays colored tiles on the debug map (when pressing F6).\nNote that they only work inside room bounds.
-entities.KoseiHelper/DebugRenderer.attributes.description.color=The color of your shape on the debug map.
-entities.KoseiHelper/DebugRenderer.attributes.description.shape=The shape that will appear on the debug map.\nCircle radius is determined by the width.\nThe text is rendered with Renogare.
+# Debug Map Shapes
+entities.KoseiHelper/DebugMapTile.placements.name.DebugMapTile=Debug Map Shape
+entities.KoseiHelper/DebugMapTile.placements.description.DebugMapTile=Displays colored shapes, text or images on the debug map (when pressing F6).\nNote that they only work if placed inside room bounds.
+entities.KoseiHelper/DebugMapTile.attributes.description.color=The color of your shape on the debug map.
+entities.KoseiHelper/DebugMapTile.attributes.description.shape=The shape that will appear on the debug map.\nCircle radius is determined by the width.\nThe text is rendered with Renogare.
+entities.KoseiHelper/DebugMapTile.attributes.description.thickness=The thickness of the circle.
+entities.KoseiHelper/DebugMapTile.attributes.description.resolution=The resolution of the circle. High values can lag the game, and very low values will look like an asterisk.
+entities.KoseiHelper/DebugMapTile.attributes.description.textSize=The size of the message.
+entities.KoseiHelper/DebugMapTile.attributes.description.message=The text that will be rendered (does not need an English.txt).
+entities.KoseiHelper/DebugMapTile.attributes.description.texture=The path to your image, relative to Gameplay/.
+entities.KoseiHelper/DebugMapTile.attributes.description.scaleX=The horizontal scale of the image.
+entities.KoseiHelper/DebugMapTile.attributes.description.scaleY=The vertical scale of the image.
+entities.KoseiHelper/DebugMapTile.attributes.description.rotation=The rotation of the image, in degrees.
 
 # Game Data Controller
 entities.KoseiHelper/GameDataController.placements.name.GameDataController=Game Data Controller
