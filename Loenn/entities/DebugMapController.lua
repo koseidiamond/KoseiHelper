@@ -43,6 +43,7 @@ DebugMapController.fieldOrder = {
 	"x",
 	"y",
 	"blockDebugMap",
+	"roomsToAffect",
 	"berryColor",
 	--"keyColor",
 	"spawnColor",

@@ -96,9 +96,9 @@ public class DebugMapController : Entity
 
     public static void Load()
     {
-        //On.Celeste.Editor.MapEditor.RenderKeys += RenderKeys;
-        //On.Celeste.Editor.LevelTemplate.RenderContents += RenderLevels;
-        //On.Celeste.Editor.MapEditor.ctor += MapEditorCtor;
+        On.Celeste.Editor.MapEditor.RenderKeys += RenderKeys;
+        On.Celeste.Editor.LevelTemplate.RenderContents += RenderLevels;
+        On.Celeste.Editor.MapEditor.ctor += MapEditorCtor;
 
         dict_levels = new Dictionary<LevelTemplate, List<CustomShape>>();
         On.Celeste.Editor.LevelTemplate.ctor_LevelData += OnLevelTemplate_ctor;
@@ -112,7 +112,6 @@ public class DebugMapController : Entity
         On.Celeste.Editor.LevelTemplate.RenderContents -= RenderLevels;
         On.Celeste.Editor.MapEditor.ctor -= MapEditorCtor;
 
-        // These two hooks are mostly copied from EvaHelper!
         On.Celeste.Editor.LevelTemplate.ctor_LevelData -= OnLevelTemplate_ctor;
         On.Celeste.Editor.LevelTemplate.RenderContents -= OnLevelTemplate_RenderContents;
 
@@ -192,10 +191,11 @@ public class DebugMapController : Entity
                         image.Position = new Vector2(debugShape.rect.X - (image.Width * debugShape.scaleX) /16,
                             debugShape.rect.Y - (image.Height *debugShape.scaleY)/16);
                         image.Scale = new Vector2(debugShape.scaleX/8, debugShape.scaleY/8);
-                        image.Rotation = debugShape.rotation;
+                        // TODO this line needs fixing idk why it's not taking the correct angles
+                        //image.Rotation = debugShape.rotation;
                         image.Render();
                         break;
-                    // TODO make angle and length attributes and render properly in plugin too
+                    // TODO (optional if we want to support Lines): Make angle and length attributes and render properly the plugin
                     case DebugMapTile.Shape.Line:
                         Logger.Debug(nameof(KoseiHelperModule), $"The debug lines are not fully implemented yet!");
                         Draw.LineAngle(new Vector2(debugShape.rect.X, debugShape.rect.Y),

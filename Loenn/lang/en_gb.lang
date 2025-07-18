@@ -149,7 +149,8 @@ entities.KoseiHelper/DebugMapController.attributes.description.roomBgColor=The b
 entities.KoseiHelper/DebugMapController.attributes.description.dummyBorderColor=The color of the border of the dummy rooms (without spawns/fillers).
 entities.KoseiHelper/DebugMapController.attributes.description.ignoreDummy=Whether dummy rooms (without any spawns) should render as normal rooms (with colors).
 entities.KoseiHelper/DebugMapController.attributes.description.blockDebugMap=If this flag is true, the debug map will be completely empty,\npreventing players to see the map or teleport to other rooms.\nLeave empty to always allow opening the debug map.
-entities.KoseiHelper/DebugMapController.attributes.description.roomsToAffect=The rooms that start with this preffix will be affected. Case sensitive.
+entities.KoseiHelper/DebugMapController.attributes.name.roomsToAffect=Room Prefix
+entities.KoseiHelper/DebugMapController.attributes.description.roomsToAffect=The rooms that start with this prefix will be affected. Case sensitive.
 
 
 # Custom Cobweb
