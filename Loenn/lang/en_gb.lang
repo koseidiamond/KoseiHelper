@@ -694,6 +694,10 @@ entities.KoseiHelper/SpawnController.attributes.description.crushBlockAxe=Determ
 entities.KoseiHelper/SpawnController.attributes.description.crushBlockChillout=If the block should have the large face and get tired after being hit.
 entities.KoseiHelper/SpawnController.attributes.description.hasTop=Determines whether or not the water has a top.
 entities.KoseiHelper/SpawnController.attributes.description.hasBottom=Determines whether or not the water has a bottom.
+entities.KoseiHelper/SpawnController.attributes.description.attachToSolid=Whether the spinner attaches to solids, and can be moved by them.
+entities.KoseiHelper/SpawnController.attributes.description.crystalColor=The color of the spinner.
+entities.KoseiHelper/SpawnController.attributes.description.orientation=Whether the spring should face left, right, up, or left/right depending on the facing direction.
+entities.KoseiHelper/SpawnController.attributes.description.playerCanUse=Determines whether the player is able to interact with the spring.
 entities.KoseiHelper/SpawnController.attributes.description.moon=Makes the strawberry render as a moon berry.\nDoes not work with wings in the base game.
 entities.KoseiHelper/SpawnController.attributes.description.winged=The strawberry attempts to vertically rise offscreen when the player dashes.
 entities.KoseiHelper/SpawnController.attributes.description.playerSpriteMode=The sprite of the spawned player clones.
@@ -702,6 +706,7 @@ entities.KoseiHelper/SpawnController.attributes.description.flagStop=The spawner
 entities.KoseiHelper/SpawnController.attributes.description.minCounterCap=The minimum value that the counter "koseiCounter" can reach.
 entities.KoseiHelper/SpawnController.attributes.description.maxCounterCap=The maximum value that the counter "koseiCounter" can reach.
 entities.KoseiHelper/SpawnController.attributes.description.decreaseCounter=If the counter "koseiCounter" should decrease by 1 instead of increase by 1 on each "spawn".
+entities.KoseiHelper/SpawnController.attributes.description.onlyOnSafeGround=Whether the spawn points should only appear while the player is on safe ground (and not in water/air).
 entities.KoseiHelper/SpawnController.attributes.description.transitionUpdate=Whether the Spawner should work even while the player is transitioning between rooms.
 
 #Spawn Controller - custom entity attributes

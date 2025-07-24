@@ -69,6 +69,10 @@ SpawnController.placements = {
 		crushBlockAxe = "Both",
 		crushBlockChillout = false,
 		hasBottom = false,
+		attachToSolid = false,
+		crystalColor = "Blue",
+		orientation = "Floor",
+		playerCanUse = true,
 		winged = false,
 		moon = false,
 		playerSpriteMode = "Madeline",
@@ -78,6 +82,7 @@ SpawnController.placements = {
 		flagStop = false,
 		minCounterCap = 0,
 		maxCounterCap = 9999,
+		onlyOnSafeGround = true,
 		decreaseCounter = false,
 
 		-- Custom Entity (or any entity that can be spawned with EntityData)
@@ -121,11 +126,14 @@ SpawnController.fieldInformation = function (entity) return {
 		"FloatySpaceBlock",
 		"Kevin",
 		"Water",
+		"Spinner",
+		"Spring",
 		"Strawberry",
 		"Player",
 		"Decal",
 		"Flag",
 		"Counter",
+		"SpawnPoint",
 		"CustomEntity"
 		},
 		editable = false
@@ -231,6 +239,25 @@ SpawnController.fieldInformation = function (entity) return {
 		},
 		editable = false
 	},
+	crystalColor = {
+		options = {
+		"Blue",
+		"Red",
+		"Purple",
+		"Rainbow"
+		},
+		editable = false
+	},
+	orientation = {
+		options = {
+		"Floor",
+		"WallLeft",
+		"WallRight",
+		"PlayerFacing",
+		"PlayerFacingOpposite"
+		},
+		editable = false
+	},
 	flagCycleAt = { fieldType = "integer" },
 	minCounterCap = { fieldType = "integer" },
 	maxCounterCap = { fieldType = "integer" },
@@ -286,6 +313,10 @@ function SpawnController.ignoredFields(entity)
 	"crushBlockAxe",
 	"crushBlockChillout",
 	"hasBottom",
+	"attachToSolid",
+	"crystalColor",
+	"orientation",
+	"playerCanUse",
 	"winged",
 	"moon",
 	"playerSpriteMode",
@@ -301,7 +332,8 @@ function SpawnController.ignoredFields(entity)
 	"flagStop",
 	"minCounterCap",
 	"maxCounterCap",
-	"decreaseCounter"
+	"decreaseCounter",
+	"onlyOnSafeGround"
 	}
     local function doNotIgnore(value)
         for i = #ignored, 1, -1 do
@@ -388,6 +420,14 @@ function SpawnController.ignoredFields(entity)
 	if entity.entityToSpawn == "Water" then
 		doNotIgnore("hasBottom")
 	end
+	if entity.entityToSpawn == "Spinner" then
+		doNotIgnore("attachToSolid")
+		doNotIgnore("crystalColor")
+	end
+	if entity.entityToSpawn == "Spring" then
+		doNotIgnore("orientation")
+		doNotIgnore("playerCanUse")
+	end
 	if entity.entityToSpawn == "Strawberry" then
 		doNotIgnore("winged")
 		doNotIgnore("moon")
@@ -407,6 +447,9 @@ function SpawnController.ignoredFields(entity)
 		doNotIgnore("minCounterCap")
 		doNotIgnore("maxCounterCap")
 		doNotIgnore("decreaseCounter")
+	end
+	if entity.entityToSpawn == "SpawnPoint" then
+		doNotIgnore("onlyOnSafeGround")
 	end
 	-- Noded entities
 	if entity.entityToSpawn == "ZipMover" or entity.entityToSpawn == "SwapBlock" or entity.entityToSpawn == "Iceball" then
@@ -543,6 +586,28 @@ function SpawnController.texture(room, entity)
 		return "objects/KoseiHelper/Controllers/SpawnController/CrushBlock"
 	elseif entityToSpawn == "Water" then
 		return "objects/KoseiHelper/Controllers/SpawnController/Water"
+	elseif entityToSpawn == "Spinner" then
+		if entity.crystalColor == "Purple" then
+			return "objects/KoseiHelper/Controllers/SpawnController/SpinnerPurple"
+		elseif entity.crystalColor == "Red" then
+			return "objects/KoseiHelper/Controllers/SpawnController/SpinnerRed"
+		elseif entity.crystalColor == "Rainbow" then
+			return "objects/KoseiHelper/Controllers/SpawnController/SpinnerWhite"
+		else
+			return "objects/KoseiHelper/Controllers/SpawnController/SpinnerBlue"
+		end
+	elseif entityToSpawn == "Spring" then
+		if entity.orientation == "WallLeft" then
+			return "objects/KoseiHelper/Controllers/SpawnController/SpringWallLeft"
+		elseif entity.orientation == "WallRight" then
+			return "objects/KoseiHelper/Controllers/SpawnController/SpringWallRight"
+		elseif entity.orientation == "PlayerFacing" then
+			return "objects/KoseiHelper/Controllers/SpawnController/SpringPlayerFacing"
+		elseif entity.orientation == "PlayerFacingOpposite" then
+			return "objects/KoseiHelper/Controllers/SpawnController/SpringPlayerFacingOpposite"
+		else
+			return "objects/KoseiHelper/Controllers/SpawnController/SpringFloor"
+		end
 	elseif entityToSpawn == "Strawberry" then
 		return "objects/KoseiHelper/Controllers/SpawnController/Strawberry"
 	elseif entityToSpawn == "Decal" then
@@ -553,6 +618,8 @@ function SpawnController.texture(room, entity)
 		return "objects/KoseiHelper/Controllers/SpawnController/Counter"
 	elseif entityToSpawn == "Player" then
 		return "objects/KoseiHelper/Controllers/SpawnController/Player"
+	elseif entityToSpawn == "SpawnPoint" then
+		return "objects/KoseiHelper/Controllers/SpawnController/SpawnPoint"
 	else
 		return "objects/KoseiHelper/Controllers/SpawnController/Broken"
     end

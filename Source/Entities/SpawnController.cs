@@ -37,11 +37,14 @@ public enum EntityType
     StarJumpBlock,
     CrushBlock,
     Water,
+    Spinner,
+    Spring,
     Strawberry,
     Player,
     Decal,
     Flag,
     Counter,
+    SpawnPoint,
     //The following entities are just alternate names so the name from the plugin is renamed:
     SwapBlock,
     Kevin,
@@ -104,7 +107,6 @@ public class SpawnController : Entity
 #pragma warning restore CS0414
     private bool hasSpawnedFromSpeed = false;
     private bool previousHasSpawnedFromFlag, currentHasSpawnedFromFlag;
-    private int previousCassetteIndex;
     private bool canSpawnFromCassette = false;
     public int flagCount = 1;
     public int flagCycleAt = 9999;
@@ -116,7 +118,6 @@ public class SpawnController : Entity
     private List<EntityWithTTL> spawnedEntitiesWithTTL = new List<EntityWithTTL>();
     private List<Solid> spawnedSolids = new List<Solid>(); // So lava/ice solids can be removed
     public static ParticleType poofParticle = TouchSwitch.P_FireWhite;
-    private List<Entity> spawnedEntities = new List<Entity>();
     public Entity spawnedEntity = null;
     public static bool playerIsJumping;
 
@@ -163,6 +164,12 @@ public class SpawnController : Entity
 
     public bool hasTop, hasBottom;
 
+    public bool attachToSolid;
+    public CrystalColor crystalColor;
+
+    public string orientation;
+    public bool playerCanUse;
+
     public string decalTexture;
     public int decalDepth;
 
@@ -171,6 +178,8 @@ public class SpawnController : Entity
 
     public int minCounterCap = 0, maxCounterCap = 9999;
     public bool decreaseCounter;
+
+    public bool onlyOnSafeGround;
 
     private bool isWinged;
     private bool isMoon;
@@ -272,6 +281,12 @@ public class SpawnController : Entity
         hasTop = data.Bool("hasTop", true);
         hasBottom = data.Bool("hasBottom", false);
 
+        attachToSolid = data.Bool("attachToSolid", false);
+        crystalColor = data.Enum("crystalColor", CrystalColor.Blue);
+
+        orientation = data.Attr("orientation", "Floor");
+        playerCanUse = data.Bool("playerCanUse", true);
+
         decalTexture = data.Attr("decalTexture", "10-farewell/creature_f00");
         decalDepth = data.Int("decalDepth", 9000);
 
@@ -281,6 +296,8 @@ public class SpawnController : Entity
         minCounterCap = data.Int("minCounterCap", 0);
         maxCounterCap = data.Int("maxCounterCap", 9999);
         decreaseCounter = data.Bool("decreaseCounter", false);
+
+        onlyOnSafeGround = data.Bool("onlyOnSafeGround", true);
 
         isWinged = data.Bool("winged", false);
         isMoon = data.Bool("moon", false);
@@ -299,12 +316,17 @@ public class SpawnController : Entity
     {
         base.Awake(scene);
         cassetteBlockManager = scene.Tracker.GetEntity<CassetteBlockManager>();
+        Level level = SceneAs<Level>();
+        if (level.Tracker.GetEntity<Player>() != null && level.Tracker.GetEntity<Player>().JustRespawned)
+            spawnCooldown = 0f;
     }
 
     public override void Added(Scene scene)
     {
         base.Added(scene);
         Level level = SceneAs<Level>();
+        foreach (var slider in level.Session.Sliders.Keys.Where(k => k.StartsWith("KoseiHelper_EntitySpawnerTTL") || k.StartsWith("KoseiHelper_EntitySpawnerCooldown_")))
+            level.Session.SetSlider(slider, 0f);
     }
 
     public override void Update()
@@ -313,7 +335,10 @@ public class SpawnController : Entity
         Player player = Scene.Tracker.GetEntity<Player>();
         Level level = SceneAs<Level>();
         if (spawnCooldown > 0)
+        {
             spawnCooldown -= Engine.RawDeltaTime;
+            level.Session.SetSlider("KoseiHelper_EntitySpawnerCooldown_" + entityID, spawnCooldown);
+        }
         else
             spawnCooldown = 0f;
         //This HashSet contains not only blocks, but all entities with width. Used to fix spawn positions on relative mode.
@@ -350,8 +375,6 @@ public class SpawnController : Entity
                     if (player.Bottom < (float)level.Bounds.Bottom && player.Top > (float)level.Bounds.Top + 4 &&
                     player.Left > (float)level.Bounds.Left + 8 && player.Right < (float)level.Bounds.Right - 8)
                     {
-
-                        previousCassetteIndex = cassetteBlockManager.currentIndex;
                         canSpawnFromCassette = true;
                     }
                 }
@@ -505,6 +528,35 @@ public class SpawnController : Entity
                     case EntityType.Water:
                         spawnedEntity = new Water(spawnPosition, hasTop, hasBottom, blockWidth, blockHeight);
                         break;
+                    case EntityType.Spinner:
+                        spawnedEntity = new CrystalStaticSpinner(spawnPosition, attachToSolid, crystalColor);
+                        break;
+                    case EntityType.Spring:
+                        switch (orientation)
+                        {
+                            case "WallLeft":
+                                spawnedEntity = new Spring(spawnPosition, Spring.Orientations.WallLeft, playerCanUse);
+                                break;
+                            case "WallRight":
+                                spawnedEntity = new Spring(spawnPosition, Spring.Orientations.WallRight, playerCanUse);
+                                break;
+                            case "PlayerFacing":
+                                if (player.Facing == Facings.Left)
+                                    spawnedEntity = new Spring(spawnPosition, Spring.Orientations.WallRight, playerCanUse);
+                                else
+                                    spawnedEntity = new Spring(spawnPosition, Spring.Orientations.WallLeft, playerCanUse);
+                                break;
+                            case "PlayerFacingOpposite":
+                                if (player.Facing == Facings.Left)
+                                    spawnedEntity = new Spring(spawnPosition, Spring.Orientations.WallLeft, playerCanUse);
+                                else
+                                    spawnedEntity = new Spring(spawnPosition, Spring.Orientations.WallRight, playerCanUse);
+                                break;
+                            default: // "Floor"
+                                spawnedEntity = new Spring(spawnPosition, Spring.Orientations.Floor, playerCanUse);
+                                break;
+                        }
+                        break;
                     case EntityType.Strawberry:
                         EntityData strawberryData = new()
                         {
@@ -559,6 +611,19 @@ public class SpawnController : Entity
                         if (spawnCondition == SpawnCondition.OnInterval)
                             spawnCooldown = spawnTime;
                         break;
+                    case EntityType.SpawnPoint:
+                        if (!onlyOnSafeGround || (onlyOnSafeGround && player.OnSafeGround && !player.SwimUnderwaterCheck() && !player._IsOverWater()))
+                        {
+                            AreaData.Areas[level.Session.Area.ID].Mode[(int)level.Session.Area.Mode].MapData.Get(level.Session.Level).Spawns.Add(spawnPosition);
+                            level.Session.HitCheckpoint = true;
+                            level.Session.RespawnPoint = spawnPosition;
+                            spawnCooldown = spawnTime;
+                            hasSpawnedFromSpeed = true;
+                            Audio.Play(appearSound, spawnPosition);
+                            if (poofWhenDisappearing)
+                                level.ParticlesFG.Emit(poofParticle, 5, spawnPosition, Vector2.One * 4f, 0 - (float)Math.PI / 2f);
+                        }
+                        break;
                     case EntityType.CustomEntity:
                         spawnedEntity = GetEntityFromPath(spawnPosition, nodePosition, level.Session.LevelData);
                         break;
@@ -576,9 +641,10 @@ public class SpawnController : Entity
             }
         }
         List<EntityWithTTL> toRemove = new List<EntityWithTTL>();
-        foreach (var wrapper in spawnedEntitiesWithTTL)
+        foreach (EntityWithTTL wrapper in spawnedEntitiesWithTTL)
         {
             wrapper.TimeToLive -= Engine.RawDeltaTime;
+            level.Session.SetSlider("KoseiHelper_EntitySpawnerTTL" + wrapper.Entity.ToString(), wrapper.TimeToLive);
 
             if (wrapper.Entity is MoveBlock moveBlock) //Fix: They would crash the game if they were too out of bounds, so...
             {
