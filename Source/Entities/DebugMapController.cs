@@ -4,6 +4,7 @@ using Celeste.Mod.Helpers;
 using Microsoft.Xna.Framework;
 using Monocle;
 using MonoMod.Utils;
+using System;
 using System.Collections.Generic;
 
 namespace Celeste.Mod.KoseiHelper.Entities;
@@ -170,7 +171,6 @@ public class DebugMapController : Entity
         orig(self, camera, allLevels);
         if (dict_levels.TryGetValue(self, out List<CustomShape> coloredRectangles))
         {
-            
             foreach (CustomShape debugShape in coloredRectangles)
             {
                 DebugMapTile debugTile = new DebugMapTile(new Vector2(debugShape.rect.X, debugShape.rect.Y),

@@ -835,6 +835,22 @@ triggers.KoseiHelper/ReverseDepthsTrigger.attributes.description.reverseTiles=Wh
 triggers.KoseiHelper/ReverseDepthsTrigger.attributes.description.reverseEntities=Whether it should affect the depth of entities (including decals).
 triggers.KoseiHelper/ReverseDepthsTrigger.attributes.description.flag=The trigger will only activate once this flag is true.\nLeave empty for no flag required.
 
+# Swap Tileset Trigger
+triggers.KoseiHelper/SwapTilesetTrigger.placements.name.SwapTilesetTrigger=Swap Tileset Trigger
+triggers.KoseiHelper/SwapTilesetTrigger.placements.description.SwapTilesetTrigger=Swaps one tileset with a different one. Does not affect tile entities.
+triggers.KoseiHelper/SwapTilesetTrigger.attributes.description.fromTileset=The tileset id that should be affected.
+triggers.KoseiHelper/SwapTilesetTrigger.attributes.description.toTileset=The tileset id that it will become.
+triggers.KoseiHelper/SwapTilesetTrigger.attributes.description.triggerMode=Whether the trigger should activate when the player enters or exits it, or on every frame (for use with flags).
+triggers.KoseiHelper/SwapTilesetTrigger.attributes.description.flag=The trigger will only activate once this flag is true.\nLeave empty for no flag required.
+triggers.KoseiHelper/SwapTilesetTrigger.attributes.description.onlyOnce=Whether the trigger should remove itself once used.
+
+# Create Spawn Point Trigger
+triggers.KoseiHelper/CreateSpawnPointTrigger.placements.name.CreateSpawnPointTrigger=Create Spawn Point Trigger
+triggers.KoseiHelper/CreateSpawnPointTrigger.placements.description.CreateSpawnPointTrigger=Creates one point at the player position.
+triggers.KoseiHelper/CreateSpawnPointTrigger.attributes.description.triggerMode=Whether the trigger should activate when the player enters or exits it, or on every frame (for use with flags).
+triggers.KoseiHelper/CreateSpawnPointTrigger.attributes.description.flag=The trigger will only activate once this flag is true.\nLeave empty for no flag required.
+triggers.KoseiHelper/CreateSpawnPointTrigger.attributes.onlyOnce=Whether the trigger should remove itself once used.
+
 # Styleground Modifier Trigger
 triggers.KoseiHelper/StylegroundModifierTrigger.placements.name.StylegroundModifierTrigger=Styleground Modifier Trigger
 triggers.KoseiHelper/StylegroundModifierTrigger.placements.description.StylegroundModifierTrigger=Modifies a specific value of a given styleground or links it to a counter/slider.

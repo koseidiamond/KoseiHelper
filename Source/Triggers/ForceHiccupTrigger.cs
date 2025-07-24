@@ -11,7 +11,7 @@ public class ForceHiccupTrigger : Trigger
     public bool onlyOnce;
     public TriggerMode triggerMode;
     private CassetteBlockManager cassetteManager;
-    private int currentCassetteIndex, previousCassetteIndex;
+    private int cassetteIndex;
     private bool canHiccup;
     public float interval;
     public string flag;
@@ -77,16 +77,14 @@ public class ForceHiccupTrigger : Trigger
         Player player = Scene.Tracker.GetEntity<Player>();
         if (cassetteManager != null && triggerMode == TriggerMode.OnCassetteBeat && player != null)
         {
-            if (currentCassetteIndex != cassetteManager.currentIndex)
+            if (cassetteIndex != cassetteManager.currentIndex)
             {
-                previousCassetteIndex = currentCassetteIndex;
-                currentCassetteIndex = cassetteManager.currentIndex;
+                cassetteIndex = cassetteManager.currentIndex;
                 canHiccup = true;
             }
             if (canHiccup)
                 player.HiccupJump();
         }
-        previousCassetteIndex = currentCassetteIndex;
         canHiccup = false;
     }
 }

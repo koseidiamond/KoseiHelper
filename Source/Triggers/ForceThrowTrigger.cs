@@ -39,9 +39,11 @@ public class ForceThrowTrigger : Trigger
     {
         base.OnEnter(player);
         if (player.Scene != null && triggerMode == TriggerMode.OnLeave)
+        {
             player.Throw();
-        if (onlyOnce)
-            RemoveSelf();
+            if (onlyOnce)
+                RemoveSelf();
+        }
     }
     public override void Update()
     {
