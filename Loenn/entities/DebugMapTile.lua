@@ -14,13 +14,27 @@ DebugMapTile.placements = {
 		shape = "Tile",
 		thickness = 1,
 		resolution = 500,
+		hollow = false,
 		textSize = 1,
 		message = "hello",
+		altFont = false,
 		texture = "decals/1-forsakencity/flag00",
 		scaleX = 1,
 		scaleY = 1,
-		rotation = 0
+		rotation = 0,
+		gui = false,
+		angle = 0,
+		length = 8
     }
+}
+
+DebugMapTile.fieldOrder = {
+	"x",
+	"y",
+	"shape",
+	"color",
+	"width",
+	"height"
 }
 
 DebugMapTile.fieldInformation = {
@@ -53,12 +67,17 @@ function DebugMapTile.ignoredFields(entity)
 	local ignored = {
 	"thickness",
 	"resolution",
+	"hollow",
 	"textSize",
 	"message",
+	"altFont",
 	"texture",
 	"scaleX",
 	"scaleY",
-	"rotation"
+	"rotation",
+	"gui",
+	"angle",
+	"length"
 	}
     local function doNotIgnore(value)
         for i = #ignored, 1, -1 do
@@ -72,15 +91,24 @@ function DebugMapTile.ignoredFields(entity)
 		doNotIgnore("thickness")
 		doNotIgnore("resolution")
 	end
+	if entity.shape == "Tile" then
+		doNotIgnore("hollow")
+	end
 	if entity.shape == "Text" then
 		doNotIgnore("textSize")
 		doNotIgnore("message")
+		doNotIgnore("altFont")
 	end
 	if entity.shape == "Decal" then
 		doNotIgnore("texture")
 		doNotIgnore("scaleX")
 		doNotIgnore("scaleY")
 		doNotIgnore("rotation")
+		doNotIgnore("gui")
+	end
+	if entity.shape == "Line" then
+		doNotIgnore("angle")
+		doNotIgnore("length")
 	end
 	return ignored
 end
@@ -116,11 +144,19 @@ function DebugMapTile.draw(room, entity, viewport)
 		end
 	else
 		if entity.shape == "Tile" then
-			love.graphics.rectangle("fill", entity.x, entity.y, entity.width, entity.height)
+			if entity.hollow then
+				love.graphics.rectangle("fill", entity.x, entity.y, entity.width, entity.height)
+			else
+				love.graphics.rectangle("line", entity.x, entity.y, entity.width, entity.height)
+			end
 		elseif entity.shape == "Circle" then
 			love.graphics.circle("line", entity.x + entity.width / 2, entity.y + entity.height / 2, entity.width / 2)
 		elseif entity.shape == "Text" then
-			love.graphics.print(entity.message or "Text", entity.x, entity.y)
+			if entity.message == "" then
+				love.graphics.print("Text", entity.x, entity.y)
+			else
+				love.graphics.print(entity.message or "Text", entity.x, entity.y)
+			end
 		end
 	end
 	love.graphics.setColor(1, 1, 1)

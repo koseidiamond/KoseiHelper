@@ -65,17 +65,24 @@ public class DebugMapController : Entity
         public Color color { get; }
         public float thickness { get; }
         public int resolution { get; }
+        public bool hollow { get; }
         public float textSize { get; }
         public string message { get; }
+        public bool altFont { get; }
         public string texture { get; }
         public float scaleX { get; }
         public float scaleY { get; }
         public float rotation { get; }
+        public bool gui { get; }
+        public float angle { get; }
+        public float length { get; }
 
         public CustomShape(DebugMapTile.Shape shape, Rectangle rect, Color color,
             float thickness, int resolution,
-            float textSize, string message,
-            string texture, float scaleX, float scaleY, float rotation)
+            bool hollow,
+            float textSize, string message, bool altFont,
+            string texture, float scaleX, float scaleY, float rotation, bool gui,
+            float angle, float length)
         {
             this.shape = shape;
             this.rect = rect;
@@ -84,13 +91,20 @@ public class DebugMapController : Entity
             this.thickness = thickness;
             this.resolution = resolution;
 
+            this.hollow = hollow;
+
             this.textSize = textSize;
             this.message = message;
+            this.altFont = altFont;
 
             this.texture = texture;
             this.scaleX = scaleX;
             this.scaleY = scaleY;
             this.rotation = rotation;
+            this.gui = gui;
+
+            this.angle = angle;
+            this.length = length;
         }
     }
 
@@ -155,7 +169,10 @@ public class DebugMapController : Entity
                         DebugMapTile debugTile = new DebugMapTile(entity_data, Vector2.Zero);
                         Rectangle rect = new Rectangle(self.X + x, self.Y + y, w, h);
                         CustomShape customShape = new CustomShape(debugTile.shape, rect, debugTile.color, debugTile.thickness, debugTile.resolution,
-                            debugTile.textSize, debugTile.message, debugTile.texture, debugTile.scaleX, debugTile.scaleY, debugTile.rotation);
+                            debugTile.hollow,
+                            debugTile.textSize, debugTile.message, debugTile.altFont,
+                            debugTile.texture, debugTile.scaleX, debugTile.scaleY, debugTile.rotation, debugTile.gui,
+                            debugTile.angle, debugTile.length);
                         list_coloredRectangles.Add(customShape);
                     }
                 }
@@ -175,8 +192,10 @@ public class DebugMapController : Entity
                 DebugMapTile debugTile = new DebugMapTile(new Vector2(debugShape.rect.X, debugShape.rect.Y),
                     debugShape.color, debugShape.rect.Width, debugShape.rect.Height, debugShape.shape,
                     debugShape.thickness, debugShape.resolution,
-                    debugShape.textSize, debugShape.message,
-                    debugShape.texture, debugShape.scaleX, debugShape.scaleY, debugShape.rotation);
+                    debugShape.hollow,
+                    debugShape.textSize, debugShape.message, debugShape.altFont,
+                    debugShape.texture, debugShape.scaleX, debugShape.scaleY, debugShape.rotation, debugShape.gui,
+                    debugShape.angle, debugShape.length);
                 switch (debugTile.shape)
                 {
                     case DebugMapTile.Shape.Circle:
@@ -184,28 +203,43 @@ public class DebugMapController : Entity
                             debugShape.thickness / 10, debugShape.resolution);
                         break;
                     case DebugMapTile.Shape.Decal:
-                        Image image = new Image(GFX.Game[debugShape.texture]);
+                        Image image;
+                        if (debugShape.gui)
+                        image = new Image(GFX.Gui[debugShape.texture]);
+                        else
+                            image = new Image(GFX.Game[debugShape.texture]);
                         image.Color = debugShape.color;
                         // Idk why I'm dividing by 16 but if it works it works
                         image.Position = new Vector2(debugShape.rect.X - (image.Width * debugShape.scaleX) / 16,
                             debugShape.rect.Y - (image.Height * debugShape.scaleY) / 16);
                         image.Scale = new Vector2(debugShape.scaleX / 8, debugShape.scaleY / 8);
-                        // TODO this line needs fixing idk why it's not taking the correct angles
-                        //image.Rotation = debugShape.rotation;
+                        image.Rotation = debugShape.rotation;
                         image.Render();
                         break;
-                    // TODO (optional if we want to support Lines): Make angle and length attributes and render properly the plugin
                     case DebugMapTile.Shape.Line:
                         Logger.Debug(nameof(KoseiHelperModule), $"The debug lines are not fully implemented yet!");
                         Draw.LineAngle(new Vector2(debugShape.rect.X, debugShape.rect.Y),
-                            debugShape.rect.Width, debugShape.rect.Height, debugShape.color);
+                            debugShape.angle, debugShape.length, debugShape.color);
                         break;
                     case DebugMapTile.Shape.Text:
-                        ActiveFont.Draw(debugShape.message, new Vector2(debugShape.rect.X, debugShape.rect.Y), Vector2.Zero,
+                        if (!debugShape.altFont)
+                        {
+                            // Renogare
+                            ActiveFont.Draw(debugShape.message, new Vector2(debugShape.rect.X, debugShape.rect.Y), Vector2.Zero,
                             new Vector2(debugShape.textSize / 10, debugShape.textSize / 10), debugShape.color);
+                        }
+                        else
+                        {
+                            // Consolas12
+                            Draw.Text(Draw.DefaultFont, debugShape.message, new Vector2(debugShape.rect.X, debugShape.rect.Y),
+                                debugShape.color, Vector2.Zero, Vector2.One * debugShape.textSize / 10, 0);
+                        }
                         break;
                     default: //Tile (rectangle)
-                        Draw.Rect(debugShape.rect.X, debugShape.rect.Y, debugShape.rect.Width, debugShape.rect.Height, debugShape.color);
+                        if (debugShape.hollow)
+                            Draw.HollowRect(debugShape.rect.X, debugShape.rect.Y, debugShape.rect.Width, debugShape.rect.Height, debugShape.color);
+                        else
+                                    Draw.Rect(debugShape.rect.X, debugShape.rect.Y, debugShape.rect.Width, debugShape.rect.Height, debugShape.color);
                         break;
                 }
 

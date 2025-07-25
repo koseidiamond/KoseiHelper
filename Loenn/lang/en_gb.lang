@@ -49,15 +49,20 @@ entities.KoseiHelper/DebugRenderer.attributes.description.depth=The depth at whi
 entities.KoseiHelper/DebugMapTile.placements.name.DebugMapTile=Debug Map Shape [Obsolete]
 entities.KoseiHelper/DebugMapTile.placements.description.DebugMapTile=Displays colored shapes, text or images on the debug map (when pressing F6).\nNote that they only work if placed inside room bounds.\nThis entity is NOT compatible with GameHelper's debug features. It's recommended to use those instead.
 entities.KoseiHelper/DebugMapTile.attributes.description.color=The color of your shape on the debug map.
-entities.KoseiHelper/DebugMapTile.attributes.description.shape=The shape that will appear on the debug map.\nCircle radius is determined by the width.\nThe text is rendered with Renogare.
+entities.KoseiHelper/DebugMapTile.attributes.description.shape=The shape that will appear on the debug map.\nCircle radius is determined by the width.
 entities.KoseiHelper/DebugMapTile.attributes.description.thickness=The thickness of the circle.
 entities.KoseiHelper/DebugMapTile.attributes.description.resolution=The resolution of the circle. High values can lag the game, and very low values will look like an asterisk.
+entities.KoseiHelper/DebugMapTile.attributes.description.hollow=Whether the rectangle should be hollow or filled.
 entities.KoseiHelper/DebugMapTile.attributes.description.textSize=The size of the message.
 entities.KoseiHelper/DebugMapTile.attributes.description.message=The text that will be rendered (does not need an English.txt).
+entities.KoseiHelper/DebugMapTile.attributes.description.altFont=Whether the text should use Renogare (default font) or Consolas12.
 entities.KoseiHelper/DebugMapTile.attributes.description.texture=The path to your image, relative to Gameplay/.\nIf the path ends with a number, it needs the number too, since images can't be animated.
 entities.KoseiHelper/DebugMapTile.attributes.description.scaleX=The horizontal scale of the image.
 entities.KoseiHelper/DebugMapTile.attributes.description.scaleY=The vertical scale of the image.
-entities.KoseiHelper/DebugMapTile.attributes.description.rotation=The rotation of the image, in radians.
+entities.KoseiHelper/DebugMapTile.attributes.description.rotation=The rotation of the image, in degrees.\n(The plugin looks wrong, but it looks fine in debug)
+entities.KoseiHelper/DebugMapTile.attributes.description.gui=Whether the path to your texture should be relative to Gui/ instead of Gameplay/.
+entities.KoseiHelper/DebugMapTile.attributes.description.angle=The angle of your line.
+entities.KoseiHelper/DebugMapTile.attributes.description.length=How long the line should be.
 
 # Debug Map Controller
 entities.KoseiHelper/DebugMapController.placements.name.DebugMapController=Debug Map Controller [Obsolete]
