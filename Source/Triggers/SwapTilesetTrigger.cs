@@ -42,7 +42,7 @@ public class SwapTilesetTrigger : Trigger
             bool now = (Scene as Level).Session.GetFlag(flag);
             if (now != lastFlagValue)
             {
-                SwapTilesets(Scene as Level, fromTileset, toTileset);
+                SwapTilesets(level);
                 lastFlagValue = now;
 
                 if (onlyOnce)
@@ -59,7 +59,7 @@ public class SwapTilesetTrigger : Trigger
         {
             if (string.IsNullOrEmpty(flag) || level.Session.GetFlag(flag))
             {
-                SwapTilesets(level, fromTileset, toTileset);
+                SwapTilesets(level);
                 if (onlyOnce)
                     RemoveSelf();
             }
@@ -74,16 +74,15 @@ public class SwapTilesetTrigger : Trigger
         {
             if (string.IsNullOrEmpty(flag) || level.Session.GetFlag(flag))
             {
-                SwapTilesets(level, fromTileset, toTileset);
+                SwapTilesets(level);
                 if (onlyOnce)
                     RemoveSelf();
             }
         }
     }
 
-    private void SwapTilesets(Level level, char swapFromTileID, char swapToTileID)
+    private void SwapTilesets(Level level)
     {
-        Logger.Debug(nameof(KoseiHelperModule), $"Swapping tilesets!");
         if (!bgTiles)
         {
             Rectangle tileBounds = level.Session.MapData.TileBounds;
@@ -106,10 +105,10 @@ public class SwapTilesetTrigger : Trigger
                 {
                     int x = k + rectangle2.X;
                     int y = l + rectangle2.Y;
-                    if (level.SolidsData[x, y] == swapFromTileID && swapFromTileID != swapToTileID)
+                    if (level.SolidsData[x, y] == fromTileset && fromTileset != toTileset)
                     {
-                        level.SolidsData[x, y] = swapToTileID;
-                        virtualMap[k, l] = swapToTileID;
+                        level.SolidsData[x, y] = toTileset;
+                        virtualMap[k, l] = toTileset;
                     }
                 }
             }
@@ -123,7 +122,7 @@ public class SwapTilesetTrigger : Trigger
                 {
                     int x2 = m + rectangle2.X;
                     int y2 = n + rectangle2.Y;
-                    if (level.SolidsData[x2, y2] != swapToTileID)
+                    if (level.SolidsData[x2, y2] != toTileset)
                         continue;
                     MTexture mTexture = generated.TileGrid.Tiles[m, n];
                     level.SolidTiles.Tiles.Tiles[x2, y2] = mTexture;
@@ -152,10 +151,10 @@ public class SwapTilesetTrigger : Trigger
                 {
                     for (int l = 0; l < bgData.Rows; l++)
                     {
-                        if (bgData[k, l] == swapFromTileID && swapFromTileID != swapToTileID)
+                        if (bgData[k, l] == fromTileset && fromTileset != toTileset)
                         {
-                            bgData[k, l] = swapToTileID;
-                            bgVirtualMap[k + 1, l + 1] = swapToTileID;
+                            bgData[k, l] = toTileset;
+                            bgVirtualMap[k + 1, l + 1] = toTileset;
                         }
                     }
                 }
@@ -165,7 +164,7 @@ public class SwapTilesetTrigger : Trigger
                 {
                     for (int n = 0; n < bgData.Rows; n++)
                     {
-                        if (bgData[m, n] != swapToTileID)
+                        if (bgData[m, n] != toTileset)
                             continue;
                         MTexture bgTexture = bgGenerated.TileGrid.Tiles[m + 1, n + 1];
                         bgTexes[m, n] = bgTexture;
