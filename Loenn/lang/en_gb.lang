@@ -46,8 +46,8 @@ entities.KoseiHelper/DebugRenderer.attributes.description.nonDebug=If the shape 
 entities.KoseiHelper/DebugRenderer.attributes.description.depth=The depth at which the Renderer appears in Lönn. Debug always appears above everything else in-game.
 
 # Debug Map Shapes
-entities.KoseiHelper/DebugMapTile.placements.name.DebugMapTile=Debug Map Shape
-entities.KoseiHelper/DebugMapTile.placements.description.DebugMapTile=Displays colored shapes, text or images on the debug map (when pressing F6).\nNote that they only work if placed inside room bounds.
+entities.KoseiHelper/DebugMapTile.placements.name.DebugMapTile=Debug Map Shape [Obsolete]
+entities.KoseiHelper/DebugMapTile.placements.description.DebugMapTile=Displays colored shapes, text or images on the debug map (when pressing F6).\nNote that they only work if placed inside room bounds.\nThis entity is NOT compatible with GameHelper's debug features. It's recommended to use those instead.
 entities.KoseiHelper/DebugMapTile.attributes.description.color=The color of your shape on the debug map.
 entities.KoseiHelper/DebugMapTile.attributes.description.shape=The shape that will appear on the debug map.\nCircle radius is determined by the width.\nThe text is rendered with Renogare.
 entities.KoseiHelper/DebugMapTile.attributes.description.thickness=The thickness of the circle.
@@ -58,6 +58,28 @@ entities.KoseiHelper/DebugMapTile.attributes.description.texture=The path to you
 entities.KoseiHelper/DebugMapTile.attributes.description.scaleX=The horizontal scale of the image.
 entities.KoseiHelper/DebugMapTile.attributes.description.scaleY=The vertical scale of the image.
 entities.KoseiHelper/DebugMapTile.attributes.description.rotation=The rotation of the image, in radians.
+
+# Debug Map Controller
+entities.KoseiHelper/DebugMapController.placements.name.DebugMapController=Debug Map Controller [Obsolete]
+entities.KoseiHelper/DebugMapController.placements.description.DebugMapController=Modifies the way the Debug Map is rendered. Persistent controller.\nWARNING: You should have only one of these in your map.\nIf you need this controller only for Debug Map Tiles, you can set the Rooms To Affect field to a nonexisting name.\nThis entity is NOT compatible with GameHelper's debug features. It's recommended to use those instead.
+entities.KoseiHelper/DebugMapController.attributes.description.hideKeys=Whether the keys should be hidden in the Debug Map.
+entities.KoseiHelper/DebugMapController.attributes.description.hideBerries=Whether the berries should be hidden in the Debug Map.\nPlayers can still know where they are if they hold the Q key.
+entities.KoseiHelper/DebugMapController.attributes.description.hideSpawns=Whether the spawns should be hidden in the Debug Map.
+entities.KoseiHelper/DebugMapController.attributes.description.redBlink=Whether the rooms that are overlapping should have a red blink each 0.1 seconds.
+entities.KoseiHelper/DebugMapController.attributes.description.gridColor=The color of the background grid. This affects the entire Debug Map.
+entities.KoseiHelper/DebugMapController.attributes.description.jumpthruColor=The color of the jump throughs.
+entities.KoseiHelper/DebugMapController.attributes.description.berryColor=The color of the strawberries.
+entities.KoseiHelper/DebugMapController.attributes.description.keyColor=The color of the keys.
+entities.KoseiHelper/DebugMapController.attributes.description.checkpointColor=The color of the checkpoints.
+entities.KoseiHelper/DebugMapController.attributes.description.spawnColor=The color of the respawns.
+entities.KoseiHelper/DebugMapController.attributes.description.bgTileColor=The color of the background tiles.
+entities.KoseiHelper/DebugMapController.attributes.description.fgTileColor=The color of the foreground tiles.
+entities.KoseiHelper/DebugMapController.attributes.description.roomBgColor=The background color of the rooms (below bg tiles).
+entities.KoseiHelper/DebugMapController.attributes.description.dummyBorderColor=The color of the border of the dummy rooms (without spawns/fillers).
+entities.KoseiHelper/DebugMapController.attributes.description.ignoreDummy=Whether dummy rooms (without any spawns) should render as normal rooms (with colors).
+entities.KoseiHelper/DebugMapController.attributes.description.blockDebugMap=If this flag is true, the debug map will be completely empty,\npreventing players to see the map or teleport to other rooms.\nLeave empty to always allow opening the debug map.
+entities.KoseiHelper/DebugMapController.attributes.name.roomsToAffect=Room Prefix
+entities.KoseiHelper/DebugMapController.attributes.description.roomsToAffect=The rooms that start with this prefix will be affected. Case sensitive.
 
 # Game Data Controller
 entities.KoseiHelper/GameDataController.placements.name.GameDataController=Game Data Controller
@@ -129,29 +151,6 @@ entities.KoseiHelper/FlagCounterSliderTranslator.attributes.description.flagSuff
 entities.KoseiHelper/FlagCounterSliderTranslator.attributes.description.absoluteValue=Whether the values of this counter/slider will be always considered positive.
 entities.KoseiHelper/FlagCounterSliderTranslator.attributes.description.reverseValue=Reverts the value after being translated.\nFlags are false when the counter/slider has the max value and true when the counter/slider has the min value.\nCounters/Sliders will have the opposed sign.
 entities.KoseiHelper/FlagCounterSliderTranslator.attributes.description.multiplierFactor=The resulting counter/slider will have the value multiplied by this factor.
-
-# Debug Map Controller
-entities.KoseiHelper/DebugMapController.placements.name.DebugMapController=Debug Map Controller
-entities.KoseiHelper/DebugMapController.placements.description.DebugMapController=Modifies the way the Debug Map is rendered. Persistent controller.\nWARNING: You should have only one of these in your map.\nIf you need this controller only for Debug Map Tiles, you can set the Rooms To Affect field to a nonexisting name.
-entities.KoseiHelper/DebugMapController.attributes.description.hideKeys=Whether the keys should be hidden in the Debug Map.
-entities.KoseiHelper/DebugMapController.attributes.description.hideBerries=Whether the berries should be hidden in the Debug Map.\nPlayers can still know where they are if they hold the Q key.
-entities.KoseiHelper/DebugMapController.attributes.description.hideSpawns=Whether the spawns should be hidden in the Debug Map.
-entities.KoseiHelper/DebugMapController.attributes.description.redBlink=Whether the rooms that are overlapping should have a red blink each 0.1 seconds.
-entities.KoseiHelper/DebugMapController.attributes.description.gridColor=The color of the background grid. This affects the entire Debug Map.
-entities.KoseiHelper/DebugMapController.attributes.description.jumpthruColor=The color of the jump throughs.
-entities.KoseiHelper/DebugMapController.attributes.description.berryColor=The color of the strawberries.
-entities.KoseiHelper/DebugMapController.attributes.description.keyColor=The color of the keys.
-entities.KoseiHelper/DebugMapController.attributes.description.checkpointColor=The color of the checkpoints.
-entities.KoseiHelper/DebugMapController.attributes.description.spawnColor=The color of the respawns.
-entities.KoseiHelper/DebugMapController.attributes.description.bgTileColor=The color of the background tiles.
-entities.KoseiHelper/DebugMapController.attributes.description.fgTileColor=The color of the foreground tiles.
-entities.KoseiHelper/DebugMapController.attributes.description.roomBgColor=The background color of the rooms (below bg tiles).
-entities.KoseiHelper/DebugMapController.attributes.description.dummyBorderColor=The color of the border of the dummy rooms (without spawns/fillers).
-entities.KoseiHelper/DebugMapController.attributes.description.ignoreDummy=Whether dummy rooms (without any spawns) should render as normal rooms (with colors).
-entities.KoseiHelper/DebugMapController.attributes.description.blockDebugMap=If this flag is true, the debug map will be completely empty,\npreventing players to see the map or teleport to other rooms.\nLeave empty to always allow opening the debug map.
-entities.KoseiHelper/DebugMapController.attributes.name.roomsToAffect=Room Prefix
-entities.KoseiHelper/DebugMapController.attributes.description.roomsToAffect=The rooms that start with this prefix will be affected. Case sensitive.
-
 
 # Custom Cobweb
 entities.KoseiHelper/CustomCobweb.placements.name.CustomCobweb=Custom Cobweb
@@ -367,7 +366,7 @@ entities.KoseiHelper/Goomba.attributes.description.slowdownDistanceMax=The dista
 entities.KoseiHelper/Goomba.attributes.description.slowdownDistanceMin=The distance at which the slowdown effect will have the maximum effect.
 
 #Trigger Spinner
-entities.KoseiHelper/TriggerSpinner.placements.name.TriggerSpinner=Trigger Spinner
+entities.KoseiHelper/TriggerSpinner.placements.name.TriggerSpinner=Trigger Spinner [Obsolete]
 entities.KoseiHelper/TriggerSpinner.placements.description.TriggerSpinner=Spinner that appears after the player touches and leaves its hitbox.\nUnlike normal spinners, these don't have "juice".
 entities.KoseiHelper/TriggerSpinner.attributes.description.color=The color of the trigger spinner.
 entities.KoseiHelper/TriggerSpinner.attributes.description.attachToSolid=If the trigger spinner should be attached to solids.
