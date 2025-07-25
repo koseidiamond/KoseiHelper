@@ -13,29 +13,26 @@ SwapTilesetTrigger.placements = {
 		triggerMode = "OnEnter",
 		fromTileset = "3",
 		toTileset = "n",
-		flag = ""
+		flag = "",
+		bgTiles = false
 		}
 	}
 }
 
-SwapTilesetTrigger.fieldInformation = function (entity) return {
-	triggerMode = {
-		options = {
-		"OnEnter",
-		"OnLeave",
-		"OnStay"
-		},
-		editable = false
-	},
-	fromTileset = {
-		options = fakeTilesHelper.getTilesOptions(entity.fg and "tilesFg"),
-		editable = true
-	},
-	toTileset = {
-		options = fakeTilesHelper.getTilesOptions(entity.fg and "tilesFg"),
-		editable = true
-	}
-}
+SwapTilesetTrigger.fieldInformation = function(entity)
+    local orig = fakeTilesHelper.getFieldInformation("toTileset", false, "tilesFg")(entity)
+
+    if entity.bgTiles then
+        orig = fakeTilesHelper.getFieldInformation("toTileset", true, "tilesBg")(entity)
+    end
+    for k,v in pairs(orig) do
+        orig["fromTileset"] = v
+    end
+    orig["triggerMode"] = {
+        options = { "OnEnter", "OnLeave", "OnStay" },
+        editable = false
+    }
+    return orig
 end
 
 return SwapTilesetTrigger
