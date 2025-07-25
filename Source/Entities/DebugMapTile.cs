@@ -30,6 +30,8 @@ public class DebugMapTile : Entity
     public float scaleX, scaleY;
     public float rotation;
     public bool gui;
+    public int animationFrames;
+    public float animationSpeed;
     public float angle, length;
     public DebugMapTile(EntityData data, Vector2 offset) : base(data.Position + offset)
     {
@@ -49,13 +51,15 @@ public class DebugMapTile : Entity
         scaleY = data.Float("scaleY", 1f);
         rotation = (float) (data.Float("rotation", 0f) * Math.PI / 180f);
         gui = data.Bool("gui", false);
+        animationFrames = data.Int("animationFrames", 0);
+        animationSpeed = data.Float("animationSpeed", 10);
         angle = data.Float("angle", 0f);
         length = data.Float("length", 0f);
         
     }
 
     public DebugMapTile(Vector2 position, bool above, Color color, float width, float height, Shape shape, float thickness, int resolution, bool hollow,
-        float textSize, string message, bool altFont, string texture, float scaleX, float scaleY, float rotation, bool gui,
+        float textSize, string message, bool altFont, string texture, float scaleX, float scaleY, float rotation, int animationFrames, float animationSpeed, bool gui,
         float angle, float length)
     {
         Position = position;
@@ -75,6 +79,8 @@ public class DebugMapTile : Entity
         this.scaleY = scaleY;
         this.rotation = rotation;
         this.gui = gui;
+        this.animationFrames = animationFrames;
+        this.animationSpeed = animationSpeed;
         this.angle = angle;
         this.length = length;
     }

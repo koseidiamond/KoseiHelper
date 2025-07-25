@@ -56,10 +56,12 @@ entities.KoseiHelper/DebugMapTile.attributes.description.hollow=Whether the rect
 entities.KoseiHelper/DebugMapTile.attributes.description.textSize=The size of the message.
 entities.KoseiHelper/DebugMapTile.attributes.description.message=The text that will be rendered (does not need an English.txt).
 entities.KoseiHelper/DebugMapTile.attributes.description.altFont=Whether the text should use Renogare (default font) or Consolas12.
-entities.KoseiHelper/DebugMapTile.attributes.description.texture=The path to your image, relative to Gameplay/.\nIf the path ends with a number, it needs the number too, since images can't be animated.
+entities.KoseiHelper/DebugMapTile.attributes.description.texture=The path to your image, relative to Gameplay/.\nIf the decal is not animated (Animation Frames = 0), you also need to write the frame that you want to use (like flag00.png).
 entities.KoseiHelper/DebugMapTile.attributes.description.scaleX=The horizontal scale of the image.
 entities.KoseiHelper/DebugMapTile.attributes.description.scaleY=The vertical scale of the image.
 entities.KoseiHelper/DebugMapTile.attributes.description.rotation=The rotation of the image, in degrees.\n(The plugin looks wrong, but it looks fine in debug)
+entities.KoseiHelper/DebugMapTile.attributes.description.animationFrames=The number of frames that the decal has, if it's animated. Leave at 0 if it's not animated!
+entities.KoseiHelper/DebugMapTile.attributes.description.animationSpeed=The speed at which the decal is animated, in fps.
 entities.KoseiHelper/DebugMapTile.attributes.description.gui=Whether the path to your texture should be relative to Gui/ instead of Gameplay/.
 entities.KoseiHelper/DebugMapTile.attributes.description.angle=The angle of your line.
 entities.KoseiHelper/DebugMapTile.attributes.description.length=How long the line should be.

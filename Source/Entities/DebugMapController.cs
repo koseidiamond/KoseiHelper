@@ -6,6 +6,7 @@ using Monocle;
 using MonoMod.Utils;
 using System.Collections.Generic;
 using System.Linq;
+using System.Transactions;
 
 namespace Celeste.Mod.KoseiHelper.Entities;
 
@@ -75,6 +76,8 @@ public class DebugMapController : Entity
         public float scaleX { get; }
         public float scaleY { get; }
         public float rotation { get; }
+        public int animationFrames { get; }
+        public float animationSpeed { get; }
         public bool gui { get; }
         public float angle { get; }
         public float length { get; }
@@ -83,7 +86,7 @@ public class DebugMapController : Entity
             float thickness, int resolution,
             bool hollow,
             float textSize, string message, bool altFont,
-            string texture, float scaleX, float scaleY, float rotation, bool gui,
+            string texture, float scaleX, float scaleY, float rotation, int animationFrames, float animationSpeed, bool gui,
             float angle, float length)
         {
             this.above = above;
@@ -105,6 +108,8 @@ public class DebugMapController : Entity
             this.scaleY = scaleY;
             this.rotation = rotation;
             this.gui = gui;
+            this.animationFrames = animationFrames;
+            this.animationSpeed = animationSpeed;
 
             this.angle = angle;
             this.length = length;
@@ -175,7 +180,7 @@ public class DebugMapController : Entity
                             debugTile.thickness, debugTile.resolution,
                             debugTile.hollow,
                             debugTile.textSize, debugTile.message, debugTile.altFont,
-                            debugTile.texture, debugTile.scaleX, debugTile.scaleY, debugTile.rotation, debugTile.gui,
+                            debugTile.texture, debugTile.scaleX, debugTile.scaleY, debugTile.rotation, debugTile.animationFrames, debugTile.animationSpeed, debugTile.gui,
                             debugTile.angle, debugTile.length);
                         list_coloredRectangles.Add(customShape);
                     }
@@ -204,7 +209,7 @@ public class DebugMapController : Entity
                     debugShape.thickness, debugShape.resolution,
                     debugShape.hollow,
                     debugShape.textSize, debugShape.message, debugShape.altFont,
-                    debugShape.texture, debugShape.scaleX, debugShape.scaleY, debugShape.rotation, debugShape.gui,
+                    debugShape.texture, debugShape.scaleX, debugShape.scaleY, debugShape.rotation, debugShape.animationFrames, debugShape.animationSpeed, debugShape.gui,
                     debugShape.angle, debugShape.length);
                 switch (debugShape.shape)
                 {
@@ -213,11 +218,17 @@ public class DebugMapController : Entity
                                     debugShape.thickness / 10, debugShape.resolution);
                         break;
                     case DebugMapTile.Shape.Decal:
-                        Image image;
-                        if (debugShape.gui)
-                            image = new Image(GFX.Gui[debugShape.texture]);
+                        string basePath = debugShape.texture;
+                        int frameCount = debugShape.animationFrames;
+                        float fps = debugShape.animationSpeed;
+                        int frame = (int)((Engine.Scene.TimeActive * fps) % frameCount);
+                        string texPath;
+                        if (frameCount > 0)
+                            texPath = $"{basePath}{frame:00}";
                         else
-                            image = new Image(GFX.Game[debugShape.texture]);
+                            texPath = basePath;
+
+                            Image image = debugShape.gui ? new Image(GFX.Gui[texPath]) : new Image(GFX.Game[texPath]);
 
                         image.Color = debugShape.color;
                         image.Position = new Vector2(debugShape.rect.X - (image.Width * debugShape.scaleX) / 16,
@@ -383,4 +394,4 @@ public class DebugMapController : Entity
         controllerFound = true;
     }
 }*/
-}
+                }

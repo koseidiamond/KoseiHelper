@@ -22,6 +22,8 @@ DebugMapTile.placements = {
 		scaleX = 1,
 		scaleY = 1,
 		rotation = 0,
+		animationFrames = 0,
+		animationSpeed = 10,
 		gui = false,
 		angle = 0,
 		length = 8
@@ -56,6 +58,13 @@ DebugMapTile.fieldInformation = {
 	thickness = {
 		minimumValue = 0.00001
 	},
+	animationFrames = {
+		minimumValue = 0,
+		fieldType = "integer"
+	},
+	animationSpeed = {
+		minimumValue = 1
+	},
 	resolution = {
 		fieldType = "integer",
 		minimumValue = 1,
@@ -75,6 +84,8 @@ function DebugMapTile.ignoredFields(entity)
 	"scaleX",
 	"scaleY",
 	"rotation",
+	"animationFrames",
+	"animationSpeed",
 	"gui",
 	"angle",
 	"length"
@@ -104,6 +115,8 @@ function DebugMapTile.ignoredFields(entity)
 		doNotIgnore("scaleX")
 		doNotIgnore("scaleY")
 		doNotIgnore("rotation")
+		doNotIgnore("animationFrames")
+		doNotIgnore("animationSpeed")
 		doNotIgnore("gui")
 	end
 	if entity.shape == "Line" then
@@ -138,8 +151,12 @@ function DebugMapTile.draw(room, entity, viewport)
 	love.graphics.setColor(r, g, b)
 	
 	if entity.shape == "Decal" then
-		local debugDecal = drawableSprite.fromTexture(entity.texture, entity)
-		if debugDecal ~= nil then
+		local texPath = entity.texture
+		if (entity.animationFrames or 0) > 0 then
+			texPath = texPath .. "00"
+		end
+		local debugDecal = drawableSprite.fromTexture(texPath, entity)
+		if debugDecal then
 			debugDecal:draw()
 		end
 	else
@@ -184,6 +201,7 @@ function DebugMapTile.depth(room, entity)
 		return -99999
 	else
 		return 9999
+	end
 end
 
 function onResize(room, entity, offsetX, offsetY, directionX, directionY)
