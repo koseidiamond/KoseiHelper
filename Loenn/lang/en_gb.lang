@@ -63,6 +63,7 @@ entities.KoseiHelper/DebugMapTile.attributes.description.rotation=The rotation o
 entities.KoseiHelper/DebugMapTile.attributes.description.gui=Whether the path to your texture should be relative to Gui/ instead of Gameplay/.
 entities.KoseiHelper/DebugMapTile.attributes.description.angle=The angle of your line.
 entities.KoseiHelper/DebugMapTile.attributes.description.length=How long the line should be.
+entities.KoseiHelper/DebugMapTile.attributes.description.above=Whether the shape should be rendered above the rest of the debug map or below its contents.
 
 # Debug Map Controller
 entities.KoseiHelper/DebugMapController.placements.name.DebugMapController=Debug Map Controller [Obsolete]

@@ -3,13 +3,13 @@ local drawableSprite = require("structs.drawable_sprite")
 
 local DebugMapTile = {}
 DebugMapTile.name = "KoseiHelper/DebugMapTile"
-DebugMapTile.depth = 1
 
 DebugMapTile.placements = {
     name = "DebugMapTile",
     data = {
         width = 8,
         height = 8,
+		above = true,
         color = "6969ee",
 		shape = "Tile",
 		thickness = 1,
@@ -145,9 +145,9 @@ function DebugMapTile.draw(room, entity, viewport)
 	else
 		if entity.shape == "Tile" then
 			if entity.hollow then
-				love.graphics.rectangle("fill", entity.x, entity.y, entity.width, entity.height)
-			else
 				love.graphics.rectangle("line", entity.x, entity.y, entity.width, entity.height)
+			else
+				love.graphics.rectangle("fill", entity.x, entity.y, entity.width, entity.height)
 			end
 		elseif entity.shape == "Circle" then
 			love.graphics.circle("line", entity.x + entity.width / 2, entity.y + entity.height / 2, entity.width / 2)
@@ -177,6 +177,13 @@ function DebugMapTile.canResize(room, entity)
 	elseif entity.shape == "Tile" then
 		return {true,true}
 	end
+end
+
+function DebugMapTile.depth(room, entity)
+	if entity.above == true then
+		return -99999
+	else
+		return 9999
 end
 
 function onResize(room, entity, offsetX, offsetY, directionX, directionY)

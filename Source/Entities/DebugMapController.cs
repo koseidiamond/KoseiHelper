@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Monocle;
 using MonoMod.Utils;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Celeste.Mod.KoseiHelper.Entities;
 
@@ -60,6 +61,7 @@ public class DebugMapController : Entity
     private static Dictionary<LevelTemplate, List<CustomShape>> dict_levels = new Dictionary<LevelTemplate, List<CustomShape>>();
     public struct CustomShape
     {
+        public bool above { get; }
         public DebugMapTile.Shape shape;
         public Rectangle rect { get; }
         public Color color { get; }
@@ -77,13 +79,14 @@ public class DebugMapController : Entity
         public float angle { get; }
         public float length { get; }
 
-        public CustomShape(DebugMapTile.Shape shape, Rectangle rect, Color color,
+        public CustomShape(bool above, DebugMapTile.Shape shape, Rectangle rect, Color color,
             float thickness, int resolution,
             bool hollow,
             float textSize, string message, bool altFont,
             string texture, float scaleX, float scaleY, float rotation, bool gui,
             float angle, float length)
         {
+            this.above = above;
             this.shape = shape;
             this.rect = rect;
             this.color = color;
@@ -168,7 +171,8 @@ public class DebugMapController : Entity
                     {
                         DebugMapTile debugTile = new DebugMapTile(entity_data, Vector2.Zero);
                         Rectangle rect = new Rectangle(self.X + x, self.Y + y, w, h);
-                        CustomShape customShape = new CustomShape(debugTile.shape, rect, debugTile.color, debugTile.thickness, debugTile.resolution,
+                        CustomShape customShape = new CustomShape(debugTile.above, debugTile.shape, rect, debugTile.color,
+                            debugTile.thickness, debugTile.resolution,
                             debugTile.hollow,
                             debugTile.textSize, debugTile.message, debugTile.altFont,
                             debugTile.texture, debugTile.scaleX, debugTile.scaleY, debugTile.rotation, debugTile.gui,
@@ -184,66 +188,69 @@ public class DebugMapController : Entity
     private static void OnLevelTemplate_RenderContents(On.Celeste.Editor.LevelTemplate.orig_RenderContents orig,
             LevelTemplate self, Camera camera, List<LevelTemplate> allLevels)
     {
+        RenderShapes(self, camera, allLevels, false);
         orig(self, camera, allLevels);
+        RenderShapes(self, camera, allLevels, true);
+    }
+
+    private static void RenderShapes(LevelTemplate self, Camera camera, List<LevelTemplate> allLevels, bool above)
+    {
         if (dict_levels.TryGetValue(self, out List<CustomShape> coloredRectangles))
         {
-            foreach (CustomShape debugShape in coloredRectangles)
+            foreach (CustomShape debugShape in coloredRectangles.Where(shape => shape.above == above))
             {
-                DebugMapTile debugTile = new DebugMapTile(new Vector2(debugShape.rect.X, debugShape.rect.Y),
+                DebugMapTile debugTile = new DebugMapTile(new Vector2(debugShape.rect.X, debugShape.rect.Y), debugShape.above,
                     debugShape.color, debugShape.rect.Width, debugShape.rect.Height, debugShape.shape,
                     debugShape.thickness, debugShape.resolution,
                     debugShape.hollow,
                     debugShape.textSize, debugShape.message, debugShape.altFont,
                     debugShape.texture, debugShape.scaleX, debugShape.scaleY, debugShape.rotation, debugShape.gui,
                     debugShape.angle, debugShape.length);
-                switch (debugTile.shape)
+                switch (debugShape.shape)
                 {
                     case DebugMapTile.Shape.Circle:
                         Draw.Circle(debugShape.rect.Center.X, debugShape.rect.Center.Y, debugShape.rect.Width / 2f, debugShape.color,
-                            debugShape.thickness / 10, debugShape.resolution);
+                                    debugShape.thickness / 10, debugShape.resolution);
                         break;
                     case DebugMapTile.Shape.Decal:
                         Image image;
                         if (debugShape.gui)
-                        image = new Image(GFX.Gui[debugShape.texture]);
+                            image = new Image(GFX.Gui[debugShape.texture]);
                         else
                             image = new Image(GFX.Game[debugShape.texture]);
+
                         image.Color = debugShape.color;
-                        // Idk why I'm dividing by 16 but if it works it works
                         image.Position = new Vector2(debugShape.rect.X - (image.Width * debugShape.scaleX) / 16,
-                            debugShape.rect.Y - (image.Height * debugShape.scaleY) / 16);
+                                                     debugShape.rect.Y - (image.Height * debugShape.scaleY) / 16);
                         image.Scale = new Vector2(debugShape.scaleX / 8, debugShape.scaleY / 8);
                         image.Rotation = debugShape.rotation;
                         image.Render();
                         break;
                     case DebugMapTile.Shape.Line:
-                        Logger.Debug(nameof(KoseiHelperModule), $"The debug lines are not fully implemented yet!");
                         Draw.LineAngle(new Vector2(debugShape.rect.X, debugShape.rect.Y),
-                            debugShape.angle, debugShape.length, debugShape.color);
+                                       debugShape.angle, debugShape.length, debugShape.color);
                         break;
                     case DebugMapTile.Shape.Text:
                         if (!debugShape.altFont)
                         {
                             // Renogare
                             ActiveFont.Draw(debugShape.message, new Vector2(debugShape.rect.X, debugShape.rect.Y), Vector2.Zero,
-                            new Vector2(debugShape.textSize / 10, debugShape.textSize / 10), debugShape.color);
+                                            new Vector2(debugShape.textSize / 10, debugShape.textSize / 10), debugShape.color);
                         }
                         else
                         {
                             // Consolas12
                             Draw.Text(Draw.DefaultFont, debugShape.message, new Vector2(debugShape.rect.X, debugShape.rect.Y),
-                                debugShape.color, Vector2.Zero, Vector2.One * debugShape.textSize / 10, 0);
+                                      debugShape.color, Vector2.Zero, Vector2.One * debugShape.textSize / 10, 0);
                         }
                         break;
-                    default: //Tile (rectangle)
+                    default: // Tile (rectangle)
                         if (debugShape.hollow)
                             Draw.HollowRect(debugShape.rect.X, debugShape.rect.Y, debugShape.rect.Width, debugShape.rect.Height, debugShape.color);
                         else
-                                    Draw.Rect(debugShape.rect.X, debugShape.rect.Y, debugShape.rect.Width, debugShape.rect.Height, debugShape.color);
+                            Draw.Rect(debugShape.rect.X, debugShape.rect.Y, debugShape.rect.Width, debugShape.rect.Height, debugShape.color);
                         break;
                 }
-
-
             }
         }
     }

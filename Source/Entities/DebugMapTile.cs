@@ -18,6 +18,7 @@ public class DebugMapTile : Entity
         Decal,
         Line
     };
+    public bool above;
     public Shape shape;
     public float thickness;
     public int resolution;
@@ -34,6 +35,7 @@ public class DebugMapTile : Entity
     {
         width = data.Width;
         height = data.Height;
+        above = data.Bool("above", true);
         color = data.HexColor("color", Calc.HexToColor("fc03f4"));
         shape = data.Enum("shape", Shape.Tile);
         thickness = data.Float("thickness", 1f);
@@ -52,11 +54,12 @@ public class DebugMapTile : Entity
         
     }
 
-    public DebugMapTile(Vector2 position, Color color, float width, float height, Shape shape, float thickness, int resolution, bool hollow,
+    public DebugMapTile(Vector2 position, bool above, Color color, float width, float height, Shape shape, float thickness, int resolution, bool hollow,
         float textSize, string message, bool altFont, string texture, float scaleX, float scaleY, float rotation, bool gui,
         float angle, float length)
     {
         Position = position;
+        this.above = above;
         this.color = color;
         this.width = width;
         this.height = height;
