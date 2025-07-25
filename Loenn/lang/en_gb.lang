@@ -849,6 +849,10 @@ triggers.KoseiHelper/SwapTilesetTrigger.attributes.description.triggerMode=Wheth
 triggers.KoseiHelper/SwapTilesetTrigger.attributes.description.flag=The trigger will only activate once this flag is true.\nLeave empty for no flag required.
 triggers.KoseiHelper/SwapTilesetTrigger.attributes.description.onlyOnce=Whether the trigger should remove itself once used.
 triggers.KoseiHelper/SwapTilesetTrigger.attributes.description.bgTiles=Whether the background tiles should be swapped instead of foreground tiles.\nClose and reopen to update the tileset lists.
+triggers.KoseiHelper/SwapTilesetTrigger.attributes.description.alternate=If the trigger activates again, the To Tileset will swap back to From Tileset.
+triggers.KoseiHelper/SwapTilesetTrigger.attributes.description.flash=Whether the screen should flash when swapping tilesets, respecting photosensitive options.
+triggers.KoseiHelper/SwapTilesetTrigger.attributes.description.flashColor=The color of the flash when swapping tilesets.
+triggers.KoseiHelper/SwapTilesetTrigger.attributes.description.sound=The sound that swapping tilesets should produce.
 
 # Create Spawn Point Trigger
 triggers.KoseiHelper/CreateSpawnPointTrigger.placements.name.CreateSpawnPointTrigger=Create Spawn Point Trigger

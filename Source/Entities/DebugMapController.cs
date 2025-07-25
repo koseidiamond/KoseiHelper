@@ -4,7 +4,6 @@ using Celeste.Mod.Helpers;
 using Microsoft.Xna.Framework;
 using Monocle;
 using MonoMod.Utils;
-using System;
 using System.Collections.Generic;
 
 namespace Celeste.Mod.KoseiHelper.Entities;
@@ -188,9 +187,9 @@ public class DebugMapController : Entity
                         Image image = new Image(GFX.Game[debugShape.texture]);
                         image.Color = debugShape.color;
                         // Idk why I'm dividing by 16 but if it works it works
-                        image.Position = new Vector2(debugShape.rect.X - (image.Width * debugShape.scaleX) /16,
-                            debugShape.rect.Y - (image.Height *debugShape.scaleY)/16);
-                        image.Scale = new Vector2(debugShape.scaleX/8, debugShape.scaleY/8);
+                        image.Position = new Vector2(debugShape.rect.X - (image.Width * debugShape.scaleX) / 16,
+                            debugShape.rect.Y - (image.Height * debugShape.scaleY) / 16);
+                        image.Scale = new Vector2(debugShape.scaleX / 8, debugShape.scaleY / 8);
                         // TODO this line needs fixing idk why it's not taking the correct angles
                         //image.Rotation = debugShape.rotation;
                         image.Render();
