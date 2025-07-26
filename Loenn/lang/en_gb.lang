@@ -47,7 +47,7 @@ entities.KoseiHelper/DebugRenderer.attributes.description.depth=The depth at whi
 
 # Debug Map Shapes
 entities.KoseiHelper/DebugMapTile.placements.name.DebugMapTile=Debug Map Shape [Obsolete]
-entities.KoseiHelper/DebugMapTile.placements.description.DebugMapTile=Displays colored shapes, text or images on the debug map (when pressing F6).\nNote that they only work if placed inside room bounds.\nThis entity is NOT compatible with GameHelper's debug features. It's recommended to use those instead.
+entities.KoseiHelper/DebugMapTile.placements.description.DebugMapTile=Displays colored shapes, text or images on the debug map (when pressing F6).\nNote that they only work if placed inside room bounds.\nThis entity is NOT compatible with GameHelper's debug features. It's recommended to use those instead.\nDebug Shapes need a Debug Map Controller in your map to be loaded.
 entities.KoseiHelper/DebugMapTile.attributes.description.color=The color of your shape on the debug map.
 entities.KoseiHelper/DebugMapTile.attributes.description.shape=The shape that will appear on the debug map.\nCircle radius is determined by the width.
 entities.KoseiHelper/DebugMapTile.attributes.description.thickness=The thickness of the circle.
