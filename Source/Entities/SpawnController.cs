@@ -12,42 +12,40 @@ namespace Celeste.Mod.KoseiHelper.Entities;
 
 public enum EntityType
 {
-    Puffer,
-    Cloud,
     BadelineBoost,
     Booster,
+    BounceBlock,
     Bumper,
-    IceBlock,
-    Heart,
+    Cloud,
+    Counter,
+    CrumblePlatform,
     DashBlock,
+    Decal,
+    DreamBlock,
     FallingBlock,
     Feather,
-    Iceball,
-    MoveBlock,
-    Seeker,
-    SwapBlockNoBg,
-    ZipMover,
-    CrumblePlatform,
-    DreamBlock,
-    BounceBlock,
-    Refill,
-    GlassBlock,
-    JumpthruPlatform,
+    Flag,
     FloatySpaceBlock,
-    StarJumpBlock,
-    CrushBlock,
-    Water,
+    GlassBlock,
+    Heart,
+    Iceball,
+    IceBlock,
+    JumpthruPlatform,
+    Kevin,
+    MoveBlock,
+    Player,
+    Puffer,
+    Refill,
+    Seeker,
+    SpawnPoint,
     Spinner,
     Spring,
+    StarJumpBlock,
     Strawberry,
-    Player,
-    Decal,
-    Flag,
-    Counter,
-    SpawnPoint,
-    //The following entities are just alternate names so the name from the plugin is renamed:
+    SwapBlockNoBg,
     SwapBlock,
-    Kevin,
+    Water,
+    ZipMover,
     CustomEntity
 }
 
@@ -168,6 +166,7 @@ public class SpawnController : Entity
 
     public bool attachToSolid;
     public CrystalColor crystalColor;
+    public bool dust;
 
     public string orientation;
     public bool playerCanUse;
@@ -246,8 +245,6 @@ public class SpawnController : Entity
         entityToSpawn = data.Enum("entityToSpawn", EntityType.Puffer);
         if (entityToSpawn == EntityType.SwapBlock)
             entityToSpawn = EntityType.SwapBlockNoBg;
-        if (entityToSpawn == EntityType.Kevin)
-            entityToSpawn = EntityType.CrushBlock;
         spawnCooldown = spawnTime = data.Float("spawnCooldown", 0f);
         removeDash = data.Bool("removeDash", false);
         removeStamina = data.Bool("removeStamina", false);
@@ -332,6 +329,7 @@ public class SpawnController : Entity
 
         attachToSolid = data.Bool("attachToSolid", false);
         crystalColor = data.Enum("crystalColor", CrystalColor.Blue);
+        dust = data.Bool("dust", false);
 
         orientation = data.Attr("orientation", "Floor");
         playerCanUse = data.Bool("playerCanUse", true);
@@ -395,7 +393,7 @@ public class SpawnController : Entity
         {
         EntityType.MoveBlock,
         EntityType.GlassBlock,
-        EntityType.CrushBlock,
+        EntityType.Kevin,
         EntityType.FallingBlock,
         EntityType.DashBlock,
         EntityType.JumpthruPlatform,
@@ -453,10 +451,13 @@ public class SpawnController : Entity
                 if (entityToSpawn != EntityType.CustomEntity)
                     Logger.Debug(nameof(KoseiHelperModule), $"An entity is going to spawn: {entityToSpawn}");
                 else //Logs the parameters used in Lönn + the original constructor
-                    Logger.Debug(nameof(KoseiHelperModule), $"An entity ({entityPath}) is going to spawn, with the attributes: " +
-                    $"{string.Join(", ", dictionaryKeys.Zip(dictionaryValues, (key, value) => $"{key}={value}"))}, with parameters: " +
-                    $"{string.Join(", ", FakeAssembly.GetFakeEntryAssembly().GetType(entityPath).GetConstructors().Select(constructor =>
-                    $"{constructor.Name}({string.Join(", ", constructor.GetParameters().Select(param => $"{param.ParameterType.Name} {param.Name}"))})"))}.");
+                {
+                    if (!string.IsNullOrEmpty(entityPath))
+                        Logger.Debug(nameof(KoseiHelperModule), $"An entity ({entityPath}) is going to spawn, with the attributes: " +
+                        $"{string.Join(", ", dictionaryKeys.Zip(dictionaryValues, (key, value) => $"{key}={value}"))}, with parameters: " +
+                        $"{string.Join(", ", FakeAssembly.GetFakeEntryAssembly().GetType(entityPath).GetConstructors().Select(constructor =>
+                        $"{constructor.Name}({string.Join(", ", constructor.GetParameters().Select(param => $"{param.ParameterType.Name} {param.Name}"))})"))}.");
+                }
 
                 if (removeDash && Scene.Tracker.GetEntity<Player>().Dashes > 0)
                     player.Dashes -= 1;
@@ -579,7 +580,7 @@ public class SpawnController : Entity
                     case EntityType.StarJumpBlock:
                         spawnedEntity = new StarJumpBlock(spawnPosition, blockWidth, blockHeight, blockSinks);
                         break;
-                    case EntityType.CrushBlock:
+                    case EntityType.Kevin:
                         spawnedEntity = new CrushBlock(spawnPosition, blockWidth, blockHeight, crushBlockAxis, crushBlockChillout);
                         break;
                     case EntityType.Water:
@@ -587,6 +588,8 @@ public class SpawnController : Entity
                         break;
                     case EntityType.Spinner:
                         spawnedEntity = new CrystalStaticSpinner(spawnPosition, attachToSolid, crystalColor);
+                        if (dust)
+                            spawnedEntity = new DustStaticSpinner(spawnPosition, attachToSolid, false);
                         break;
                     case EntityType.Spring:
                         switch (orientation)
@@ -880,7 +883,7 @@ public class SpawnController : Entity
         {
             entityType = FakeAssembly.GetFakeEntryAssembly().GetType(entityPath); // This is where it gets the type, like Celeste.Strawberry
         }
-        catch (ArgumentNullException)
+        catch
         {
             Logger.Log(LogLevel.Error, "KoseiHelper", "Failed to get entity: Requested type does not exist");
             return null;

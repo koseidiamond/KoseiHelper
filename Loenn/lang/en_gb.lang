@@ -707,6 +707,7 @@ entities.KoseiHelper/SpawnController.attributes.description.hasTop=Determines wh
 entities.KoseiHelper/SpawnController.attributes.description.hasBottom=Determines whether or not the water has a bottom.
 entities.KoseiHelper/SpawnController.attributes.description.attachToSolid=Whether the spinner attaches to solids, and can be moved by them.
 entities.KoseiHelper/SpawnController.attributes.description.crystalColor=The color of the spinner.
+entities.KoseiHelper/SpawnController.attributes.description.dust=Whether the spinner should be a dust bunny.
 entities.KoseiHelper/SpawnController.attributes.description.orientation=Whether the spring should face left, right, up, or left/right depending on the facing direction.
 entities.KoseiHelper/SpawnController.attributes.description.playerCanUse=Determines whether the player is able to interact with the spring.
 entities.KoseiHelper/SpawnController.attributes.description.moon=Makes the strawberry render as a moon berry.\nDoes not work with wings in the base game.

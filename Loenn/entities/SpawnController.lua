@@ -72,6 +72,7 @@ SpawnController.placements = {
 		hasBottom = false,
 		attachToSolid = false,
 		crystalColor = "Blue",
+		dust = false,
 		orientation = "Floor",
 		playerCanUse = true,
 		winged = false,
@@ -327,6 +328,7 @@ function SpawnController.ignoredFields(entity)
 	"hasBottom",
 	"attachToSolid",
 	"crystalColor",
+	"dust",
 	"orientation",
 	"playerCanUse",
 	"winged",
@@ -443,6 +445,7 @@ function SpawnController.ignoredFields(entity)
 	if entity.entityToSpawn == "Spinner" then
 		doNotIgnore("attachToSolid")
 		doNotIgnore("crystalColor")
+		doNotIgnore("dust")
 	end
 	if entity.entityToSpawn == "Spring" then
 		doNotIgnore("orientation")
