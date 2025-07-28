@@ -6,7 +6,6 @@ using Monocle;
 using MonoMod.Utils;
 using System.Collections.Generic;
 using System.Linq;
-using System.Transactions;
 
 namespace Celeste.Mod.KoseiHelper.Entities;
 
@@ -228,7 +227,7 @@ public class DebugMapController : Entity
                         else
                             texPath = basePath;
 
-                            Image image = debugShape.gui ? new Image(GFX.Gui[texPath]) : new Image(GFX.Game[texPath]);
+                        Image image = debugShape.gui ? new Image(GFX.Gui[texPath]) : new Image(GFX.Game[texPath]);
 
                         image.Color = debugShape.color;
                         image.Position = new Vector2(debugShape.rect.X - (image.Width * debugShape.scaleX) / 16,
@@ -394,4 +393,4 @@ public class DebugMapController : Entity
         controllerFound = true;
     }
 }*/
-                }
+}

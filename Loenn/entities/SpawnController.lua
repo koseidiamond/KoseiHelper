@@ -31,7 +31,6 @@ SpawnController.placements = {
 		absoluteCoords = false,
 		poofWhenDisappearing = true,
 		ignoreJustRespawned = false,
-		canDragAround = false,
 		
 		--Spawn conditions
 		spawnFlag = "koseiHelper_spawn",
@@ -91,7 +90,12 @@ SpawnController.placements = {
 		entityPath = "",
 		dictKeys = "",
 		dictValues = "",
-		noNode = false
+		noNode = false,
+		
+		-- Mouse attributes
+		canDragAround = false,
+		mouseWheelMode = false,
+		wheelOptions = ""
 		
 		-- Secret attributes that no one should use unless they have a good reason (if you're lurking here you know what you're doing):
 		-- noCollider
@@ -285,6 +289,8 @@ function SpawnController.ignoredFields(entity)
 	"_name",
 	"_id",
 	"canDragAround",
+	"mouseWheelMode",
+	"wheelOptions",
 	"nodeX",
 	"nodeY",
 	"blockWidth",
@@ -371,6 +377,10 @@ function SpawnController.ignoredFields(entity)
 	end
 	if entity.spawnCondition == "LeftClick" or entity.spawnCondition == "RightClick" then
 		doNotIgnore("canDragAround")
+		doNotIgnore("mouseWheelMode")
+		if entity.mouseWheelMode == true then
+			doNotIgnore("wheelOptions")
+		end
 	end
 	-- Entity attributes
 	if entity.spawnCondition == "BadelineBoost" then

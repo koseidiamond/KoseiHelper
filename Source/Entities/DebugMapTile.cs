@@ -49,13 +49,13 @@ public class DebugMapTile : Entity
         texture = data.Attr("texture", "characters/bird/Recover03");
         scaleX = data.Float("scaleX", 1f);
         scaleY = data.Float("scaleY", 1f);
-        rotation = (float) (data.Float("rotation", 0f) * Math.PI / 180f);
+        rotation = (float)(data.Float("rotation", 0f) * Math.PI / 180f);
         gui = data.Bool("gui", false);
         animationFrames = data.Int("animationFrames", 0);
         animationSpeed = data.Float("animationSpeed", 10);
         angle = data.Float("angle", 0f);
         length = data.Float("length", 0f);
-        
+
     }
 
     public DebugMapTile(Vector2 position, bool above, Color color, float width, float height, Shape shape, float thickness, int resolution, bool hollow,

@@ -1,6 +1,5 @@
 using Microsoft.Xna.Framework;
 using Monocle;
-using System;
 
 namespace Celeste.Mod.KoseiHelper.Entities;
 
@@ -49,9 +48,9 @@ public class BoosterNoOutline : Booster
     public override void Update()
     {
         base.Update();
-            if (respawnTimer > 0f && singleUse)
-            {
-                RemoveSelf();
-            }
+        if (respawnTimer > 0f && singleUse)
+        {
+            RemoveSelf();
         }
     }
+}

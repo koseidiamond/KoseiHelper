@@ -1,7 +1,6 @@
-using Celeste.Mod.Entities;
+﻿using Celeste.Mod.Entities;
 using Celeste.Mod.Helpers;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
 using Monocle;
 using System;
 using System.Collections.Generic;
@@ -205,20 +204,34 @@ public class SpawnController : Entity
     // Mouse wheel
 
     public bool mouseWheelMode;
-
-    private static readonly EntityType[] WheelCycle = Enum.GetValues<EntityType>()
-        .Except(new[]
+    public string wheelOptions;
+    private static EntityType[] WheelCycle;
+    private static int wheelIndex;
+    public static EntityType currentWheelValue => WheelCycle[wheelIndex];
+    private EntityType[] BuildWheelCycle(string wheelList)
+    {
+        if (!string.IsNullOrWhiteSpace(wheelList))
         {
+            try
+            {
+                return wheelList.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).Select(s => Enum.Parse<EntityType>(s, true)).ToArray();
+            }
+            catch
+            {
+                Logger.Log(LogLevel.Error, "KoseiHelper", "An invalid entity type was introduced in the Wheel Options list!\nUsing the default list instead.");
+            }
+        }
+
+        return Enum.GetValues<EntityType>()
+            .Except(new[]
+            {
             EntityType.Player,
-            EntityType.Decal,
             EntityType.Flag,
             EntityType.Counter,
             EntityType.SpawnPoint,
-            EntityType.CustomEntity
-        })
-        .ToArray();
-    private static int wheelIndex;
-    public static EntityType currentWheelValue => WheelCycle[wheelIndex];
+            })
+            .ToArray();
+    }
     private static int lastWheel;
 
     public SpawnController(EntityData data, Vector2 offset) : base(data.Position + offset)
@@ -266,10 +279,13 @@ public class SpawnController : Entity
             base.Tag = Tags.TransitionUpdate;
         mouseWheelMode = data.Bool("mouseWheelMode", false);
         if (mouseWheelMode)
+        {
             base.Tag = Tags.HUD;
+            wheelOptions = data.Attr("wheelOptions", "");
+            WheelCycle = BuildWheelCycle(wheelOptions);
+        }
 
         //Entity specific attributes
-
 
         nodeX = data.Int("nodeX", 0);
         nodeY = data.Int("nodeY", 0);
@@ -436,7 +452,7 @@ public class SpawnController : Entity
             {
                 if (entityToSpawn != EntityType.CustomEntity)
                     Logger.Debug(nameof(KoseiHelperModule), $"An entity is going to spawn: {entityToSpawn}");
-                else //Logs the parameters used in L�nn + the original constructor
+                else //Logs the parameters used in Lönn + the original constructor
                     Logger.Debug(nameof(KoseiHelperModule), $"An entity ({entityPath}) is going to spawn, with the attributes: " +
                     $"{string.Join(", ", dictionaryKeys.Zip(dictionaryValues, (key, value) => $"{key}={value}"))}, with parameters: " +
                     $"{string.Join(", ", FakeAssembly.GetFakeEntryAssembly().GetType(entityPath).GetConstructors().Select(constructor =>
@@ -717,10 +733,8 @@ public class SpawnController : Entity
                 isDragging = false;
                 draggedEntity = null;
             }
-            if (mouseWheelMode) // todo
+            if (mouseWheelMode)
             {
-                //if (Scene.OnInterval(1f))
-                //Logger.Debug(nameof(KoseiHelperModule), $"wheel test {MInput.Mouse.Wheel}, index {wheelIndex}");
                 int wheel = MInput.Mouse.Wheel;
                 int movedWheel = wheel - lastWheel;
                 if (movedWheel != 0)
