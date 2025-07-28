@@ -202,6 +202,25 @@ public class SpawnController : Entity
     private Entity draggedEntity = null;
     private Vector2 dragOffset = Vector2.Zero;
 
+    // Mouse wheel
+
+    public bool mouseWheelMode;
+
+    private static readonly EntityType[] WheelCycle = Enum.GetValues<EntityType>()
+        .Except(new[]
+        {
+            EntityType.Player,
+            EntityType.Decal,
+            EntityType.Flag,
+            EntityType.Counter,
+            EntityType.SpawnPoint,
+            EntityType.CustomEntity
+        })
+        .ToArray();
+    private static int wheelIndex;
+    public static EntityType currentWheelValue => WheelCycle[wheelIndex];
+    private static int lastWheel;
+
     public SpawnController(EntityData data, Vector2 offset) : base(data.Position + offset)
     {
         Add(new PostUpdateHook(() => { }));
@@ -245,6 +264,9 @@ public class SpawnController : Entity
             base.Tag = Tags.Persistent;
         if (data.Bool("transitionUpdate", false) || entityToSpawn == EntityType.Player)
             base.Tag = Tags.TransitionUpdate;
+        mouseWheelMode = data.Bool("mouseWheelMode", false);
+        if (mouseWheelMode)
+            base.Tag = Tags.HUD;
 
         //Entity specific attributes
 
@@ -695,6 +717,20 @@ public class SpawnController : Entity
                 isDragging = false;
                 draggedEntity = null;
             }
+            if (mouseWheelMode) // todo
+            {
+                //if (Scene.OnInterval(1f))
+                //Logger.Debug(nameof(KoseiHelperModule), $"wheel test {MInput.Mouse.Wheel}, index {wheelIndex}");
+                int wheel = MInput.Mouse.Wheel;
+                int movedWheel = wheel - lastWheel;
+                if (movedWheel != 0)
+                {
+                    lastWheel = wheel;
+                    int dir = Math.Sign(movedWheel);
+                    wheelIndex = (wheelIndex + dir + WheelCycle.Length) % WheelCycle.Length;
+                    entityToSpawn = currentWheelValue;
+                }
+            }
         }
 
         List<EntityWithTTL> toRemove = new List<EntityWithTTL>();
@@ -933,6 +969,24 @@ public class SpawnController : Entity
     {
         jumpCheck(self);
         orig(self, dir);
+    }
+
+    public override void Render()
+    {
+        if (mouseWheelMode)
+        {
+            base.Render();
+            Player player = SceneAs<Level>().Tracker.GetEntity<Player>();
+            Level level = SceneAs<Level>();
+            if (true && level != null && player != null)
+            {
+                // if canSpawn
+                if (entityToSpawn == EntityType.CustomEntity)
+                    ActiveFont.Draw(entityPath.ToString(), new Vector2(20f, 140f), Vector2.Zero, new Vector2(0.5f, 0.5f), Color.White, 1f, Color.Black, 1f, Color.Black);
+                else
+                    ActiveFont.Draw(entityToSpawn.ToString(), new Vector2(20f, 140f), Vector2.Zero, new Vector2(0.5f, 0.5f), Color.White, 1f, Color.Black, 1f, Color.Black);
+            }
+        }
     }
 
     public static void Load()
