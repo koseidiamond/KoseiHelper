@@ -172,7 +172,9 @@ SpawnController.fieldInformation = function (entity) return {
 		"OnSpeedX",
 		"OnInterval",
 		"OnClimb",
-		"OnJump"
+		"OnJump",
+		"OnLeftClick",
+		"RightClick"
 		},
 		editable = false
 	},

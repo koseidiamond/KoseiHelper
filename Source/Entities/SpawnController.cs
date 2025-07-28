@@ -1,6 +1,7 @@
 using Celeste.Mod.Entities;
 using Celeste.Mod.Helpers;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using Monocle;
 using System;
 using System.Collections.Generic;
@@ -60,7 +61,9 @@ public enum SpawnCondition
     OnSpeedX = 5,
     OnInterval = 6,
     OnClimb = 7,
-    OnJump = 8
+    OnJump = 8,
+    LeftClick = 9,
+    RightClick = 10
 }
 
 public enum CassetteColor
@@ -392,6 +395,8 @@ public class SpawnController : Entity
                 SpawnCondition.OnCustomButtonPress => KoseiHelperModule.Settings.SpawnButton.Pressed && spawnCooldown == 0,
                 SpawnCondition.OnClimb => player.StateMachine.state == 1,
                 SpawnCondition.OnJump => playerIsJumping,
+                SpawnCondition.LeftClick => MInput.Mouse.PressedLeftButton,
+                SpawnCondition.RightClick => MInput.Mouse.PressedRightButton,
                 _ => false
             };
             if ((despawnMethod == DespawnMethod.Flag || despawnMethod == DespawnMethod.TTLFlag) && level.Session.GetFlag(flagToLive))
@@ -422,6 +427,12 @@ public class SpawnController : Entity
                         spawnPosition = new Vector2(player.Position.X - offsetX, player.Position.Y + offsetY);
                     if (relativeToPlayerFacing && player.Facing == Facings.Right && isBlock)
                         spawnPosition = new Vector2(player.Position.X + offsetX - blockWidth, player.Position.Y + offsetY);
+                    if (spawnCondition == SpawnCondition.LeftClick || spawnCondition == SpawnCondition.RightClick)
+                    {
+                        float mouseX = MInput.Mouse.Position.X * (320f / 1920f);
+                        float mouseY = MInput.Mouse.Position.Y * (180f / 1080f);
+                        spawnPosition = new Vector2(level.Camera.Position.X + mouseX + offsetX, level.Camera.Position.Y + mouseY + offsetY);
+                    }
                 }
                 //Calculate node position
                 var nodePosition = new Vector2(X + nodeX, Y + nodeY);
@@ -636,6 +647,7 @@ public class SpawnController : Entity
                     spawnedEntitiesWithTTL.Add(new EntityWithTTL(spawnedEntity, entityTTL, entityFTL));
                     spawnCooldown = spawnTime;
                     hasSpawnedFromSpeed = true;
+                    level.Session.IncrementCounter("KoseiHelper_Total_" + spawnedEntity.ToString() + "s_Spawned");
                     Audio.Play(appearSound, player.Position);
                 }
             }
@@ -645,8 +657,7 @@ public class SpawnController : Entity
         {
             wrapper.TimeToLive -= Engine.RawDeltaTime;
             level.Session.SetSlider("KoseiHelper_EntitySpawnerTTL" + wrapper.Entity.ToString(), wrapper.TimeToLive);
-
-            if (wrapper.Entity is MoveBlock moveBlock) //Fix: They would crash the game if they were too out of bounds, so...
+            if (wrapper.Entity is MoveBlock moveBlock) // They would crash the game if they were too out of bounds, so...
             {
                 if (wrapper.Entity.Bottom > (float)level.Bounds.Bottom + 16 || // ... We remove move blocks regardless of TTS if they are oob!
                     wrapper.Entity.Left < (float)level.Bounds.Left - 16 ||
