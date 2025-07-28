@@ -132,7 +132,7 @@ public class SpawnController : Entity
 
     public bool cloudFragile;
 
-    public bool boosterRed;
+    public bool boosterRed, boosterSingleUse;
 
     public bool dummyFix;
 
@@ -176,6 +176,8 @@ public class SpawnController : Entity
     public string decalTexture;
     public int decalDepth;
 
+    public bool canDragAround;
+
     private CoreModes coreMode;
     private CassetteBlockManager cassetteBlockManager;
 
@@ -195,6 +197,10 @@ public class SpawnController : Entity
     private string entityPath;
     private List<string> dictionaryKeys;
     private List<string> dictionaryValues;
+
+    private bool isDragging = false;
+    private Entity draggedEntity = null;
+    private Vector2 dragOffset = Vector2.Zero;
 
     public SpawnController(EntityData data, Vector2 offset) : base(data.Position + offset)
     {
@@ -233,6 +239,7 @@ public class SpawnController : Entity
         poofWhenDisappearing = data.Bool("poofWhenDisappearing", true);
         noNode = data.Bool("noNode", false);
         ignoreJustRespawned = data.Bool("ignoreJustRespawned", false);
+        canDragAround = data.Bool("canDragAround", false);
         dashCount = 0;
         if (persistency)
             base.Tag = Tags.Persistent;
@@ -249,6 +256,7 @@ public class SpawnController : Entity
         blockTileType = data.Char("blockTileType", '3');
 
         boosterRed = data.Bool("boosterRed", false);
+        boosterSingleUse = data.Bool("boosterSingleUse", false);
 
         dummyFix = data.Bool("dummyFix", true);
 
@@ -458,7 +466,7 @@ public class SpawnController : Entity
                         spawnedEntity = new BadelineBoost(new Vector2[] { spawnPosition, new Vector2(player.Position.X + offsetX, level.Bounds.Top - 200) }, false, false, false, false, false);
                         break;
                     case EntityType.Booster:
-                        spawnedEntity = new BoosterNoOutline(spawnPosition, boosterRed); // I had to make a new class so their outline doesn't stay after they poof
+                        spawnedEntity = new BoosterNoOutline(spawnPosition, boosterRed, boosterSingleUse); // I had to make a new class so their outline doesn't stay after they poof
                         break;
                     case EntityType.Bumper:
                         spawnedEntity = new Bumper(spawnPosition, null);
@@ -632,7 +640,10 @@ public class SpawnController : Entity
                             hasSpawnedFromSpeed = true;
                             Audio.Play(appearSound, spawnPosition);
                             if (poofWhenDisappearing)
-                                level.ParticlesFG.Emit(poofParticle, 5, spawnPosition, Vector2.One * 4f, 0 - (float)Math.PI / 2f);
+                            {
+                                if (!(entityToSpawn == EntityType.Booster && boosterSingleUse))
+                                    level.ParticlesFG.Emit(poofParticle, 5, spawnPosition, Vector2.One * 4f, 0 - (float)Math.PI / 2f);
+                            }
                         }
                         break;
                     case EntityType.CustomEntity:
@@ -652,6 +663,40 @@ public class SpawnController : Entity
                 }
             }
         }
+
+        if (canDragAround)
+        {
+            float mouseX = MInput.Mouse.Position.X * (320f / 1920f);
+            float mouseY = MInput.Mouse.Position.Y * (180f / 1080f);
+            Vector2 mousePosition = new Vector2(level.Camera.Position.X + mouseX, level.Camera.Position.Y + mouseY);
+
+            if (isDragging && spawnedEntity != null)
+            {
+                draggedEntity.Position = mousePosition - dragOffset;
+            }
+            if (spawnedEntity != null)
+            {
+                if ((MInput.Mouse.CheckLeftButton && spawnCondition == SpawnCondition.LeftClick) ||
+                    (MInput.Mouse.CheckRightButton && spawnCondition == SpawnCondition.RightClick))
+                {
+                    // Check if we're clicking on the tile at the center of the last spawned entity from this controller
+                    Rectangle entityCenterRect = new Rectangle((int)(spawnedEntity.Center.X - 8), (int)(spawnedEntity.Center.Y - 8), 16, 16);
+                    if (entityCenterRect.Contains((int)mousePosition.X, (int)mousePosition.Y))
+                    {
+                        isDragging = true;
+                        draggedEntity = spawnedEntity;
+                        dragOffset = mousePosition - spawnedEntity.Position;
+                    }
+                }
+            }
+            if ((MInput.Mouse.ReleasedLeftButton && spawnCondition == SpawnCondition.LeftClick) ||
+                (MInput.Mouse.ReleasedRightButton && spawnCondition == SpawnCondition.RightClick))
+            {
+                isDragging = false;
+                draggedEntity = null;
+            }
+        }
+
         List<EntityWithTTL> toRemove = new List<EntityWithTTL>();
         foreach (EntityWithTTL wrapper in spawnedEntitiesWithTTL)
         {

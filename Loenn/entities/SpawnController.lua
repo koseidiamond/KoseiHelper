@@ -31,6 +31,7 @@ SpawnController.placements = {
 		absoluteCoords = false,
 		poofWhenDisappearing = true,
 		ignoreJustRespawned = false,
+		canDragAround = false,
 		
 		--Spawn conditions
 		spawnFlag = "koseiHelper_spawn",
@@ -48,6 +49,7 @@ SpawnController.placements = {
 		blockTileType = "3",
 		
 		boosterRed = false,
+		boosterSingleUse = false,
 		dummyFix = true,
 		cloudFragile = true,
 		featherShielded = false,
@@ -173,7 +175,7 @@ SpawnController.fieldInformation = function (entity) return {
 		"OnInterval",
 		"OnClimb",
 		"OnJump",
-		"OnLeftClick",
+		"LeftClick",
 		"RightClick"
 		},
 		editable = false
@@ -282,6 +284,7 @@ function SpawnController.ignoredFields(entity)
 	local ignored = {
 	"_name",
 	"_id",
+	"canDragAround",
 	"nodeX",
 	"nodeY",
 	"blockWidth",
@@ -289,6 +292,7 @@ function SpawnController.ignoredFields(entity)
 	"blockTileType",
 	"nodeRelativeToPlayerFacing",
 	"boosterRed",
+	"boosterSingleUse",
 	"dummyFix",
 	"timeToLive",
 	"flagToLive",
@@ -365,12 +369,16 @@ function SpawnController.ignoredFields(entity)
 	if entity.spawnCondition == "OnDash" then
 		doNotIgnore("everyXDashes")
 	end
+	if entity.spawnCondition == "LeftClick" or entity.spawnCondition == "RightClick" then
+		doNotIgnore("canDragAround")
+	end
 	-- Entity attributes
 	if entity.spawnCondition == "BadelineBoost" then
 		doNotIgnore("dummyFix")
 	end
 	if entity.entityToSpawn == "Booster" then
 		doNotIgnore("boosterRed")
+		doNotIgnore("boosterSingleUse")
 	end
 	if entity.entityToSpawn == "Cloud" then
 		doNotIgnore("cloudFragile")

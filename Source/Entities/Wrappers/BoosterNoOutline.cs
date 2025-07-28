@@ -1,18 +1,20 @@
 using Microsoft.Xna.Framework;
 using Monocle;
+using System;
 
 namespace Celeste.Mod.KoseiHelper.Entities;
 
 [TrackedAs(typeof(Booster))]
 public class BoosterNoOutline : Booster
 {
-
-    public BoosterNoOutline(Vector2 position, bool red)
+    private bool singleUse;
+    public BoosterNoOutline(Vector2 position, bool red, bool singleUse)
          : base(position, red)
     {
         base.Depth = -8500;
         base.Collider = new Circle(10f, 0f, 2f);
         this.red = red;
+        this.singleUse = singleUse;
         Add(new PlayerCollider(OnPlayer));
         Add(light = new VertexLight(Color.White, 1f, 16, 32));
         Add(bloom = new BloomPoint(0.1f, 16f));
@@ -25,7 +27,7 @@ public class BoosterNoOutline : Booster
     }
 
     public BoosterNoOutline(EntityData data, Vector2 offset)
-        : this(data.Position + offset, data.Bool("red"))
+        : this(data.Position + offset, data.Bool("red"), data.Bool("singleUse"))
     {
         Ch9HubBooster = data.Bool("ch9_hub_booster");
     }
@@ -43,4 +45,13 @@ public class BoosterNoOutline : Booster
         outline.Add(new MirrorReflection());
         scene.Add(outline);
     }
-}
+
+    public override void Update()
+    {
+        base.Update();
+            if (respawnTimer > 0f && singleUse)
+            {
+                RemoveSelf();
+            }
+        }
+    }
