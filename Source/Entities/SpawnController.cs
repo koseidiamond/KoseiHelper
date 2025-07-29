@@ -631,7 +631,7 @@ public class SpawnController : Entity
                             spawnedEntity = new Decal(decalTexture, spawnPosition, new Vector2(1, 1), decalDepth);
                         break;
                     case EntityType.DreamBlock:
-                        //spawnedEntity = new DreamBlock(spawnPosition, blockWidth, blockHeight, null, false, true);
+                        spawnedEntity = new DreamBlock(spawnPosition, blockWidth, blockHeight, null, false, true);
                         break;
                     case EntityType.DustBunny:
                         if (noNode)
@@ -836,7 +836,9 @@ public class SpawnController : Entity
                     spawnCooldown = spawnTime;
                     hasSpawnedFromSpeed = true;
                     level.Session.IncrementCounter("KoseiHelper_Total_" + spawnedEntity.ToString() + "s_Spawned");
-                    Audio.Play(appearSound, player.Position);
+                    level.Session.IncrementCounter("KoseiHelper_TotalEntitiesSpawned");
+
+                   Audio.Play(appearSound, player.Position);
                 }
             }
         }
@@ -903,8 +905,11 @@ public class SpawnController : Entity
         EntityWithTTL previousEntity = null;
         foreach (EntityWithTTL wrapper in spawnedEntitiesWithTTL)
         {
-            wrapper.TimeToLive -= Engine.RawDeltaTime;
-            level.Session.SetSlider("KoseiHelper_EntitySpawnerTTL" + wrapper.Entity.ToString(), wrapper.TimeToLive);
+            if (wrapper.TimeToLive >= 0f && (despawnMethod == DespawnMethod.TTL || despawnMethod == DespawnMethod.TTLFlag))
+            {
+                wrapper.TimeToLive -= Engine.RawDeltaTime;
+                level.Session.SetSlider("KoseiHelper_EntitySpawnerTTL" + wrapper.Entity.ToString(), wrapper.TimeToLive);
+            }
             if (wrapper.Entity is MoveBlock moveBlock) // They would crash the game if they were too out of bounds, so...
             {
                 if (wrapper.Entity.Bottom > (float)level.Bounds.Bottom + 16 || // ... We remove move blocks regardless of TTS if they are oob!
