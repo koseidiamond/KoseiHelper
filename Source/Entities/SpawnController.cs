@@ -437,6 +437,7 @@ public class SpawnController : Entity
         EntityType.StarJumpBlock,
         EntityType.SwapBlock,
         EntityType.TempleGate,
+        EntityType.Water,
         EntityType.ZipMover
         };
         bool isBlock = blockEntities.Contains(entityToSpawn);
