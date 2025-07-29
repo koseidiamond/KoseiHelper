@@ -133,7 +133,11 @@ SpawnController.placements = {
 		-- Mouse attributes
 		canDragAround = false,
 		mouseWheelMode = false,
-		wheelOptions = ""
+		wheelOptions = "",
+		wheelIndicatorX = 20,
+		wheelIndicatorY = 140,
+		wheelIndicatorImage = false,
+		oppositeDragButton = false
 		
 		-- Secret attributes that no one should use unless they have a good reason (if you're lurking here you know what you're doing):
 		-- noCollider
@@ -385,9 +389,6 @@ function SpawnController.ignoredFields(entity)
 	local ignored = {
 	"_name",
 	"_id",
-	"canDragAround",
-	"mouseWheelMode",
-	"wheelOptions",
 	"nodeX",
 	"nodeY",
 	"blockWidth",
@@ -399,6 +400,14 @@ function SpawnController.ignoredFields(entity)
 	
 	"everyXDashes",
 	"cassetteColor",
+	
+	"canDragAround",
+	"mouseWheelMode",
+	"wheelOptions",
+	"wheelIndicatorX",
+	"wheelIndicatorY",
+	"wheelIndicatorImage",
+	"oppositeDragButton",
 	
 	"dummyFix",
 	
@@ -513,11 +522,18 @@ function SpawnController.ignoredFields(entity)
 	if entity.spawnCondition == "OnDash" then
 		doNotIgnore("everyXDashes")
 	end
+	-- Mouse options
 	if entity.spawnCondition == "LeftClick" or entity.spawnCondition == "RightClick" then
 		doNotIgnore("canDragAround")
 		doNotIgnore("mouseWheelMode")
+		if entity.canDragAround == true then
+			doNotIgnore("oppositeDragButton")
+		end
 		if entity.mouseWheelMode == true then
 			doNotIgnore("wheelOptions")
+			doNotIgnore("wheelIndicatorX")
+			doNotIgnore("wheelIndicatorY")
+			doNotIgnore("wheelIndicatorImage")
 		end
 	end
 	-- Entity attributes
@@ -698,6 +714,8 @@ SpawnController.fieldOrder =  {
 	"dictKeys",
 	"dictValues",
 	"wheelOptions",
+	"wheelIndicatorX",
+	"wheelIndicatorY",
 	
 	-- non-boolean entity-specific attributes
 	"bladeSpeed",
@@ -837,7 +855,7 @@ function SpawnController.texture(room, entity)
 	elseif entityToSpawn == "JumpthruPlatform" then
 		return "objects/KoseiHelper/Controllers/SpawnController/JumpthruPlatform"
 	elseif entityToSpawn == "Kevin" then
-		return "objects/KoseiHelper/Controllers/SpawnController/CrushBlock"
+		return "objects/KoseiHelper/Controllers/SpawnController/Kevin"
 	elseif entityToSpawn == "MoveBlock" then
         return "objects/KoseiHelper/Controllers/SpawnController/MoveBlock"
 	elseif entityToSpawn == "Seeker" then
@@ -907,8 +925,8 @@ function SpawnController.texture(room, entity)
 			return "objects/KoseiHelper/Controllers/SpawnController/TempleGateMirror"
 		elseif entity.templeGateSprite == "Theo" then
 			return "objects/KoseiHelper/Controllers/SpawnController/TempleGateTheo"
-		else
-			return "objects/KoseiHelper/Controllers/SpawnController/TempleGateDefault"
+		else -- Default
+			return "objects/KoseiHelper/Controllers/SpawnController/TempleGate"
 		end
 	elseif entityToSpawn == "Water" then
 		return "objects/KoseiHelper/Controllers/SpawnController/Water"

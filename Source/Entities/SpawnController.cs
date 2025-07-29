@@ -219,8 +219,11 @@ public class SpawnController : Entity
     // Mouse mode
 
     public bool canDragAround;
+    public bool oppositeDragButton;
     public bool mouseWheelMode;
     public string wheelOptions;
+    public float wheelIndicatorX, wheelIndicatorY;
+    public bool wheelIndicatorImage;
     private static EntityType[] WheelCycle;
     private static int wheelIndex;
     public static EntityType currentWheelValue => WheelCycle[wheelIndex];
@@ -276,15 +279,22 @@ public class SpawnController : Entity
         noNode = data.Bool("noNode", false);
         ignoreJustRespawned = data.Bool("ignoreJustRespawned", false);
         canDragAround = data.Bool("canDragAround", false);
+        oppositeDragButton = data.Bool("oppositeDragButton", true);
         dashCount = 0;
         if (persistency)
             base.Tag = Tags.Persistent;
         if (data.Bool("transitionUpdate", false) || entityToSpawn == EntityType.Player)
             base.Tag = Tags.TransitionUpdate;
+
         mouseWheelMode = data.Bool("mouseWheelMode", false);
+        wheelIndicatorX = data.Float("wheelIndicatorX", 20f);
+        wheelIndicatorY = data.Float("wheelIndicatorY", 140f);
+        wheelIndicatorImage = data.Bool("wheelIndicatorImage", false);
         if (mouseWheelMode)
         {
-            base.Tag = Tags.HUD;
+            this.Depth = -300000;
+            if (!wheelIndicatorImage)
+                base.Tag = Tags.HUD;
             wheelOptions = data.Attr("wheelOptions", "");
             WheelCycle = BuildWheelCycle(wheelOptions);
         }
@@ -498,12 +508,12 @@ public class SpawnController : Entity
                         spawnPosition = new Vector2(player.Position.X - offsetX, player.Position.Y + offsetY);
                     if (relativeToPlayerFacing && player.Facing == Facings.Right && isBlock)
                         spawnPosition = new Vector2(player.Position.X + offsetX - blockWidth, player.Position.Y + offsetY);
-                    if (spawnCondition == SpawnCondition.LeftClick || spawnCondition == SpawnCondition.RightClick)
-                    {
-                        float mouseX = MInput.Mouse.Position.X * (320f / 1920f);
-                        float mouseY = MInput.Mouse.Position.Y * (180f / 1080f);
-                        spawnPosition = new Vector2(level.Camera.Position.X + mouseX + offsetX, level.Camera.Position.Y + mouseY + offsetY);
-                    }
+                }
+                if (spawnCondition == SpawnCondition.LeftClick || spawnCondition == SpawnCondition.RightClick)
+                {
+                    float mouseX = MInput.Mouse.Position.X * (320f / 1920f);
+                    float mouseY = MInput.Mouse.Position.Y * (180f / 1080f);
+                    spawnPosition = new Vector2(level.Camera.Position.X + mouseX + offsetX, level.Camera.Position.Y + mouseY + offsetY);
                 }
                 //Calculate node position
                 var nodePosition = new Vector2(X + nodeX, Y + nodeY);
@@ -618,7 +628,7 @@ public class SpawnController : Entity
                             spawnedEntity = new Decal(decalTexture, spawnPosition, new Vector2(1, 1), decalDepth);
                         break;
                     case EntityType.DreamBlock:
-                        spawnedEntity = new DreamBlock(spawnPosition, blockWidth, blockHeight, null, false, true);
+                        //spawnedEntity = new DreamBlock(spawnPosition, blockWidth, blockHeight, null, false, true);
                         break;
                     case EntityType.DustBunny:
                         if (noNode)
@@ -827,7 +837,7 @@ public class SpawnController : Entity
         }
 
         //Mouse functionality
-        if (canDragAround)
+        if (canDragAround && player != null)
         {
             float mouseX = MInput.Mouse.Position.X * (320f / 1920f);
             float mouseY = MInput.Mouse.Position.Y * (180f / 1080f);
@@ -839,8 +849,10 @@ public class SpawnController : Entity
             }
             if (spawnedEntity != null)
             {
-                if ((MInput.Mouse.CheckLeftButton && spawnCondition == SpawnCondition.LeftClick) ||
-                    (MInput.Mouse.CheckRightButton && spawnCondition == SpawnCondition.RightClick))
+                if ((MInput.Mouse.CheckLeftButton &&
+                    ((spawnCondition == SpawnCondition.LeftClick && !oppositeDragButton) || (spawnCondition == SpawnCondition.RightClick && oppositeDragButton))) ||
+                (MInput.Mouse.CheckRightButton &&
+                ((spawnCondition == SpawnCondition.RightClick && !oppositeDragButton) || (spawnCondition == SpawnCondition.LeftClick && oppositeDragButton))))
                 {
                     // Check if we're clicking on the tile at the center of the last spawned entity from this controller
                     Rectangle entityCenterRect = new Rectangle((int)(spawnedEntity.Center.X - 8), (int)(spawnedEntity.Center.Y - 8), 16, 16);
@@ -852,8 +864,10 @@ public class SpawnController : Entity
                     }
                 }
             }
-            if ((MInput.Mouse.ReleasedLeftButton && spawnCondition == SpawnCondition.LeftClick) ||
-                (MInput.Mouse.ReleasedRightButton && spawnCondition == SpawnCondition.RightClick))
+            if (!oppositeDragButton && ((MInput.Mouse.ReleasedLeftButton && spawnCondition == SpawnCondition.LeftClick) ||
+                (MInput.Mouse.ReleasedRightButton && spawnCondition == SpawnCondition.RightClick)) ||
+                oppositeDragButton && ((MInput.Mouse.ReleasedRightButton && spawnCondition == SpawnCondition.LeftClick) ||
+                (MInput.Mouse.ReleasedLeftButton && spawnCondition == SpawnCondition.RightClick)))
             {
                 isDragging = false;
                 draggedEntity = null;
@@ -938,7 +952,7 @@ public class SpawnController : Entity
             level.ParticlesFG.Emit(poofParticle, 5, wrapper.Entity.Center, Vector2.One * 4f, 0 - (float)Math.PI / 2f);
 
         //Fixes being stuck in StDummy if the player touches Badeline as she's poofing
-        if (wrapper.Entity is BadelineBoost && player.StateMachine.State == 11)
+        if (wrapper.Entity is BadelineBoost && player != null && player.StateMachine.State == 11)
             player.StateMachine.State = 0;
         if (wrapper.Entity is IceBlock iceBlock) // Removes solids from iceBlocks
         {
@@ -1117,15 +1131,190 @@ public class SpawnController : Entity
             base.Render();
             Player player = SceneAs<Level>().Tracker.GetEntity<Player>();
             Level level = SceneAs<Level>();
-            if (true && level != null && player != null)
+            if (level != null && player != null)
             {
-                // if canSpawn
                 if (entityToSpawn == EntityType.CustomEntity)
-                    ActiveFont.Draw(entityPath.ToString(), new Vector2(20f, 140f), Vector2.Zero, new Vector2(0.5f, 0.5f), Color.White, 1f, Color.Black, 1f, Color.Black);
+                {
+                    if (string.IsNullOrEmpty(entityPath))
+                    {
+                        if (!wheelIndicatorImage)
+                            ActiveFont.Draw("[Custom entity not specified]", new Vector2(wheelIndicatorX, wheelIndicatorY), Vector2.Zero, new Vector2(0.5f, 0.5f), Color.White, 1f, Color.Black, 1f, Color.Black);
+                        else
+                        {
+                            Image image = new Image(GFX.Game["objects/KoseiHelper/Controllers/SpawnController/Empty"]);
+                            image.Position = new Vector2(level.Camera.Position.X + wheelIndicatorX, level.Camera.Position.Y + wheelIndicatorY);
+                            image.Render();
+                        }
+                    }
+                    else
+                    {
+                        if (!wheelIndicatorImage)
+                            ActiveFont.Draw(entityPath.ToString(), new Vector2(wheelIndicatorX, wheelIndicatorY), Vector2.Zero, new Vector2(0.5f, 0.5f), Color.White, 1f, Color.Black, 1f, Color.Black);
+                        else
+                        {
+                            Image image = new Image(GFX.Game["objects/KoseiHelper/Controllers/SpawnController/Broken"]);
+                            image.Position = new Vector2(level.Camera.Position.X + wheelIndicatorX, level.Camera.Position.Y + wheelIndicatorY);
+                            image.Render();
+                        }
+                    }
+                }
                 else
-                    ActiveFont.Draw(entityToSpawn.ToString(), new Vector2(20f, 140f), Vector2.Zero, new Vector2(0.5f, 0.5f), Color.White, 1f, Color.Black, 1f, Color.Black);
+                {
+                    if (!wheelIndicatorImage)
+                        ActiveFont.Draw(entityToSpawn.ToString(), new Vector2(wheelIndicatorX, wheelIndicatorY), Vector2.Zero, new Vector2(0.5f, 0.5f), Color.White, 1f, Color.Black, 1f, Color.Black);
+                    else
+                    {
+                        Image image = PreRenderWheelIndicator(level);
+                        image.Render();
+                    }
+                }
             }
         }
+    }
+
+    public Image PreRenderWheelIndicator(Level level)
+    {
+        Image image;
+        switch (entityToSpawn)
+        {
+            case EntityType.Blade:
+                if (bladeStar)
+                    image = new Image(GFX.Game["objects/KoseiHelper/Controllers/SpawnController/Star"]);
+                else
+                    image = new Image(GFX.Game["objects/KoseiHelper/Controllers/SpawnController/Blade"]);
+                break;
+            case EntityType.Booster:
+                if (boosterRed)
+                    image = new Image(GFX.Game["objects/KoseiHelper/Controllers/SpawnController/Booster"]);
+                else
+                    image = new Image(GFX.Game["objects/KoseiHelper/Controllers/SpawnController/BoosterGreen"]);
+                break;
+            case EntityType.Cloud:
+                if (cloudFragile)
+                    image = new Image(GFX.Game["objects/KoseiHelper/Controllers/SpawnController/CloudFragile"]);
+                else
+                    image = new Image(GFX.Game["objects/KoseiHelper/Controllers/SpawnController/Cloud"]);
+                break;
+            case EntityType.DashSwitch:
+                switch (dashSwitchSide)
+                {
+                    case "Left":
+                        if (dashSwitchSprite == "Mirror")
+                            image = new Image(GFX.Game["objects/KoseiHelper/Controllers/SpawnController/DashSwitchLeftMirror"]);
+                        else
+                            image = new Image(GFX.Game["objects/KoseiHelper/Controllers/SpawnController/DashSwitchLeftDefault"]);
+                        break;
+                    case "Right":
+                        if (dashSwitchSprite == "Mirror")
+                            image = new Image(GFX.Game["objects/KoseiHelper/Controllers/SpawnController/DashSwitchRightMirror"]);
+                        else
+                            image = new Image(GFX.Game["objects/KoseiHelper/Controllers/SpawnController/DashSwitchRightDefault"]);
+                        break;
+                    case "Down":
+                        if (dashSwitchSprite == "Mirror")
+                            image = new Image(GFX.Game["objects/KoseiHelper/Controllers/SpawnController/DashSwitchDownMirror"]);
+                        else
+                            image = new Image(GFX.Game["objects/KoseiHelper/Controllers/SpawnController/DashSwitchDownDefault"]);
+                        break;
+                    default:
+                        if (dashSwitchSprite == "Mirror")
+                            image = new Image(GFX.Game["objects/KoseiHelper/Controllers/SpawnController/DashSwitchUpMirror"]);
+                        else
+                            image = new Image(GFX.Game["objects/KoseiHelper/Controllers/SpawnController/DashSwitchUpDefault"]);
+                        break;
+                }
+                break;
+            case EntityType.Feather:
+                if (featherShielded)
+                    image = new Image(GFX.Game["objects/KoseiHelper/Controllers/SpawnController/FeatherShielded"]);
+                else
+                    image = new Image(GFX.Game["objects/KoseiHelper/Controllers/SpawnController/Feather"]);
+                break;
+            case EntityType.Jellyfish:
+                if (jellyfishBubble)
+                    image = new Image(GFX.Game["objects/KoseiHelper/Controllers/SpawnController/JellyfishFloating"]);
+                else
+                    image = new Image(GFX.Game["objects/KoseiHelper/Controllers/SpawnController/Jellyfish"]);
+                break;
+            case EntityType.Refill:
+                if (refillTwoDashes)
+                    image = new Image(GFX.Game["objects/KoseiHelper/Controllers/SpawnController/RefillPink"]);
+                else
+                    image = new Image(GFX.Game["objects/KoseiHelper/Controllers/SpawnController/Refill"]);
+                break;
+            case EntityType.Spinner:
+                switch (crystalColor)
+                {
+                    case CrystalColor.Purple:
+                        image = new Image(GFX.Game["objects/KoseiHelper/Controllers/SpawnController/SpinnerPurple"]);
+                        break;
+                    case CrystalColor.Red:
+                        image = new Image(GFX.Game["objects/KoseiHelper/Controllers/SpawnController/SpinnerRed"]);
+                        break;
+                    case CrystalColor.Rainbow:
+                        image = new Image(GFX.Game["objects/KoseiHelper/Controllers/SpawnController/SpinnerWhite"]);
+                        break;
+                    default:
+                        image = new Image(GFX.Game["objects/KoseiHelper/Controllers/SpawnController/SpinnerBlue"]);
+                        break;
+                }
+                break;
+            case EntityType.Spring:
+                switch (orientation)
+                {
+                    case "WallLeft":
+                        image = new Image(GFX.Game["objects/KoseiHelper/Controllers/SpawnController/SpringWallLeft"]);
+                        break;
+                    case "WallRight":
+                        image = new Image(GFX.Game["objects/KoseiHelper/Controllers/SpawnController/SpringWallRight"]);
+                        break;
+                    case "PlayerFacing":
+                        image = new Image(GFX.Game["objects/KoseiHelper/Controllers/SpawnController/SpringPlayerFacing"]);
+                        break;
+                    case "PlayerFacingOpposite":
+                        image = new Image(GFX.Game["objects/KoseiHelper/Controllers/SpawnController/SpringPlayerFacingOpposite"]);
+                        break;
+                    default:
+                        image = new Image(GFX.Game["objects/KoseiHelper/Controllers/SpawnController/SpringFloor"]);
+                        break;
+                }
+                break;
+            case EntityType.Strawberry:
+                if (isMoon)
+                {
+                    if (isWinged)
+                        image = new Image(GFX.Game["objects/KoseiHelper/Controllers/SpawnController/StrawberryWingedMoon"]);
+                    else
+                        image = new Image(GFX.Game["objects/KoseiHelper/Controllers/SpawnController/StrawberryMoon"]);
+                }
+                else
+                {
+                    if (isWinged)
+                        image = new Image(GFX.Game["objects/KoseiHelper/Controllers/SpawnController/StrawberryWinged"]);
+                    else
+                        image = new Image(GFX.Game["objects/KoseiHelper/Controllers/SpawnController/Strawberry"]);
+                }
+                break;
+            case EntityType.TempleGate:
+                switch (templeGateSprite)
+                {
+                    case "Mirror":
+                        image = new Image(GFX.Game["objects/KoseiHelper/Controllers/SpawnController/TempleGateMirror"]);
+                        break;
+                    case "Theo":
+                        image = new Image(GFX.Game["objects/KoseiHelper/Controllers/SpawnController/TempleGateTheo"]);
+                        break;
+                    default:
+                        image = new Image(GFX.Game["objects/KoseiHelper/Controllers/SpawnController/TempleGate"]);
+                        break;
+                }
+                break;
+            default:
+                image = new Image(GFX.Game["objects/KoseiHelper/Controllers/SpawnController/" + entityToSpawn.ToString()]);
+                break;
+        }
+        image.Position = new Vector2(level.Camera.Position.X + wheelIndicatorX, level.Camera.Position.Y + wheelIndicatorY);
+        return image;
     }
 
     public static void Load()
