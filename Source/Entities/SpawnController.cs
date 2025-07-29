@@ -21,9 +21,11 @@ public enum EntityType
     Counter,
     CrumblePlatform,
     DashBlock,
+    DashSwitch,
     Decal,
     DreamBlock,
     DustBunny,
+    ExitBlock,
     FallingBlock,
     Feather,
     Flag,
@@ -32,6 +34,7 @@ public enum EntityType
     Heart,
     Iceball,
     IceBlock,
+    Jellyfish,
     JumpthruPlatform,
     Kevin,
     MoveBlock,
@@ -45,6 +48,8 @@ public enum EntityType
     StarJumpBlock,
     Strawberry,
     SwapBlock,
+    TempleGate,
+    TheoCrystal,
     Water,
     ZipMover,
     CustomEntity
@@ -114,6 +119,7 @@ public class SpawnController : Entity
     public bool flagStop;
     public bool poofWhenDisappearing;
     public bool absoluteCoords = false;
+    private bool ignoreJustRespawned;
     //other important variables
     private int entityID = 7388544; // Very high value so it doesn't conflict with other ids (hopefully)
     private List<EntityWithTTL> spawnedEntitiesWithTTL = new List<EntityWithTTL>();
@@ -128,42 +134,47 @@ public class SpawnController : Entity
     public int blockWidth, blockHeight = 16;
     public char blockTileType;
 
-    public bool cloudFragile;
+    public bool dummyFix;
 
     public bool boosterRed, boosterSingleUse;
 
-    public bool dummyFix;
+    public bool cloudFragile;
+
+    public int minCounterCap = 0, maxCounterCap = 9999;
+    public bool decreaseCounter;
+
+    public bool dashBlockCanDash;
+
+    public string decalTexture;
+    public int decalDepth;
+
+    public bool fallingBlockBadeline, fallingBlockClimbFall;
 
     public bool featherShielded;
     public bool featherSingleUse;
 
+    public string flagToEnableSpawner;
+    public bool flagValue;
+
     public float iceballSpeed;
     public bool iceballAlwaysIce;
 
-    public bool dashBlockCanDash;
+    public bool jellyfishBubble;
 
-    public bool fallingBlockBadeline, fallingBlockClimbFall;
+    public string jumpthruTexture;
+    public int soundIndex;
 
     public bool moveBlockCanSteer, moveBlockFast;
     public MoveBlock.Directions moveBlockDirection;
 
     public SwapBlockNoBg.Themes swapBlockTheme;
-    public ZipMover.Themes zipMoverTheme;
-
-    public string flagToEnableSpawner;
-    public bool flagValue;
 
     public bool refillTwoDashes;
-
-    public string jumpthruTexture;
-    public int soundIndex;
 
     public bool blockSinks;
 
     public CrushBlock.Axes crushBlockAxis;
     public bool crushBlockChillout;
-
-    public bool hasTop, hasBottom;
 
     public bool attachToSolid;
     public CrystalColor crystalColor;
@@ -173,25 +184,20 @@ public class SpawnController : Entity
     public string orientation;
     public bool playerCanUse;
 
-    public string decalTexture;
-    public int decalDepth;
-
-    public bool canDragAround;
-
     private CoreModes coreMode;
     private CassetteBlockManager cassetteBlockManager;
-
-    public int minCounterCap = 0, maxCounterCap = 9999;
-    public bool decreaseCounter;
 
     public bool onlyOnSafeGround;
 
     private bool isWinged;
     private bool isMoon;
     private bool noNode;
-    private bool ignoreJustRespawned;
+
+    public bool hasTop, hasBottom;
 
     private PlayerSpriteMode playerSpriteMode;
+
+    public ZipMover.Themes zipMoverTheme;
 
     //Custom Entity Fields
     private string entityPath;
@@ -202,8 +208,9 @@ public class SpawnController : Entity
     private Entity draggedEntity = null;
     private Vector2 dragOffset = Vector2.Zero;
 
-    // Mouse wheel
+    // Mouse mode
 
+    public bool canDragAround;
     public bool mouseWheelMode;
     public string wheelOptions;
     private static EntityType[] WheelCycle;
@@ -290,33 +297,43 @@ public class SpawnController : Entity
         blockHeight = data.Int("blockHeight", 16);
         blockTileType = data.Char("blockTileType", '3');
 
+        dummyFix = data.Bool("dummyFix", true);
+
         boosterRed = data.Bool("boosterRed", false);
         boosterSingleUse = data.Bool("boosterSingleUse", false);
 
-        dummyFix = data.Bool("dummyFix", true);
-
         cloudFragile = data.Bool("cloudFragile", true);
+
+        minCounterCap = data.Int("minCounterCap", 0);
+        maxCounterCap = data.Int("maxCounterCap", 9999);
+        decreaseCounter = data.Bool("decreaseCounter", false);
+
+        dashBlockCanDash = data.Bool("dashBlockCanDash", true);
+
+        decalTexture = data.Attr("decalTexture", "10-farewell/creature_f00");
+        decalDepth = data.Int("decalDepth", 9000);
+
+        fallingBlockBadeline = data.Bool("fallingBlockBadeline", false);
+        fallingBlockClimbFall = data.Bool("fallingBlockClimbFall", false);
 
         featherShielded = data.Bool("featherShielded", false);
         featherSingleUse = data.Bool("featherSingleUse", true);
 
-        refillTwoDashes = data.Bool("refillTwoDashes", false);
+        flagCycleAt = data.Int("flagCycleAt", 9999);
+        flagStop = data.Bool("flagStop", false);
 
-        dashBlockCanDash = data.Bool("dashBlockCanDash", true);
+        iceballSpeed = data.Float("iceballSpeed", 1f);
+        iceballAlwaysIce = data.Bool("iceballAlwaysIce", false);
+
+        jellyfishBubble = data.Bool("jellyfishBubble", false);
+
+        refillTwoDashes = data.Bool("refillTwoDashes", false);
 
         moveBlockCanSteer = data.Bool("moveBlockCanSteer", false);
         moveBlockFast = data.Bool("moveBlockFast", true);
         moveBlockDirection = data.Enum("moveBlockDirection", MoveBlock.Directions.Down);
 
-        iceballSpeed = data.Float("iceballSpeed", 1f);
-        iceballAlwaysIce = data.Bool("iceballAlwaysIce", false);
-
         swapBlockTheme = data.Enum("swapBlockTheme", SwapBlockNoBg.Themes.Normal);
-
-        fallingBlockBadeline = data.Bool("fallingBlockBadeline", false);
-        fallingBlockClimbFall = data.Bool("fallingBlockClimbFall", false);
-
-        zipMoverTheme = data.Enum("zipMoverTheme", ZipMover.Themes.Normal);
 
         jumpthruTexture = data.Attr("jumpthruTexture", "wood");
         soundIndex = data.Int("soundIndex", -1);
@@ -339,22 +356,14 @@ public class SpawnController : Entity
         orientation = data.Attr("orientation", "Floor");
         playerCanUse = data.Bool("playerCanUse", true);
 
-        decalTexture = data.Attr("decalTexture", "10-farewell/creature_f00");
-        decalDepth = data.Int("decalDepth", 9000);
-
-        flagCycleAt = data.Int("flagCycleAt", 9999);
-        flagStop = data.Bool("flagStop", false);
-
-        minCounterCap = data.Int("minCounterCap", 0);
-        maxCounterCap = data.Int("maxCounterCap", 9999);
-        decreaseCounter = data.Bool("decreaseCounter", false);
-
         onlyOnSafeGround = data.Bool("onlyOnSafeGround", true);
 
         isWinged = data.Bool("winged", false);
         isMoon = data.Bool("moon", false);
 
         playerSpriteMode = data.Enum("playerSpriteMode", PlayerSpriteMode.Madeline);
+
+        zipMoverTheme = data.Enum("zipMoverTheme", ZipMover.Themes.Normal);
 
         //Custom Entities
         entityPath = data.Attr("entityPath");
@@ -500,124 +509,8 @@ public class SpawnController : Entity
                 string entityFTL = flagToLive;
                 switch (entityToSpawn)
                 { // If relativeToPlayerFacing is true, a positive X value will spawn in front of the player, and a negative X value will spawn behind the player
-                    case EntityType.Puffer:
-                        spawnedEntity = new Puffer(spawnPosition, player.Facing == Facings.Right);
-                        break;
-                    case EntityType.Cloud:
-                        spawnedEntity = new Cloud(spawnPosition, cloudFragile);
-                        break;
                     case EntityType.BadelineBoost:
                         spawnedEntity = new BadelineBoost(new Vector2[] { spawnPosition, new Vector2(player.Position.X + offsetX, level.Bounds.Top - 200) }, false, false, false, false, false);
-                        break;
-                    case EntityType.Booster:
-                        spawnedEntity = new BoosterNoOutline(spawnPosition, boosterRed, boosterSingleUse); // I had to make a new class so their outline doesn't stay after they poof
-                        break;
-                    case EntityType.Bumper:
-                        spawnedEntity = new Bumper(spawnPosition, null);
-                        break;
-                    case EntityType.IceBlock: //It also works for lava actually
-                        if (coreMode == CoreModes.Hot)
-                            spawnedEntity = new FireBarrier(spawnPosition, blockWidth, blockHeight);
-                        else if (coreMode == CoreModes.Cold)
-                            spawnedEntity = new IceBlock(spawnPosition, blockWidth, blockHeight);
-                        if (spawnedEntity is IceBlock iceBlock)
-                        {
-                            var solid = iceBlock.solid;
-                            if (solid != null)
-                                spawnedSolids.Add(solid);
-                        }
-                        else if (spawnedEntity is FireBarrier fireBarrier)
-                        {
-                            var solid = fireBarrier.solid;
-                            if (solid != null)
-                                spawnedSolids.Add(solid);
-                        }
-                        break;
-                    case EntityType.Heart:
-                        spawnedEntity = new FakeHeart(spawnPosition);
-                        break;
-                    case EntityType.DashBlock:
-                        spawnedEntity = new NoFreezeDashBlock(spawnPosition, blockTileType, blockWidth, blockHeight, false, true, dashBlockCanDash, new EntityID("koseiHelper_spawnedDashBlock", entityID));
-                        entityID++;
-                        break;
-                    case EntityType.Feather:
-                        spawnedEntity = new FlyFeather(spawnPosition, featherShielded, featherSingleUse);
-                        break;
-                    case EntityType.Iceball:
-                        spawnedEntity = new FireBall(new Vector2[] { spawnPosition, nodePosition }, 1, 1, 0, iceballSpeed, iceballAlwaysIce);
-                        break;
-                    case EntityType.MoveBlock:
-                        spawnedEntity = new MoveBlock(spawnPosition, blockWidth, blockHeight, moveBlockDirection, moveBlockCanSteer, moveBlockFast);
-                        break;
-                    case EntityType.Seeker:
-                        spawnedEntity = new Seeker(spawnPosition, new Vector2[] { spawnPosition });
-                        break;
-                    case EntityType.SwapBlock:
-                        spawnedEntity = new SwapBlockNoBg(spawnPosition, blockWidth, blockHeight, nodePosition, swapBlockTheme);
-                        break;
-                    case EntityType.ZipMover:
-                        spawnedEntity = new ZipMover(spawnPosition, blockWidth, blockHeight, nodePosition, zipMoverTheme);
-                        break;
-                    case EntityType.FallingBlock:
-                        spawnedEntity = new FallingBlock(spawnPosition, blockTileType, blockWidth, blockHeight, fallingBlockBadeline, false, fallingBlockClimbFall);
-                        break;
-                    case EntityType.CrumblePlatform:
-                        spawnedEntity = new CrumblePlatform(spawnPosition, blockWidth);
-                        break;
-                    case EntityType.DreamBlock:
-                        spawnedEntity = new DreamBlock(spawnPosition, blockWidth, blockHeight, null, false, true);
-                        break;
-                    case EntityType.BounceBlock:
-                        spawnedEntity = new BounceBlock(spawnPosition, blockWidth, blockHeight);
-                        break;
-                    case EntityType.Refill:
-                        spawnedEntity = new Refill(spawnPosition, refillTwoDashes, true);
-                        break;
-                    case EntityType.GlassBlock:
-                        spawnedEntity = new GlassBlock(spawnPosition, blockWidth, blockHeight, blockSinks);
-                        break;
-                    case EntityType.JumpthruPlatform:
-                        spawnedEntity = new JumpthruPlatform(spawnPosition, blockWidth, jumpthruTexture, soundIndex);
-                        break;
-                    case EntityType.FloatySpaceBlock:
-                        spawnedEntity = new FloatySpaceBlock(spawnPosition, blockWidth, blockHeight, blockTileType, true);
-                        break;
-                    case EntityType.StarJumpBlock:
-                        spawnedEntity = new StarJumpBlock(spawnPosition, blockWidth, blockHeight, blockSinks);
-                        break;
-                    case EntityType.Kevin:
-                        spawnedEntity = new CrushBlock(spawnPosition, blockWidth, blockHeight, crushBlockAxis, crushBlockChillout);
-                        break;
-                    case EntityType.Water:
-                        spawnedEntity = new Water(spawnPosition, hasTop, hasBottom, blockWidth, blockHeight);
-                        break;
-                    case EntityType.Spinner:
-                        spawnedEntity = new CrystalStaticSpinner(spawnPosition, attachToSolid, crystalColor);
-                        break;
-                    case EntityType.DustBunny:
-                            if (noNode)
-                                spawnedEntity = new DustStaticSpinner(spawnPosition, attachToSolid, false);
-                            else
-                            {
-                                EntityData dustSpinnerData = new()
-                                {
-                                    Position = spawnPosition,
-                                    Level = level.Session.LevelData,
-                                    Nodes = new Vector2[] { nodePosition },
-                                    Values = new()
-                                };
-                                for (int i = 0; i < dictionaryKeys.Count; i++)
-                                {
-                                    dustSpinnerData.Values[dictionaryKeys[i]] = dictionaryValues.ElementAtOrDefault(i);
-                                }
-                            dustSpinnerData.Values["startCenter"] = dustSpinnerData.Bool("startCenter", bladeStartCenter).ToString();
-                            dustSpinnerData.Values["clockwise"] = dustSpinnerData.Bool("clockwise", bladeClockwise).ToString();
-                            dustSpinnerData.Values["speed"] = dustSpinnerData.Enum("speed", bladeSpeed).ToString();
-                            if (circularMovement)
-                                spawnedEntity = new DustRotateSpinner(dustSpinnerData, Vector2.Zero);
-                            else
-                                spawnedEntity = new DustTrackSpinner(dustSpinnerData, Vector2.Zero);
-                        }
                         break;
                     case EntityType.Blade:
                         EntityData bladeData = new()
@@ -648,6 +541,167 @@ public class SpawnController : Entity
                             else
                                 spawnedEntity = new BladeTrackSpinner(bladeData, Vector2.Zero);
                         }
+                        break;
+                    case EntityType.Booster:
+                        spawnedEntity = new BoosterNoOutline(spawnPosition, boosterRed, boosterSingleUse); // I had to make a new class so their outline doesn't stay after they poof
+                        break;
+                    case EntityType.BounceBlock:
+                        spawnedEntity = new BounceBlock(spawnPosition, blockWidth, blockHeight);
+                        break;
+                    case EntityType.Bumper:
+                        spawnedEntity = new Bumper(spawnPosition, null);
+                        break;
+                    case EntityType.Cloud:
+                        spawnedEntity = new Cloud(spawnPosition, cloudFragile);
+                        break;
+                    case EntityType.Counter:
+                        if (decreaseCounter && level.Session.GetCounter("koseiCounter") > minCounterCap)
+                            level.Session.SetCounter("koseiCounter", level.Session.GetCounter("koseiCounter") - 1);
+                        if (!decreaseCounter && level.Session.GetCounter("koseiCounter") < maxCounterCap)
+                            level.Session.IncrementCounter("koseiCounter");
+                        Audio.Play(appearSound, player.Position); //Audio is here because it doesn't actually spawn anything
+                        if (spawnCondition == SpawnCondition.OnInterval)
+                            spawnCooldown = spawnTime;
+                        break;
+                    case EntityType.CrumblePlatform:
+                        spawnedEntity = new CrumblePlatform(spawnPosition, blockWidth);
+                        break;
+                    case EntityType.DashBlock:
+                        spawnedEntity = new NoFreezeDashBlock(spawnPosition, blockTileType, blockWidth, blockHeight, false, true, dashBlockCanDash, new EntityID("koseiHelper_spawnedDashBlock", entityID));
+                        entityID++;
+                        break;
+                    case EntityType.Decal:
+                        if (player.Facing == Facings.Left)
+                            spawnedEntity = new Decal(decalTexture, spawnPosition, new Vector2(-1, 1), decalDepth);
+                        else
+                            spawnedEntity = new Decal(decalTexture, spawnPosition, new Vector2(1, 1), decalDepth);
+                        break;
+                    case EntityType.DreamBlock:
+                        spawnedEntity = new DreamBlock(spawnPosition, blockWidth, blockHeight, null, false, true);
+                        break;
+                    case EntityType.DustBunny:
+                        if (noNode)
+                            spawnedEntity = new DustStaticSpinner(spawnPosition, attachToSolid, false);
+                        else
+                        {
+                            EntityData dustSpinnerData = new()
+                            {
+                                Position = spawnPosition,
+                                Level = level.Session.LevelData,
+                                Nodes = new Vector2[] { nodePosition },
+                                Values = new()
+                            };
+                            for (int i = 0; i < dictionaryKeys.Count; i++)
+                            {
+                                dustSpinnerData.Values[dictionaryKeys[i]] = dictionaryValues.ElementAtOrDefault(i);
+                            }
+                            dustSpinnerData.Values["startCenter"] = dustSpinnerData.Bool("startCenter", bladeStartCenter).ToString();
+                            dustSpinnerData.Values["clockwise"] = dustSpinnerData.Bool("clockwise", bladeClockwise).ToString();
+                            dustSpinnerData.Values["speed"] = dustSpinnerData.Enum("speed", bladeSpeed).ToString();
+                            if (circularMovement)
+                                spawnedEntity = new DustRotateSpinner(dustSpinnerData, Vector2.Zero);
+                            else
+                                spawnedEntity = new DustTrackSpinner(dustSpinnerData, Vector2.Zero);
+                        }
+                        break;
+                    case EntityType.FallingBlock:
+                        spawnedEntity = new FallingBlock(spawnPosition, blockTileType, blockWidth, blockHeight, fallingBlockBadeline, false, fallingBlockClimbFall);
+                        break;
+                    case EntityType.Feather:
+                        spawnedEntity = new FlyFeather(spawnPosition, featherShielded, featherSingleUse);
+                        break;
+                    case EntityType.Flag:
+                        if (flagCount > flagCycleAt) // If the counter has exceeded the max (e.g. 4>3)
+                        {
+                            level.Session.SetFlag("koseiFlag" + flagCycleAt, false);
+                            if (!flagStop)
+                                flagCount = 1; // The counter is reset
+                            else
+                                RemoveSelf();
+                        }
+                        level.Session.SetFlag("koseiFlag" + flagCount, true);
+                        level.Session.SetFlag("koseiFlag" + (flagCount - 1), false);
+                        Audio.Play(appearSound, player.Position); //Audio is here because it doesn't actually spawn anything
+                        if (spawnCondition == SpawnCondition.OnInterval)
+                            spawnCooldown = spawnTime;
+                        flagCount++;
+                        break;
+                    case EntityType.FloatySpaceBlock:
+                        spawnedEntity = new FloatySpaceBlock(spawnPosition, blockWidth, blockHeight, blockTileType, true);
+                        break;
+                    case EntityType.GlassBlock:
+                        spawnedEntity = new GlassBlock(spawnPosition, blockWidth, blockHeight, blockSinks);
+                        break;
+                    case EntityType.Heart:
+                        spawnedEntity = new FakeHeart(spawnPosition);
+                        break;
+                    case EntityType.Iceball:
+                        spawnedEntity = new FireBall(new Vector2[] { spawnPosition, nodePosition }, 1, 1, 0, iceballSpeed, iceballAlwaysIce);
+                        break;
+                    case EntityType.IceBlock: //It also works for lava actually
+                        if (coreMode == CoreModes.Hot)
+                            spawnedEntity = new FireBarrier(spawnPosition, blockWidth, blockHeight);
+                        else if (coreMode == CoreModes.Cold)
+                            spawnedEntity = new IceBlock(spawnPosition, blockWidth, blockHeight);
+                        if (spawnedEntity is IceBlock iceBlock)
+                        {
+                            var solid = iceBlock.solid;
+                            if (solid != null)
+                                spawnedSolids.Add(solid);
+                        }
+                        else if (spawnedEntity is FireBarrier fireBarrier)
+                        {
+                            var solid = fireBarrier.solid;
+                            if (solid != null)
+                                spawnedSolids.Add(solid);
+                        }
+                        break;
+                    case EntityType.Jellyfish:
+                        spawnedEntity = new Glider(spawnPosition, jellyfishBubble, false);
+                        break;
+                    case EntityType.JumpthruPlatform:
+                        spawnedEntity = new JumpthruPlatform(spawnPosition, blockWidth, jumpthruTexture, soundIndex);
+                        break;
+                    case EntityType.Kevin:
+                        spawnedEntity = new CrushBlock(spawnPosition, blockWidth, blockHeight, crushBlockAxis, crushBlockChillout);
+                        break;
+                    case EntityType.MoveBlock:
+                        spawnedEntity = new MoveBlock(spawnPosition, blockWidth, blockHeight, moveBlockDirection, moveBlockCanSteer, moveBlockFast);
+                        break;
+                    case EntityType.Player:
+                        spawnedEntity = new Player(spawnPosition, playerSpriteMode);
+                        break;
+                    case EntityType.Refill:
+                        spawnedEntity = new Refill(spawnPosition, refillTwoDashes, true);
+                        break;
+                    case EntityType.StarJumpBlock:
+                        spawnedEntity = new StarJumpBlock(spawnPosition, blockWidth, blockHeight, blockSinks);
+                        break;
+                    
+                    case EntityType.Puffer:
+                        spawnedEntity = new Puffer(spawnPosition, player.Facing == Facings.Right);
+                        break;
+                    case EntityType.Seeker:
+                        spawnedEntity = new Seeker(spawnPosition, new Vector2[] { spawnPosition });
+                        break;
+                    case EntityType.SpawnPoint:
+                        if (!onlyOnSafeGround || (onlyOnSafeGround && player.OnSafeGround && !player.SwimUnderwaterCheck() && !player._IsOverWater()))
+                        {
+                            AreaData.Areas[level.Session.Area.ID].Mode[(int)level.Session.Area.Mode].MapData.Get(level.Session.Level).Spawns.Add(spawnPosition);
+                            level.Session.HitCheckpoint = true;
+                            level.Session.RespawnPoint = spawnPosition;
+                            spawnCooldown = spawnTime;
+                            hasSpawnedFromSpeed = true;
+                            Audio.Play(appearSound, spawnPosition);
+                            if (poofWhenDisappearing)
+                            {
+                                if (!(entityToSpawn == EntityType.Booster && boosterSingleUse))
+                                    level.ParticlesFG.Emit(poofParticle, 5, spawnPosition, Vector2.One * 4f, 0 - (float)Math.PI / 2f);
+                            }
+                        }
+                        break;
+                    case EntityType.Spinner:
+                        spawnedEntity = new CrystalStaticSpinner(spawnPosition, attachToSolid, crystalColor);
                         break;
                     case EntityType.Spring:
                         switch (orientation)
@@ -691,56 +745,19 @@ public class SpawnController : Entity
                         EntityID strawberryID = new EntityID(level.Session.LevelData.Name, entityID++);
                         spawnedEntity = new Strawberry(strawberryData, Vector2.Zero, strawberryID);
                         break;
-                    case EntityType.Player:
-                        spawnedEntity = new Player(spawnPosition, playerSpriteMode);
+                    case EntityType.SwapBlock:
+                        spawnedEntity = new SwapBlockNoBg(spawnPosition, blockWidth, blockHeight, nodePosition, swapBlockTheme);
                         break;
-                    case EntityType.Decal:
-                        if (player.Facing == Facings.Left)
-                            spawnedEntity = new Decal(decalTexture, spawnPosition, new Vector2(-1, 1), decalDepth);
-                        else
-                            spawnedEntity = new Decal(decalTexture, spawnPosition, new Vector2(1, 1), decalDepth);
+                    case EntityType.TheoCrystal:
+                        spawnedEntity = new TheoCrystal(spawnPosition);
                         break;
-                    case EntityType.Flag:
-                        if (flagCount > flagCycleAt) // If the counter has exceeded the max (e.g. 4>3)
-                        {
-                            level.Session.SetFlag("koseiFlag" + flagCycleAt, false);
-                            if (!flagStop)
-                                flagCount = 1; // The counter is reset
-                            else
-                                RemoveSelf();
-                        }
-                        level.Session.SetFlag("koseiFlag" + flagCount, true);
-                        level.Session.SetFlag("koseiFlag" + (flagCount - 1), false);
-                        Audio.Play(appearSound, player.Position); //Audio is here because it doesn't actually spawn anything
-                        if (spawnCondition == SpawnCondition.OnInterval)
-                            spawnCooldown = spawnTime;
-                        flagCount++;
+                    case EntityType.Water:
+                        spawnedEntity = new Water(spawnPosition, hasTop, hasBottom, blockWidth, blockHeight);
                         break;
-                    case EntityType.Counter:
-                        if (decreaseCounter && level.Session.GetCounter("koseiCounter") > minCounterCap)
-                            level.Session.SetCounter("koseiCounter", level.Session.GetCounter("koseiCounter") - 1);
-                        if (!decreaseCounter && level.Session.GetCounter("koseiCounter") < maxCounterCap)
-                            level.Session.IncrementCounter("koseiCounter");
-                        Audio.Play(appearSound, player.Position); //Audio is here because it doesn't actually spawn anything
-                        if (spawnCondition == SpawnCondition.OnInterval)
-                            spawnCooldown = spawnTime;
+                    case EntityType.ZipMover:
+                        spawnedEntity = new ZipMover(spawnPosition, blockWidth, blockHeight, nodePosition, zipMoverTheme);
                         break;
-                    case EntityType.SpawnPoint:
-                        if (!onlyOnSafeGround || (onlyOnSafeGround && player.OnSafeGround && !player.SwimUnderwaterCheck() && !player._IsOverWater()))
-                        {
-                            AreaData.Areas[level.Session.Area.ID].Mode[(int)level.Session.Area.Mode].MapData.Get(level.Session.Level).Spawns.Add(spawnPosition);
-                            level.Session.HitCheckpoint = true;
-                            level.Session.RespawnPoint = spawnPosition;
-                            spawnCooldown = spawnTime;
-                            hasSpawnedFromSpeed = true;
-                            Audio.Play(appearSound, spawnPosition);
-                            if (poofWhenDisappearing)
-                            {
-                                if (!(entityToSpawn == EntityType.Booster && boosterSingleUse))
-                                    level.ParticlesFG.Emit(poofParticle, 5, spawnPosition, Vector2.One * 4f, 0 - (float)Math.PI / 2f);
-                            }
-                        }
-                        break;
+                    
                     case EntityType.CustomEntity:
                         spawnedEntity = GetEntityFromPath(spawnPosition, nodePosition, level.Session.LevelData);
                         break;
@@ -759,6 +776,7 @@ public class SpawnController : Entity
             }
         }
 
+        //Mouse functionality
         if (canDragAround)
         {
             float mouseX = MInput.Mouse.Position.X * (320f / 1920f);

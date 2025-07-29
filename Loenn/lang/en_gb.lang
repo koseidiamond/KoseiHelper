@@ -681,6 +681,8 @@ entities.KoseiHelper/SpawnController.attributes.description.wheelOptions=A list 
 entities.KoseiHelper/SpawnController.attributes.description.blockWidth=Width of the block.
 entities.KoseiHelper/SpawnController.attributes.description.blockHeight=Height of the block.
 entities.KoseiHelper/SpawnController.attributes.description.blockTileType=The tileset that the block should use.
+
+entities.KoseiHelper/SpawnController.attributes.description.jellyfishBubble=Whether the entity should hover in the air before being grabbed.
 entities.KoseiHelper/SpawnController.attributes.description.boosterRed=If the spawned boosters should be red or green.
 entities.KoseiHelper/SpawnController.attributes.description.boosterSingleUse=Whether the booster should disappear after being used once.
 entities.KoseiHelper/SpawnController.attributes.description.dummyFix=If this option is enabled, the badeline dummies will disappear always.\nIf it is disabled, they might stay if the orb is used while disappearing.
@@ -724,7 +726,7 @@ entities.KoseiHelper/SpawnController.attributes.description.minCounterCap=The mi
 entities.KoseiHelper/SpawnController.attributes.description.maxCounterCap=The maximum value that the counter "koseiCounter" can reach.
 entities.KoseiHelper/SpawnController.attributes.description.decreaseCounter=If the counter "koseiCounter" should decrease by 1 instead of increase by 1 on each "spawn".
 entities.KoseiHelper/SpawnController.attributes.description.onlyOnSafeGround=Whether the spawn points should only appear while the player is on safe ground (and not in water/air).
-entities.KoseiHelper/SpawnController.attributes.description.transitionUpdate=Whether the Spawner should work even while the player is transitioning between rooms.
+entities.KoseiHelper/SpawnController.attributes.description.transitionUpdate=Whether the Spawner should work even while the player is transitioning between rooms. Cursed.
 
 #Spawn Controller - custom entity attributes
 entities.KoseiHelper/SpawnController.attributes.description.entityPath=The full path to the entity class to be spawned.\nSpawning will only work for entities that accept an EntityData and Vector2 parameterized constructor.\n For example, Celeste.Strawberry.
