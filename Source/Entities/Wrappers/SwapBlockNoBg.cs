@@ -14,7 +14,7 @@ public class SwapBlockNoBg : Solid
         Moon
     }
 
-    private class PathRendererNoBg : Entity
+    public class PathRendererNoBg : Entity
     {
         private SwapBlockNoBg block;
         private MTexture pathTexture;
@@ -75,7 +75,7 @@ public class SwapBlockNoBg : Solid
     private MTexture[,] nineSliceTarget;
     private Sprite middleGreen;
     private Sprite middleRed;
-    private PathRendererNoBg path;
+    public PathRendererNoBg path;
     private EventInstance moveSfx;
     private EventInstance returnSfx;
     private DisplacementRenderer.Burst burst;

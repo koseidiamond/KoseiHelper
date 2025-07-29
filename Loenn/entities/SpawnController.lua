@@ -397,7 +397,8 @@ function SpawnController.ignoredFields(entity)
 	"nodeRelativeToPlayerFacing",
 	"timeToLive",
 	"flagToLive",
-	
+	"poofWhenDisappearing",
+	"disappearSound",
 	"everyXDashes",
 	"cassetteColor",
 	
@@ -509,6 +510,10 @@ function SpawnController.ignoredFields(entity)
 	end
 	if entity.despawnMethod == "TTL" or entity.despawnMethod == "TTLFlag" then
 		doNotIgnore("timeToLive")
+	end
+	if entity.despawnMethod ~= "None" then
+		doNotIgnore("poofWhenDisappearing")
+		doNotIgnore("disappearSound")
 	end
 	if entity.despawnMethod == "Flag" or entity.despawnMethod == "TTLFlag" then
 		doNotIgnore("flagToLive")

@@ -84,7 +84,8 @@ public enum DespawnMethod
     None,
     TTL,
     Flag,
-    TTLFlag
+    TTLFlag,
+    OverriddenByNext
 }
 
 [CustomEntity("KoseiHelper/SpawnController")]
@@ -241,7 +242,7 @@ public class SpawnController : Entity
             }
         }
 
-        return Enum.GetValues<EntityType>().Except(new[] {EntityType.Flag,EntityType.Counter,EntityType.SpawnPoint}).ToArray();
+        return Enum.GetValues<EntityType>().Except(new[] { EntityType.Flag, EntityType.Counter, EntityType.SpawnPoint }).ToArray();
     }
     private static int lastWheel;
 
@@ -618,7 +619,7 @@ public class SpawnController : Entity
                                 }
                                 break;
                         }
-                        spawnedEntity = new DashSwitch(spawnPosition + new Vector2(0f,-8f), side, dashSwitchPersistent, dashSwitchAllGates,
+                        spawnedEntity = new DashSwitch(spawnPosition + new Vector2(0f, -8f), side, dashSwitchPersistent, dashSwitchAllGates,
                             new EntityID("koseiHelper_spawnedDashSwitch", entityID), dashSwitchSprite);
                         break;
                     case EntityType.Decal:
@@ -827,6 +828,8 @@ public class SpawnController : Entity
                 if (spawnedEntity != null && player != null)
                 { // If the entity has been spawned successfully:
                     Scene.Add(spawnedEntity);
+                    if (despawnMethod == DespawnMethod.None)
+                        spawnedEntity.AddTag(Tags.Global);
                     spawnedEntitiesWithTTL.Add(new EntityWithTTL(spawnedEntity, entityTTL, entityFTL));
                     spawnCooldown = spawnTime;
                     hasSpawnedFromSpeed = true;
@@ -887,6 +890,7 @@ public class SpawnController : Entity
         }
 
         List<EntityWithTTL> toRemove = new List<EntityWithTTL>();
+        EntityWithTTL previousEntity = null;
         foreach (EntityWithTTL wrapper in spawnedEntitiesWithTTL)
         {
             wrapper.TimeToLive -= Engine.RawDeltaTime;
@@ -915,11 +919,16 @@ public class SpawnController : Entity
                     if (wrapper.TimeToLive <= 0 || level.Session.GetFlag(wrapper.TTLFlag))
                         HandleDespawn(wrapper, player, level, toRemove, poofWhenDisappearing, disappearSound, poofParticle, dummyFix);
                     break;
+                case DespawnMethod.OverriddenByNext:
+                    if (previousEntity != null)
+                        HandleDespawn(previousEntity, player, level, toRemove, poofWhenDisappearing, disappearSound, poofParticle, dummyFix);
+                    break;
                 default: // TTL
                     if (wrapper.TimeToLive <= 0)
                         HandleDespawn(wrapper, player, level, toRemove, poofWhenDisappearing, disappearSound, poofParticle, dummyFix);
                     break;
             }
+            previousEntity = wrapper;
         }
         // Remove the entities from the list after they have been removed from the scene
         foreach (var wrapper in toRemove)
@@ -954,6 +963,8 @@ public class SpawnController : Entity
         //Fixes being stuck in StDummy if the player touches Badeline as she's poofing
         if (wrapper.Entity is BadelineBoost && player != null && player.StateMachine.State == 11)
             player.StateMachine.State = 0;
+        if (wrapper.Entity is SwapBlockNoBg swapBlockNoBg)
+            Scene.Remove(swapBlockNoBg.path);
         if (wrapper.Entity is IceBlock iceBlock) // Removes solids from iceBlocks
         {
             var solidToRemove = iceBlock.solid;
@@ -980,7 +991,6 @@ public class SpawnController : Entity
                 Scene.Remove(badelineDummy);
         }
     }
-
 
     private Entity GetEntityFromPath(Vector2 spawn, Vector2 node, LevelData data)
     {
