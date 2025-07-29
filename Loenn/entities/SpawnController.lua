@@ -60,6 +60,11 @@ SpawnController.placements = {
 		
 		dashBlockCanDash = true,
 		
+		dashSwitchPersistent = false,
+		dashSwitchAllGates = false,
+		dashSwitchSprite = "Default",
+		dashSwitchSide = "Up",
+		
 		decalTexture = "10-farewell/creature_f00",
 		decalDepth = 9000,
 		
@@ -112,6 +117,9 @@ SpawnController.placements = {
 		
 		onlyOnSafeGround = true,
 		
+		templeGateType = "NearestSwitch",
+		templeGateSprite = "Default",
+		
 		hasBottom = false,
 		
 		zipMoverTheme = "Normal",
@@ -146,6 +154,7 @@ SpawnController.fieldInformation = function (entity) return {
 		"Counter",
 		"CrumblePlatform",
 		"DashBlock",
+		"DashSwitch",
 		"Decal",
 		"DreamBlock",
 		"DustBunny",
@@ -171,6 +180,7 @@ SpawnController.fieldInformation = function (entity) return {
 		"StarJumpBlock",
 		"Strawberry",
 		"SwapBlock",
+		"TempleGate",
 		"TheoCrystal",
 		"Water",
 		"ZipMover",
@@ -233,6 +243,52 @@ SpawnController.fieldInformation = function (entity) return {
 		fieldType = "integer",
 		minimumValue = 1
 	},
+	-- Specific entities
+	bladeSpeed = {
+		options = {
+		"Slow",
+		"Normal",
+		"Fast"
+		},
+		editable = false
+	},
+	dashSwitchSprite = {
+		options = {
+		"Default",
+		"Mirror"
+		},
+		editable = true
+	},
+	dashSwitchSide = {
+		options = {
+		"Up",
+		"Down",
+		"Left",
+		"Right",
+		"MovingDirection"
+		},
+		editable = false
+	},
+	minCounterCap = {
+		fieldType = "integer"
+	},
+	maxCounterCap = {
+		fieldType = "integer"
+	},
+	flagCycleAt = {
+		fieldType = "integer"
+	},
+	jumpthruTexture = {
+        options = textures
+    },
+	crushBlockAxe = {
+		options = {
+		"Both",
+		"Horizontal",
+		"Vertical"
+		},
+		editable = false
+	},
 	moveBlockDirection = {
 		options = {
 		"Left",
@@ -249,27 +305,9 @@ SpawnController.fieldInformation = function (entity) return {
 		},
 		editable = false
 	},
-	zipMoverTheme = {
-		options = {
-		"Normal",
-		"Moon"
-		},
-		editable = false
-	},
-	crushBlockAxe = {
-		options = {
-		"Both",
-		"Horizontal",
-		"Vertical"
-		},
-		editable = false
-	},
 	soundIndex = {
         options = enums.tileset_sound_ids,
         fieldType = "integer"
-    },
-	jumpthruTexture = {
-        options = textures
     },
 	playerSpriteMode = {
 		options = {
@@ -290,14 +328,6 @@ SpawnController.fieldInformation = function (entity) return {
 		},
 		editable = false
 	},
-	bladeSpeed = {
-		options = {
-		"Slow",
-		"Normal",
-		"Fast"
-		},
-		editable = false
-	},
 	orientation = {
 		options = {
 		"Floor",
@@ -308,9 +338,32 @@ SpawnController.fieldInformation = function (entity) return {
 		},
 		editable = false
 	},
-	flagCycleAt = { fieldType = "integer" },
-	minCounterCap = { fieldType = "integer" },
-	maxCounterCap = { fieldType = "integer" },
+	templeGateType = {
+		options = {
+		"NearestSwitch",
+		"CloseBehindPlayer",
+		"CloseBehindPlayerAlways",
+		"HoldingTheo",
+		"TouchSwitches",
+		"CloseBehindPlayerAndTheo"
+		},
+		editable = false
+	},
+	templeGateSprite = {
+		options = {
+		"Default",
+		"Mirror",
+		"Theo"
+		},
+		editable = true
+	},
+	zipMoverTheme = {
+		options = {
+		"Normal",
+		"Moon"
+		},
+		editable = false
+	},
 	dictKeys = {
 		fieldType = "list",
 		elementOptions = {
@@ -342,33 +395,57 @@ function SpawnController.ignoredFields(entity)
 	"timeToLive",
 	"flagToLive",
 	
+	"everyXDashes",
+	"cassetteColor",
+	
 	"dummyFix",
+	
 	"boosterRed",
 	"boosterSingleUse",
+	
 	"cloudFragile",
+	
+	"crushBlockAxe",
+	"crushBlockChillout",
+	
+	"dashSwitchPersistent",
+	"dashSwitchAllGates",
+	"dashSwitchSprite",
+	"dashSwitchSide",
+	
+	"decalTexture",
+	"decalDepth",
+	
+	"fallingBlockBadeline",
+	"fallingBlockClimbFall",
+	
 	"featherShielded",
 	"featherSingleUse",
+	
 	"jellyfishBubble",
+	
 	"dashBlockCanDash",
+	
 	"iceballSpeed",
 	"iceballAlwaysIce",
+	
+	"jumpthruTexture",
+	"soundIndex",
+	
 	"moveBlockDirection",
 	"moveBlockCanSteer",
 	"moveBlockFast",
+	
 	"swapBlockTheme", 
 	
 	"spawnFlag",
 	"spawnFlagValue",
 	"spawnSpeed",
-	"fallingBlockBadeline",
-	"fallingBlockClimbFall",
+	
 	"refillTwoDashes",
-	"jumpthruTexture",
-	"soundIndex",
+	
 	"blockSinks",
-	"crushBlockAxe",
-	"crushBlockChillout",
-	"hasBottom",
+	
 	"attachToSolid",
 	"crystalColor",
 	"bladeStar",
@@ -376,22 +453,30 @@ function SpawnController.ignoredFields(entity)
 	"clockwise",
 	"bladeStartCenter",
 	"bladeSpeed",
+	
 	"orientation",
 	"playerCanUse",
+	
 	"winged",
 	"moon",
+	
 	"playerSpriteMode",
-	"everyXDashes",
-	"cassetteColor",
-	"decalTexture",
-	"decalDepth",
-	"zipMoverTheme",
+	
 	"flagCycleAt",
 	"flagStop",
+	
 	"minCounterCap",
 	"maxCounterCap",
 	"decreaseCounter",
+	
+	"templeGateType",
+	"templeGateSprite",
+	
 	"onlyOnSafeGround",
+	
+	"hasBottom",
+	
+	"zipMoverTheme",
 	
 	"entityPath",
 	"dictKeys",
@@ -437,6 +522,18 @@ function SpawnController.ignoredFields(entity)
 	if entity.spawnCondition == "BadelineBoost" then
 		doNotIgnore("dummyFix")
 	end
+	if entity.entityToSpawn == "Blade" or entity.entityToSpawn == "DustBunny" then
+		doNotIgnore("circularMovement")
+		if entity.entityToSpawn == "Blade" then
+			doNotIgnore("bladeStar")
+		end
+		if entity.circularMovement == true then
+			doNotIgnore("clockwise")
+		else
+			doNotIgnore("bladeSpeed")
+			doNotIgnore("bladeStartCenter")
+		end
+	end
 	if entity.entityToSpawn == "Booster" then
 		doNotIgnore("boosterRed")
 		doNotIgnore("boosterSingleUse")
@@ -454,6 +551,12 @@ function SpawnController.ignoredFields(entity)
 	end
 	if entity.entityToSpawn == "DashBlock" then
 		doNotIgnore("dashBlockCanDash")
+	end
+	if entity.entityToSpawn == "DashSwitch" then
+		doNotIgnore("dashSwitchPersistent")
+		doNotIgnore("dashSwitchAllGates")
+		doNotIgnore("dashSwitchSprite")
+		doNotIgnore("dashSwitchSide")
 	end
 	if entity.entityToSpawn == "Decal" then
 		doNotIgnore("decalTexture")
@@ -504,18 +607,6 @@ function SpawnController.ignoredFields(entity)
 	if entity.entityToSpawn == "Spinner" then
 		doNotIgnore("attachToSolid")
 	end
-	if entity.entityToSpawn == "Blade" or entity.entityToSpawn == "DustBunny" then
-		doNotIgnore("circularMovement")
-		if entity.entityToSpawn == "Blade" then
-			doNotIgnore("bladeStar")
-		end
-		if entity.circularMovement == true then
-			doNotIgnore("clockwise")
-		else
-			doNotIgnore("bladeSpeed")
-			doNotIgnore("bladeStartCenter")
-		end
-	end
 	if entity.entityToSpawn == "SpawnPoint" then
 		doNotIgnore("onlyOnSafeGround")
 	end
@@ -529,6 +620,10 @@ function SpawnController.ignoredFields(entity)
 	end
 	if entity.entityToSpawn == "SwapBlock" then
 		doNotIgnore("swapBlockTheme")
+	end
+	if entity.entityToSpawn == "TempleGate" then
+		doNotIgnore("templeGateType")
+		doNotIgnore("templeGateSprite")
 	end
 	if entity.entityToSpawn == "Water" then
 		doNotIgnore("hasBottom")
@@ -603,22 +698,40 @@ SpawnController.fieldOrder =  {
 	"wheelOptions",
 	
 	-- non-boolean entity-specific attributes
-	"iceballSpeed",
-	"moveBlockDirection",
-	"swapBlockTheme",
-	"zipMoverTheme",
-	"jumpthruTexture",
-	"soundIndex",
-	"crushBlockAxe",
-	"crystalColor",
 	"bladeSpeed",
-	"orientation",
-	"playerSpriteMode",
-	"decalTexture",
-	"decalDepth",
-	"flagCycleAt",
+	
 	"minCounterCap",
 	"maxCounterCap",
+	
+	"dashSwitchSprite",
+	"dashSwitchSide",
+	
+	"decalTexture",
+	"decalDepth",
+	
+	"flagCycleAt",
+	
+	"iceballSpeed",
+	
+	"crushBlockAxe",
+	
+	"moveBlockDirection",
+	
+	"jumpthruTexture",
+	"soundIndex",
+	
+	"crystalColor",
+	
+	"orientation",
+	
+	"playerSpriteMode",
+	
+	"swapBlockTheme",
+	
+	"templeGateSprite",
+	"templeGateType",
+	
+	"zipMoverTheme",
 	
 	-- general booleans
 	"flagValue",
@@ -665,6 +778,28 @@ function SpawnController.texture(room, entity)
 		return "objects/KoseiHelper/Controllers/SpawnController/Counter"
 	elseif entityToSpawn == "DashBlock" then
         return "objects/KoseiHelper/Controllers/SpawnController/DashBlock"
+	elseif entityToSpawn == "DashSwitch" then
+		if entity.dashSwitchSprite == "Mirror" then
+			if entity.dashSwitchSide == "Left" then
+				return "objects/KoseiHelper/Controllers/SpawnController/DashSwitchLeftMirror"
+			elseif entity.dashSwitchSide == "Right" then
+				return "objects/KoseiHelper/Controllers/SpawnController/DashSwitchRightMirror"
+			elseif entity.dashSwitchSide == "Down" then
+				return "objects/KoseiHelper/Controllers/SpawnController/DashSwitchDownMirror"
+			else
+				return "objects/KoseiHelper/Controllers/SpawnController/DashSwitchUpMirror"
+			end
+		else
+			if entity.dashSwitchSide == "Left" then
+				return "objects/KoseiHelper/Controllers/SpawnController/DashSwitchLeftDefault"
+			elseif entity.dashSwitchSide == "Right" then
+				return "objects/KoseiHelper/Controllers/SpawnController/DashSwitchRightDefault"
+			elseif entity.dashSwitchSide == "Down" then
+				return "objects/KoseiHelper/Controllers/SpawnController/DashSwitchDownDefault"
+			else
+				return "objects/KoseiHelper/Controllers/SpawnController/DashSwitchUpDefault"
+			end
+		end
 	elseif entityToSpawn == "Decal" then
 		return "objects/KoseiHelper/Controllers/SpawnController/Decal"
 	elseif entityToSpawn == "DustBunny" then
@@ -761,6 +896,14 @@ function SpawnController.texture(room, entity)
 		end
 	elseif entityToSpawn == "TheoCrystal" then
         return "objects/KoseiHelper/Controllers/SpawnController/TheoCrystal"
+	elseif entityToSpawn == "TempleGate" then
+		if entity.templeGateSprite == "Mirror" then
+			return "objects/KoseiHelper/Controllers/SpawnController/TempleGateMirror"
+		elseif entity.templeGateSprite == "Theo" then
+			return "objects/KoseiHelper/Controllers/SpawnController/TempleGateTheo"
+		else
+			return "objects/KoseiHelper/Controllers/SpawnController/TempleGateDefault"
+		end
 	elseif entityToSpawn == "Water" then
 		return "objects/KoseiHelper/Controllers/SpawnController/Water"
 	elseif entityToSpawn == "ZipMover" then

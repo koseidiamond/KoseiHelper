@@ -120,6 +120,7 @@ public class SpawnController : Entity
     public bool poofWhenDisappearing;
     public bool absoluteCoords = false;
     private bool ignoreJustRespawned;
+    private bool noNode;
     //other important variables
     private int entityID = 7388544; // Very high value so it doesn't conflict with other ids (hopefully)
     private List<EntityWithTTL> spawnedEntitiesWithTTL = new List<EntityWithTTL>();
@@ -144,6 +145,10 @@ public class SpawnController : Entity
     public bool decreaseCounter;
 
     public bool dashBlockCanDash;
+
+    public bool dashSwitchPersistent, dashSwitchAllGates;
+    public string dashSwitchSprite;
+    public string dashSwitchSide;
 
     public string decalTexture;
     public int decalDepth;
@@ -175,6 +180,8 @@ public class SpawnController : Entity
 
     public CrushBlock.Axes crushBlockAxis;
     public bool crushBlockChillout;
+    private PlayerSpriteMode playerSpriteMode;
+
 
     public bool attachToSolid;
     public CrystalColor crystalColor;
@@ -191,11 +198,11 @@ public class SpawnController : Entity
 
     private bool isWinged;
     private bool isMoon;
-    private bool noNode;
+
+    private TempleGate.Types templeGateType;
+    private string templeGateSprite;
 
     public bool hasTop, hasBottom;
-
-    private PlayerSpriteMode playerSpriteMode;
 
     public ZipMover.Themes zipMoverTheme;
 
@@ -310,6 +317,11 @@ public class SpawnController : Entity
 
         dashBlockCanDash = data.Bool("dashBlockCanDash", true);
 
+        dashSwitchPersistent = data.Bool("dashSwitchPersistent", false);
+        dashSwitchAllGates = data.Bool("dashSwitchAllGates", false);
+        dashSwitchSprite = data.Attr("dashSwitchSprite", "Default");
+        dashSwitchSide = data.Attr("dashSwitchSide", "Up");
+
         decalTexture = data.Attr("decalTexture", "10-farewell/creature_f00");
         decalDepth = data.Int("decalDepth", 9000);
 
@@ -360,6 +372,9 @@ public class SpawnController : Entity
 
         isWinged = data.Bool("winged", false);
         isMoon = data.Bool("moon", false);
+
+        templeGateType = data.Enum("templeGateType", TempleGate.Types.NearestSwitch);
+        templeGateSprite = data.Attr("templeGateSprite", "Default");
 
         playerSpriteMode = data.Enum("playerSpriteMode", PlayerSpriteMode.Madeline);
 
@@ -570,6 +585,37 @@ public class SpawnController : Entity
                         spawnedEntity = new NoFreezeDashBlock(spawnPosition, blockTileType, blockWidth, blockHeight, false, true, dashBlockCanDash, new EntityID("koseiHelper_spawnedDashBlock", entityID));
                         entityID++;
                         break;
+                    case EntityType.DashSwitch:
+                        DashSwitch.Sides side = DashSwitch.Sides.Up;
+                        switch (dashSwitchSide)
+                        {
+                            case "Left":
+                                side = DashSwitch.Sides.Left;
+                                break;
+                            case "Right":
+                                side = DashSwitch.Sides.Right;
+                                break;
+                            case "Down":
+                                side = DashSwitch.Sides.Down;
+                                break;
+                            case "MovingDirection":
+                                if (player.Speed != Vector2.Zero)
+                                {
+                                    side = Math.Abs(player.Speed.X) > Math.Abs(player.Speed.Y)
+                                        ? (player.Speed.X > 0f ? DashSwitch.Sides.Left : DashSwitch.Sides.Right)
+                                        : (player.Speed.Y > 0f ? DashSwitch.Sides.Up : DashSwitch.Sides.Down);
+                                }
+                                else
+                                {
+                                    side = player.onGround
+                                        ? DashSwitch.Sides.Up
+                                        : (player.Facing == Facings.Left ? DashSwitch.Sides.Left : DashSwitch.Sides.Right);
+                                }
+                                break;
+                        }
+                        spawnedEntity = new DashSwitch(spawnPosition + new Vector2(0f,-8f), side, dashSwitchPersistent, dashSwitchAllGates,
+                            new EntityID("koseiHelper_spawnedDashSwitch", entityID), dashSwitchSprite);
+                        break;
                     case EntityType.Decal:
                         if (player.Facing == Facings.Left)
                             spawnedEntity = new Decal(decalTexture, spawnPosition, new Vector2(-1, 1), decalDepth);
@@ -677,7 +723,7 @@ public class SpawnController : Entity
                     case EntityType.StarJumpBlock:
                         spawnedEntity = new StarJumpBlock(spawnPosition, blockWidth, blockHeight, blockSinks);
                         break;
-                    
+
                     case EntityType.Puffer:
                         spawnedEntity = new Puffer(spawnPosition, player.Facing == Facings.Right);
                         break;
@@ -748,6 +794,9 @@ public class SpawnController : Entity
                     case EntityType.SwapBlock:
                         spawnedEntity = new SwapBlockNoBg(spawnPosition, blockWidth, blockHeight, nodePosition, swapBlockTheme);
                         break;
+                    case EntityType.TempleGate: // I'm not sure about this levelID thing but hopefully this works
+                        spawnedEntity = new TempleGate(spawnPosition, blockHeight, templeGateType, templeGateSprite, level.Session.LevelData.Name);
+                        break;
                     case EntityType.TheoCrystal:
                         spawnedEntity = new TheoCrystal(spawnPosition);
                         break;
@@ -757,7 +806,7 @@ public class SpawnController : Entity
                     case EntityType.ZipMover:
                         spawnedEntity = new ZipMover(spawnPosition, blockWidth, blockHeight, nodePosition, zipMoverTheme);
                         break;
-                    
+
                     case EntityType.CustomEntity:
                         spawnedEntity = GetEntityFromPath(spawnPosition, nodePosition, level.Session.LevelData);
                         break;

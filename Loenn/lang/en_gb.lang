@@ -682,50 +682,79 @@ entities.KoseiHelper/SpawnController.attributes.description.blockWidth=Width of 
 entities.KoseiHelper/SpawnController.attributes.description.blockHeight=Height of the block.
 entities.KoseiHelper/SpawnController.attributes.description.blockTileType=The tileset that the block should use.
 
-entities.KoseiHelper/SpawnController.attributes.description.jellyfishBubble=Whether the entity should hover in the air before being grabbed.
-entities.KoseiHelper/SpawnController.attributes.description.boosterRed=If the spawned boosters should be red or green.
-entities.KoseiHelper/SpawnController.attributes.description.boosterSingleUse=Whether the booster should disappear after being used once.
 entities.KoseiHelper/SpawnController.attributes.description.dummyFix=If this option is enabled, the badeline dummies will disappear always.\nIf it is disabled, they might stay if the orb is used while disappearing.
-entities.KoseiHelper/SpawnController.attributes.description.cloudFragile=If the cloud spawned should be fragile (pink) or more permanent (blue).
-entities.KoseiHelper/SpawnController.attributes.description.fallingBlockBadeline=If the block should behave as Badeline (boss) Falling Blocks.
-entities.KoseiHelper/SpawnController.attributes.description.fallingBlockClimbFall=After a delay, the block will physically fall down until it comes into contact with another block.
-entities.KoseiHelper/SpawnController.attributes.description.featherShielded=If the feather should be inside a shield/bubble.
-entities.KoseiHelper/SpawnController.attributes.description.featherSingleUse=If the feather should be instantly consumed after used.
-entities.KoseiHelper/SpawnController.attributes.description.dashBlockCanDash=If the dash block should be destroyed with a dash or not.\n(They can still be destroyed through other means, e.g. red boosters)
-entities.KoseiHelper/SpawnController.attributes.description.iceballSpeed=The speed of the fireball/iceball.
-entities.KoseiHelper/SpawnController.attributes.description.iceballAlwaysIce=If the entity spawned should be always an iceball regardless of Core Mode.
-entities.KoseiHelper/SpawnController.attributes.description.moveBlockDirection=The direction the move block should be moving towards.
-entities.KoseiHelper/SpawnController.attributes.description.moveBlockCanSteer=If the move block can steer.
-entities.KoseiHelper/SpawnController.attributes.description.moveBlockFast=If the move block should be slightly faster than normal.
-entities.KoseiHelper/SpawnController.attributes.description.swapBlockTheme=The theme (sprite) of the swap block.
-entities.KoseiHelper/SpawnController.attributes.description.zipMoverTheme=The theme (sprite) of the zip mover.
-entities.KoseiHelper/SpawnController.attributes.description.refillTwoDashes=If the refill should give two dashes instead of one.
-entities.KoseiHelper/SpawnController.attributes.description.jumpthruTexture=The path of the texture to the jumpthru, relative to objects/jumpthru/.
-entities.KoseiHelper/SpawnController.attributes.description.soundIndex=The sound the jumpthru makes when you step on it.\Leave as -1 for the default one.
-entities.KoseiHelper/SpawnController.attributes.description.blockSinks=If the block sinks when the player steps on it.
-entities.KoseiHelper/SpawnController.attributes.description.crushBlockAxe=Determines which sides of the Kevin block are hittable.
-entities.KoseiHelper/SpawnController.attributes.description.crushBlockChillout=If the block should have the large face and get tired after being hit.
-entities.KoseiHelper/SpawnController.attributes.description.hasTop=Determines whether or not the water has a top.
-entities.KoseiHelper/SpawnController.attributes.description.hasBottom=Determines whether or not the water has a bottom.
-entities.KoseiHelper/SpawnController.attributes.description.attachToSolid=Whether the spinner attaches to solids, and can be moved by them.
-entities.KoseiHelper/SpawnController.attributes.description.crystalColor=The color of the spinner.
+
 entities.KoseiHelper/SpawnController.attributes.description.bladeStar=Changes the appearance of the blade into a star.
 entities.KoseiHelper/SpawnController.attributes.description.circularMovement=Whether the spinner should rotate or move back and forth towards the node.
 entities.KoseiHelper/SpawnController.attributes.description.bladeClockwise=The spinning blade will run clockwise.
 entities.KoseiHelper/SpawnController.attributes.description.bladeStarCenter=The spinner will start at the end of the track.
 entities.KoseiHelper/SpawnController.attributes.description.bladeSpeed=Changes the speed of the spinner's rotation.
 entities.KoseiHelper/SpawnController.attributes.description.circularMovement=Whether the moving dust bunny should rotate or move between the position and the node.\n(Make sure to check "No Node" if you don't want it to move)
-entities.KoseiHelper/SpawnController.attributes.description.orientation=Whether the spring should face left, right, up, or left/right depending on the facing direction.
-entities.KoseiHelper/SpawnController.attributes.description.playerCanUse=Determines whether the player is able to interact with the spring.
-entities.KoseiHelper/SpawnController.attributes.description.moon=Makes the strawberry render as a moon berry.\nDoes not work with wings in the base game.
-entities.KoseiHelper/SpawnController.attributes.description.winged=The strawberry attempts to vertically rise offscreen when the player dashes.
-entities.KoseiHelper/SpawnController.attributes.description.playerSpriteMode=The sprite of the spawned player clones.
-entities.KoseiHelper/SpawnController.attributes.description.flagCycleAt=The "spawned flag" will cycle until reaching this number, then it will reset the values again.\nFor example, if the cycle is 3, the process will be:\nkoseiFlag1 > koseiFlag2 > koseiFlag3 > !koseiFlag1 > !koseiFlag2 > !koseiFlag3 > koseiFlag1 > ...
-entities.KoseiHelper/SpawnController.attributes.description.flagStop=The spawner will remove itself (stop) after the flag koseiFlagN has reached the Cycle At value.
+
+entities.KoseiHelper/SpawnController.attributes.description.boosterRed=If the spawned boosters should be red or green.
+entities.KoseiHelper/SpawnController.attributes.description.boosterSingleUse=Whether the booster should disappear after being used once.
+
+entities.KoseiHelper/SpawnController.attributes.description.cloudFragile=If the cloud spawned should be fragile (pink) or more permanent (blue).
+
 entities.KoseiHelper/SpawnController.attributes.description.minCounterCap=The minimum value that the counter "koseiCounter" can reach.
 entities.KoseiHelper/SpawnController.attributes.description.maxCounterCap=The maximum value that the counter "koseiCounter" can reach.
 entities.KoseiHelper/SpawnController.attributes.description.decreaseCounter=If the counter "koseiCounter" should decrease by 1 instead of increase by 1 on each "spawn".
+
+entities.KoseiHelper/SpawnController.attributes.description.dashBlockCanDash=If the dash block should be destroyed with a dash or not.\n(They can still be destroyed through other means, e.g. red boosters)
+
+entities.KoseiHelper/SpawnController.attributes.description.dashSwitchPersistent=Once turned on, it will stay activated, even if the player dies.
+entities.KoseiHelper/SpawnController.attributes.description.dashSwitchAllGates=Whether the switch should open all temple gates instead of opening only the closest one.
+entities.KoseiHelper/SpawnController.attributes.description.dashSwitchSprite=Changes the visual appearance of the switch.
+entities.KoseiHelper/SpawnController.attributes.description.dashSwitchSide=Flips the switch entity horizontally/vertically so that it can be attached to wall surfaces/ceilings/floors.\nMovingDirection adjusts the side based on the player speed.
+
+entities.KoseiHelper/SpawnController.attributes.description.fallingBlockBadeline=If the block should behave as Badeline (boss) Falling Blocks.
+entities.KoseiHelper/SpawnController.attributes.description.fallingBlockClimbFall=After a delay, the block will physically fall down until it comes into contact with another block.
+
+entities.KoseiHelper/SpawnController.attributes.description.featherShielded=If the feather should be inside a shield/bubble.
+entities.KoseiHelper/SpawnController.attributes.description.featherSingleUse=If the feather should be instantly consumed after used.
+
+entities.KoseiHelper/SpawnController.attributes.description.flagCycleAt=The "spawned flag" will cycle until reaching this number, then it will reset the values again.\nFor example, if the cycle is 3, the process will be:\nkoseiFlag1 > koseiFlag2 > koseiFlag3 > !koseiFlag1 > !koseiFlag2 > !koseiFlag3 > koseiFlag1 > ...
+entities.KoseiHelper/SpawnController.attributes.description.flagStop=The spawner will remove itself (stop) after the flag koseiFlagN has reached the Cycle At value.
+
+entities.KoseiHelper/SpawnController.attributes.description.jellyfishBubble=Whether the entity should hover in the air before being grabbed.
+entities.KoseiHelper/SpawnController.attributes.description.jumpthruTexture=The path of the texture to the jumpthru, relative to objects/jumpthru/.
+entities.KoseiHelper/SpawnController.attributes.description.soundIndex=The sound the jumpthru makes when you step on it.\Leave as -1 for the default one.entities.KoseiHelper/SpawnController.attributes.description.crushBlockAxe=Determines which sides of the Kevin block are hittable.
+
+entities.KoseiHelper/SpawnController.attributes.description.crushBlockChillout=If the block should have the large face and get tired after being hit.entities.KoseiHelper/SpawnController.attributes.description.iceballSpeed=The speed of the fireball/iceball.
+
+entities.KoseiHelper/SpawnController.attributes.description.iceballAlwaysIce=If the entity spawned should be always an iceball regardless of Core Mode.
+
+entities.KoseiHelper/SpawnController.attributes.description.moveBlockDirection=The direction the move block should be moving towards.
+entities.KoseiHelper/SpawnController.attributes.description.moveBlockCanSteer=If the move block can steer.
+entities.KoseiHelper/SpawnController.attributes.description.moveBlockFast=If the move block should be slightly faster than normal.
+
+entities.KoseiHelper/SpawnController.attributes.description.blockSinks=If the block sinks when the player steps on it.
+
+entities.KoseiHelper/SpawnController.attributes.description.playerSpriteMode=The sprite of the spawned player clones.
+
+entities.KoseiHelper/SpawnController.attributes.description.refillTwoDashes=If the refill should give two dashes instead of one.
+
+entities.KoseiHelper/SpawnController.attributes.description.attachToSolid=Whether the spinner attaches to solids, and can be moved by them.
+entities.KoseiHelper/SpawnController.attributes.description.crystalColor=The color of the spinner.
+
+entities.KoseiHelper/SpawnController.attributes.description.orientation=Whether the spring should face left, right, up, or left/right depending on the facing direction.
+entities.KoseiHelper/SpawnController.attributes.description.playerCanUse=Determines whether the player is able to interact with the spring.
+
+entities.KoseiHelper/SpawnController.attributes.description.moon=Makes the strawberry render as a moon berry.\nDoes not work with wings in the base game.
+entities.KoseiHelper/SpawnController.attributes.description.winged=The strawberry attempts to vertically rise offscreen when the player dashes.
+
+entities.KoseiHelper/SpawnController.attributes.description.swapBlockTheme=The theme (sprite) of the swap block.
+
+entities.KoseiHelper/SpawnController.attributes.description.templeGateType=Determines the condition for opening/closing the gate.
+entities.KoseiHelper/SpawnController.attributes.description.templeGateSprite=Determines the visual appearance of the gate.
+
 entities.KoseiHelper/SpawnController.attributes.description.onlyOnSafeGround=Whether the spawn points should only appear while the player is on safe ground (and not in water/air).
+
+entities.KoseiHelper/SpawnController.attributes.description.hasTop=Determines whether or not the water has a top.\nWarning: Can crash the game.
+entities.KoseiHelper/SpawnController.attributes.description.hasBottom=Determines whether or not the water has a bottom.
+
+entities.KoseiHelper/SpawnController.attributes.description.zipMoverTheme=The theme (sprite) of the zip mover.
+
 entities.KoseiHelper/SpawnController.attributes.description.transitionUpdate=Whether the Spawner should work even while the player is transitioning between rooms. Cursed.
 
 #Spawn Controller - custom entity attributes
