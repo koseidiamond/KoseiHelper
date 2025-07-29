@@ -209,9 +209,17 @@ SpawnController.fieldInformation = function (entity) return {
 		"None",
 		"TTL",
 		"Flag",
-		"TTLFlag"
+		"TTLFlag",
+		"OverriddenByNext"
 		},
 		editable = false
+	},
+	appearSound = {
+		options = {
+		"event:/KoseiHelper/spawn",
+		"event:/new_content/game/10_farewell/ppt_mouseclick"
+		},
+		editable = true
 	},
 	spawnCooldown = {
 		minimumValue = 0
