@@ -13,6 +13,7 @@ namespace Celeste.Mod.KoseiHelper.Entities;
 public enum EntityType
 {
     BadelineBoost,
+    Blade,
     Booster,
     BounceBlock,
     Bumper,
@@ -22,6 +23,7 @@ public enum EntityType
     DashBlock,
     Decal,
     DreamBlock,
+    DustBunny,
     FallingBlock,
     Feather,
     Flag,
@@ -42,7 +44,6 @@ public enum EntityType
     Spring,
     StarJumpBlock,
     Strawberry,
-    SwapBlockNoBg,
     SwapBlock,
     Water,
     ZipMover,
@@ -146,7 +147,7 @@ public class SpawnController : Entity
     public bool moveBlockCanSteer, moveBlockFast;
     public MoveBlock.Directions moveBlockDirection;
 
-    public SwapBlockNoBg.Themes swapBlockNoBgTheme;
+    public SwapBlockNoBg.Themes swapBlockTheme;
     public ZipMover.Themes zipMoverTheme;
 
     public string flagToEnableSpawner;
@@ -166,7 +167,8 @@ public class SpawnController : Entity
 
     public bool attachToSolid;
     public CrystalColor crystalColor;
-    public bool dust;
+    public bool circularMovement, bladeStar, bladeClockwise, bladeStartCenter;
+    public TrackSpinner.Speeds bladeSpeed;
 
     public string orientation;
     public bool playerCanUse;
@@ -243,8 +245,6 @@ public class SpawnController : Entity
         offsetY = data.Int("offsetY", 8);
         absoluteCoords = data.Bool("absoluteCoords", false);
         entityToSpawn = data.Enum("entityToSpawn", EntityType.Puffer);
-        if (entityToSpawn == EntityType.SwapBlock)
-            entityToSpawn = EntityType.SwapBlockNoBg;
         spawnCooldown = spawnTime = data.Float("spawnCooldown", 0f);
         removeDash = data.Bool("removeDash", false);
         removeStamina = data.Bool("removeStamina", false);
@@ -311,7 +311,7 @@ public class SpawnController : Entity
         iceballSpeed = data.Float("iceballSpeed", 1f);
         iceballAlwaysIce = data.Bool("iceballAlwaysIce", false);
 
-        swapBlockNoBgTheme = data.Enum("swapBlockTheme", SwapBlockNoBg.Themes.Normal);
+        swapBlockTheme = data.Enum("swapBlockTheme", SwapBlockNoBg.Themes.Normal);
 
         fallingBlockBadeline = data.Bool("fallingBlockBadeline", false);
         fallingBlockClimbFall = data.Bool("fallingBlockClimbFall", false);
@@ -329,7 +329,12 @@ public class SpawnController : Entity
 
         attachToSolid = data.Bool("attachToSolid", false);
         crystalColor = data.Enum("crystalColor", CrystalColor.Blue);
-        dust = data.Bool("dust", false);
+
+        bladeStar = data.Bool("bladeStar", false);
+        circularMovement = data.Bool("circularMovement", false);
+        bladeClockwise = data.Bool("clockwise", false);
+        bladeStartCenter = data.Bool("bladeStartCenter", false);
+        bladeSpeed = data.Enum("bladeSpeed", BladeTrackSpinner.Speeds.Normal);
 
         orientation = data.Attr("orientation", "Floor");
         playerCanUse = data.Bool("playerCanUse", true);
@@ -401,7 +406,7 @@ public class SpawnController : Entity
         EntityType.FloatySpaceBlock,
         EntityType.StarJumpBlock,
         EntityType.CrumblePlatform,
-        EntityType.SwapBlockNoBg,
+        EntityType.SwapBlock,
         EntityType.ZipMover
         };
         bool isBlock = blockEntities.Contains(entityToSpawn);
@@ -547,8 +552,8 @@ public class SpawnController : Entity
                     case EntityType.Seeker:
                         spawnedEntity = new Seeker(spawnPosition, new Vector2[] { spawnPosition });
                         break;
-                    case EntityType.SwapBlockNoBg:
-                        spawnedEntity = new SwapBlockNoBg(spawnPosition, blockWidth, blockHeight, nodePosition, swapBlockNoBgTheme);
+                    case EntityType.SwapBlock:
+                        spawnedEntity = new SwapBlockNoBg(spawnPosition, blockWidth, blockHeight, nodePosition, swapBlockTheme);
                         break;
                     case EntityType.ZipMover:
                         spawnedEntity = new ZipMover(spawnPosition, blockWidth, blockHeight, nodePosition, zipMoverTheme);
@@ -588,8 +593,61 @@ public class SpawnController : Entity
                         break;
                     case EntityType.Spinner:
                         spawnedEntity = new CrystalStaticSpinner(spawnPosition, attachToSolid, crystalColor);
-                        if (dust)
-                            spawnedEntity = new DustStaticSpinner(spawnPosition, attachToSolid, false);
+                        break;
+                    case EntityType.DustBunny:
+                            if (noNode)
+                                spawnedEntity = new DustStaticSpinner(spawnPosition, attachToSolid, false);
+                            else
+                            {
+                                EntityData dustSpinnerData = new()
+                                {
+                                    Position = spawnPosition,
+                                    Level = level.Session.LevelData,
+                                    Nodes = new Vector2[] { nodePosition },
+                                    Values = new()
+                                };
+                                for (int i = 0; i < dictionaryKeys.Count; i++)
+                                {
+                                    dustSpinnerData.Values[dictionaryKeys[i]] = dictionaryValues.ElementAtOrDefault(i);
+                                }
+                            dustSpinnerData.Values["startCenter"] = dustSpinnerData.Bool("startCenter", bladeStartCenter).ToString();
+                            dustSpinnerData.Values["clockwise"] = dustSpinnerData.Bool("clockwise", bladeClockwise).ToString();
+                            dustSpinnerData.Values["speed"] = dustSpinnerData.Enum("speed", bladeSpeed).ToString();
+                            if (circularMovement)
+                                spawnedEntity = new DustRotateSpinner(dustSpinnerData, Vector2.Zero);
+                            else
+                                spawnedEntity = new DustTrackSpinner(dustSpinnerData, Vector2.Zero);
+                        }
+                        break;
+                    case EntityType.Blade:
+                        EntityData bladeData = new()
+                        {
+                            Position = spawnPosition,
+                            Level = level.Session.LevelData,
+                            Nodes = new Vector2[] { nodePosition },
+                            Values = new()
+                        };
+                        for (int i = 0; i < dictionaryKeys.Count; i++)
+                        {
+                            bladeData.Values[dictionaryKeys[i]] = dictionaryValues.ElementAtOrDefault(i);
+                        }
+                        bladeData.Values["startCenter"] = bladeData.Bool("startCenter", bladeStartCenter).ToString();
+                        bladeData.Values["clockwise"] = bladeData.Bool("clockwise", bladeClockwise).ToString();
+                        bladeData.Values["speed"] = bladeData.Enum("speed", bladeSpeed).ToString();
+                        if (circularMovement)
+                        {
+                            if (bladeStar)
+                                spawnedEntity = new StarRotateSpinner(bladeData, Vector2.Zero);
+                            else
+                                spawnedEntity = new BladeRotateSpinner(bladeData, Vector2.Zero);
+                        }
+                        else
+                        {
+                            if (bladeStar)
+                                spawnedEntity = new StarTrackSpinner(bladeData, Vector2.Zero);
+                            else
+                                spawnedEntity = new BladeTrackSpinner(bladeData, Vector2.Zero);
+                        }
                         break;
                     case EntityType.Spring:
                         switch (orientation)
@@ -631,11 +689,7 @@ public class SpawnController : Entity
                         strawberryData.Values["winged"] = strawberryData.Bool("Winged", isWinged).ToString();
                         strawberryData.Values["moon"] = strawberryData.Bool("Moon", isMoon).ToString();
                         EntityID strawberryID = new EntityID(level.Session.LevelData.Name, entityID++);
-                        spawnedEntity = new Strawberry(
-                            strawberryData,
-                            Vector2.Zero,
-                            strawberryID
-                        );
+                        spawnedEntity = new Strawberry(strawberryData, Vector2.Zero, strawberryID);
                         break;
                     case EntityType.Player:
                         spawnedEntity = new Player(spawnPosition, playerSpriteMode);

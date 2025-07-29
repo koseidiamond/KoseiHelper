@@ -49,43 +49,70 @@ SpawnController.placements = {
 		
 		boosterRed = false,
 		boosterSingleUse = false,
+		
 		dummyFix = true,
+		
 		cloudFragile = true,
+		
 		featherShielded = false,
 		featherSingleUse = true,
+		
 		dashBlockCanDash = true,
+		
 		iceballSpeed = 1,
 		iceballAlwaysIce = false,
+		
 		moveBlockDirection = "Down",
 		moveBlockCanSteer = false,
 		moveBlockFast = true,
+		
 		fallingBlockBadeline = false,
 		fallingBlockClimbFall = false,
+		
 		swapBlockTheme = "Normal",
 		zipMoverTheme = "Normal",
+		
 		refillTwoDashes = false,
+		
 		jumpthruTexture = "wood",
 		soundIndex = -1,
+		
 		blockSinks = false,
+		
 		crushBlockAxe = "Both",
 		crushBlockChillout = false,
+		
 		hasBottom = false,
+		
 		attachToSolid = false,
 		crystalColor = "Blue",
-		dust = false,
+		
+		circularMovement = false,
+		bladeStar = false,
+		bladeStartCenter = false,
+		clockwise = false,
+		bladeSpeed = "Normal",
+		
 		orientation = "Floor",
 		playerCanUse = true,
+		
 		winged = false,
 		moon = false,
+		
 		playerSpriteMode = "Madeline",
+		
 		decalTexture = "10-farewell/creature_f00",
 		decalDepth = 9000,
+		
 		flagCycleAt = 9999,
 		flagStop = false,
+		
 		minCounterCap = 0,
 		maxCounterCap = 9999,
-		onlyOnSafeGround = true,
 		decreaseCounter = false,
+		
+		onlyOnSafeGround = true,
+		
 
 		-- Custom Entity (or any entity that can be spawned with EntityData)
 		entityPath = "",
@@ -109,6 +136,7 @@ SpawnController.fieldInformation = function (entity) return {
 	entityToSpawn = {
 		options = {
 		"BadelineBoost",
+		"Blade",
 		"Booster",
 		"BounceBlock",
 		"Bumper",
@@ -118,6 +146,7 @@ SpawnController.fieldInformation = function (entity) return {
 		"DashBlock",
 		"Decal",
 		"DreamBlock",
+		"DustBunny",
 		"FallingBlock",
 		"Feather",
 		"Flag",
@@ -257,6 +286,14 @@ SpawnController.fieldInformation = function (entity) return {
 		},
 		editable = false
 	},
+	bladeSpeed = {
+		options = {
+		"Slow",
+		"Normal",
+		"Fast"
+		},
+		editable = false
+	},
 	orientation = {
 		options = {
 		"Floor",
@@ -328,7 +365,11 @@ function SpawnController.ignoredFields(entity)
 	"hasBottom",
 	"attachToSolid",
 	"crystalColor",
-	"dust",
+	"bladeStar",
+	"circularMovement",
+	"clockwise",
+	"bladeStartCenter",
+	"bladeSpeed",
 	"orientation",
 	"playerCanUse",
 	"winged",
@@ -444,8 +485,18 @@ function SpawnController.ignoredFields(entity)
 	end
 	if entity.entityToSpawn == "Spinner" then
 		doNotIgnore("attachToSolid")
-		doNotIgnore("crystalColor")
-		doNotIgnore("dust")
+	end
+	if entity.entityToSpawn == "Blade" or entity.entityToSpawn == "DustBunny" then
+		doNotIgnore("circularMovement")
+		if entity.entityToSpawn == "Blade" then
+			doNotIgnore("bladeStar")
+		end
+		if entity.circularMovement == true then
+			doNotIgnore("clockwise")
+		else
+			doNotIgnore("bladeSpeed")
+			doNotIgnore("bladeStartCenter")
+		end
 	end
 	if entity.entityToSpawn == "Spring" then
 		doNotIgnore("orientation")
@@ -475,7 +526,8 @@ function SpawnController.ignoredFields(entity)
 		doNotIgnore("onlyOnSafeGround")
 	end
 	-- Noded entities
-	if entity.entityToSpawn == "ZipMover" or entity.entityToSpawn == "SwapBlock" or entity.entityToSpawn == "Iceball" then
+	if entity.entityToSpawn == "ZipMover" or entity.entityToSpawn == "SwapBlock" or entity.entityToSpawn == "Iceball" or entity.entityToSpawn == "Blade" or
+		(entity.entityToSpawn == "DustBunny" and entity.noNode == false) then
 		doNotIgnore("nodeX")
 		doNotIgnore("nodeY")
 		doNotIgnore("nodeRelativeToPlayerFacing")
@@ -501,6 +553,8 @@ function SpawnController.ignoredFields(entity)
 		doNotIgnore("entityPath")
 		doNotIgnore("dictKeys")
 		doNotIgnore("dictValues")
+	end
+	if entity.entityToSpawn == "CustomEntity" or entity.entityToSpawn == "DustBunny" then
 		doNotIgnore("noNode")
 	end
 	return ignored
@@ -512,6 +566,12 @@ SpawnController.fieldOrder =  {
 	"entityToSpawn",
 	"spawnCondition",
 	"despawnMethod",
+	-- spawn conditions
+	"spawnSpeed",
+	"spawnFlag",
+	"everyXDashes",
+	"cassetteColor",
+	-- general attributes
 	"offsetX",
 	"offsetY",
 	"nodeX",
@@ -522,8 +582,6 @@ SpawnController.fieldOrder =  {
 	"flagToLive",
 	"spawnCooldown",
 	"spawnLimit",
-	"spawnSpeed",
-	"spawnFlag",
 	"blockWidth",
 	"blockHeight",
 	"blockTileType",
@@ -531,6 +589,27 @@ SpawnController.fieldOrder =  {
 	"entityPath",
 	"dictKeys",
 	"dictValues",
+	"wheelOptions",
+	
+	-- non-boolean entity-specific attributes
+	"iceballSpeed",
+	"moveBlockDirection",
+	"swapBlockTheme",
+	"zipMoverTheme",
+	"jumpthruTexture",
+	"soundIndex",
+	"crushBlockAxe",
+	"crystalColor",
+	"bladeSpeed",
+	"orientation",
+	"playerSpriteMode",
+	"decalTexture",
+	"decalDepth",
+	"flagCycleAt",
+	"minCounterCap",
+	"maxCounterCap",
+	
+	-- general booleans
 	"flagValue",
 	"spawnFlagValue",
 	"removeDash",
@@ -574,7 +653,11 @@ function SpawnController.texture(room, entity)
 	elseif entityToSpawn == "FallingBlock" then
         return "objects/KoseiHelper/Controllers/SpawnController/FallingBlock"
 	elseif entityToSpawn == "Feather" then
-        return "objects/KoseiHelper/Controllers/SpawnController/Feather"
+		if entity.featherShielded then
+			return "objects/KoseiHelper/Controllers/SpawnController/FeatherShielded"
+		else
+			return "objects/KoseiHelper/Controllers/SpawnController/Feather"
+		end
 	elseif entityToSpawn == "Iceball" then
         return "objects/KoseiHelper/Controllers/SpawnController/Iceball"
 	elseif entityToSpawn == "MoveBlock" then
@@ -619,6 +702,14 @@ function SpawnController.texture(room, entity)
 		else
 			return "objects/KoseiHelper/Controllers/SpawnController/SpinnerBlue"
 		end
+	elseif entityToSpawn == "DustBunny" then
+		return "objects/KoseiHelper/Controllers/SpawnController/DustBunny"
+	elseif entityToSpawn == "Blade" then
+		if entity.bladeStar then
+			return "objects/KoseiHelper/Controllers/SpawnController/Star"
+		else
+			return "objects/KoseiHelper/Controllers/SpawnController/Blade"
+		end
 	elseif entityToSpawn == "Spring" then
 		if entity.orientation == "WallLeft" then
 			return "objects/KoseiHelper/Controllers/SpawnController/SpringWallLeft"
@@ -632,7 +723,19 @@ function SpawnController.texture(room, entity)
 			return "objects/KoseiHelper/Controllers/SpawnController/SpringFloor"
 		end
 	elseif entityToSpawn == "Strawberry" then
-		return "objects/KoseiHelper/Controllers/SpawnController/Strawberry"
+		if entity.moon then
+			if entity.winged then
+				return "objects/KoseiHelper/Controllers/SpawnController/StrawberryWingedMoon"
+			else
+				return "objects/KoseiHelper/Controllers/SpawnController/StrawberryMoon"
+			end
+		else
+			if entity.winged then
+				return "objects/KoseiHelper/Controllers/SpawnController/StrawberryWinged"
+			else
+				return "objects/KoseiHelper/Controllers/SpawnController/Strawberry"
+			end
+		end
 	elseif entityToSpawn == "Decal" then
 		return "objects/KoseiHelper/Controllers/SpawnController/Decal"
 	elseif entityToSpawn == "Flag" then
