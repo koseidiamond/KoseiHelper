@@ -158,6 +158,7 @@ SpawnController.fieldInformation = function (entity) return {
 		"Decal",
 		"DreamBlock",
 		"DustBunny",
+		"ExitBlock",
 		"FallingBlock",
 		"Feather",
 		"Flag",
@@ -170,6 +171,7 @@ SpawnController.fieldInformation = function (entity) return {
 		"JumpthruPlatform",
 		"Kevin",
 		"MoveBlock",
+		"Oshiro",
 		"Player",
 		"Puffer",
 		"Refill",
@@ -639,13 +641,13 @@ function SpawnController.ignoredFields(entity)
 		doNotIgnore("nodeRelativeToPlayerFacing")
 	end
 	-- Entities with tileset
-	if entity.entityToSpawn == "DashBlock" or entity.entityToSpawn == "FallingBlock" or entity.entityToSpawn == "FloatySpaceBlock" then
+	if entity.entityToSpawn == "DashBlock" or entity.entityToSpawn == "FallingBlock" or entity.entityToSpawn == "FloatySpaceBlock" or entity.entityToSpawn == "ExitBlock" then
 		doNotIgnore("blockTileType")
 	end
 	--Entities with size
 	if entity.entityToSpawn == "DashBlock" or entity.entityToSpawn == "FallingBlock" or entity.entityToSpawn == "IceBlock" or entity.entityToSpawn == "MoveBlock" or entity.entityToSpawn == "StarJumpBlock"
 	or entity.entityToSpawn == "Kevin"	or entity.entityToSpawn == "SwapBlock" or entity.entityToSpawn == "ZipMover" or entity.entityToSpawn == "DreamBlock" or entity.entityToSpawn == "GlassBlock"
-	or entity.entityToSpawn == "FloatySpaceBlock" or entity.entityToSpawn == "Water" then
+	or entity.entityToSpawn == "FloatySpaceBlock" or entity.entityToSpawn == "Water" or entity.entityToSpawn == "ExitBlock" then
 		doNotIgnore("blockWidth")
 		doNotIgnore("blockHeight")
 	end
@@ -804,6 +806,8 @@ function SpawnController.texture(room, entity)
 		return "objects/KoseiHelper/Controllers/SpawnController/Decal"
 	elseif entityToSpawn == "DustBunny" then
 		return "objects/KoseiHelper/Controllers/SpawnController/DustBunny"
+	elseif entityToSpawn == "ExitBlock" then
+		return "objects/KoseiHelper/Controllers/SpawnController/ExitBlock"
 	elseif entityToSpawn == "FallingBlock" then
         return "objects/KoseiHelper/Controllers/SpawnController/FallingBlock"
 	elseif entityToSpawn == "Feather" then
@@ -844,6 +848,8 @@ function SpawnController.texture(room, entity)
 		return "objects/KoseiHelper/Controllers/SpawnController/CrumblePlatform"
 	elseif entityToSpawn == "DreamBlock" then
 		return "objects/KoseiHelper/Controllers/SpawnController/DreamBlock"
+	elseif entityToSpawn == "Oshiro" then
+		return "objects/KoseiHelper/Controllers/SpawnController/Oshiro"
 	elseif entityToSpawn == "Player" then
 		return "objects/KoseiHelper/Controllers/SpawnController/Player"
 	elseif entityToSpawn == "Puffer" then

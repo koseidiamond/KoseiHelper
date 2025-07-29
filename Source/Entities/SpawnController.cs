@@ -38,6 +38,7 @@ public enum EntityType
     JumpthruPlatform,
     Kevin,
     MoveBlock,
+    Oshiro,
     Player,
     Puffer,
     Refill,
@@ -237,15 +238,7 @@ public class SpawnController : Entity
             }
         }
 
-        return Enum.GetValues<EntityType>()
-            .Except(new[]
-            {
-            EntityType.Player,
-            EntityType.Flag,
-            EntityType.Counter,
-            EntityType.SpawnPoint,
-            })
-            .ToArray();
+        return Enum.GetValues<EntityType>().Except(new[] {EntityType.Flag,EntityType.Counter,EntityType.SpawnPoint}).ToArray();
     }
     private static int lastWheel;
 
@@ -420,17 +413,19 @@ public class SpawnController : Entity
         //This HashSet contains not only blocks, but all entities with width. Used to fix spawn positions on relative mode.
         HashSet<EntityType> blockEntities = new HashSet<EntityType>
         {
-        EntityType.MoveBlock,
-        EntityType.GlassBlock,
-        EntityType.Kevin,
-        EntityType.FallingBlock,
-        EntityType.DashBlock,
-        EntityType.JumpthruPlatform,
         EntityType.BounceBlock,
-        EntityType.FloatySpaceBlock,
-        EntityType.StarJumpBlock,
         EntityType.CrumblePlatform,
+        EntityType.DashBlock,
+        EntityType.ExitBlock,
+        EntityType.FallingBlock,
+        EntityType.FloatySpaceBlock,
+        EntityType.GlassBlock,
+        EntityType.JumpthruPlatform,
+        EntityType.Kevin,
+        EntityType.MoveBlock,
+        EntityType.StarJumpBlock,
         EntityType.SwapBlock,
+        EntityType.TempleGate,
         EntityType.ZipMover
         };
         bool isBlock = blockEntities.Contains(entityToSpawn);
@@ -650,6 +645,9 @@ public class SpawnController : Entity
                                 spawnedEntity = new DustTrackSpinner(dustSpinnerData, Vector2.Zero);
                         }
                         break;
+                    case EntityType.ExitBlock:
+                        spawnedEntity = new ExitBlock(spawnPosition, blockWidth, blockHeight, blockTileType);
+                        break;
                     case EntityType.FallingBlock:
                         spawnedEntity = new FallingBlock(spawnPosition, blockTileType, blockWidth, blockHeight, fallingBlockBadeline, false, fallingBlockClimbFall);
                         break;
@@ -713,6 +711,9 @@ public class SpawnController : Entity
                         break;
                     case EntityType.MoveBlock:
                         spawnedEntity = new MoveBlock(spawnPosition, blockWidth, blockHeight, moveBlockDirection, moveBlockCanSteer, moveBlockFast);
+                        break;
+                    case EntityType.Oshiro:
+                        spawnedEntity = new AngryOshiro(spawnPosition, false);
                         break;
                     case EntityType.Player:
                         spawnedEntity = new Player(spawnPosition, playerSpriteMode);
