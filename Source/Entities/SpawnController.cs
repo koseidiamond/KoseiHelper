@@ -517,7 +517,7 @@ public class SpawnController : Entity
                     float mouseY = MInput.Mouse.Position.Y * (180f / 1080f);
                     spawnPosition = new Vector2(level.Camera.Position.X + mouseX + offsetX, level.Camera.Position.Y + mouseY + offsetY);
                     if (isBlock)
-                        spawnPosition -= new Vector2(blockWidth/2, blockHeight/2);
+                        spawnPosition -= new Vector2(blockWidth / 2, blockHeight / 2);
                 }
                 //Calculate node position
                 var nodePosition = new Vector2(X + nodeX, Y + nodeY);
@@ -839,7 +839,7 @@ public class SpawnController : Entity
                     level.Session.IncrementCounter("KoseiHelper_Total_" + spawnedEntity.ToString() + "s_Spawned");
                     level.Session.IncrementCounter("KoseiHelper_TotalEntitiesSpawned");
 
-                   Audio.Play(appearSound, player.Position);
+                    Audio.Play(appearSound, player.Position);
                 }
             }
         }
