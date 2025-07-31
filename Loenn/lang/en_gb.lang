@@ -940,6 +940,7 @@ triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.scrollY=D
 triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.speedX=Automatically moves the styleground along the X axis in-game.
 triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.speedY=Automatically moves the styleground along the Y axis in-game.
 triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.alpha=Determines opacity between 0 (translucent) and 1 (opaque).
+triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.windMultiplier=How much the wind should affect the styleground.
 triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.fadeIn=Determines whether the styleground should fade in when transitioning to it.
 triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.flipX=Flips the styleground on the X axis.
 triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.flipY=Flips the styleground on the Y axis.

@@ -32,6 +32,7 @@ StylegroundModifierTrigger.placements = {
 		speedX = 0,
 		speedY = 0,
 		alpha = 1,
+		windMultiplier = 0,
 		fadeIn = false,
 		flipX = false,
 		flipY = false,
@@ -100,6 +101,7 @@ StylegroundModifierTrigger.fieldInformation = function (entity) return {
 		"SpeedX",
 		"SpeedY",
 		"Alpha",
+		"WindMultiplier",
 		-- To be implemented:
 		--"FadeIn",
 		"FlipX",
@@ -180,6 +182,7 @@ function StylegroundModifierTrigger.ignoredFields(entity)
 	"speedX",
 	"speedY",
 	"alpha",
+	"windMultiplier",
 	"fadeIn",
 	"flipX",
 	"flipY",
@@ -248,6 +251,9 @@ function StylegroundModifierTrigger.ignoredFields(entity)
 		end
 		if entity.fieldToModify == "Alpha" then
 			doNotIgnore("alpha")
+		end
+		if entity.fieldToModify == "WindMultiplier" then
+			doNotIgnore("windMultiplier")
 		end
 		if entity.fieldToModify == "FadeIn" then
 			doNotIgnore("fadeIn")

@@ -56,6 +56,7 @@ public class StylegroundModifierTrigger : Trigger
         SpeedX,
         SpeedY,
         Alpha,
+        WindMultiplier,
         FadeIn,
         FlipX,
         FlipY,
@@ -71,6 +72,7 @@ public class StylegroundModifierTrigger : Trigger
     public float scrollX, scrollY;
     public float speedX, speedY;
     public float alpha;
+    public float windMultiplier;
     public bool fadeIn;
     public bool flipX, flipY;
     public bool instantIn, instantOut;
@@ -113,6 +115,7 @@ public class StylegroundModifierTrigger : Trigger
         speedX = data.Float("speedX", 0f);
         speedY = data.Float("speedY", 0f);
         alpha = data.Float("alpha", 1f);
+        windMultiplier = data.Float("windMultiplier", 1f);
         fadeIn = data.Bool("fadeIn", false);
         flipX = data.Bool("flipX", false);
         flipY = data.Bool("flipY", false);
@@ -390,6 +393,32 @@ public class StylegroundModifierTrigger : Trigger
                         break;
                     default: // DirectValue
                         backdrop.FadeAlphaMultiplier = alpha;
+                        break;
+                }
+                break;
+            case FieldToModify.WindMultiplier:
+                switch (valueType)
+                {
+                    case ValueType.Counter:
+                        if (absoluteValue)
+                            backdrop.WindMultiplier = Math.Abs(session.GetCounter(linkedCounter)) * multiplier;
+                        else
+                            backdrop.WindMultiplier = session.GetCounter(linkedCounter) * multiplier;
+                        break;
+                    case ValueType.Slider:
+                        if (absoluteValue)
+                            backdrop.WindMultiplier = Math.Abs(session.GetSlider(linkedSlider)) * multiplier;
+                        else
+                            backdrop.WindMultiplier = session.GetSlider(linkedSlider) * multiplier;
+                        break;
+                    case ValueType.Flag:
+                        if (session.GetFlag(linkedFlag))
+                            backdrop.WindMultiplier = valueWhileTrue;
+                        else
+                            backdrop.WindMultiplier = valueWhileFalse;
+                        break;
+                    default: // DirectValue
+                        backdrop.WindMultiplier = alpha;
                         break;
                 }
                 break;
