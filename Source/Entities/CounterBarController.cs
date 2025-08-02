@@ -58,7 +58,6 @@ namespace Celeste.Mod.KoseiHelper.Entities
 
         public override void Update()
         {
-            Logger.Debug(nameof(KoseiHelperModule), $"uhhhh");
             Level level = SceneAs<Level>();
             flagTrue = level.Session.GetFlag(flag);
             if (!slider)
