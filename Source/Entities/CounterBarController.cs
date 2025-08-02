@@ -58,6 +58,7 @@ namespace Celeste.Mod.KoseiHelper.Entities
 
         public override void Update()
         {
+            Logger.Debug(nameof(KoseiHelperModule), $"uhhhh");
             Level level = SceneAs<Level>();
             flagTrue = level.Session.GetFlag(flag);
             if (!slider)
@@ -90,83 +91,47 @@ namespace Celeste.Mod.KoseiHelper.Entities
 
         public override void Render()
         {
-            if (string.IsNullOrEmpty(flag) || (!string.IsNullOrEmpty(flag) && flagTrue))
+            if (string.IsNullOrEmpty(flag) || flagTrue)
             {
+                if (!string.IsNullOrEmpty(framePath))
+                {
+                    var center = new Vector2(xPosition + width / 2, yPosition + height / 2);
+                    texture.DrawJustified(center, new Vector2(0.5f, 0.5f));
+                }
                 if (string.IsNullOrEmpty(innerTexturePath))
                 {
-                    if (!string.IsNullOrEmpty(framePath))
-                    {
-                        if (!vertical)
-                        {
-                            texture.DrawJustified(new Vector2(xPosition + width / 2, yPosition + height / 2), new Vector2(0.5f, 0.5f));
-                        }
-                        else
-                        {
-                            texture.DrawJustified(new Vector2(xPosition + width / 2, yPosition + height / 2), new Vector2(0.5f, 0.5f));
-                        }
-                    }
-
                     if (!vertical)
                     {
-                        if (reverse)
-                        {
-                            Draw.Rect(new Vector2(xPosition + width - filled, yPosition), filled, Collider.Height, color);
-                        }
-                        else
-                        {
-                            Draw.Rect(new Vector2(xPosition, yPosition), filled, Collider.Height, color);
-                        }
-
-                        if (outline)
-                            Draw.HollowRect(new Vector2(xPosition, yPosition), Collider.Width, Collider.Height, Color.Black);
+                        var pos = reverse
+                            ? new Vector2(xPosition + width - filled, yPosition)
+                            : new Vector2(xPosition, yPosition);
+                        Draw.Rect(pos, filled, Collider.Height, color);
                     }
                     else
                     {
-                        if (reverse)
-                        {
-                            Draw.Rect(new Vector2(xPosition, yPosition), Collider.Width, filled, color);
-                        }
-                        else
-                        {
-                            Draw.Rect(new Vector2(xPosition, yPosition + height - filled), Collider.Width, filled, color);
-                        }
-                        if (outline)
-                            Draw.HollowRect(new Vector2(xPosition, yPosition), Collider.Width, Collider.Height, Color.Black);
+                        var pos = reverse
+                            ? new Vector2(xPosition, yPosition)
+                            : new Vector2(xPosition, yPosition + height - filled);
+                        Draw.Rect(pos, Collider.Width, filled, color);
+                    }
+
+                    if (outline)
+                    {
+                        Draw.HollowRect(
+                            new Vector2(xPosition, yPosition), Collider.Width, Collider.Height, Color.Black);
                     }
                 }
-                else // Inner texture provided, render using the texture
+                else
                 {
                     if (!vertical)
-                    {
-                        int textureWidth = (int)filled;
-                        MTexture subtexture = innerTexture.GetSubtexture(0, 0, textureWidth, innerTexture.Height);
-                        if (reverse)
-                        {
-                            subtexture.Draw(new Vector2(xPosition + width - textureWidth, yPosition));
-                        }
-                        else
-                        {
-                            subtexture.Draw(new Vector2(xPosition, yPosition));
-                        }
-                    }
+                        innerTexture.GetSubtexture(0, 0, (int)filled, innerTexture.Height).Draw(reverse ?
+                            new Vector2(xPosition + width - (int)filled, yPosition) : new Vector2(xPosition, yPosition));
                     else
-                    {
-                        int textureHeight = (int)filled;
-                        MTexture subtexture = innerTexture.GetSubtexture(0, 0, innerTexture.Width, textureHeight);
-                        if (reverse)
-                        {
-                            subtexture.Draw(new Vector2(xPosition, yPosition + height - textureHeight));
-                        }
-                        else
-                        {
-                            subtexture.Draw(new Vector2(xPosition, yPosition + height - textureHeight));
-                        }
-                    }
+                        innerTexture.GetSubtexture(0, 0, innerTexture.Width, (int)filled).Draw(new Vector2(xPosition, reverse ?
+                            yPosition : yPosition + height - (int)filled));
                 }
-
                 base.Render();
             }
         }
-
     }
 }

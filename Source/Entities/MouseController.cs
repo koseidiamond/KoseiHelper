@@ -1,8 +1,6 @@
 using Celeste.Mod.Entities;
-using Celeste.Mod.KoseiHelper.NemesisGun;
 using Microsoft.Xna.Framework;
 using Monocle;
-using System;
 
 namespace Celeste.Mod.KoseiHelper.Entities;
 
@@ -88,7 +86,7 @@ public class MouseController : Entity
         {
             if (entity is Puffer puffer && puffer.Collider.Bounds.Intersects(Hitbox) && puffer.Collidable)
             {
-                if (puffer.Left -5f > Left)
+                if (puffer.Left - 5f > Left)
                 {
                     puffer.facing.X = 1f;
                     puffer.GotoHitSpeed(280f * Vector2.UnitX);
@@ -97,7 +95,7 @@ public class MouseController : Entity
                     puffer.bounceWiggler.Start();
                     puffer.Alert(restart: true, playSfx: false);
                 }
-                else if (puffer.Right +5f < Right)
+                else if (puffer.Right + 5f < Right)
                 {
                     puffer.facing.X = -1f;
                     puffer.GotoHitSpeed(280f * -Vector2.UnitX);
@@ -108,7 +106,7 @@ public class MouseController : Entity
                 }
                 else
                 {
-                    if (puffer.Top +5f <= Bottom)
+                    if (puffer.Top + 5f <= Bottom)
                     {
                         puffer.GotoHitSpeed(224f * -Vector2.UnitY);
                         Audio.Play("event:/new_content/game/10_farewell/puffer_boop", puffer.Position);
