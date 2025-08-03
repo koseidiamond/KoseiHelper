@@ -132,6 +132,8 @@ public class SpawnController : Entity
     public Entity spawnedEntity = null;
     public static bool playerIsJumping;
     public bool globalEntity;
+    private bool onlyOnBgTiles;
+    private Entity bgTilesCollider;
 
     //entity specific data
 
@@ -290,6 +292,7 @@ public class SpawnController : Entity
         if (data.Bool("transitionUpdate", false) || entityToSpawn == EntityType.Player)
             base.Tag = Tags.TransitionUpdate;
         globalEntity = data.Bool("globalEntity", false);
+        onlyOnBgTiles = data.Bool("onlyOnBgTiles", false);
 
         mouseWheelMode = data.Bool("mouseWheelMode", false);
         wheelIndicatorX = data.Float("wheelIndicatorX", 20f);
@@ -411,6 +414,23 @@ public class SpawnController : Entity
         Level level = SceneAs<Level>();
         foreach (var slider in level.Session.Sliders.Keys.Where(k => k.StartsWith("KoseiHelper_EntitySpawnerTTL") || k.StartsWith("KoseiHelper_EntitySpawnerCooldown_")))
             level.Session.SetSlider(slider, 0f);
+        if (onlyOnBgTiles)
+        {
+            Rectangle rectangle = new Rectangle(level.Bounds.Left / 8, level.Bounds.Y / 8, level.Bounds.Width / 8, level.Bounds.Height / 8);
+            Rectangle tileBounds = level.Session.MapData.TileBounds;
+            bool[,] array = new bool[rectangle.Width, rectangle.Height];
+            for (int i = 0; i < rectangle.Width; i++)
+            {
+                for (int j = 0; j < rectangle.Height; j++)
+                {
+                    array[i, j] = level.BgData[i + rectangle.Left - tileBounds.Left, j + rectangle.Top - tileBounds.Top] != '0';
+                }
+            }
+            bgTilesCollider = new Solid(new Vector2(level.Bounds.Left, level.Bounds.Top), 1f, 1f, safe: true);
+            bgTilesCollider.Collider = new Grid(8f, 8f, array);
+            bgTilesCollider.Collidable = false;
+            base.Scene.Add(bgTilesCollider);
+        }
     }
 
     public override void Update()
@@ -486,6 +506,14 @@ public class SpawnController : Entity
             };
             if ((despawnMethod == DespawnMethod.Flag || despawnMethod == DespawnMethod.TTLFlag) && level.Session.GetFlag(flagToLive))
                 conditionMet = false; // Can't spawn if it's supposed to be despawning
+            if (onlyOnBgTiles && player != null)
+            {
+                bgTilesCollider.Collidable = true;
+                bool collidingWithBgTiles = player.CollideCheck(bgTilesCollider);
+                bgTilesCollider.Collidable = false;
+                if (!collidingWithBgTiles && !player.onGround)
+                    conditionMet = false;
+            }
             playerIsJumping = false;
             if (conditionMet && spawnLimit != 0 && spawnCooldown == 0 && player != null)
             {
