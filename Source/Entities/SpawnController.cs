@@ -107,6 +107,7 @@ public class SpawnController : Entity
     public bool persistency;
     public float timeToLive;
     public string flagToLive;
+    public string counterPositive;
     public string appearSound;
     public string disappearSound;
     public int dashCount, everyXDashes;
@@ -130,6 +131,7 @@ public class SpawnController : Entity
     public static ParticleType poofParticle = TouchSwitch.P_FireWhite;
     public Entity spawnedEntity = null;
     public static bool playerIsJumping;
+    public bool globalEntity;
 
     //entity specific data
 
@@ -263,6 +265,7 @@ public class SpawnController : Entity
         nodeRelativeToPlayerFacing = data.Bool("nodeRelativeToPlayerFacing", true);
         timeToLive = data.Float("timeToLive", 0f);
         flagToLive = data.Attr("flagToLive", "KoseiHelper_despawnEntity");
+        counterPositive = data.Attr("counterPositive", "");
         appearSound = data.Attr("appearSound", "event:/KoseiHelper/spawn");
         disappearSound = data.Attr("disappearSound", "event:/game/general/assist_dash_aim");
         flagToEnableSpawner = data.Attr("flag", "");
@@ -286,6 +289,7 @@ public class SpawnController : Entity
             base.Tag = Tags.Persistent;
         if (data.Bool("transitionUpdate", false) || entityToSpawn == EntityType.Player)
             base.Tag = Tags.TransitionUpdate;
+        globalEntity = data.Bool("globalEntity", false);
 
         mouseWheelMode = data.Bool("mouseWheelMode", false);
         wheelIndicatorX = data.Float("wheelIndicatorX", 20f);
@@ -444,7 +448,8 @@ public class SpawnController : Entity
         // If the flag flagToEnableSpawner is true, or if no flag is required, check if the spawn conditions are met
         // (Not to be confused with spawnFlag, this one is just a common requirement, the other is for the Flag Mode)
         if (((flagValue && level.Session.GetFlag(flagToEnableSpawner)) || string.IsNullOrEmpty(flagToEnableSpawner) ||
-            (!flagValue && !level.Session.GetFlag(flagToEnableSpawner))) && player != null && (!player.JustRespawned || ignoreJustRespawned))
+            (!flagValue && !level.Session.GetFlag(flagToEnableSpawner))) && player != null && (!player.JustRespawned || ignoreJustRespawned) &&
+            (string.IsNullOrEmpty(counterPositive) || level.Session.GetCounter(counterPositive) > 0))
         {
             if (cassetteBlockManager != null)
             {
@@ -831,13 +836,15 @@ public class SpawnController : Entity
                 if (spawnedEntity != null && player != null)
                 { // If the entity has been spawned successfully:
                     Scene.Add(spawnedEntity);
-                    if (despawnMethod == DespawnMethod.None)
+                    if (despawnMethod == DespawnMethod.None || globalEntity)
                         spawnedEntity.AddTag(Tags.Global);
                     spawnedEntitiesWithTTL.Add(new EntityWithTTL(spawnedEntity, entityTTL, entityFTL));
                     spawnCooldown = spawnTime;
                     hasSpawnedFromSpeed = true;
                     level.Session.IncrementCounter("KoseiHelper_Total_" + spawnedEntity.ToString() + "s_Spawned");
                     level.Session.IncrementCounter("KoseiHelper_TotalEntitiesSpawned");
+                    if (!string.IsNullOrEmpty(counterPositive))
+                        level.Session.SetCounter(counterPositive, level.Session.GetCounter(counterPositive) - 1);
 
                     Audio.Play(appearSound, player.Position);
                 }
