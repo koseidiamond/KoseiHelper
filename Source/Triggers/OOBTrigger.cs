@@ -22,9 +22,7 @@ public class OOBTrigger : Trigger
         if (player.Scene != null && !onExit)
         {
             if (!inBound)
-            {
                 player.EnforceLevelBounds = false;
-            }
             else
                 player.EnforceLevelBounds = true;
             if (onlyOnce)
@@ -38,13 +36,11 @@ public class OOBTrigger : Trigger
         if (player.Scene != null && onExit)
         {
             if (!inBound)
-            {
                 player.EnforceLevelBounds = false;
-            }
             else
                 player.EnforceLevelBounds = true;
+            if (onlyOnce)
+                RemoveSelf();
         }
-        if (onlyOnce)
-            RemoveSelf();
     }
 }
