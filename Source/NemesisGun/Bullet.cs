@@ -1,6 +1,5 @@
 using Celeste.Mod.Entities;
 using Celeste.Mod.KoseiHelper.Entities;
-using Celeste.Mod.MaxHelpingHand.Entities;
 using Microsoft.Xna.Framework;
 using Monocle;
 using System;
@@ -93,6 +92,8 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
             if (CanDoShit(owner))
             {
                 CollisionCheck();
+                if (KoseiHelperModule.Settings.GunInteractions.SpinnerFix)
+                    SpinnerFix();
                 if (Calc.Random.Next(10) == 1)
                 {
                     switch (Extensions.shotDustType)
@@ -149,6 +150,122 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 DestroyBullet();
             updateCount++;
             Update();
+        }
+
+        private void SpinnerFix()
+        {
+            foreach (CrystalStaticSpinner spinner in base.Scene.Tracker.GetEntities<CrystalStaticSpinner>())
+            {
+                Vector2 spinnerPos = spinner.Position;
+                if (Vector2.Distance(Center, spinnerPos) <= 6f)
+                {
+                    spinner.Destroy();
+                    if (KoseiHelperModule.Settings.GunSettings.RecoilOnlyOnInteraction && owner is Player pRecoil)
+                        RecoilOnInteraction(pRecoil, spinner);
+                    DestroyBullet();
+                    return;
+                }
+                System.Drawing.RectangleF rectHitbox = new System.Drawing.RectangleF(spinnerPos.X - 8f, spinnerPos.Y - 3f, 16f, 4f);
+
+                if (rectHitbox.Contains(CenterX, CenterY))
+                {
+                    spinner.Destroy();
+                    spinner.RemoveSelf();
+                    if (KoseiHelperModule.Settings.GunSettings.RecoilOnlyOnInteraction && owner is Player pRecoil)
+                        RecoilOnInteraction(pRecoil, spinner);
+                    DestroyBullet();
+                    return;
+                }
+            }
+            if (KoseiHelperModule.Instance.frostHelperLoaded)
+                SpinnerFix_FrostHelper();
+        }
+
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        private void SpinnerFix_FrostHelper()
+        { // Idk what I'm doing anymore but this was a pain to do just to support their custom hitboxes
+            foreach (FrostHelper.CustomSpinner spinner in Scene.Tracker.GetEntities<FrostHelper.CustomSpinner>())
+            {
+                if (spinner.Collider == null || !KoseiHelperModule.Settings.GunInteractions.BreakSpinners)
+                    continue;
+
+                Vector2 relativeCenter = Center - spinner.Position;
+
+                switch (spinner.Collider)
+                {
+                    case Circle circle:
+                        if (Vector2.Distance(circle.Position, relativeCenter) <= circle.Radius)
+                        {
+                            spinner.Destroy();
+                            spinner.RemoveSelf();
+
+                            if (KoseiHelperModule.Settings.GunSettings.RecoilOnlyOnInteraction && SceneAs<Level>().Session.GetFlag("KoseiHelper_playerIsShooting") && owner is Player pRecoil)
+                            {
+                                RecoilOnInteraction(pRecoil, spinner);
+                            }
+
+                            DestroyBullet();
+                            return;
+                        }
+                        break;
+
+                    case Hitbox hitbox:
+                        if (new System.Drawing.RectangleF(hitbox.Position.X, hitbox.Position.Y, hitbox.Width, hitbox.Height).Contains(relativeCenter.X, relativeCenter.Y))
+                        {
+                            spinner.Destroy();
+                            spinner.RemoveSelf();
+
+                            if (KoseiHelperModule.Settings.GunSettings.RecoilOnlyOnInteraction && SceneAs<Level>().Session.GetFlag("KoseiHelper_playerIsShooting") && owner is Player pRecoil)
+                            {
+                                RecoilOnInteraction(pRecoil, spinner);
+                            }
+
+                            DestroyBullet();
+                            return;
+                        }
+                        break;
+
+                    case ColliderList list:
+                        foreach (Collider sub in list.colliders)
+                        {
+                            if (sub is Circle subCircle)
+                            {
+                                if (Vector2.Distance(subCircle.Position, relativeCenter) <= subCircle.Radius)
+                                {
+                                    spinner.Destroy();
+                                    spinner.RemoveSelf();
+
+                                    if (KoseiHelperModule.Settings.GunSettings.RecoilOnlyOnInteraction && SceneAs<Level>().Session.GetFlag("KoseiHelper_playerIsShooting") &&
+                                        owner is Player pRecoil)
+                                    {
+                                        RecoilOnInteraction(pRecoil, spinner);
+                                    }
+
+                                    DestroyBullet();
+                                    return;
+                                }
+                            }
+                            else if (sub is Hitbox subHitbox)
+                            {
+                                if (new System.Drawing.RectangleF(subHitbox.Position.X, subHitbox.Position.Y, subHitbox.Width, subHitbox.Height).Contains(relativeCenter.X, relativeCenter.Y))
+                                {
+                                    spinner.Destroy();
+                                    spinner.RemoveSelf();
+
+                                    if (KoseiHelperModule.Settings.GunSettings.RecoilOnlyOnInteraction && SceneAs<Level>().Session.GetFlag("KoseiHelper_playerIsShooting") &&
+                                        owner is Player pRecoil)
+                                    {
+                                        RecoilOnInteraction(pRecoil, spinner);
+                                    }
+
+                                    DestroyBullet();
+                                    return;
+                                }
+                            }
+                        }
+                        break;
+                }
+            }
         }
 
         public override void Render()

@@ -120,6 +120,9 @@ public class KoseiHelperModuleSettings : EverestModuleSettings
         [SettingSubText("Whether bullets should be able to break spinners.")]
         public bool BreakSpinners { get; set; } = true;
 
+        [SettingSubText("Whether spinners can be shattered, regardless of the distance (they are uncollidable if they are too far).\nEnable this only if you need it, since it can impact performance.")]
+        public bool SpinnerFix { get; set; } = false;
+
         [SettingSubText("Whether bullets can activate moving blocks.")]
         public bool MoveMovingBlocks { get; set; } = false;
 

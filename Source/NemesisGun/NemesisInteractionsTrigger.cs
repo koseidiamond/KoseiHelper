@@ -10,7 +10,7 @@ public class NemesisGunInteractions : Trigger
     private TriggerMode triggerMode;
 
     public bool canKillPlayer = false, breakBounceBlocks = true, activateFallingBlocks = true, harmEnemies = true, moveSwapBlocks = true,
-        breakSpinners = true, breakMovingBlades = true, collectables = true, useRefills = true, pressDashSwitches = true, canBounce = true,
+        breakSpinners = true, spinnerFix = false, breakMovingBlades = true, collectables = true, useRefills = true, pressDashSwitches = true, canBounce = true,
         scareBirds = true, collectTouchSwitches = true, collectBadelineOrbs = true, useFeathers = true, coreModeToggles = true, collideWithPlatforms = true,
         moveMovingBlocks = false;
     public bool useBoosters = false;
@@ -32,6 +32,7 @@ public class NemesisGunInteractions : Trigger
         activateFallingBlocks = data.Bool("activateFallingBlocks", true);
         harmEnemies = data.Bool("harmEnemies", true);
         breakSpinners = data.Bool("breakSpinners", true);
+        spinnerFix = data.Bool("spinnerFix", false);
         breakMovingBlades = data.Bool("breakMovingBlades", true);
         theoBehavior = data.Enum("theoInteraction", KoseiHelperModuleSettings.NemesisInteractions.TheoBehavior.HitSpring);
         jellyfishBehavior = data.Enum("jellyfishInteraction", KoseiHelperModuleSettings.NemesisInteractions.JellyfishBehavior.HitSpring);
@@ -81,6 +82,7 @@ public class NemesisGunInteractions : Trigger
         KoseiHelperModule.Settings.GunInteractions.ActivateFallingBlocks = activateFallingBlocks;
         KoseiHelperModule.Settings.GunInteractions.HarmEnemies = harmEnemies;
         KoseiHelperModule.Settings.GunInteractions.BreakSpinners = breakSpinners;
+        KoseiHelperModule.Settings.GunInteractions.SpinnerFix = spinnerFix;
         KoseiHelperModule.Settings.GunInteractions.BreakMovingBlades = breakMovingBlades;
         KoseiHelperModule.Settings.GunInteractions.Collectables = collectables;
         KoseiHelperModule.Settings.GunInteractions.UseRefills = useRefills;

@@ -368,9 +368,9 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
             {
 
                 if (entity is Player extraPlayer)
-                    new Bullet(extraPlayer.Center + new Vector2(-3,-1), GetGunVector(actor, cursorPos, facing), actor);
+                    new Bullet(extraPlayer.Center + new Vector2(-3, -1), GetGunVector(actor, cursorPos, facing), actor);
             }
-                    new Bullet(actualPlayerPos, GetGunVector(actor, cursorPos, facing), actor);
+            new Bullet(actualPlayerPos, GetGunVector(actor, cursorPos, facing), actor);
             Audio.Play(Extensions.gunshotSound, actualPlayerPos);
         }
     }
