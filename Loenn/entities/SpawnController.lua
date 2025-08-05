@@ -32,6 +32,7 @@ SpawnController.placements = {
 		absoluteCoords = false,
 		poofWhenDisappearing = true,
 		ignoreJustRespawned = false,
+		gridAligned = false,
 		
 		--Spawn conditions
 		spawnFlag = "koseiHelper_spawn",
@@ -779,6 +780,7 @@ SpawnController.fieldOrder =  {
 	"absoluteCoords",
 	"poofWhenDisappearing",
 	"ignoreJustRespawned",
+	"gridAligned",
 	--"transitionUpdate",
 	"noNode"
 }

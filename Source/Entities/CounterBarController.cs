@@ -94,21 +94,21 @@ namespace Celeste.Mod.KoseiHelper.Entities
             {
                 if (!string.IsNullOrEmpty(framePath))
                 {
-                    var center = new Vector2(xPosition + width / 2, yPosition + height / 2);
+                    Vector2 center = new Vector2(xPosition + width / 2, yPosition + height / 2);
                     texture.DrawJustified(center, new Vector2(0.5f, 0.5f));
                 }
                 if (string.IsNullOrEmpty(innerTexturePath))
                 {
                     if (!vertical)
                     {
-                        var pos = reverse
+                        Vector2 pos = reverse
                             ? new Vector2(xPosition + width - filled, yPosition)
                             : new Vector2(xPosition, yPosition);
                         Draw.Rect(pos, filled, Collider.Height, color);
                     }
                     else
                     {
-                        var pos = reverse
+                        Vector2 pos = reverse
                             ? new Vector2(xPosition, yPosition)
                             : new Vector2(xPosition, yPosition + height - filled);
                         Draw.Rect(pos, Collider.Width, filled, color);

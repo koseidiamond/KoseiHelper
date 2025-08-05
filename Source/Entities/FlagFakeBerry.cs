@@ -324,8 +324,8 @@ namespace Celeste.Mod.KoseiHelper.Entities
                 float num = Calc.Random.NextFloat((float)Math.PI * 2f);
                 level.ParticlesFG.Emit(StrawberrySeed.P_Burst, 1, Position + Calc.AngleToVector(num, 4f), Vector2.Zero, num);
             }
-            var bloomWasVisible = bloom.Visible;
-            var lightWasVisible = light.Visible;
+            bool bloomWasVisible = bloom.Visible;
+            bool lightWasVisible = light.Visible;
             bloom.Visible = false;
             light.Visible = false;
             Visible = false;

@@ -128,7 +128,7 @@ namespace Celeste.Mod.KoseiHelper.Entities
             }
             else // Custom Texture
                 images.Add(new Image(mTexture.GetSubtexture(0, 0, 16, 16)).CenterOrigin().SetColor(spriteColor));
-            foreach (var image in images)
+            foreach (Image image in images)
             {
                 Add(image);
             }

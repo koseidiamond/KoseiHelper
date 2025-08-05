@@ -47,7 +47,7 @@ namespace Celeste.Mod.KoseiHelper.Triggers
                         {
                             string content = reader.ReadToEnd();
                             flags = content.Split(',').Select(flag => flag.Trim()).ToList();
-                            foreach (var flag in flags)
+                            foreach (string flag in flags)
                             {
                                 //Logger.Debug(nameof(KoseiHelperModule), $"Flag loaded: {flag}");
                                 level.Session.SetFlag(flag);
@@ -83,7 +83,7 @@ namespace Celeste.Mod.KoseiHelper.Triggers
                     Logger.Debug(nameof(KoseiHelperModule), $"The file exists");
                     existingContent = File.ReadAllText(filePath);
                 }
-                var combinedFlags = existingContent.Split(',')
+                List<string> combinedFlags = existingContent.Split(',')
                     .Select(flag => flag.Trim())
                     .Concat(newFlags)
                     .Distinct()

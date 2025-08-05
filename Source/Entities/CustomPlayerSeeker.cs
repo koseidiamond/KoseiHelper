@@ -316,7 +316,7 @@ public class CustomPlayerSeeker : Actor
                         MoveH(speed.X * Engine.DeltaTime, OnCollide);
                         MoveV(speed.Y * Engine.DeltaTime, OnCollide);
                     }
-                    foreach (var hazardType in hazardTypes)
+                    foreach (Type hazardType in hazardTypes)
                     {
                         // Get all entities in the scene
                         foreach (Entity hazardEntity in base.Scene.Entities)

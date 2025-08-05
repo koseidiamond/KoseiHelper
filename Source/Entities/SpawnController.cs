@@ -132,6 +132,7 @@ public class SpawnController : Entity
     public Entity spawnedEntity = null;
     public static bool playerIsJumping;
     public bool globalEntity;
+    public bool gridAligned;
     private bool onlyOnBgTiles;
     private Entity bgTilesCollider;
 
@@ -293,6 +294,7 @@ public class SpawnController : Entity
             base.Tag = Tags.TransitionUpdate;
         globalEntity = data.Bool("globalEntity", false);
         onlyOnBgTiles = data.Bool("onlyOnBgTiles", false);
+        gridAligned = data.Bool("gridAligned", false);
 
         mouseWheelMode = data.Bool("mouseWheelMode", false);
         wheelIndicatorX = data.Float("wheelIndicatorX", 20f);
@@ -412,7 +414,7 @@ public class SpawnController : Entity
     {
         base.Added(scene);
         Level level = SceneAs<Level>();
-        foreach (var slider in level.Session.Sliders.Keys.Where(k => k.StartsWith("KoseiHelper_EntitySpawnerTTL") || k.StartsWith("KoseiHelper_EntitySpawnerCooldown_")))
+        foreach (String slider in level.Session.Sliders.Keys.Where(k => k.StartsWith("KoseiHelper_EntitySpawnerTTL") || k.StartsWith("KoseiHelper_EntitySpawnerCooldown_")))
             level.Session.SetSlider(slider, 0f);
         if (onlyOnBgTiles)
         {
@@ -535,7 +537,7 @@ public class SpawnController : Entity
                 if (spawnLimit > 0)
                     spawnLimit -= 1;
                 //Calculate spawn position
-                var spawnPosition = new Vector2(X + offsetX, Y + offsetY);
+                Vector2 spawnPosition = new Vector2(X + offsetX, Y + offsetY);
                 if (!absoluteCoords)
                 {
                     spawnPosition = new Vector2(player.Position.X + offsetX, player.Position.Y + offsetY);
@@ -552,8 +554,10 @@ public class SpawnController : Entity
                     if (isBlock)
                         spawnPosition -= new Vector2(blockWidth / 2, blockHeight / 2);
                 }
+                if (gridAligned)
+                    spawnPosition = new Vector2((float)Math.Floor(spawnPosition.X / 8f) * 8f,(float)Math.Floor(spawnPosition.Y / 8f) * 8f);
                 //Calculate node position
-                var nodePosition = new Vector2(X + nodeX, Y + nodeY);
+                Vector2 nodePosition = new Vector2(X + nodeX, Y + nodeY);
                 if (!absoluteCoords)
                 {
                     nodePosition = new Vector2(player.Position.X + nodeX, player.Position.Y + nodeY);
@@ -736,13 +740,13 @@ public class SpawnController : Entity
                             spawnedEntity = new IceBlock(spawnPosition, blockWidth, blockHeight);
                         if (spawnedEntity is IceBlock iceBlock)
                         {
-                            var solid = iceBlock.solid;
+                            Solid solid = iceBlock.solid;
                             if (solid != null)
                                 spawnedSolids.Add(solid);
                         }
                         else if (spawnedEntity is FireBarrier fireBarrier)
                         {
-                            var solid = fireBarrier.solid;
+                            Solid solid = fireBarrier.solid;
                             if (solid != null)
                                 spawnedSolids.Add(solid);
                         }
@@ -981,7 +985,7 @@ public class SpawnController : Entity
             previousEntity = wrapper;
         }
         // Remove the entities from the list after they have been removed from the scene
-        foreach (var wrapper in toRemove)
+        foreach (EntityWithTTL wrapper in toRemove)
         {
             spawnedEntitiesWithTTL.Remove(wrapper);
         }
@@ -1017,7 +1021,7 @@ public class SpawnController : Entity
             Scene.Remove(swapBlockNoBg.path);
         if (wrapper.Entity is IceBlock iceBlock) // Removes solids from iceBlocks
         {
-            var solidToRemove = iceBlock.solid;
+            Solid solidToRemove = iceBlock.solid;
             if (solidToRemove != null)
             {
                 Scene.Remove(solidToRemove);
@@ -1026,7 +1030,7 @@ public class SpawnController : Entity
         }
         if (wrapper.Entity is FireBarrier fireBarrier) // Removes solids from fireBarriers
         {
-            var solidToRemove = fireBarrier.solid;
+            Solid solidToRemove = fireBarrier.solid;
             if (solidToRemove != null)
             {
                 Scene.Remove(solidToRemove);
@@ -1037,7 +1041,7 @@ public class SpawnController : Entity
         toRemove.Add(wrapper);
         if (dummyFix)
         {
-            foreach (var badelineDummy in level.Entities.OfType<BadelineDummy>())
+            foreach (BadelineDummy badelineDummy in level.Entities.OfType<BadelineDummy>())
                 Scene.Remove(badelineDummy);
         }
     }
@@ -1093,7 +1097,7 @@ public class SpawnController : Entity
                 ParameterInfo[] parameters = ctor.GetParameters();
                 List<object> ctorParams = new List<object>();
 
-                foreach (var param in parameters)
+                foreach (ParameterInfo param in parameters)
                 {
                     if (param.ParameterType == typeof(EntityData))
                     {
@@ -1111,8 +1115,8 @@ public class SpawnController : Entity
                         string enumValue = entityData.Values.FirstOrDefault(kv => kv.Key == param.Name).Value as string;
                         if (enumValue != null)
                         {
-                            var enumType = param.ParameterType;
-                            var enumParsed = Enum.Parse(enumType, enumValue);
+                            Type enumType = param.ParameterType;
+                            Object enumParsed = Enum.Parse(enumType, enumValue);
                             ctorParams.Add(enumParsed);
                         }
                         else

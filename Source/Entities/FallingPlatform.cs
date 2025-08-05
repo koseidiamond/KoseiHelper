@@ -37,14 +37,14 @@ public class FallingPlatform : JumpthruPlatform
         if (blockImage)
         {
             List<Image> imagesToRemove = new List<Image>();
-            foreach (var component in Components)
+            foreach (Component component in Components)
             {
                 if (component is Image image)
                 {
                     imagesToRemove.Add(image);
                 }
             }
-            foreach (var image in imagesToRemove)
+            foreach (Image image in imagesToRemove)
             {
                 Remove(image);
             }

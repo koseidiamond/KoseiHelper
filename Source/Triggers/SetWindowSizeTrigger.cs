@@ -19,7 +19,7 @@ public class SetWindowSizeTrigger : Trigger
         windowHeightTo = data.Int("heightTo", 1080);
         fullScreen = data.Bool("fullScreen", false);
         direction = data.Attr("positionMode");
-        if (!string.IsNullOrEmpty(direction) && Enum.TryParse<PositionModes>(direction.ToString(), ignoreCase: true, out var result))
+        if (!string.IsNullOrEmpty(direction) && Enum.TryParse<PositionModes>(direction.ToString(), ignoreCase: true, out PositionModes result))
             positionMode = result;
 
     }

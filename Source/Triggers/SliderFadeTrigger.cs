@@ -21,7 +21,7 @@ public class SliderFadeTrigger : Trigger
         fadeFrom = data.Float("fadeFrom", 0f);
         fadeTo = data.Float("fadeTo", 0.5f);
         flag = data.Attr("flag", "");
-        if (!string.IsNullOrEmpty(direction) && Enum.TryParse<PositionModes>(direction.ToString(), ignoreCase: true, out var result))
+        if (!string.IsNullOrEmpty(direction) && Enum.TryParse<PositionModes>(direction.ToString(), ignoreCase: true, out PositionModes result))
             positionMode = result;
     }
 
