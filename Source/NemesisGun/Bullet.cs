@@ -93,7 +93,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
             {
                 CollisionCheck();
                 if (KoseiHelperModule.Settings.GunInteractions.SpinnerFix)
-                    SpinnerFix();
+                    ShatterSpinnerFromAnyDistance();
                 if (Calc.Random.Next(10) == 1)
                 {
                     switch (Extensions.shotDustType)
@@ -152,28 +152,23 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
             Update();
         }
 
-        private void SpinnerFix()
+        private void ShatterSpinnerFromAnyDistance()
         {
+            if (dead) return;
             foreach (CrystalStaticSpinner spinner in base.Scene.Tracker.GetEntities<CrystalStaticSpinner>())
             {
                 Vector2 spinnerPos = spinner.Position;
-                if (Vector2.Distance(Center, spinnerPos) <= 6f)
-                {
-                    spinner.Destroy();
-                    if (KoseiHelperModule.Settings.GunSettings.RecoilOnlyOnInteraction && owner is Player pRecoil)
-                        RecoilOnInteraction(pRecoil, spinner);
-                    DestroyBullet();
-                    return;
-                }
                 System.Drawing.RectangleF rectHitbox = new System.Drawing.RectangleF(spinnerPos.X - 8f, spinnerPos.Y - 3f, 16f, 4f);
 
-                if (rectHitbox.Contains(CenterX, CenterY))
+                if (rectHitbox.Contains(CenterX, CenterY) || Vector2.Distance(Center, spinnerPos) <= 6f)
                 {
+                    DestroyBullet();
+                    dead = true;
+                    // Destroy() copypaste because debris is too much
                     spinner.Destroy();
                     spinner.RemoveSelf();
                     if (KoseiHelperModule.Settings.GunSettings.RecoilOnlyOnInteraction && owner is Player pRecoil)
                         RecoilOnInteraction(pRecoil, spinner);
-                    DestroyBullet();
                     return;
                 }
             }
@@ -183,7 +178,8 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
 
         [MethodImpl(MethodImplOptions.NoInlining)]
         private void SpinnerFix_FrostHelper()
-        { // Idk what I'm doing anymore but this was a pain to do just to support their custom hitboxes
+        { // Idk what I'm doing anymore but this was a pain to do just to support their custom hitboxes. There's probably a lot of jank here
+            if (dead) return;
             foreach (FrostHelper.CustomSpinner spinner in Scene.Tracker.GetEntities<FrostHelper.CustomSpinner>())
             {
                 if (spinner.Collider == null || !KoseiHelperModule.Settings.GunInteractions.BreakSpinners)
@@ -200,15 +196,12 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                             spinner.RemoveSelf();
 
                             if (KoseiHelperModule.Settings.GunSettings.RecoilOnlyOnInteraction && SceneAs<Level>().Session.GetFlag("KoseiHelper_playerIsShooting") && owner is Player pRecoil)
-                            {
                                 RecoilOnInteraction(pRecoil, spinner);
-                            }
-
+                            dead = true;
                             DestroyBullet();
                             return;
                         }
                         break;
-
                     case Hitbox hitbox:
                         if (new System.Drawing.RectangleF(hitbox.Position.X, hitbox.Position.Y, hitbox.Width, hitbox.Height).Contains(relativeCenter.X, relativeCenter.Y))
                         {
@@ -216,15 +209,12 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                             spinner.RemoveSelf();
 
                             if (KoseiHelperModule.Settings.GunSettings.RecoilOnlyOnInteraction && SceneAs<Level>().Session.GetFlag("KoseiHelper_playerIsShooting") && owner is Player pRecoil)
-                            {
                                 RecoilOnInteraction(pRecoil, spinner);
-                            }
-
+                            dead = true;
                             DestroyBullet();
                             return;
                         }
                         break;
-
                     case ColliderList list:
                         foreach (Collider sub in list.colliders)
                         {
@@ -237,10 +227,8 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
 
                                     if (KoseiHelperModule.Settings.GunSettings.RecoilOnlyOnInteraction && SceneAs<Level>().Session.GetFlag("KoseiHelper_playerIsShooting") &&
                                         owner is Player pRecoil)
-                                    {
                                         RecoilOnInteraction(pRecoil, spinner);
-                                    }
-
+                                    dead = true;
                                     DestroyBullet();
                                     return;
                                 }
@@ -254,10 +242,8 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
 
                                     if (KoseiHelperModule.Settings.GunSettings.RecoilOnlyOnInteraction && SceneAs<Level>().Session.GetFlag("KoseiHelper_playerIsShooting") &&
                                         owner is Player pRecoil)
-                                    {
                                         RecoilOnInteraction(pRecoil, spinner);
-                                    }
-
+                                    dead = true;
                                     DestroyBullet();
                                     return;
                                 }
@@ -514,7 +500,8 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 return;
             }
 
-            if (owner.Scene.CollideFirst<CrystalStaticSpinner>(Hitbox) is CrystalStaticSpinner spinner && KoseiHelperModule.Settings.GunInteractions.BreakSpinners && !dead)
+            if (owner.Scene.CollideFirst<CrystalStaticSpinner>(Hitbox) is CrystalStaticSpinner spinner && KoseiHelperModule.Settings.GunInteractions.BreakSpinners &&
+                !KoseiHelperModule.Settings.GunInteractions.SpinnerFix && !dead)
             {
                 spinner.Destroy();
                 if (KoseiHelperModule.Settings.GunSettings.RecoilOnlyOnInteraction && SceneAs<Level>().Session.GetFlag("KoseiHelper_playerIsShooting") && owner is Player pRecoil)
@@ -1097,11 +1084,21 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
 
         private void RecoilOnInteraction(Player player, Entity entity)
         {
-            if (entity.Right < player.Left + 1)
-                player.Speed.X -= KoseiHelperModule.Settings.GunSettings.Recoil * (float)(0 - player.Facing); // Player goes left
-            if (entity.Left > player.Right - 1)
-                player.Speed.X += KoseiHelperModule.Settings.GunSettings.Recoil * (float)(0 - player.Facing); // Player goes right
-            RemoveSelf();
+            if (entity.Right < player.Left + 1 || entity.Left > player.Right - 1)
+            {
+                if (entity.Right < player.Left + 1) // entity is on the left of the player
+                    player.Speed.X += KoseiHelperModule.Settings.GunSettings.Recoil; // Player goes left
+                if (entity.Left > player.Right - 1) // entity is on the right of the player
+                    player.Speed.X -= KoseiHelperModule.Settings.GunSettings.Recoil; // Player goes right
+            }
+            else
+            {
+                if (entity.Bottom < player.Top + 1) // entity is above the player
+                    player.Speed.Y += KoseiHelperModule.Settings.GunSettings.Recoil;
+                if (entity.Top > player.Bottom - 1) // entity is below the player
+                    player.Speed.Y -= KoseiHelperModule.Settings.GunSettings.Recoil;
+            }
+                RemoveSelf();
         }
 
         private bool BootlegStunSeeker(Seeker seeker)
