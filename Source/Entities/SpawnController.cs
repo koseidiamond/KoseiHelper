@@ -894,7 +894,7 @@ public class SpawnController : Entity
             {
                 foreach (EntityWithTTL entityWrapper in spawnedEntitiesWithTTL)
                 {
-                    var entity = entityWrapper.Entity;
+                    Entity entity = entityWrapper.Entity;
                     //Checks if we're clicking on the 1.5tiles (in size) at the center of the entity
                     Rectangle entityCenterRect = new Rectangle((int)(entity.Center.X - 12), (int)(entity.Center.Y - 12), 20, 20);
                     if (entityCenterRect.Contains((int)mousePosition.X, (int)mousePosition.Y))

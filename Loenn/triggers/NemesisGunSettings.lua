@@ -26,6 +26,7 @@ NemesisGunSettings.placements = {
 		recoilStrength = 80,
 		recoilCooldown = 16,
 		recoilUpwards = false,
+		recoilOnInteraction = false,
 		canShootInFeather = true,
 		freezeFrames = 0,
 		horizontalAcceleration = 0,
@@ -182,6 +183,7 @@ NemesisGunSettings.fieldOrder =
 	"enabled",
 	"loseGunOnRespawn",
 	"recoilUpwards",
+	"recoilOnInteraction",
 	"canShootInFeather",
 	"bulletExplosion"
 	

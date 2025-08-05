@@ -1,5 +1,6 @@
 using Celeste.Mod.Entities;
 using Celeste.Mod.KoseiHelper.Entities;
+using Celeste.Mod.MaxHelpingHand.Entities;
 using Microsoft.Xna.Framework;
 using Monocle;
 using System;
@@ -169,6 +170,8 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 KoseiHelperModule.Settings.GunInteractions.BreakSpinners && !dead)
             {
                 customSpinner.Destroy();
+                if (KoseiHelperModule.Settings.GunSettings.RecoilOnlyOnInteraction && SceneAs<Level>().Session.GetFlag("KoseiHelper_playerIsShooting") && owner is Player pRecoil)
+                    RecoilOnInteraction(pRecoil, customSpinner);
                 DestroyBullet();
                 return;
             }
@@ -193,7 +196,11 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                    KoseiHelperModule.Settings.GunInteractions.CollideWithPlatforms)
             {
                 if ((sidewaysJumpthru.AllowLeftToRight && velocity.X < 0) || (!sidewaysJumpthru.AllowLeftToRight && velocity.X > 0))
+                {
+                    if (KoseiHelperModule.Settings.GunSettings.RecoilOnlyOnInteraction && SceneAs<Level>().Session.GetFlag("KoseiHelper_playerIsShooting") && owner is Player pRecoil)
+                        RecoilOnInteraction(pRecoil, sidewaysJumpthru);
                     DestroyBullet();
+                }
                 return;
             }
 
@@ -201,7 +208,11 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 KoseiHelperModule.Settings.GunInteractions.CollideWithPlatforms)
             {
                 if (velocity.Y < 0)
+                {
+                    if (KoseiHelperModule.Settings.GunSettings.RecoilOnlyOnInteraction && SceneAs<Level>().Session.GetFlag("KoseiHelper_playerIsShooting") && owner is Player pRecoil)
+                        RecoilOnInteraction(pRecoil, upsidedownJumpthru);
                     DestroyBullet();
+                }
                 return;
             }
         }
@@ -244,6 +255,8 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
             {
                 if (BootlegStunSeeker(seeker))
                 {
+                    if (KoseiHelperModule.Settings.GunSettings.RecoilOnlyOnInteraction && SceneAs<Level>().Session.GetFlag("KoseiHelper_playerIsShooting") && owner is Player pRecoil)
+                        RecoilOnInteraction(pRecoil, seeker);
                     DestroyBullet();
                     return;
                 }
@@ -251,6 +264,8 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
 
             if (owner.Scene.CollideFirst<FlyFeather>(Hitbox) is FlyFeather feather && KoseiHelperModule.Settings.GunInteractions.UseFeathers && !dead)
             {
+                if (KoseiHelperModule.Settings.GunSettings.RecoilOnlyOnInteraction && SceneAs<Level>().Session.GetFlag("KoseiHelper_playerIsShooting") && owner is Player pRecoil)
+                    RecoilOnInteraction(pRecoil, feather);
                 if ((bool)feather_shielded.GetValue(feather) == true)
                 {
                     feather_shielded.SetValue(feather, false);
@@ -269,6 +284,8 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
             if (owner.Scene.CollideFirst<AngryOshiro>(Hitbox) is AngryOshiro angryOshiro && KoseiHelperModule.Settings.GunInteractions.HarmEnemies && !dead)
             {
                 BootlegOshiroBounce(angryOshiro);
+                if (KoseiHelperModule.Settings.GunSettings.RecoilOnlyOnInteraction && SceneAs<Level>().Session.GetFlag("KoseiHelper_playerIsShooting") && owner is Player pRecoil)
+                    RecoilOnInteraction(pRecoil, angryOshiro);
                 DestroyBullet();
                 return;
             }
@@ -316,6 +333,8 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                         }
                         break;
                 }
+                if (KoseiHelperModule.Settings.GunSettings.RecoilOnlyOnInteraction && SceneAs<Level>().Session.GetFlag("KoseiHelper_playerIsShooting") && owner is Player pRecoil)
+                    RecoilOnInteraction(pRecoil, theo);
                 DestroyBullet();
                 return;
             }
@@ -334,6 +353,8 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                         dBlock.Break(Position, velocity, true, true);
                         break;
                 }
+                if (KoseiHelperModule.Settings.GunSettings.RecoilOnlyOnInteraction && SceneAs<Level>().Session.GetFlag("KoseiHelper_playerIsShooting") && owner is Player pRecoil)
+                    RecoilOnInteraction(pRecoil, dBlock);
                 DestroyBullet();
                 return;
             }
@@ -351,6 +372,8 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                         ccrackedblock.Break(Position);
                         break;
                 }
+                if (KoseiHelperModule.Settings.GunSettings.RecoilOnlyOnInteraction && SceneAs<Level>().Session.GetFlag("KoseiHelper_playerIsShooting") && owner is Player pRecoil)
+                    RecoilOnInteraction(pRecoil, ccrackedblock);
                 DestroyBullet();
                 return;
             }
@@ -368,6 +391,8 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                         crackedblock.Break(Center);
                         break;
                 }
+                if (KoseiHelperModule.Settings.GunSettings.RecoilOnlyOnInteraction && SceneAs<Level>().Session.GetFlag("KoseiHelper_playerIsShooting") && owner is Player pRecoil)
+                    RecoilOnInteraction(pRecoil, crackedblock);
                 DestroyBullet();
                 return;
             }
@@ -375,6 +400,8 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
             if (owner.Scene.CollideFirst<CrystalStaticSpinner>(Hitbox) is CrystalStaticSpinner spinner && KoseiHelperModule.Settings.GunInteractions.BreakSpinners && !dead)
             {
                 spinner.Destroy();
+                if (KoseiHelperModule.Settings.GunSettings.RecoilOnlyOnInteraction && SceneAs<Level>().Session.GetFlag("KoseiHelper_playerIsShooting") && owner is Player pRecoil)
+                    RecoilOnInteraction(pRecoil, spinner);
                 DestroyBullet();
                 return;
             }
@@ -395,6 +422,8 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 if (owner is Player p && !heartGem.collected)
                 {
                     NemesisGun.heartGemCollect.Invoke(heartGem, new object[] { p });
+                    if (KoseiHelperModule.Settings.GunSettings.RecoilOnlyOnInteraction && SceneAs<Level>().Session.GetFlag("KoseiHelper_playerIsShooting") && owner is Player pRecoil)
+                        RecoilOnInteraction(pRecoil, heartGem);
                     DestroyBullet();
                 }
                 return;
@@ -405,6 +434,8 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 if (owner is Player p_bird && flingBird.state == FlingBird.States.Wait)
                 {
                     flingBird.Skip();
+                    if (KoseiHelperModule.Settings.GunSettings.RecoilOnlyOnInteraction && SceneAs<Level>().Session.GetFlag("KoseiHelper_playerIsShooting") && owner is Player pRecoil)
+                        RecoilOnInteraction(pRecoil, flingBird);
                     DestroyBullet();
                 }
                 return;
@@ -422,6 +453,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
             if (KoseiHelperModule.Instance.helpingHandLoaded)
             {
                 CollisionCheck_HelpingHand();
+                return;
             }
 
             if (owner.Scene.CollideFirst<FinalBoss>(Hitbox) is FinalBoss boss && KoseiHelperModule.Settings.GunInteractions.HarmEnemies && !dead)
@@ -429,6 +461,8 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 Level level = SceneAs<Level>();
                 if (!boss.Sitting && owner is Player p)
                     boss.OnPlayer(p);
+                if (KoseiHelperModule.Settings.GunSettings.RecoilOnlyOnInteraction && SceneAs<Level>().Session.GetFlag("KoseiHelper_playerIsShooting") && owner is Player pRecoil)
+                    RecoilOnInteraction(pRecoil, boss);
                 DestroyBullet();
                 return;
             }
@@ -436,6 +470,8 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
             if (owner.Scene.CollideFirst<DustStaticSpinner>(Hitbox) is DustStaticSpinner dSSpinner && KoseiHelperModule.Settings.GunInteractions.BreakSpinners && !dead)
             {
                 dSSpinner.RemoveSelf();
+                if (KoseiHelperModule.Settings.GunSettings.RecoilOnlyOnInteraction && SceneAs<Level>().Session.GetFlag("KoseiHelper_playerIsShooting") && owner is Player pRecoil)
+                    RecoilOnInteraction(pRecoil, dSSpinner);
                 DestroyBullet();
                 return;
             }
@@ -450,6 +486,8 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
             {
                 if (owner is Player p)
                     NemesisGun.strawberrySeedOnPlayer.Invoke(seed, new object[] { p });
+                if (KoseiHelperModule.Settings.GunSettings.RecoilOnlyOnInteraction && SceneAs<Level>().Session.GetFlag("KoseiHelper_playerIsShooting") && owner is Player pRecoil)
+                    RecoilOnInteraction(pRecoil, seed);
                 DestroyBullet();
                 return;
             }
@@ -506,6 +544,8 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                             jelly.sprite.Play("death");
                             jelly.destroyed = true;
                             jelly.RemoveSelf();
+                            if (KoseiHelperModule.Settings.GunSettings.RecoilOnlyOnInteraction && SceneAs<Level>().Session.GetFlag("KoseiHelper_playerIsShooting") && owner is Player pRecoil)
+                                RecoilOnInteraction(pRecoil, jelly);
                             DestroyBullet();
                             break;
                     }
@@ -532,6 +572,8 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                     fakeHeart.ScaleWiggler.Start();
                     fakeHeart.moveWiggleDir = (fakeHeart.Center - Center).SafeNormalize(Vector2.UnitY);
                     Input.Rumble(RumbleStrength.Medium, RumbleLength.Medium);
+                    if (KoseiHelperModule.Settings.GunSettings.RecoilOnlyOnInteraction && SceneAs<Level>().Session.GetFlag("KoseiHelper_playerIsShooting") && owner is Player pRecoil)
+                        RecoilOnInteraction(pRecoil, fakeHeart);
                     return;
                 }
 
@@ -539,6 +581,8 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                     owner is Player playercassette)
                 {
                     cassette.OnPlayer(playercassette);
+                    if (KoseiHelperModule.Settings.GunSettings.RecoilOnlyOnInteraction && SceneAs<Level>().Session.GetFlag("KoseiHelper_playerIsShooting") && owner is Player pRecoil)
+                        RecoilOnInteraction(pRecoil, cassette);
                     DestroyBullet();
                     return;
                 }
@@ -546,6 +590,8 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 if (entity is TrackSpinner tSpinner && KoseiHelperModule.Settings.GunInteractions.BreakMovingBlades && tSpinner.Collider.Bounds.Intersects(Hitbox) && !dead)
                 {
                     tSpinner.RemoveSelf();
+                    if (KoseiHelperModule.Settings.GunSettings.RecoilOnlyOnInteraction && SceneAs<Level>().Session.GetFlag("KoseiHelper_playerIsShooting") && owner is Player pRecoil)
+                        RecoilOnInteraction(pRecoil, tSpinner);
                     DestroyBullet();
                     return;
                 }
@@ -553,6 +599,8 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 if (entity is RotateSpinner rSpinner && KoseiHelperModule.Settings.GunInteractions.BreakMovingBlades && rSpinner.Collider.Bounds.Intersects(Hitbox) && !dead)
                 {
                     rSpinner.RemoveSelf();
+                    if (KoseiHelperModule.Settings.GunSettings.RecoilOnlyOnInteraction && SceneAs<Level>().Session.GetFlag("KoseiHelper_playerIsShooting") && owner is Player pRecoil)
+                        RecoilOnInteraction(pRecoil, rSpinner);
                     DestroyBullet();
                     return;
                 }
@@ -561,6 +609,8 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 {
                     if ((bool)NemesisGun.bumperFireMode.GetValue(bumper))
                     {
+                        if (KoseiHelperModule.Settings.GunSettings.RecoilOnlyOnInteraction && SceneAs<Level>().Session.GetFlag("KoseiHelper_playerIsShooting") && owner is Player pRecoil)
+                            RecoilOnInteraction(pRecoil, bumper);
                         DestroyBullet();
                         return;
                     }
@@ -591,6 +641,8 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                     if (owner is Player p_key && !key.follower.HasLeader)
                     {
                         key.OnPlayer(p_key);
+                        if (KoseiHelperModule.Settings.GunSettings.RecoilOnlyOnInteraction && SceneAs<Level>().Session.GetFlag("KoseiHelper_playerIsShooting") && owner is Player pRecoil)
+                            RecoilOnInteraction(pRecoil, key);
                         DestroyBullet();
                     }
                     return;
@@ -604,6 +656,8 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                     {
                         booster.OnPlayer(p_booster);
                         p_booster.Position = booster.Position;
+                        if (KoseiHelperModule.Settings.GunSettings.RecoilOnlyOnInteraction && SceneAs<Level>().Session.GetFlag("KoseiHelper_playerIsShooting") && owner is Player pRecoil)
+                            RecoilOnInteraction(pRecoil, booster);
                         DestroyBullet();
                     }
                     return;
@@ -612,6 +666,8 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 if (entity is Spring spring && spring.Collider.Bounds.Intersects(Hitbox) && !BouncedOffSpring.Contains(spring) &&
                     KoseiHelperModule.Settings.GunInteractions.CanBounce && !dead && owner is Player p_spring && spring.Collidable)
                 {
+                    if (KoseiHelperModule.Settings.GunSettings.RecoilOnlyOnInteraction && SceneAs<Level>().Session.GetFlag("KoseiHelper_playerIsShooting") && owner is Player pRecoil)
+                        RecoilOnInteraction(pRecoil, spring);
                     if (KoseiHelperModule.Settings.GunInteractions.CanBounce)
                     {
                         velocity = (Center - spring.Center).SafeNormalize();
@@ -625,6 +681,8 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 if (entity is Refill refill && refill.Collider.Bounds.Intersects(Hitbox) && KoseiHelperModule.Settings.GunInteractions.UseRefills &&
                     !dead && owner is Player refill_player)
                 {
+                    if (KoseiHelperModule.Settings.GunSettings.RecoilOnlyOnInteraction && SceneAs<Level>().Session.GetFlag("KoseiHelper_playerIsShooting") && owner is Player pRecoil)
+                        RecoilOnInteraction(pRecoil, refill);
                     if (refill.Collidable)
                     {
                         refill.OnPlayer(refill_player);
@@ -638,6 +696,8 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 {
                     if (sGem.Collidable)
                     {
+                        if (KoseiHelperModule.Settings.GunSettings.RecoilOnlyOnInteraction && SceneAs<Level>().Session.GetFlag("KoseiHelper_playerIsShooting") && owner is Player pRecoil)
+                            RecoilOnInteraction(pRecoil, sGem);
                         if (KoseiHelperModule.Settings.GunInteractions.Collectables)
                         {
                             sGem.Add(new Coroutine((IEnumerator)NemesisGun.summitGemSmashRoutine.Invoke(sGem, new object[] { p, p.Scene as Level })));
@@ -717,6 +777,8 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                         default:
                             break;
                     }
+                    if (KoseiHelperModule.Settings.GunSettings.RecoilOnlyOnInteraction && SceneAs<Level>().Session.GetFlag("KoseiHelper_playerIsShooting") && owner is Player pRecoil)
+                        RecoilOnInteraction(pRecoil, puffer);
                     DestroyBullet();
                     return;
                 }
@@ -726,6 +788,8 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 if (entity is Goomba goomba && KoseiHelperModule.Settings.GunInteractions.HarmEnemies && goomba.Collider.Bounds.Intersects(Hitbox) && !dead)
                 {
                     goomba.Killed((owner as Player), (owner as Player).SceneAs<Level>());
+                    if (KoseiHelperModule.Settings.GunSettings.RecoilOnlyOnInteraction && SceneAs<Level>().Session.GetFlag("KoseiHelper_playerIsShooting") && owner is Player pRecoil)
+                        RecoilOnInteraction(pRecoil, goomba);
                     DestroyBullet();
                     return;
                 }
@@ -735,6 +799,8 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 {
                     plutterbird.Die();
                     SceneAs<Level>().Session.IncrementCounter("KoseiHelper_PlutterbirdsKilled");
+                    if (KoseiHelperModule.Settings.GunSettings.RecoilOnlyOnInteraction && SceneAs<Level>().Session.GetFlag("KoseiHelper_playerIsShooting") && owner is Player pRecoil)
+                        RecoilOnInteraction(pRecoil, plutterbird);
                     DestroyBullet();
                     return;
                 }
@@ -742,6 +808,8 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 if (entity is DefrostableBlock defrostableBlock && defrostableBlock.Collider.Bounds.Intersects(Hitbox) && !dead)
                 {
                     defrostableBlock.defrosting = true;
+                    if (KoseiHelperModule.Settings.GunSettings.RecoilOnlyOnInteraction && SceneAs<Level>().Session.GetFlag("KoseiHelper_playerIsShooting") && owner is Player pRecoil)
+                        RecoilOnInteraction(pRecoil, defrostableBlock);
                     DestroyBullet();
                     return;
                 }
@@ -751,6 +819,8 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                     plant.RemoveSelf();
                     SceneAs<Level>().ParticlesFG.Emit(Player.P_Split, 5, Position, Vector2.One * 4f, velocity.Angle() - (float)Math.PI / 2f);
                     Audio.Play("event:/KoseiHelper/goomba", plant.Center);
+                    if (KoseiHelperModule.Settings.GunSettings.RecoilOnlyOnInteraction && SceneAs<Level>().Session.GetFlag("KoseiHelper_playerIsShooting") && owner is Player pRecoil)
+                        RecoilOnInteraction(pRecoil, plant);
                     DestroyBullet();
                     return;
                 }
@@ -760,6 +830,8 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                     Audio.Play("event:/KoseiHelper/mary", Position);
                     SceneAs<Level>().ParticlesFG.Emit(SwitchGate.P_Behind, 5, Center + new Vector2(0, -2), Vector2.One * 4f, CenterX - (float)Math.PI / 2f);
                     mary.RemoveSelf();
+                    if (KoseiHelperModule.Settings.GunSettings.RecoilOnlyOnInteraction && SceneAs<Level>().Session.GetFlag("KoseiHelper_playerIsShooting") && owner is Player pRecoil)
+                        RecoilOnInteraction(pRecoil, mary);
                     DestroyBullet();
                     return;
                 }
@@ -769,6 +841,8 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                     && KoseiHelperModule.Settings.GunInteractions.CollideWithPlatforms && velocity.Y < 0)
                 {
                     fallingPlatform.StartFalling();
+                    if (KoseiHelperModule.Settings.GunSettings.RecoilOnlyOnInteraction && SceneAs<Level>().Session.GetFlag("KoseiHelper_playerIsShooting") && owner is Player pRecoil)
+                        RecoilOnInteraction(pRecoil, fallingPlatform);
                     DestroyBullet();
                     return;
                 }
@@ -782,7 +856,11 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 if (entity is JumpThru jumpthru && jumpthru.Collider.Bounds.Intersects(Hitbox) && !dead && KoseiHelperModule.Settings.GunInteractions.CollideWithPlatforms)
                 {
                     if (velocity.Y > 0)
+                    {
+                        if (KoseiHelperModule.Settings.GunSettings.RecoilOnlyOnInteraction && SceneAs<Level>().Session.GetFlag("KoseiHelper_playerIsShooting") && owner is Player pRecoil)
+                            RecoilOnInteraction(pRecoil, jumpthru);
                         DestroyBullet();
+                    }
                     return;
                 }
             }
@@ -799,15 +877,23 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                             Audio.Play("event:/new_content/game/10_farewell/glider_emancipate", dreamBlock.Center);
                             SceneAs<Level>().Displacement.AddBurst(dreamBlock.Center, 0.3f, 8, Math.Min(dreamBlock.Width, dreamBlock.Height), 0.8f);
                             dreamBlock.OneUseDestroy();
+                            if (KoseiHelperModule.Settings.GunSettings.RecoilOnlyOnInteraction && SceneAs<Level>().Session.GetFlag("KoseiHelper_playerIsShooting") && owner is Player pRecoil)
+                                RecoilOnInteraction(pRecoil, dreamBlock);
                             DestroyBullet();
                             break;
                         case KoseiHelperModuleSettings.NemesisInteractions.DreamBlockBehavior.GoThrough:
                             if ((owner.Scene as Level).Session.Inventory.DreamDash)
                                 return;
                             else
+                            {
+                                if (KoseiHelperModule.Settings.GunSettings.RecoilOnlyOnInteraction && SceneAs<Level>().Session.GetFlag("KoseiHelper_playerIsShooting") && owner is Player pRecoil2)
+                                    RecoilOnInteraction(pRecoil2, dreamBlock);
                                 DestroyBullet();
+                            }
                             return;
                         default: // None
+                            if (KoseiHelperModule.Settings.GunSettings.RecoilOnlyOnInteraction && SceneAs<Level>().Session.GetFlag("KoseiHelper_playerIsShooting") && owner is Player pRecoil3)
+                                RecoilOnInteraction(pRecoil3, dreamBlock);
                             DestroyBullet();
                             break;
                     }
@@ -819,6 +905,8 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                     if (owner is Player p_oshirodoor)
                     {
                         customOshiroDoor.OnDashCollide(p_oshirodoor, customOshiroDoor.Center);
+                        if (KoseiHelperModule.Settings.GunSettings.RecoilOnlyOnInteraction && SceneAs<Level>().Session.GetFlag("KoseiHelper_playerIsShooting") && owner is Player pRecoil)
+                            RecoilOnInteraction(pRecoil, p_oshirodoor);
                         DestroyBullet();
                     }
                     return;
@@ -826,13 +914,18 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
 
                 if (solid is CrushBlock cBlock) // TODO stupid kevins SOMEONE PLEASE HELP
                 {
+                    if (KoseiHelperModule.Settings.GunSettings.RecoilOnlyOnInteraction && SceneAs<Level>().Session.GetFlag("KoseiHelper_playerIsShooting") && owner is Player pRecoil)
+                        RecoilOnInteraction(pRecoil, cBlock);
                     DestroyBullet();
                     return;
                 }
 
-                if (solid is MoveBlock moveBlock && KoseiHelperModule.Settings.GunInteractions.MoveMovingBlocks) // TODO stupid kevins SOMEONE PLEASE HELP
+                if (solid is MoveBlock moveBlock && KoseiHelperModule.Settings.GunInteractions.MoveMovingBlocks) // TODO stupid move blocks SOMEONE PLEASE HELP
                 {
                     moveBlock.triggered = true;
+                    moveBlock.state = MoveBlock.MovementState.Moving;
+                    if (KoseiHelperModule.Settings.GunSettings.RecoilOnlyOnInteraction && SceneAs<Level>().Session.GetFlag("KoseiHelper_playerIsShooting") && owner is Player pRecoil)
+                        RecoilOnInteraction(pRecoil, moveBlock);
                     DestroyBullet();
                     return;
                 }
@@ -840,24 +933,58 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 if (solid is SwapBlock swapBlock && owner is Player pSwapBlock && KoseiHelperModule.Settings.GunInteractions.MoveSwapBlocks)
                 {
                     swapBlock.OnDash(velocity);
+                    if (KoseiHelperModule.Settings.GunSettings.RecoilOnlyOnInteraction && SceneAs<Level>().Session.GetFlag("KoseiHelper_playerIsShooting") && owner is Player pRecoil)
+                        RecoilOnInteraction(pRecoil, swapBlock);
                     DestroyBullet();
                     return;
                 }
 
                 if (solid is LightningBreakerBox lBBox && owner is Player pl)
+                {
                     lBBox.Dashed(pl, velocity);
+                    if (KoseiHelperModule.Settings.GunSettings.RecoilOnlyOnInteraction && SceneAs<Level>().Session.GetFlag("KoseiHelper_playerIsShooting") && owner is Player pRecoil)
+                        RecoilOnInteraction(pRecoil, lBBox);
+                    DestroyBullet();
+                    return;
+                }
 
                 if (solid is DashSwitch dSwitch && KoseiHelperModule.Settings.GunInteractions.PressDashSwitches)
+                {
                     dSwitch.OnDashCollide(null, (Vector2)NemesisGun.dashSwitchPressDirection.GetValue(dSwitch));
+                    if (KoseiHelperModule.Settings.GunSettings.RecoilOnlyOnInteraction && SceneAs<Level>().Session.GetFlag("KoseiHelper_playerIsShooting") && owner is Player pRecoil)
+                        RecoilOnInteraction(pRecoil, dSwitch);
+                    DestroyBullet();
+                    return;
+                }
 
                 if (solid is FallingBlock fallingBlock && KoseiHelperModule.Settings.GunInteractions.ActivateFallingBlocks)
+                {
                     fallingBlock.Triggered = true;
+                    fallingBlock.HasStartedFalling = true;
+                    if (KoseiHelperModule.Settings.GunSettings.RecoilOnlyOnInteraction && SceneAs<Level>().Session.GetFlag("KoseiHelper_playerIsShooting") && owner is Player pRecoil)
+                        RecoilOnInteraction(pRecoil, fallingBlock);
+                    DestroyBullet();
+                    return;
+                }
 
                 if (solid is BounceBlock bounceBlock && KoseiHelperModule.Settings.GunInteractions.BreakBounceBlocks)
+                {
                     bounceBlock.Break();
-                DestroyBullet();
-                return;
+                    if (KoseiHelperModule.Settings.GunSettings.RecoilOnlyOnInteraction && SceneAs<Level>().Session.GetFlag("KoseiHelper_playerIsShooting") && owner is Player pRecoil)
+                        RecoilOnInteraction(pRecoil, bounceBlock);
+                    DestroyBullet();
+                    return;
+                }
             }
+        }
+
+        private void RecoilOnInteraction(Player player, Entity entity)
+        {
+            if (entity.Right < player.Left + 1)
+                player.Speed.X -= KoseiHelperModule.Settings.GunSettings.Recoil * (float)(0 - player.Facing); // Player goes left
+            if (entity.Left > player.Right - 1)
+                player.Speed.X += KoseiHelperModule.Settings.GunSettings.Recoil * (float)(0 - player.Facing); // Player goes right
+            RemoveSelf();
         }
 
         private bool BootlegStunSeeker(Seeker seeker)
@@ -924,7 +1051,6 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
         {
             base.DebugRender(camera);
             Draw.HollowRect(Hitbox, Extensions.color1);
-
         }
 
         public static bool CanDoShit(Actor owner)
