@@ -637,6 +637,10 @@ entities.KoseiHelper/FlagRefillController.attributes.description.persistent=If t
 entities.KoseiHelper/FlagRefillController.attributes.description.countWhenUsed=Counter Refills will increase/decrease when the player dashes instead of when collecting the refill.
 entities.KoseiHelper/FlagRefillController.attributes.description.decrease=Counter refills will decrease instead.\nThis option only applies for the Dashing mode because it affects the player instead of individual refills!
 
+# Mouse Controller
+entities.KoseiHelper/MouseController.placements.name.MouseController=Mouse Controller
+entities.KoseiHelper/MouseController.placements.description.MouseController=Allows using the mouse to make entities do different things, like exploding puffers.
+entities.KoseiHelper/MouseController.attributes.name.cursorTexture=The texture of the mouse cursor, relative to Graphics/Atlases/Gui/.
 
 # Spawn Controller - General attributes
 entities.KoseiHelper/SpawnController.placements.name.SpawnController=Spawn Controller
@@ -798,7 +802,7 @@ triggers.KoseiHelper/OOBTrigger.attributes.description.inBound=If the player sho
 triggers.KoseiHelper/OOBTrigger.attributes.description.climbFix=In vanilla, the player can't climb if they are to the left/right of the current screen.\nNot recommended to disable.\n(The trigger with the highest ID determines if the player can climb outside the current room or not).
 
 #Kill If Not Grounded Trigger
-triggers.KoseiHelper/KillIfNotGroundedTrigger.placements.name.KillIfNotGroundedTrigger=Kill If Not Grounded Trigger
+triggers.KoseiHelper/KillIfNotGroundedTrigger.placements.name.KillIfNotGroundedTrigger=Kill If (Not) Grounded Trigger
 triggers.KoseiHelper/KillIfNotGroundedTrigger.placements.description.KillIfNotGroundedTrigger=Kills the player if they are not on ground (or, optionally, not climbing either) while inside.
 triggers.KoseiHelper/KillIfNotGroundedTrigger.attributes.description.spareIfClimbing=Enable this option if you don't want to kill the player while they are climbing inside the trigger.
 triggers.KoseiHelper/KillIfNotGroundedTrigger.attributes.description.killIfGrounded=Whether the player should die if they touch the ground while inside the trigger.

@@ -7,13 +7,15 @@ namespace Celeste.Mod.KoseiHelper.Entities;
 [CustomEntity("KoseiHelper/MouseController")]
 public class MouseController : Entity
 {
-    float mouseX, mouseY;
+    public float mouseX, mouseY;
+    public string cursorTexture;
     public Rectangle Hitbox => new Rectangle((int)Position.X, (int)Position.Y, 12, 12);
 
     public MouseController(EntityData data, Vector2 offset) : base(data.Position + offset)
     {
         base.Collider = new Hitbox(12, 12, 0, 0);
         base.Tag = Tags.HUD;
+        cursorTexture = data.Attr("cursorTexture", "dot_outline");
     }
 
     public override void Update()
@@ -131,7 +133,7 @@ public class MouseController : Entity
     public override void Render()
     {
         Level level = SceneAs<Level>();
-        Image image = new Image(GFX.Gui["lookout/cursor"]);
+        Image image = new Image(GFX.Gui[cursorTexture]);
         image.Position = new Vector2(mouseX * 6f - image.Width / 2f, mouseY * 6f - image.Height / 2f);
         image.Render();
     }

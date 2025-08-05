@@ -13,4 +13,6 @@ KillIfNotGroundedTrigger.placements = {
 	}
 }
 
+KillIfNotGroundedTrigger.triggerText = "Kill If (Not) Grounded"
+
 return KillIfNotGroundedTrigger

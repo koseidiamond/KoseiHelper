@@ -7,11 +7,19 @@ MouseController.placements = {
 	{
 		name = "MouseController",
 		data = {
+		cursorTexture = "dot_outline"
 		}
 	}
 }
 
 MouseController.fieldInformation = {
+	cursorTexture = {
+		options = {
+			"dot_outline",
+			"KoseiHelper/mouseCursors/cursor"
+		},
+		editable = true
+	}
 }
 
 return MouseController
