@@ -885,44 +885,43 @@ public class SpawnController : Entity
             float mouseX = MInput.Mouse.Position.X * (320f / 1920f);
             float mouseY = MInput.Mouse.Position.Y * (180f / 1080f);
             Vector2 mousePosition = new Vector2(level.Camera.Position.X + mouseX, level.Camera.Position.Y + mouseY);
-            if (isDragging && draggedEntity != null)
-            {
-                draggedEntity.Position = mousePosition - dragOffset;
-            }
 
-            if (spawnedEntitiesWithTTL != null && !isDragging)
+            if (isDragging && draggedEntity != null)
+                draggedEntity.Position = mousePosition - dragOffset;
+
+            // Determine drag button state based on spawnCondition and oppositeDragButton
+            bool dragButtonHeld =
+                (spawnCondition == SpawnCondition.LeftClick && !oppositeDragButton && MInput.Mouse.CheckLeftButton) ||
+                (spawnCondition == SpawnCondition.RightClick && !oppositeDragButton && MInput.Mouse.CheckRightButton) ||
+                (spawnCondition == SpawnCondition.LeftClick && oppositeDragButton && MInput.Mouse.CheckRightButton) ||
+                (spawnCondition == SpawnCondition.RightClick && oppositeDragButton && MInput.Mouse.CheckLeftButton);
+            bool dragButtonReleased =
+                (spawnCondition == SpawnCondition.LeftClick && !oppositeDragButton && MInput.Mouse.ReleasedLeftButton) ||
+                (spawnCondition == SpawnCondition.RightClick && !oppositeDragButton && MInput.Mouse.ReleasedRightButton) ||
+                (spawnCondition == SpawnCondition.LeftClick && oppositeDragButton && MInput.Mouse.ReleasedRightButton) ||
+                (spawnCondition == SpawnCondition.RightClick && oppositeDragButton && MInput.Mouse.ReleasedLeftButton);
+
+            if (spawnedEntitiesWithTTL != null && !isDragging && dragButtonHeld)
             {
                 foreach (EntityWithTTL entityWrapper in spawnedEntitiesWithTTL)
                 {
                     Entity entity = entityWrapper.Entity;
-                    //Checks if we're clicking on the 1.5tiles (in size) at the center of the entity
                     Rectangle entityCenterRect = new Rectangle((int)(entity.Center.X - 12), (int)(entity.Center.Y - 12), 20, 20);
                     if (entityCenterRect.Contains((int)mousePosition.X, (int)mousePosition.Y))
                     {
-                        if ((MInput.Mouse.CheckLeftButton &&
-                            ((spawnCondition == SpawnCondition.LeftClick && !oppositeDragButton) ||
-                            (spawnCondition == SpawnCondition.RightClick && oppositeDragButton))) ||
-                        (MInput.Mouse.CheckRightButton &&
-                        ((spawnCondition == SpawnCondition.RightClick && !oppositeDragButton) ||
-                        (spawnCondition == SpawnCondition.LeftClick && oppositeDragButton))))
-                        {
-                            isDragging = true;
-                            draggedEntity = entity;
-                            dragOffset = mousePosition - entity.Position;
-                            break;
-                        }
+                        isDragging = true;
+                        draggedEntity = entity;
+                        dragOffset = mousePosition - entity.Position;
+                        break;
                     }
                 }
             }
-
-            if (!oppositeDragButton && ((MInput.Mouse.ReleasedLeftButton && spawnCondition == SpawnCondition.LeftClick) ||
-                (MInput.Mouse.ReleasedRightButton && spawnCondition == SpawnCondition.RightClick)) ||
-                oppositeDragButton && ((MInput.Mouse.ReleasedRightButton && spawnCondition == SpawnCondition.LeftClick) ||
-                (MInput.Mouse.ReleasedLeftButton && spawnCondition == SpawnCondition.RightClick)))
+            if (dragButtonReleased)
             {
                 isDragging = false;
                 draggedEntity = null;
             }
+
             if (mouseWheelMode && (spawnCondition == SpawnCondition.LeftClick || spawnCondition == SpawnCondition.RightClick))
             {
                 int wheel = MInput.Mouse.Wheel;
