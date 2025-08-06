@@ -201,7 +201,6 @@ namespace Celeste.Mod.KoseiHelper.Entities
             Vector2 vector4 = vector3.Perpendicular();
             vector3 *= 4000f;
             vector4 *= 120f;
-            int num = 0;
             GameplayRenderer.Begin();
         }
 

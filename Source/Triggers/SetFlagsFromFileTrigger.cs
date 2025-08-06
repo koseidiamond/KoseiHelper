@@ -54,7 +54,7 @@ namespace Celeste.Mod.KoseiHelper.Triggers
                             }
                         }
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         //Logger.Error(nameof(KoseiHelperModule), $"Error reading flags file: {ex.Message}");
                     }

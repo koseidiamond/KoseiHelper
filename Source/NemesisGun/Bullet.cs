@@ -50,6 +50,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
             BouncedOffSpring = new List<Spring>();
             bulletTexture = GFX.Game[Extensions.bulletTexture];
             customParticleTexture = GFX.Game[Extensions.customParticleTexture];
+#pragma warning disable CL013
             if (CanDoShit(owner))
                 (owner.Scene as Level).Add(this);
             (owner.Scene as Level).Session.SetFlag("KoseiHelper_playerIsShooting", true);
@@ -1084,19 +1085,26 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
 
         private void RecoilOnInteraction(Player player, Entity entity)
         {
-            if (entity.Right < player.Left + 1 || entity.Left > player.Right - 1)
+            if (!KoseiHelperModule.Settings.GunSettings.RecoilUpwards)
             {
-                if (entity.Right < player.Left + 1) // entity is on the left of the player
-                    player.Speed.X += KoseiHelperModule.Settings.GunSettings.Recoil; // Player goes left
-                if (entity.Left > player.Right - 1) // entity is on the right of the player
-                    player.Speed.X -= KoseiHelperModule.Settings.GunSettings.Recoil; // Player goes right
+                if (entity.Right < player.Left + 1 || entity.Left > player.Right - 1)
+                {
+                    if (entity.Right < player.Left + 1) // entity is on the left of the player
+                        player.Speed.X += KoseiHelperModule.Settings.GunSettings.Recoil; // Player goes left
+                    if (entity.Left > player.Right - 1) // entity is on the right of the player
+                        player.Speed.X -= KoseiHelperModule.Settings.GunSettings.Recoil; // Player goes right
+                }
+                else
+                {
+                    if (entity.Bottom < player.Top + 1) // entity is above the player
+                        player.Speed.Y += KoseiHelperModule.Settings.GunSettings.Recoil;
+                    if (entity.Top > player.Bottom - 1) // entity is below the player
+                        player.Speed.Y -= KoseiHelperModule.Settings.GunSettings.Recoil;
+                }
             }
             else
             {
-                if (entity.Bottom < player.Top + 1) // entity is above the player
-                    player.Speed.Y += KoseiHelperModule.Settings.GunSettings.Recoil;
-                if (entity.Top > player.Bottom - 1) // entity is below the player
-                    player.Speed.Y -= KoseiHelperModule.Settings.GunSettings.Recoil;
+                player.Speed.Y -= KoseiHelperModule.Settings.GunSettings.Recoil;
             }
                 RemoveSelf();
         }

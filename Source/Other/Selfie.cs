@@ -12,7 +12,7 @@ public class Selfie : Entity
     private Image image;
     private bool waitForKeyPress;
     private float timer;
-    private Tween tween;
+    //private Tween tween;
 
     private string buttonIcon;
 
@@ -74,8 +74,8 @@ public class Selfie : Entity
 
     public override void Update()
     {
-        if (tween != null && tween.Active)
-            tween.Update();
+        //if (tween != null && tween.Active)
+        //    tween.Update();
         if (waitForKeyPress)
             timer += Engine.DeltaTime;
     }

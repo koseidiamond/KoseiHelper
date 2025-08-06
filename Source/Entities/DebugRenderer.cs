@@ -101,17 +101,14 @@ public class DebugRenderer : Entity
                     Draw.Line(new Vector2(X, Y), node, color);
                     break;
                 case Shape.Text:
-                    if (font != null)
+                    switch (font)
                     {
-                        switch (font)
-                        {
-                            case Font.Consolas12:
-                                Draw.Text(Draw.DefaultFont, message, new Vector2(X, Y), color, Vector2.Zero, Vector2.One * fontSize, 0);
-                                break;
-                            case Font.Renogare:
-                                ActiveFont.Draw(message, new Vector2(X, Y), Vector2.Zero, Vector2.One * fontSize / 2, color);
-                                break;
-                        }
+                        case Font.Consolas12:
+                            Draw.Text(Draw.DefaultFont, message, new Vector2(X, Y), color, Vector2.Zero, Vector2.One * fontSize, 0);
+                            break;
+                        case Font.Renogare:
+                            ActiveFont.Draw(message, new Vector2(X, Y), Vector2.Zero, Vector2.One * fontSize / 2, color);
+                            break;
                     }
                     break;
                 case Shape.Image:

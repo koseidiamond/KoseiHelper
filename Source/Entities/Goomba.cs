@@ -21,7 +21,7 @@ public class Goomba : Actor
     private Sprite sprite;
     private Collider bounceCollider;
     private int walkDirection = 1;
-    private Collision onCollideH;
+    private Collision onCollideH = null;
     private Collision onCollideV = null;
     public float speedX = 50;
     public GoombaBehavior behavior;

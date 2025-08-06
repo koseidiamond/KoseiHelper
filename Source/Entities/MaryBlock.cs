@@ -363,7 +363,7 @@ public class MaryBlock : Entity
     private class BaldStateComponent : Component
     {
         public BaldStateComponent() : base(false, false) { }
-        public MaryBlock CurrentMary;
+        //public MaryBlock CurrentMary;
     }
 
     public static int StBald;

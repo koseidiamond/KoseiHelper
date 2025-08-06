@@ -26,12 +26,13 @@ public class FlagRefill : Entity
     private float respawnTimer;
     private string str;
     public float respawnTime = 2.5f;
-    public FlagRefill(Vector2 position, bool oneUse, float respawnTime) : base(position)
+    public FlagRefill(Vector2 position, bool oneUse, float respawnTime, bool twoDashes) : base(position)
     {
         base.Collider = new Hitbox(16f, 16f, -8f, -8f);
         base.Add(new PlayerCollider(new Action<Player>(this.OnPlayer), null, null));
         this.oneUse = oneUse;
         this.respawnTime = respawnTime;
+        this.twoDashes = twoDashes;
         str = "objects/KoseiHelper/Refills/FlagRefill/";
         base.Add(this.outline = new Image(GFX.Game[str + "outline"]));
         this.outline.CenterOrigin();
@@ -60,12 +61,13 @@ public class FlagRefill : Entity
         this.UpdateY();
         base.Depth = -100;
     }
-    public FlagRefill(EntityData data, Vector2 offset) : this(data.Position + offset, data.Bool("oneUse", false), data.Float("respawnTime", 2.5f))
+    public FlagRefill(EntityData data, Vector2 offset) : this(data.Position + offset, data.Bool("oneUse", false), data.Float("respawnTime", 2.5f), data.Bool("twoDashes", false))
     {
         base.Collider = new Hitbox(16f, 16f, -8f, -8f);
         base.Add(new PlayerCollider(new Action<Player>(this.OnPlayer), null, null));
         this.oneUse = data.Bool("oneUse", false);
         this.respawnTime = data.Float("respawnTime", 2.5f);
+        this.twoDashes = data.Bool("twoDashes", false);
         str = data.Attr("sprite", "objects/KoseiHelper/Refills/FlagRefill/");
         base.Add(this.outline = new Image(GFX.Game[str + "outline"]));
         this.outline.CenterOrigin();

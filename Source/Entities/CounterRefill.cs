@@ -28,12 +28,13 @@ public class CounterRefill : Entity
     public float respawnTime;
 
     public bool decrease;
-    public CounterRefill(Vector2 position, bool oneUse, float respawnTime) : base(position)
+    public CounterRefill(Vector2 position, bool oneUse, float respawnTime, bool twoDashes) : base(position)
     {
         base.Collider = new Hitbox(16f, 16f, -8f, -8f);
         base.Add(new PlayerCollider(new Action<Player>(this.OnPlayer), null, null));
         this.oneUse = oneUse;
         this.respawnTime = respawnTime;
+        this.twoDashes = twoDashes;
         texturePath = "objects/KoseiHelper/Refills/CounterRefill/";
         base.Add(this.outline = new Image(GFX.Game[texturePath + "outline"]));
         this.outline.CenterOrigin();
@@ -62,13 +63,14 @@ public class CounterRefill : Entity
         this.UpdateY();
         base.Depth = -100;
     }
-    public CounterRefill(EntityData data, Vector2 offset) : this(data.Position + offset, data.Bool("oneUse", false), data.Float("respawnTime", 2.5f))
+    public CounterRefill(EntityData data, Vector2 offset) : this(data.Position + offset, data.Bool("oneUse", false), data.Float("respawnTime", 2.5f), data.Bool("twoDashes",false))
     {
         base.Collider = new Hitbox(16f, 16f, -8f, -8f);
         base.Add(new PlayerCollider(new Action<Player>(this.OnPlayer), null, null));
         this.oneUse = data.Bool("oneUse", false);
         this.respawnTime = data.Float("respawnTime", 2.5f);
         this.decrease = data.Bool("decrease", false);
+        this.twoDashes = data.Bool("twoDashes", false);
         texturePath = data.Attr("sprite", "objects/KoseiHelper/Refills/CounterRefill/");
         base.Add(this.outline = new Image(GFX.Game[texturePath + "outline"]));
         this.outline.CenterOrigin();
