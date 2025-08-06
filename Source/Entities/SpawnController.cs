@@ -159,6 +159,7 @@ public class SpawnController : Entity
 
     public string decalTexture;
     public int decalDepth;
+    public bool dontFlip;
 
     public bool fallingBlockBadeline, fallingBlockClimbFall;
 
@@ -337,6 +338,7 @@ public class SpawnController : Entity
 
         decalTexture = data.Attr("decalTexture", "10-farewell/creature_f00");
         decalDepth = data.Int("decalDepth", 9000);
+        dontFlip = data.Bool("dontFlip", false);
 
         fallingBlockBadeline = data.Bool("fallingBlockBadeline", false);
         fallingBlockClimbFall = data.Bool("fallingBlockClimbFall", false);
@@ -511,7 +513,7 @@ public class SpawnController : Entity
             if (onlyOnBgTiles && player != null)
             {
                 bgTilesCollider.Collidable = true;
-                bool collidingWithBgTiles = player.CollideCheck(bgTilesCollider);
+                bool collidingWithBgTiles = player.CollideCheck(bgTilesCollider, player.CenterLeft) && player.CollideCheck(bgTilesCollider, player.CenterRight);
                 bgTilesCollider.Collidable = false;
                 if (!collidingWithBgTiles && !player.onGround)
                     conditionMet = false;
@@ -663,7 +665,7 @@ public class SpawnController : Entity
                             new EntityID("koseiHelper_spawnedDashSwitch", entityID), dashSwitchSprite);
                         break;
                     case EntityType.Decal:
-                        if (player.Facing == Facings.Left)
+                        if (player.Facing == Facings.Left && !dontFlip)
                             spawnedEntity = new Decal(decalTexture, spawnPosition, new Vector2(-1, 1), decalDepth);
                         else
                             spawnedEntity = new Decal(decalTexture, spawnPosition, new Vector2(1, 1), decalDepth);

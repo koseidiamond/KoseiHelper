@@ -69,6 +69,7 @@ SpawnController.placements = {
 		
 		decalTexture = "10-farewell/creature_f00",
 		decalDepth = 9000,
+		dontFlip = false,
 		
 		fallingBlockBadeline = false,
 		fallingBlockClimbFall = false,
@@ -291,6 +292,9 @@ SpawnController.fieldInformation = function (entity) return {
 	maxCounterCap = {
 		fieldType = "integer"
 	},
+	decalDepth = {
+		fieldType = "integer"
+	},
 	flagCycleAt = {
 		fieldType = "integer"
 	},
@@ -437,6 +441,7 @@ function SpawnController.ignoredFields(entity)
 	
 	"decalTexture",
 	"decalDepth",
+	"dontFlip",
 	
 	"fallingBlockBadeline",
 	"fallingBlockClimbFall",
@@ -594,6 +599,7 @@ function SpawnController.ignoredFields(entity)
 	if entity.entityToSpawn == "Decal" then
 		doNotIgnore("decalTexture")
 		doNotIgnore("decalDepth")
+		doNotIgnore("dontFlip")
 	end
 	if entity.entityToSpawn == "FallingBlock" then
 		doNotIgnore("fallingBlockBadeline")
