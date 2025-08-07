@@ -38,7 +38,8 @@ GameDataController.placements = {
 			onTopOfWater = "KoseiHelper_onTopOfWater",
 			totalBerriesCollected = "KoseiHelper_totalBerriesCollected",
 			timeRate= "KoseiHelper_timeRateSlider",
-			anxiety = "KoseiHelper_anxietySlider"
+			anxiety = "KoseiHelper_anxietySlider",
+			coyoteFrames = "KoseiHelper_coyoteFrameCounter"
 		}
 	}
 }

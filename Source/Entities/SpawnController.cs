@@ -557,7 +557,7 @@ public class SpawnController : Entity
                         spawnPosition -= new Vector2(blockWidth / 2, blockHeight / 2);
                 }
                 if (gridAligned)
-                    spawnPosition = new Vector2((float)Math.Floor(spawnPosition.X / 8f) * 8f,(float)Math.Floor(spawnPosition.Y / 8f) * 8f);
+                    spawnPosition = new Vector2((float)Math.Floor(spawnPosition.X / 8f) * 8f, (float)Math.Floor(spawnPosition.Y / 8f) * 8f);
                 //Calculate node position
                 Vector2 nodePosition = new Vector2(X + nodeX, Y + nodeY);
                 if (!absoluteCoords)

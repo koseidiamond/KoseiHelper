@@ -1106,7 +1106,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
             {
                 player.Speed.Y -= KoseiHelperModule.Settings.GunSettings.Recoil;
             }
-                RemoveSelf();
+            RemoveSelf();
         }
 
         private bool BootlegStunSeeker(Seeker seeker)

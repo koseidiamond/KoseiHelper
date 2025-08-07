@@ -63,7 +63,7 @@ public class CounterRefill : Entity
         this.UpdateY();
         base.Depth = -100;
     }
-    public CounterRefill(EntityData data, Vector2 offset) : this(data.Position + offset, data.Bool("oneUse", false), data.Float("respawnTime", 2.5f), data.Bool("twoDashes",false))
+    public CounterRefill(EntityData data, Vector2 offset) : this(data.Position + offset, data.Bool("oneUse", false), data.Float("respawnTime", 2.5f), data.Bool("twoDashes", false))
     {
         base.Collider = new Hitbox(16f, 16f, -8f, -8f);
         base.Add(new PlayerCollider(new Action<Player>(this.OnPlayer), null, null));

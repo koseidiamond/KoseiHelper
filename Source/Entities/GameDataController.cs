@@ -36,6 +36,7 @@ public class GameDataController : Entity
     public string totalBerriesCollected;
     public string timeRate;
     public string anxiety;
+    public string coyoteFrames;
 
     private static int timesJumpedCounter, timesWallJumped, timesWallbounced;
 
@@ -73,6 +74,7 @@ public class GameDataController : Entity
         totalBerriesCollected = data.Attr("totalBerriesCollected", "KoseiHelper_totalBerriesCollected");
         timeRate = data.Attr("timeRate", "KoseiHelper_timeRateSlider");
         anxiety = data.Attr("anxiety", "KoseiHelper_anxietySlider");
+        coyoteFrames = data.Attr("coyoteFrames", "KoseiHelper_coyoteFrameCounter");
         base.Tag = Tags.PauseUpdate;
         base.Tag = Tags.TransitionUpdate;
     }
@@ -150,6 +152,7 @@ public class GameDataController : Entity
             session.SetSlider(WindLevelY, level.windController.targetSpeed.Y);
             session.SetSlider(timeRate, Engine.TimeRate);
             session.SetSlider(anxiety, Distort.Anxiety);
+            session.SetCounter(coyoteFrames, (int)(player.jumpGraceTimer * 60) - 1);
         }
     }
 

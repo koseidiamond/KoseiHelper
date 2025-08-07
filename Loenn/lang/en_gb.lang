@@ -124,6 +124,7 @@ entities.KoseiHelper/GameDataController.attributes.description.onTopOfWater=Whet
 entities.KoseiHelper/GameDataController.attributes.description.totalBerriesCollected=The total amount of berries collected in this map for the current session.
 entities.KoseiHelper/GameDataController.attributes.description.timeRate=Slider depending on the time rate of the game.
 entities.KoseiHelper/GameDataController.attributes.description.anxiety=Slider depending on the current anxiety effects.
+entities.KoseiHelper/GameDataController.attributes.description.coyoteFrames=Indicates the amount of coyote frames left.
 
 # Set Flag On Berry Collection Controller
 entities.KoseiHelper/SetFlagOnBerryCollectionController.placements.name.SetFlagOnBerryCollectionController=Set Flag On Berry Collection Controller

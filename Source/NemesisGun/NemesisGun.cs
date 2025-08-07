@@ -246,7 +246,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
             On.Celeste.Player.Render -= PlayerRendered;
         }
 
-        #pragma warning disable CL0004
+#pragma warning disable CL0004
         private void PlayerUpdated(On.Celeste.Player.orig_Update orig, Player self)
         {
             Session session = self.SceneAs<Level>().Session;
