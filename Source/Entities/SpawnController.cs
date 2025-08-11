@@ -308,6 +308,7 @@ public class SpawnController : Entity
                 base.Tag = Tags.HUD;
             wheelOptions = data.Attr("wheelOptions", "");
             WheelCycle = BuildWheelCycle(wheelOptions);
+            entityToSpawn = currentWheelValue;
         }
 
         //Entity specific attributes
