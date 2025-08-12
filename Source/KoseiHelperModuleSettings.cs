@@ -124,7 +124,7 @@ public class KoseiHelperModuleSettings : EverestModuleSettings
         public bool SpinnerFix { get; set; } = false;
 
         [SettingSubText("Whether bullets can activate moving blocks.")]
-        public bool MoveMovingBlocks { get; set; } = false;
+        public bool MoveMovingBlocks { get; set; } = true;
 
         [SettingSubText("Whether bullets should be able to break blades/stars/dust bunnies that move/rotate.")]
         public bool BreakMovingBlades { get; set; } = true;
@@ -132,7 +132,7 @@ public class KoseiHelperModuleSettings : EverestModuleSettings
         [SettingSubText("Whether bullets should be able to use feathers (or permanently destroy their bubbles if shielded).")]
         public bool UseFeathers { get; set; } = true;
 
-        [SettingSubText("Whether the player can collect entities (berries, keys, gems, hearts, cassettes) by shooting.")]
+        [SettingSubText("Whether the player can collect entities (berries/seeds, keys, gems, hearts, cassettes) by shooting.")]
         public bool Collectables { get; set; } = true;
 
         [SettingSubText("Whether bullets can use refills for you.")]
@@ -159,6 +159,9 @@ public class KoseiHelperModuleSettings : EverestModuleSettings
 
         [SettingSubText("The player will immediately teleport and use the booster when shooting it.")]
         public bool UseBoosters { get; set; } = false;
+
+        [SettingSubText("The player will immediately teleport and use the booster when shooting it.")]
+        public bool DashOnKevins { get; set; } = true;
 
         [SettingSubText("How much the water will slow down the bullets. Recommended values are 0.990 to 1.000. Default 0.995.")]
         [SettingNumberInput(allowNegatives: true, maxLength: 9)]

@@ -32,7 +32,8 @@ NemesisGunInteractions.placements = {
 		coreModeToggles = true,
 		moveSwapBlocks = true,
 		collideWithPlatforms = true,
-		moveMovingBlocks = false
+		moveMovingBlocks = true,
+		dashOnKevins = true
 		}
 	}
 }
@@ -91,7 +92,7 @@ NemesisGunInteractions.fieldInformation =
 		},
 		editable = false
 	},
-		dashBlockBehavior =
+	dashBlockBehavior =
 	{
 		options =
 		{

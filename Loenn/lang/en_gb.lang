@@ -639,9 +639,9 @@ entities.KoseiHelper/FlagRefillController.attributes.description.countWhenUsed=C
 entities.KoseiHelper/FlagRefillController.attributes.description.decrease=Counter refills will decrease instead.\nThis option only applies for the Dashing mode because it affects the player instead of individual refills!
 
 # Mouse Controller
-entities.KoseiHelper/MouseController.placements.name.MouseController=Mouse Controller
-entities.KoseiHelper/MouseController.placements.description.MouseController=Allows using the mouse to make entities do different things, like exploding puffers.
-entities.KoseiHelper/MouseController.attributes.name.cursorTexture=The texture of the mouse cursor, relative to Graphics/Atlases/Gui/.
+# entities.KoseiHelper/MouseController.placements.name.MouseController=Mouse Controller
+# entities.KoseiHelper/MouseController.placements.description.MouseController=Allows using the mouse to make entities do different things, like exploding puffers.
+# entities.KoseiHelper/MouseController.attributes.name.cursorTexture=The texture of the mouse cursor, relative to Graphics/Atlases/Gui/.
 
 # Spawn Controller - General attributes
 entities.KoseiHelper/SpawnController.placements.name.SpawnController=Spawn Controller
@@ -1027,3 +1027,4 @@ triggers.KoseiHelper/NemesisGunInteractions.attributes.description.pufferInterac
 triggers.KoseiHelper/NemesisGunInteractions.attributes.description.moveSwapBlocks=Whether swap blocks should move when shot.
 triggers.KoseiHelper/NemesisGunInteractions.attributes.description.collideWithPlatforms=Whether bullets should collide with platform entities (jumpthrus, clouds, etc) in the correct direction.\nSideways jumpthrus and upside down ones from Helping Hand are supported.
 triggers.KoseiHelper/NemesisGunInteractions.attributes.description.moveMovingBlocks=Whether bullets can make moving blocks to start moving.
+triggers.KoseiHelper/NemesisGunInteractions.attributes.description.dashOnKevins=Whether bullets can attack kevins on their sides.

@@ -1020,15 +1020,33 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                     return;
                 }
 
-                if (solid is CrushBlock cBlock) // TODO stupid kevins SOMEONE PLEASE HELP
+                if (solid is CrushBlock cBlock && KoseiHelperModule.Settings.GunInteractions.DashOnKevins)
                 {
+                    float leftDist = Math.Abs(Left - cBlock.Right);
+                    float rightDist = Math.Abs(Right - cBlock.Left);
+                    float topDist = Math.Abs(Top - cBlock.Bottom);
+                    float bottomDist = Math.Abs(Bottom - cBlock.Top);
+                    float min = Math.Min(Math.Min(leftDist, rightDist), Math.Min(topDist, bottomDist));
+                    Vector2 direction;
+                    if (min == leftDist)
+                        direction = Vector2.UnitX; // bullet is to the right
+                    else if (min == rightDist)
+                        direction = -Vector2.UnitX; // bullet is to the left
+                    else if (min == topDist)
+                        direction = Vector2.UnitY; // bullet is below
+                    else
+                        direction = -Vector2.UnitY; // bullet is above
+
+                    if (cBlock.CanActivate(direction))
+                        cBlock.Attack(direction);
+
                     if (KoseiHelperModule.Settings.GunSettings.RecoilOnlyOnInteraction && SceneAs<Level>().Session.GetFlag("KoseiHelper_playerIsShooting") && owner is Player pRecoil)
                         RecoilOnInteraction(pRecoil, cBlock);
                     DestroyBullet();
                     return;
                 }
 
-                if (solid is MoveBlock moveBlock && KoseiHelperModule.Settings.GunInteractions.MoveMovingBlocks) // TODO stupid move blocks SOMEONE PLEASE HELP
+                if (solid is MoveBlock moveBlock && KoseiHelperModule.Settings.GunInteractions.MoveMovingBlocks)
                 {
                     moveBlock.triggered = true;
                     moveBlock.state = MoveBlock.MovementState.Moving;
@@ -1083,6 +1101,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                     DestroyBullet();
                     return;
                 }
+                DestroyBullet();
             }
         }
 
