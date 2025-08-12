@@ -366,12 +366,13 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
             Vector2 actualPlayerPos = actor.Center + new Vector2(-3, -1);
             if (actor is Player player)
                 facing = player.Facing;
-            foreach (Entity entity in (actor.Scene as Level).Entities)
+            // This was supposed to support player clones but it breaks some interactions (like dash blocks) :(
+            /*foreach (Entity entity in (actor.Scene as Level).Entities)
             {
 
                 if (entity is Player extraPlayer)
                     new Bullet(extraPlayer.Center + new Vector2(-3, -1), GetGunVector(actor, cursorPos, facing), actor);
-            }
+            }*/
             new Bullet(actualPlayerPos, GetGunVector(actor, cursorPos, facing), actor);
             Audio.Play(Extensions.gunshotSound, actualPlayerPos);
         }
