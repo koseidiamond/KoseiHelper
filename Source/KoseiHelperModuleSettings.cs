@@ -160,7 +160,7 @@ public class KoseiHelperModuleSettings : EverestModuleSettings
         [SettingSubText("The player will immediately teleport and use the booster when shooting it.")]
         public bool UseBoosters { get; set; } = false;
 
-        [SettingSubText("The player will immediately teleport and use the booster when shooting it.")]
+        [SettingSubText("Kevins will be activated like when they are dashed from a certain direction.")]
         public bool DashOnKevins { get; set; } = true;
 
         [SettingSubText("How much the water will slow down the bullets. Recommended values are 0.990 to 1.000. Default 0.995.")]

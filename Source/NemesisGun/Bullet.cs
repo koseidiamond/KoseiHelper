@@ -317,10 +317,31 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                     if (KoseiHelperModule.Settings.GunSettings.RecoilOnlyOnInteraction && SceneAs<Level>().Session.GetFlag("KoseiHelper_playerIsShooting") && owner is Player pRecoil)
                         RecoilOnInteraction(pRecoil, upsidedownJumpthru);
                     DestroyBullet();
+                    
                 }
                 return;
             }
         }
+
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        // Checks whether the jumpthru is vanilla or upside down
+        private void JumpthruTypeCheck(Entity entity)
+        {
+            if (entity is not MaxHelpingHand.Entities.UpsideDownJumpThru && velocity.Y > 0)
+            {
+                if (KoseiHelperModule.Settings.GunSettings.RecoilOnlyOnInteraction && SceneAs<Level>().Session.GetFlag("KoseiHelper_playerIsShooting") && owner is Player pRecoil)
+                    RecoilOnInteraction(pRecoil, entity);
+                DestroyBullet();
+            }
+
+            if (entity is MaxHelpingHand.Entities.UpsideDownJumpThru upsideDownJT && velocity.Y < 0)
+            {
+                if (KoseiHelperModule.Settings.GunSettings.RecoilOnlyOnInteraction && SceneAs<Level>().Session.GetFlag("KoseiHelper_playerIsShooting") && owner is Player pRecoil)
+                    RecoilOnInteraction(pRecoil, upsideDownJT);
+                DestroyBullet();
+            }
+        }
+
 
         [MethodImpl(MethodImplOptions.NoInlining)]
         private void CollisionCheckEntity_CollabUtils2(Entity entity)
@@ -963,11 +984,16 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 // Affects moving platforms, clouds, etc
                 if (entity is JumpThru jumpthru && jumpthru.Collider.Bounds.Intersects(Hitbox) && !dead && KoseiHelperModule.Settings.GunInteractions.CollideWithPlatforms)
                 {
-                    if (velocity.Y > 0)
-                    {
-                        if (KoseiHelperModule.Settings.GunSettings.RecoilOnlyOnInteraction && SceneAs<Level>().Session.GetFlag("KoseiHelper_playerIsShooting") && owner is Player pRecoil)
-                            RecoilOnInteraction(pRecoil, jumpthru);
-                        DestroyBullet();
+                    if (KoseiHelperModule.Instance.helpingHandLoaded)
+                        JumpthruTypeCheck(jumpthru);
+                    else
+                     {
+                        if (velocity.Y > 0)
+                        {
+                            if (KoseiHelperModule.Settings.GunSettings.RecoilOnlyOnInteraction && SceneAs<Level>().Session.GetFlag("KoseiHelper_playerIsShooting") && owner is Player pRecoil)
+                                RecoilOnInteraction(pRecoil, jumpthru);
+                            DestroyBullet();
+                        }
                     }
                     return;
                 }
