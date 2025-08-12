@@ -362,9 +362,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
         public static void Gunshot(Actor actor, Vector2 cursorPos, Facings facing = Facings.Left)
         {
             if (actor == null || actor.Scene == null)
-            {
                 return;
-            }
             Vector2 actualPlayerPos = actor.Center + new Vector2(-3, -1);
             if (actor is Player player)
                 facing = player.Facing;

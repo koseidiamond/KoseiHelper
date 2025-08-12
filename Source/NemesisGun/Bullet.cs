@@ -289,6 +289,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 if (owner is Player p_tswitch)
                 {
                     flagTouchSwitch.TurnOn();
+                    return;
                 }
             }
         }
@@ -412,14 +413,14 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                         theo.Die();
                         break;
                     default:
-                        if (theo.Left > Left)
+                        if (theo.Left > Left + 2)
                         {
                             theo.MoveTowardsY(CenterY + 5f, 4f);
                             theo.Speed.X = 220f;
                             theo.Speed.Y = -80f;
                             theo.noGravityTimer = 0.1f;
                         }
-                        else if (Math.Round(theo.Right) < Right)
+                        else if (theo.Right < Right -2)
                         {
                             theo.MoveTowardsY(CenterY + 5f, 4f);
                             theo.Speed.X = -220f;
@@ -558,7 +559,6 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
             if (KoseiHelperModule.Instance.helpingHandLoaded)
             {
                 CollisionCheck_HelpingHand();
-                return;
             }
 
             if (owner.Scene.CollideFirst<FinalBoss>(Hitbox) is FinalBoss boss && KoseiHelperModule.Settings.GunInteractions.HarmEnemies && !dead)
@@ -613,20 +613,23 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                     switch (KoseiHelperModule.Settings.GunInteractions.jellyfishBehavior)
                     {
                         case KoseiHelperModuleSettings.NemesisInteractions.JellyfishBehavior.None:
+                            jelly.bubble = false;
                             break;
                         case KoseiHelperModuleSettings.NemesisInteractions.JellyfishBehavior.Throw:
+                            jelly.bubble = false;
                             jelly.OnRelease(velocity);
                             DestroyBullet();
                             break;
                         case KoseiHelperModuleSettings.NemesisInteractions.JellyfishBehavior.HitSpring:
-                            if (jelly.Left > Left)
+                            jelly.bubble = false;
+                            if (jelly.Left > Left + 2)
                             {
                                 jelly.MoveTowardsY(CenterY + 5f, 4f);
                                 jelly.Speed.X = 160f;
                                 jelly.Speed.Y = -80f;
                                 jelly.noGravityTimer = 0.1f;
                             }
-                            else if (Math.Round(jelly.Right) < Right)
+                            else if (jelly.Right < Right - 2)
                             {
                                 jelly.MoveTowardsY(CenterY + 5f, 4f);
                                 jelly.Speed.X = -160f;
@@ -838,7 +841,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                             NemesisGun.pufferGotoGone.Invoke(puffer, null);
                             break;
                         case KoseiHelperModuleSettings.NemesisInteractions.PufferBehavior.HitSpring:
-                            if (puffer.Left > Left)
+                            if (puffer.Left > Left +2)
                             {
                                 puffer.facing.X = 1f;
                                 puffer.GotoHitSpeed(280f * Vector2.UnitX);
@@ -847,7 +850,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                                 puffer.bounceWiggler.Start();
                                 puffer.Alert(restart: true, playSfx: false);
                             }
-                            else if (Math.Round(puffer.Right) < Right)
+                            else if (puffer.Right < Right -2)
                             {
                                 puffer.facing.X = -1f;
                                 puffer.GotoHitSpeed(280f * -Vector2.UnitX);
@@ -1172,6 +1175,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
         public override void DebugRender(Camera camera)
         {
             base.DebugRender(camera);
+            if (!dead)
             Draw.HollowRect(Hitbox, Extensions.color1);
         }
 

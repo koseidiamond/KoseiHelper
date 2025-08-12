@@ -226,7 +226,6 @@ public class KoseiHelperModuleSettings : EverestModuleSettings
         public PufferBehavior pufferBehavior { get; set; } = PufferBehavior.Explode;
     }
     [SettingSubText("Determines which entities react to the Nemesis Gun bullets.\n" +
-        "These can be overridden by specific map settings.\n" +
-        "By default all are true except CanKillPlayer and UseBoosters.")]
+        "These can be overridden by specific map settings.\n")]
     public NemesisInteractions GunInteractions { get; set; } = new();
 }
