@@ -350,7 +350,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 gunTexture.DrawOutline(player.Center, new Vector2(gunTexture.Width / 2, gunTexture.Height / 2), Color.Black, 1, lastGunRotation, effects);
             if (KoseiHelperModule.Settings.GunSettings.CanShootInFeather || (player as Player).StateMachine.state != 19) // make it invisible if the feather can't use it
                 gunTexture.DrawCentered(player.Center, Color.White, 1, lastGunRotation, effects);
-            
+
         }
 
         private static Vector2 PlayerPosScreenSpace(Actor self)

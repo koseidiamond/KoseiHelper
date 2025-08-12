@@ -4,6 +4,17 @@ namespace Celeste.Mod.KoseiHelper;
 
 public class KoseiHelperModuleSettings : EverestModuleSettings
 {
+    public bool ResetGunSettings { get; set; } = false;
+    public void CreateResetGunSettingsEntry(TextMenu menu, bool inGame)
+    {
+        if (!inGame)
+        {
+            TextMenu.Item item;
+            menu.Add(item = new TextMenu.Button("KoseiHelper_ResetGunSettings".DialogCleanOrNull()).Pressed(delegate { CleanGunSettings(); }));
+            menu.Add(item = new TextMenu.Button("KoseiHelper_ResetGunInteractions".DialogCleanOrNull()).Pressed(delegate { CleanGunInteractions(); }));
+        }
+    }
+
     [DefaultButtonBinding(Buttons.LeftShoulder, Keys.Tab)]
     [SettingName("SpawnButton")]
     public ButtonBinding SpawnButton { get; set; }
@@ -231,4 +242,52 @@ public class KoseiHelperModuleSettings : EverestModuleSettings
     [SettingSubText("Determines which entities react to the Nemesis Gun bullets.\n" +
         "These can be overridden by specific map settings.\n")]
     public NemesisInteractions GunInteractions { get; set; } = new();
+
+    private void CleanGunSettings()
+    {
+        KoseiHelperModule.Settings.GunSettings.CanShootInFeather = false;
+        KoseiHelperModule.Settings.GunSettings.Cooldown = 8;
+        KoseiHelperModule.Settings.GunSettings.Lifetime = 600;
+        KoseiHelperModule.Settings.GunSettings.RecoilCooldown = 16;
+        KoseiHelperModule.Settings.GunSettings.RecoilUpwards = false;
+        KoseiHelperModule.Settings.GunSettings.RecoilOnlyOnInteraction = false;
+        KoseiHelperModule.Settings.GunSettings.FreezeFrames = 0;
+        KoseiHelperModule.Settings.GunSettings.SpeedMultiplier = 1f;
+        KoseiHelperModule.Settings.GunSettings.Recoil = 80f;
+        KoseiHelperModule.Settings.GunSettings.HorizontalAcceleration = 0f;
+        KoseiHelperModule.Settings.GunSettings.VerticalAcceleration = 0f;
+        KoseiHelperModule.Settings.GunSettings.dashBehavior = NemesisSettings.DashBehavior.None;
+        KoseiHelperModule.Settings.GunSettings.gunDirections = NemesisSettings.GunDirections.EightDirections;
+    }
+
+    private void CleanGunInteractions()
+    {
+        KoseiHelperModule.Settings.GunInteractions.CanKillPlayer = false;
+        KoseiHelperModule.Settings.GunInteractions.BreakBounceBlocks = true;
+        KoseiHelperModule.Settings.GunInteractions.ActivateFallingBlocks = true;
+        KoseiHelperModule.Settings.GunInteractions.CollideWithPlatforms = true;
+        KoseiHelperModule.Settings.GunInteractions.MoveSwapBlocks = true;
+        KoseiHelperModule.Settings.GunInteractions.HarmEnemies = true;
+        KoseiHelperModule.Settings.GunInteractions.BreakSpinners = true;
+        KoseiHelperModule.Settings.GunInteractions.SpinnerFix = false;
+        KoseiHelperModule.Settings.GunInteractions.MoveMovingBlocks = true;
+        KoseiHelperModule.Settings.GunInteractions.BreakMovingBlades = true;
+        KoseiHelperModule.Settings.GunInteractions.UseFeathers = true;
+        KoseiHelperModule.Settings.GunInteractions.Collectables = true;
+        KoseiHelperModule.Settings.GunInteractions.UseRefills = true;
+        KoseiHelperModule.Settings.GunInteractions.PressDashSwitches = true;
+        KoseiHelperModule.Settings.GunInteractions.CanBounce = true;
+        KoseiHelperModule.Settings.GunInteractions.ScareBirds = true;
+        KoseiHelperModule.Settings.GunInteractions.CollectTouchSwitches = true;
+        KoseiHelperModule.Settings.GunInteractions.CollectBadelineOrbs = true;
+        KoseiHelperModule.Settings.GunInteractions.CoreModeToggles = true;
+        KoseiHelperModule.Settings.GunInteractions.UseBoosters = false;
+        KoseiHelperModule.Settings.GunInteractions.DashOnKevins = true;
+        KoseiHelperModule.Settings.GunInteractions.WaterFriction = 0.995f;
+        KoseiHelperModule.Settings.GunInteractions.dashBlockBehavior = NemesisInteractions.DashBlockBehavior.BreakAll;
+        KoseiHelperModule.Settings.GunInteractions.theoBehavior = NemesisInteractions.TheoBehavior.HitSpring;
+        KoseiHelperModule.Settings.GunInteractions.jellyfishBehavior = NemesisInteractions.JellyfishBehavior.HitSpring;
+        KoseiHelperModule.Settings.GunInteractions.dreamBlockBehavior = NemesisInteractions.DreamBlockBehavior.GoThrough;
+        KoseiHelperModule.Settings.GunInteractions.pufferBehavior = NemesisInteractions.PufferBehavior.Explode;
+    }
 }

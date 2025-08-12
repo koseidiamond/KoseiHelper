@@ -317,7 +317,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                     if (KoseiHelperModule.Settings.GunSettings.RecoilOnlyOnInteraction && SceneAs<Level>().Session.GetFlag("KoseiHelper_playerIsShooting") && owner is Player pRecoil)
                         RecoilOnInteraction(pRecoil, upsidedownJumpthru);
                     DestroyBullet();
-                    
+
                 }
                 return;
             }
@@ -441,7 +441,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                             theo.Speed.Y = -80f;
                             theo.noGravityTimer = 0.1f;
                         }
-                        else if (theo.Right < Right -2)
+                        else if (theo.Right < Right - 2)
                         {
                             theo.MoveTowardsY(CenterY + 5f, 4f);
                             theo.Speed.X = -220f;
@@ -862,7 +862,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                             NemesisGun.pufferGotoGone.Invoke(puffer, null);
                             break;
                         case KoseiHelperModuleSettings.NemesisInteractions.PufferBehavior.HitSpring:
-                            if (puffer.Left > Left +2)
+                            if (puffer.Left > Left + 2)
                             {
                                 puffer.facing.X = 1f;
                                 puffer.GotoHitSpeed(280f * Vector2.UnitX);
@@ -871,7 +871,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                                 puffer.bounceWiggler.Start();
                                 puffer.Alert(restart: true, playSfx: false);
                             }
-                            else if (puffer.Right < Right -2)
+                            else if (puffer.Right < Right - 2)
                             {
                                 puffer.facing.X = -1f;
                                 puffer.GotoHitSpeed(280f * -Vector2.UnitX);
@@ -987,7 +987,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                     if (KoseiHelperModule.Instance.helpingHandLoaded)
                         JumpthruTypeCheck(jumpthru);
                     else
-                     {
+                    {
                         if (velocity.Y > 0)
                         {
                             if (KoseiHelperModule.Settings.GunSettings.RecoilOnlyOnInteraction && SceneAs<Level>().Session.GetFlag("KoseiHelper_playerIsShooting") && owner is Player pRecoil)
@@ -1221,7 +1221,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
         {
             base.DebugRender(camera);
             if (!dead)
-            Draw.HollowRect(Hitbox, Extensions.color1);
+                Draw.HollowRect(Hitbox, Extensions.color1);
         }
 
         public static bool CanDoShit(Actor owner)
