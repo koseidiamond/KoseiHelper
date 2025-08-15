@@ -18,6 +18,8 @@ public class SwapTilesetTrigger : Trigger
     private Color flashColor;
     private string sound;
 
+    private bool initialized = false;
+
     public SwapTilesetTrigger(EntityData data, Vector2 offset) : base(data, offset)
     {
         onlyOnce = data.Bool("onlyOnce", false);
@@ -43,12 +45,12 @@ public class SwapTilesetTrigger : Trigger
         if (player.Scene != null && triggerMode == TriggerMode.OnStay)
         {
             if (string.IsNullOrEmpty(flag)) return;
-            bool now = (Scene as Level).Session.GetFlag(flag);
-            if (now != lastFlagValue)
+            bool now = level.Session.GetFlag(flag);
+            if (!initialized || now != lastFlagValue)
             {
-                SwapTilesets(level);
+                SwapTilesets(level, enforceFlagState: true, flagValue: now);
                 lastFlagValue = now;
-
+                initialized = true;
                 if (onlyOnce)
                     RemoveSelf();
             }
@@ -85,8 +87,11 @@ public class SwapTilesetTrigger : Trigger
         }
     }
 
-    private void SwapTilesets(Level level)
+    private void SwapTilesets(Level level, bool enforceFlagState = false, bool flagValue = false)
     {
+        char targetTileset = enforceFlagState? (flagValue ? toTileset : fromTileset) : toTileset;
+        char sourceTileset = enforceFlagState? (flagValue ? fromTileset : toTileset) : fromTileset;
+
         if (!bgTiles)
         {
             Rectangle tileBounds = level.Session.MapData.TileBounds;
@@ -111,10 +116,10 @@ public class SwapTilesetTrigger : Trigger
                     int y = l + rectangle2.Y;
 
                     // Only swap if the current tile is not already the target tileset
-                    if (level.SolidsData[x, y] == fromTileset && fromTileset != toTileset)
+                    if (level.SolidsData[x, y] == sourceTileset && sourceTileset != targetTileset)
                     {
-                        level.SolidsData[x, y] = toTileset;
-                        virtualMap[k, l] = toTileset;
+                        level.SolidsData[x, y] = targetTileset;
+                        virtualMap[k, l] = targetTileset;
                     }
                 }
             }
@@ -130,7 +135,7 @@ public class SwapTilesetTrigger : Trigger
                     int y2 = n + rectangle2.Y;
 
                     // Only apply if the tile's current texture matches the target tileset
-                    if (level.SolidsData[x2, y2] != toTileset)
+                    if (level.SolidsData[x2, y2] != targetTileset)
                         continue;
 
                     MTexture mTexture = generated.TileGrid.Tiles[m, n];
@@ -159,10 +164,10 @@ public class SwapTilesetTrigger : Trigger
                     for (int l = 0; l < bgData.Rows; l++)
                     {
                         // Only swap if the current tile is not already the target tileset
-                        if (bgData[k, l] == fromTileset && fromTileset != toTileset)
+                        if (bgData[k, l] == sourceTileset && sourceTileset != targetTileset)
                         {
-                            bgData[k, l] = toTileset;
-                            bgVirtualMap[k + 1, l + 1] = toTileset;
+                            bgData[k, l] = targetTileset;
+                            bgVirtualMap[k + 1, l + 1] = targetTileset;
                         }
                     }
                 }
@@ -174,7 +179,7 @@ public class SwapTilesetTrigger : Trigger
                     for (int n = 0; n < bgData.Rows; n++)
                     {
                         // Only apply if the tile's current texture matches the target tileset
-                        if (bgData[m, n] != toTileset)
+                        if (bgData[m, n] != targetTileset)
                             continue;
 
                         MTexture bgTexture = bgGenerated.TileGrid.Tiles[m + 1, n + 1];
@@ -187,10 +192,9 @@ public class SwapTilesetTrigger : Trigger
         if (flash)
             level.Flash(flashColor, false);
 
-        if (alternate)
+        if (alternate && !enforceFlagState)
             (fromTileset, toTileset) = (toTileset, fromTileset);
 
         Audio.Play(sound);
     }
-
 }

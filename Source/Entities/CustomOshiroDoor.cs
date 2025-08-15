@@ -75,7 +75,7 @@ public class CustomOshiroDoor : Solid
         }
     }
 
-    private DashCollisionResults OnDashed(Player player, Vector2 direction)
+    public DashCollisionResults OnDashed(Player player, Vector2 direction)
     {
         Audio.Play(bumpSound, Position);
         wiggler.Start();

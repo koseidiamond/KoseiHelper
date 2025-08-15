@@ -69,7 +69,8 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
         public override void Update()
         {
             base.Update();
-
+            if (!SceneAs<Level>().IsInBounds(this))
+                DestroyBullet();
             // For curved bullets
             if (startVelocity.X > 0) // When shooting left
                 velocity.X += Engine.DeltaTime * KoseiHelperModule.Settings.GunSettings.HorizontalAcceleration;
@@ -261,9 +262,9 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
             {
                 float angle = (float)Math.Atan2(velocity.Y, velocity.X);
                 if (Extensions.particleDoesntRotate)
-                    bulletTexture.DrawCentered(Position, Color.White, 1);
+                    bulletTexture.DrawCentered(Center, Color.White, 1);
                 else
-                    bulletTexture.DrawCentered(Position, Color.White, 1, angle);
+                    bulletTexture.DrawCentered(Center, Color.White, 1, angle);
             }
         }
 
@@ -410,6 +411,12 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
             if (owner.Scene.CollideFirst<AngryOshiro>(Hitbox) is AngryOshiro angryOshiro && KoseiHelperModule.Settings.GunInteractions.HarmEnemies && !dead)
             {
                 BootlegOshiroBounce(angryOshiro);
+                if (owner is Player poshiro)
+                {
+                    if (!poshiro.Inventory.NoRefills)
+                        poshiro.RefillDash();
+                    poshiro.RefillStamina();
+                }
                 if (KoseiHelperModule.Settings.GunSettings.RecoilOnlyOnInteraction && SceneAs<Level>().Session.GetFlag("KoseiHelper_playerIsShooting") && owner is Player pRecoil)
                     RecoilOnInteraction(pRecoil, angryOshiro);
                 DestroyBullet();
@@ -1038,7 +1045,8 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 {
                     if (owner is Player p_oshirodoor)
                     {
-                        customOshiroDoor.OnDashCollide(p_oshirodoor, customOshiroDoor.Center);
+                        customOshiroDoor.OnDashed(p_oshirodoor, customOshiroDoor.Center);
+                        //customOshiroDoor.OnDashCollide(p_oshirodoor, customOshiroDoor.Center);
                         if (KoseiHelperModule.Settings.GunSettings.RecoilOnlyOnInteraction && SceneAs<Level>().Session.GetFlag("KoseiHelper_playerIsShooting") && owner is Player pRecoil)
                             RecoilOnInteraction(pRecoil, p_oshirodoor);
                         DestroyBullet();
