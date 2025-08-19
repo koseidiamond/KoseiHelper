@@ -1,4 +1,6 @@
-
+local drawableText = require("structs.drawable_text")
+local drawableSprite = require("structs.drawable_sprite")
+local utils = require("utils")
 
 local FlagCounterSliderTranslator = {}
 
@@ -126,23 +128,54 @@ function FlagCounterSliderTranslator.ignoredFields(entity)
 	return ignored
 end
 
-function FlagCounterSliderTranslator.texture(room, entity)
+function FlagCounterSliderTranslator.sprite(room, entity)
+	local texturePath
 	local mode = entity.mode
 	if mode == "FlagToCounter" then
-		return "objects/KoseiHelper/Controllers/TranslatorFlagCounter"
+		texturePath = "objects/KoseiHelper/Controllers/TranslatorFlagCounter"
 	elseif mode == "FlagToSlider" then
-		return "objects/KoseiHelper/Controllers/TranslatorFlagSlider"
+		texturePath = "objects/KoseiHelper/Controllers/TranslatorFlagSlider"
 	elseif mode == "CounterToFlag" then
-		return "objects/KoseiHelper/Controllers/TranslatorCounterFlag"
+		texturePath = "objects/KoseiHelper/Controllers/TranslatorCounterFlag"
 	elseif mode == "CounterToSlider" then
-		return "objects/KoseiHelper/Controllers/TranslatorCounterSlider"
+		texturePath = "objects/KoseiHelper/Controllers/TranslatorCounterSlider"
 	elseif mode == "SliderToFlag" then
-		return "objects/KoseiHelper/Controllers/TranslatorSliderFlag"
+		texturePath = "objects/KoseiHelper/Controllers/TranslatorSliderFlag"
 	elseif mode == "SliderToCounter" then
-		return "objects/KoseiHelper/Controllers/TranslatorSliderCounter"
+		texturePath = "objects/KoseiHelper/Controllers/TranslatorSliderCounter"
 	else
-		return "objects/KoseiHelper/Controllers/TranslatorFlagCounterSlider"
+		texturePath = "objects/KoseiHelper/Controllers/TranslatorFlagCounterSlider"
 	end
-end
+	local sprite = drawableSprite.fromTexture(texturePath, entity)
+	local sprites = {sprite}
+	local flagText = tostring(entity.flagName)
+	local counterText = tostring(entity.counterName)
+	local sliderText = tostring(entity.sliderName)
+	if mode == "FlagToCounter" or mode == "FlagToSlider" then
+		local text1 = drawableText.fromText(flagText, entity.x - 8, entity.y-28, entity.width, entity.height, nil, 1, {0.92549, 0.12941, 0.32157})
+		table.insert(sprites, text1)
+	end
+	if mode == "CounterToFlag" or mode == "CounterToSlider" then
+		local text1 = drawableText.fromText(counterText, entity.x - 8, entity.y-28, entity.width, entity.height, nil, 1, {0.2902, 0.0902, 0.9492})
+		table.insert(sprites, text1)
+	end
+	if mode == "SliderToFlag" or mode == "SliderToCounter" then
+		local text1 = drawableText.fromText(sliderText, entity.x - 8, entity.y-28, entity.width, entity.height, nil, 1, {0.19608, 0.80392, 0.19608})
+		table.insert(sprites, text1)
+	end
+	if mode == "CounterToFlag" or mode == "SliderToFlag" then
+		local text2 = drawableText.fromText(flagText, entity.x - 8, entity.y-20, entity.width, entity.height, nil, 1, {0.92549, 0.12941, 0.32157})
+		table.insert(sprites, text2)
+	end
+	if mode == "FlagToCounter" or mode == "SliderToCounter" then
+		local text2 = drawableText.fromText(counterText, entity.x - 8, entity.y-20, entity.width, entity.height, nil, 1, {0.2902, 0.0902, 0.9492})
+		table.insert(sprites, text2)
+	end
+	if mode == "FlagToSlider" or mode == "CounterToSlider" then
+		local text2 = drawableText.fromText(sliderText, entity.x - 8, entity.y-20, entity.width, entity.height, nil, 1, {0.19608, 0.80392, 0.19608})
+		table.insert(sprites, text2)
+	end
+	return sprites
+end	
 
 return FlagCounterSliderTranslator
