@@ -8,8 +8,15 @@ KillIfNotGroundedTrigger.placements = {
 		name = "KillIfNotGroundedTrigger",
 		data = {
 			spareIfClimbing = false,
-			killIfGrounded = false
+			killIfGrounded = false,
+			delay = 0.01
 		}
+	}
+}
+
+KillIfNotGroundedTrigger.fieldInformation = {
+	delay = {
+		minimumValue = 0
 	}
 }
 

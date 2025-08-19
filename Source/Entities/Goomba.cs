@@ -103,7 +103,7 @@ public class Goomba : Actor
         }
         if (isWinged)
             Add(new DashListener { OnDash = OnDashFlyAway });
-        Add(new PlayerCollider(OnPlayer));
+        Add(new PlayerCollider(OnPlayer, Collider));
         Add(new PlayerCollider(OnPlayerBounce, bounceCollider));
         spriteID = data.Attr("spriteID", "koseiHelper_goomba");
         Add(sprite = GFX.SpriteBank.Create(spriteID));
@@ -387,8 +387,8 @@ public class Goomba : Actor
 
     private void OnPlayer(Player player)
     {
-        if (player.Scene != null)
-            player.Die(player.Center);
+        if (player.Scene != null && this != null)
+            player.Die(Vector2.Normalize(player.Center - Center));
     }
 
     private void OnPlayerBounce(Player player)

@@ -125,7 +125,7 @@ public class Plant : Actor
             sprite.FlipX = true;
         }
 
-        Add(new PlayerCollider(OnPlayer));
+        Add(new PlayerCollider(OnPlayer, Collider));
     }
 
     public override void Update()
@@ -715,11 +715,8 @@ public class Plant : Actor
 
     private void OnPlayer(Player player)
     {
-        Level level = SceneAs<Level>();
-        if (player.Scene != null)
-        {
-            player.Die(Center);
-        }
+        if (player.Scene != null && this != null)
+            player.Die(Vector2.Normalize(player.Center - Center));
     }
 
     public Vector2 ShotOrigin
