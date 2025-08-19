@@ -9,7 +9,8 @@ KillIfNotGroundedTrigger.placements = {
 		data = {
 			spareIfClimbing = false,
 			killIfGrounded = false,
-			delay = 0.01
+			delay = 0.01,
+			group = 0
 		}
 	}
 }
@@ -17,6 +18,9 @@ KillIfNotGroundedTrigger.placements = {
 KillIfNotGroundedTrigger.fieldInformation = {
 	delay = {
 		minimumValue = 0
+	},
+	group = {
+		fieldType = "integer"
 	}
 }
 

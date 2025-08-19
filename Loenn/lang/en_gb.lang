@@ -808,6 +808,7 @@ triggers.KoseiHelper/KillIfNotGroundedTrigger.placements.description.KillIfNotGr
 triggers.KoseiHelper/KillIfNotGroundedTrigger.attributes.description.spareIfClimbing=Enable this option if you don't want to kill the player while they are climbing inside the trigger.
 triggers.KoseiHelper/KillIfNotGroundedTrigger.attributes.description.killIfGrounded=Whether the player should die if they touch the ground while inside the trigger.
 triggers.KoseiHelper/KillIfNotGroundedTrigger.attributes.description.delay=The time that needs to pass until the player is killed while the conditions apply.\nIf the conditions do not apply, the cooldown will be reset.
+triggers.KoseiHelper/KillIfNotGroundedTrigger.attributes.description.group=Multiple triggers with the same group will share the same cooldown reduction,\nallowing arbitrary-shaped zones where you can be killed.\nLeave as 0 if you don't need to use this functionality.
 
 # Metadata Trigger
 triggers.KoseiHelper/MetadataTrigger.placements.name.MetadataTrigger=Metadata Trigger

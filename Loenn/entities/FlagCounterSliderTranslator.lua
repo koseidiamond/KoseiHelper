@@ -1,8 +1,9 @@
+
+
 local FlagCounterSliderTranslator = {}
 
 FlagCounterSliderTranslator.name = "KoseiHelper/FlagCounterSliderTranslator"
 FlagCounterSliderTranslator.depth = -9500
-FlagCounterSliderTranslator.texture = "objects/KoseiHelper/Controllers/FlagCounterSliderTranslator"
 FlagCounterSliderTranslator.placements = {
 	{
 		name = "FlagCounterSliderTranslator",
@@ -123,6 +124,25 @@ function FlagCounterSliderTranslator.ignoredFields(entity)
 		doNotIgnore("absoluteValue")
 	end
 	return ignored
+end
+
+function FlagCounterSliderTranslator.texture(room, entity)
+	local mode = entity.mode
+	if mode == "FlagToCounter" then
+		return "objects/KoseiHelper/Controllers/TranslatorFlagCounter"
+	elseif mode == "FlagToSlider" then
+		return "objects/KoseiHelper/Controllers/TranslatorFlagSlider"
+	elseif mode == "CounterToFlag" then
+		return "objects/KoseiHelper/Controllers/TranslatorCounterFlag"
+	elseif mode == "CounterToSlider" then
+		return "objects/KoseiHelper/Controllers/TranslatorCounterSlider"
+	elseif mode == "SliderToFlag" then
+		return "objects/KoseiHelper/Controllers/TranslatorSliderFlag"
+	elseif mode == "SliderToCounter" then
+		return "objects/KoseiHelper/Controllers/TranslatorSliderCounter"
+	else
+		return "objects/KoseiHelper/Controllers/TranslatorFlagCounterSlider"
+	end
 end
 
 return FlagCounterSliderTranslator
