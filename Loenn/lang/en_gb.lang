@@ -465,12 +465,14 @@ entities.KoseiHelper/CustomOshiroDoor.attributes.description.singleUse=If the os
 entities.KoseiHelper/CustomOshiroDoor.attributes.description.wiggleDuration=The time it should keep wiggling after being bumped.
 entities.KoseiHelper/CustomOshiroDoor.attributes.description.wiggleFrequency=How much it wiggles when being bumped.
 entities.KoseiHelper/CustomOshiroDoor.attributes.description.wiggleScale=The size of the wiggling/shrinking movement when being bumped.
-entities.KoseiHelper/CustomOshiroDoor.attributes.description.flag=The flag that needs to be enabled to make the door disappear.\nNeeds a room reload (respawn, transition, etc).
+entities.KoseiHelper/CustomOshiroDoor.attributes.description.flag=The flag that needs to be enabled to make the door disappear.\nNeeds a room reload (respawn, transition, etc) unless Dynamic Flag React is set.
 entities.KoseiHelper/CustomOshiroDoor.attributes.description.collisionMode=How will the player bounce after bumping the block.\nVanilla: Small bounce in the opposite direction.\nRebound: Small bounce, can control the direction while bouncing.\nSideBounce: Cancels all horizontal speed if bumped on top/bottom, but bounces towards the other side. Allows "grabless cornerboost-like" tech.\nPointBounce: Like SideBounce, but pushes the player towards the opposite direction it was bumped. Allows redirecting speed.
 entities.KoseiHelper/CustomOshiroDoor.attributes.description.refillDash=If the door should always refill the player dash when bumped.
 entities.KoseiHelper/CustomOshiroDoor.attributes.description.givesCoyote=If bumping (dashing on) the door should give 5 coyote frames.
 entities.KoseiHelper/CustomOshiroDoor.attributes.description.destroyAttached=If entities attached (like spikes) should be destroyed when the door does.\nThe entities will still load if the block doesn't appear due to the enabled flag.
 entities.KoseiHelper/CustomOshiroDoor.attributes.description.depth=The depth at which the Oshiro Door will be rendered.
+entities.KoseiHelper/CustomOshiroDoor.attributes.description.dynamicFlagReact=Whether the oshiro door should open/close each time the flag changes.\nVanilla Oshiro Doors only check for the flag on room load.\nYou will need to define your own "reappear" animation if you use a custom sprite.
+entities.KoseiHelper/CustomOshiroDoor.attributes.description.tintAttached=Whether static movers (such as spikes and springs) should match the Oshiro Door tint.
 
 entities.KoseiHelper/TilesetOshiroDoor.placements.name.CustomOshiroDoorTileset= Custom Oshiro Door (Tileset)
 entities.KoseiHelper/TilesetOshiroDoor.placements.description.CustomOshiroDoorTileset= The bouncy oshiro/ghost block but using a tileset.

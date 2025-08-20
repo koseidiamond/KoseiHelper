@@ -18,4 +18,5 @@
 {20a4b661-d8c4-44a4-98bd-8d842d211b28} event:/KoseiHelper/shatter_dream_block
 {a87b7a52-17b5-4626-90dd-b92c98389273} event:/KoseiHelper/Guns/shotArrow
 {9397a788-fbd7-4b2d-9810-e7e014bbe65e} event:/KoseiHelper/noAmmo
+{eb0747c7-213e-41d6-9d13-df190d2b60ba} event:/KoseiHelper/forcefield_reappear
 {ba8e885e-d7ef-474b-9ea8-20ba14e4943e} bank:/KoseiHelper

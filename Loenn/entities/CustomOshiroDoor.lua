@@ -28,7 +28,9 @@ CustomOshiroDoor.placements = {
 			givesCoyote = false,
 			collisionMode = "Vanilla",
 			destroyAttached = false,
-			depth = -9000
+			depth = -9000,
+			dynamicFlagReact = false,
+			tintAttached = false
 		}
 	}
 }

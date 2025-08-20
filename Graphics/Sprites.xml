@@ -58,6 +58,7 @@
 
     <Loop id="idle" path="ghost_door" delay="0.06" frames="00-19"/>
     <Anim id="open" path="ghost_door" delay="0.06" frames="20-28"/>
+	<Anim id="reappear" path="ghost_door" delay="0.06" frames="28,27,26,25,24,23,22,21,20" goto="idle"/>
   </koseiHelper_CustomOshiroDoor>
   
   <koseiHelper_Plant path="objects/KoseiHelper/Plant/">
