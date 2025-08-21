@@ -76,7 +76,7 @@ public class CustomOshiroDoor : Solid
                 if (staticMover.Entity is Spikes spikes)
                     spikes.SetSpikeColor(tint);
                 if (staticMover.Entity is Spring spring)
-                    spring.DisabledColor = tint;
+                    spring.sprite.SetColor(tint);
             }
         }
     }
@@ -152,7 +152,7 @@ public class CustomOshiroDoor : Solid
                                     if (staticMover.Entity is Spikes spikes)
                                         spikes.SetSpikeColor(tint);
                                     if (staticMover.Entity is Spring spring)
-                                        spring.DisabledColor = tint;
+                                        spring.sprite.SetColor(tint);
                                 }
                             }
                         }
