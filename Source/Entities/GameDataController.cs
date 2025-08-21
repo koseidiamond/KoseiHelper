@@ -87,71 +87,120 @@ public class GameDataController : Entity
         Player player = level.Tracker.GetEntity<Player>();
         if (player?.Dead ?? true)
         {
-            session.SetCounter(timesDashed, 0);
-            session.SetCounter(timesJumped, 0);
-            session.SetCounter(timesJumped + "Wall", 0);
-            session.SetCounter(timesJumped + "Wallbounce", 0);
-            timesJumpedCounter = 0;
-            timesWallbounced = 0;
-            timesWallJumped = 0;
+            if (!string.IsNullOrEmpty(timesDashed))
+                session.SetCounter(timesDashed, 0);
+            if (!string.IsNullOrEmpty(timesJumped))
+            {
+                session.SetCounter(timesJumped, 0);
+                session.SetCounter(timesJumped + "Wall", 0);
+                session.SetCounter(timesJumped + "Wallbounce", 0);
+                timesJumpedCounter = 0;
+                timesWallbounced = 0;
+                timesWallJumped = 0;
+            }
         }
         if (player != null && !player.Dead)
         {
-            session.SetFlag(ducking, player.Ducking);
-            if (player.Facing == Facings.Left)
+            if (!string.IsNullOrEmpty(ducking))
+                session.SetFlag(ducking, player.Ducking);
+            if (!string.IsNullOrEmpty(facing))
             {
-                session.SetFlag(facing + "Left", true);
-                session.SetFlag(facing + "Right", false);
+                if (player.Facing == Facings.Left)
+                {
+                    session.SetFlag(facing + "Left", true);
+                    session.SetFlag(facing + "Right", false);
+                }
+                else
+                {
+                    session.SetFlag(facing + "Left", false);
+                    session.SetFlag(facing + "Right", true);
+                }
             }
-            else
+            if (!string.IsNullOrEmpty(stamina))
+                session.SetSlider(stamina, player.Stamina);
+
+            if (!string.IsNullOrEmpty(justRespawned))
+                session.SetFlag(justRespawned, player.JustRespawned);
+
+            if (!string.IsNullOrEmpty(speedX))
+                session.SetSlider(speedX, player.Speed.X);
+            if (!string.IsNullOrEmpty(speedY))
+                session.SetSlider(speedY, player.Speed.Y);
+
+            if (!string.IsNullOrEmpty(onGround))
             {
-                session.SetFlag(facing + "Left", false);
-                session.SetFlag(facing + "Right", true);
+                session.SetFlag(onGround, player.onGround);
+                session.SetFlag(onGround + "Safe", player.OnSafeGround);
             }
-            session.SetSlider(stamina, player.Stamina);
 
-            session.SetFlag(justRespawned, player.JustRespawned);
+            if (!string.IsNullOrEmpty(playerState))
+                session.SetCounter(playerState, player.StateMachine.state);
+            if (!string.IsNullOrEmpty(dashAttacking))
+                session.SetFlag(dashAttacking, player.DashAttacking);
 
-            session.SetSlider(speedX, player.Speed.X);
-            session.SetSlider(speedY, player.Speed.Y);
+            if (!string.IsNullOrEmpty(startedFromGolden))
+                session.SetFlag(startedFromGolden, session.RestartedFromGolden);
+            if (!string.IsNullOrEmpty(carryingGolden))
+                session.SetFlag(carryingGolden, session.GrabbedGolden);
 
-            session.SetFlag(onGround, player.onGround);
-            session.SetFlag(onGround + "Safe", player.OnSafeGround);
+            if (!string.IsNullOrEmpty(darknessAlpha))
+                session.SetSlider(darknessAlpha, session.LightingAlphaAdd);
+            if (!string.IsNullOrEmpty(bloomAmount))
+                session.SetSlider(bloomAmount, session.BloomBaseAdd);
 
-            session.SetCounter(playerState, player.StateMachine.state);
-            session.SetFlag(dashAttacking, player.DashAttacking);
+            if (!string.IsNullOrEmpty(death))
+                session.SetCounter(death, session.DeathsInCurrentLevel);
 
-            session.SetFlag(startedFromGolden, session.RestartedFromGolden);
-            session.SetFlag(carryingGolden, session.GrabbedGolden);
-
-            session.SetSlider(darknessAlpha, session.LightingAlphaAdd);
-            session.SetSlider(bloomAmount, session.BloomBaseAdd);
-
-            session.SetCounter(death, session.DeathsInCurrentLevel);
-
-            if (player.StartedDashing)
+            if (player.StartedDashing && !string.IsNullOrEmpty(timesDashed))
                 session.IncrementCounter(timesDashed);
-            session.SetCounter(timesJumped, timesJumpedCounter);
-            session.SetCounter(timesJumped + "Wall", timesWallJumped);
-            session.SetCounter(timesJumped + "Wallbounce", timesWallbounced);
+            if (!string.IsNullOrEmpty(timesJumped))
+            {
+                session.SetCounter(timesJumped, timesJumpedCounter);
+                session.SetCounter(timesJumped + "Wall", timesWallJumped);
+                session.SetCounter(timesJumped + "Wallbounce", timesWallbounced);
+            }
 
-            session.SetSlider(worldPositionX, player.Position.X);
-            session.SetSlider(worldPositionY, player.Position.Y);
-            session.SetSlider(featherTime, player.starFlyTimer);
-            session.SetFlag(launched, player.launched);
-            session.SetFlag(transitioning, level.Transitioning);
-            session.SetSlider(WindLevelX, level.VisualWind);
-            session.SetFlag(demoDashing, player.demoDashed);
+            if (!string.IsNullOrEmpty(worldPositionX))
+                session.SetSlider(worldPositionX, player.Position.X);
+            if (!string.IsNullOrEmpty(worldPositionY))
+                session.SetSlider(worldPositionY, player.Position.Y);
+            if (!string.IsNullOrEmpty(featherTime))
+                session.SetSlider(featherTime, player.starFlyTimer);
+            if (!string.IsNullOrEmpty(launched))
+                session.SetFlag(launched, player.launched);
+            if (!string.IsNullOrEmpty(transitioning))
+                session.SetFlag(transitioning, level.Transitioning);
+
+            if (!string.IsNullOrEmpty(WindLevelX))
+                session.SetSlider(WindLevelX, level.VisualWind);
+            if (!string.IsNullOrEmpty(WindLevelY))
+                session.SetSlider(WindLevelY, level.windController.targetSpeed.Y);
+
+            if (!string.IsNullOrEmpty(demoDashing))
+                session.SetFlag(demoDashing, player.demoDashed);
+            if (!string.IsNullOrEmpty(forceMoveX))
             session.SetSlider(forceMoveX, player.forceMoveXTimer);
+            if (!string.IsNullOrEmpty(wallSlide))
             session.SetSlider(wallSlide, player.wallSlideTimer);
+            if (!string.IsNullOrEmpty(gliderBoost))
             session.SetFlag(gliderBoost, player.gliderBoostTimer > 0f ? true : false);
 
+            if (!string.IsNullOrEmpty(chainedBerries))
             session.SetCounter(chainedBerries, player.StrawberryCollectIndex);
+
+            if (!string.IsNullOrEmpty(onTopOfWater))
             session.SetFlag(onTopOfWater, player._IsOverWater() && !player.SwimUnderwaterCheck());
+
+            if (!string.IsNullOrEmpty(totalBerriesCollected))
             session.SetCounter(totalBerriesCollected, level.strawberriesDisplay.strawberries.amount);
-            session.SetSlider(WindLevelY, level.windController.targetSpeed.Y);
+
+            if (!string.IsNullOrEmpty(timeRate))
             session.SetSlider(timeRate, Engine.TimeRate);
+
+            if (!string.IsNullOrEmpty(anxiety))
             session.SetSlider(anxiety, Distort.Anxiety);
+
+            if (!string.IsNullOrEmpty(coyoteFrames))
             session.SetCounter(coyoteFrames, (int)(player.jumpGraceTimer * 60) - 1);
         }
     }

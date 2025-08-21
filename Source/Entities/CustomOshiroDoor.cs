@@ -1,7 +1,6 @@
 using Celeste.Mod.Entities;
 using Microsoft.Xna.Framework;
 using Monocle;
-using static MonoMod.InlineRT.MonoModRule;
 
 namespace Celeste.Mod.KoseiHelper.Entities;
 

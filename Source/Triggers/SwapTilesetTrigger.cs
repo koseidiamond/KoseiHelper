@@ -89,8 +89,8 @@ public class SwapTilesetTrigger : Trigger
 
     private void SwapTilesets(Level level, bool enforceFlagState = false, bool flagValue = false)
     {
-        char targetTileset = enforceFlagState? (flagValue ? toTileset : fromTileset) : toTileset;
-        char sourceTileset = enforceFlagState? (flagValue ? fromTileset : toTileset) : fromTileset;
+        char targetTileset = enforceFlagState ? (flagValue ? toTileset : fromTileset) : toTileset;
+        char sourceTileset = enforceFlagState ? (flagValue ? fromTileset : toTileset) : fromTileset;
 
         if (!bgTiles)
         {
