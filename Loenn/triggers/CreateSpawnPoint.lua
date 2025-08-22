@@ -9,7 +9,8 @@ CreateSpawnPointTrigger.placements = {
 		data = {
 		onlyOnce = false,
 		triggerMode = "OnEnter",
-		flag = ""
+		flag = "",
+		room = ""
 		}
 	}
 }

@@ -8,13 +8,14 @@ public class CreateSpawnPointTrigger : Trigger
 {
     public bool onlyOnce;
     public TriggerMode triggerMode;
-    public string flag;
+    public string flag, room;
     private bool current, previous;
     public CreateSpawnPointTrigger(EntityData data, Vector2 offset) : base(data, offset)
     {
         onlyOnce = data.Bool("onlyOnce", false);
         triggerMode = data.Enum("triggerMode", TriggerMode.OnStay);
         flag = data.Attr("flag", "");
+        room = data.Attr("room", "");
     }
 
     public override void OnEnter(Player player)
@@ -66,7 +67,13 @@ public class CreateSpawnPointTrigger : Trigger
     public void AddSpawn(Session session, Vector2 newSpawn)
     {
         MapData mapData = AreaData.Areas[session.Area.ID].Mode[(int)session.Area.Mode].MapData;
-        mapData.Get(session.Level).Spawns.Add(newSpawn);
+        if (string.IsNullOrEmpty(room))
+            mapData.Get(session.Level).Spawns.Add(newSpawn);
+        else
+        {
+            mapData.Get(room).Spawns.Add(newSpawn);
+            mapData.Get(room).Dummy = false;
+        }
         session.HitCheckpoint = true;
         session.RespawnPoint = newSpawn;
     }

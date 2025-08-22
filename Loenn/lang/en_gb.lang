@@ -925,6 +925,7 @@ triggers.KoseiHelper/CreateSpawnPointTrigger.placements.description.CreateSpawnP
 triggers.KoseiHelper/CreateSpawnPointTrigger.attributes.description.triggerMode=Whether the trigger should activate when the player enters or exits it, or on every frame (for use with flags).
 triggers.KoseiHelper/CreateSpawnPointTrigger.attributes.description.flag=The trigger will only activate once this flag is true.\nLeave empty for no flag required.
 triggers.KoseiHelper/CreateSpawnPointTrigger.attributes.onlyOnce=Whether the trigger should remove itself once used.
+triggers.KoseiHelper/CreateSpawnPointTrigger.attributes.room=The name of the room where the spawn should be created.\nLeave as empty if it should be the same as the one the player is currently in.\nUseful if the player is trying to enter a filler room while out of bounds.
 
 # Styleground Modifier Trigger
 triggers.KoseiHelper/StylegroundModifierTrigger.placements.name.StylegroundModifierTrigger=Styleground Modifier Trigger
