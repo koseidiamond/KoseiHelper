@@ -69,6 +69,10 @@ PregnantFlutterbird.fieldOrder = {
 	"partnerID",
 	"chaseSpeedXMult",
 	"chaseSpeedYMult",
+	"colliderWidth",
+	"colliderHeight",
+	"colliderXOffset",
+	"colliderYOffset",
 	"bouncy",
 	"chaser",
 	"coyote",
@@ -115,6 +119,20 @@ PregnantFlutterbird.fieldInformation = {
 	partnerID = {
 		fieldType = "integer",
 		minimumValue = 0
+	},
+	colliderWidth = {
+		fieldType = "integer",
+		minimumValue = 0
+	},
+	colliderHeight = {
+		fieldType = "integer",
+		minimumValue = 0
+	},
+	colliderXOffset = {
+		fieldType = "integer"
+	},
+	colliderYOffset = {
+		fieldType = "integer"
 	}
 }
 
