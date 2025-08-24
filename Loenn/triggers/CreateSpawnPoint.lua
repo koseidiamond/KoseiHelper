@@ -1,7 +1,7 @@
 local CreateSpawnPointTrigger = {}
 
 CreateSpawnPointTrigger.name = "KoseiHelper/CreateSpawnPointTrigger"
-CreateSpawnPointTrigger.depth = 100
+CreateSpawnPointTrigger.nodeLimits = {0, 1}
 
 CreateSpawnPointTrigger.placements = {
 	{
