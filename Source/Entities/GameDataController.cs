@@ -37,6 +37,7 @@ public class GameDataController : Entity
     public string timeRate;
     public string anxiety;
     public string coyoteFrames;
+    public string usingWatchtower;
 
     private static int timesJumpedCounter, timesWallJumped, timesWallbounced;
 
@@ -75,6 +76,7 @@ public class GameDataController : Entity
         timeRate = data.Attr("timeRate", "KoseiHelper_timeRateSlider");
         anxiety = data.Attr("anxiety", "KoseiHelper_anxietySlider");
         coyoteFrames = data.Attr("coyoteFrames", "KoseiHelper_coyoteFrameCounter");
+        usingWatchtower = data.Attr("usingWatchtower", "KoseiHelper_usingWatchtower");
         base.Tag = Tags.PauseUpdate;
         base.Tag = Tags.TransitionUpdate;
     }
@@ -202,6 +204,12 @@ public class GameDataController : Entity
 
             if (!string.IsNullOrEmpty(coyoteFrames))
             session.SetCounter(coyoteFrames, (int)(player.jumpGraceTimer * 60) - 1);
+
+            if (!string.IsNullOrEmpty(usingWatchtower))
+            {
+                Lookout lookout = level.Tracker.GetNearestEntity<Lookout>(player.Center);
+                session.SetFlag(usingWatchtower, lookout != null && lookout.interacting);
+            }
         }
     }
 

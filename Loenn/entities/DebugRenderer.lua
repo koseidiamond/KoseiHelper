@@ -29,6 +29,7 @@ DebugRenderer.placements = {
         width = 8,
         height = 8,
         color = "000000",
+		alpha = 1,
 		shape = "HollowRectangle",
 		flag = "",
 		message = "text",
@@ -48,6 +49,7 @@ DebugRenderer.fieldOrder = {
 	"width",
 	"height",
 	"color",
+	"alpha",
 	"depth",
 	"shape",
 	"flag",
@@ -64,6 +66,7 @@ DebugRenderer.fieldInformation = {
 	shape = {
 		options = {
 			"HollowRectangle",
+			"DottedRectangle",
 			"FilledRectangle",
 			"Circle",
 			"Ellipse",
@@ -90,6 +93,10 @@ DebugRenderer.fieldInformation = {
 	ellipseSegments = {
 		fieldType = "integer",
 		minimumValue = 3
+	},
+	alpha = {
+		minimumValue = 0,
+		maximumValue = 1
 	}
 }
 
@@ -102,8 +109,7 @@ function DebugRenderer.ignoredFields(entity)
 	"message",
 	"ellipseSegments",
 	"imagePath",
-	"scaled",
-	"color"
+	"scaled"
 	}
     local function doNotIgnore(value)
         for i = #ignored, 1, -1 do
@@ -113,9 +119,6 @@ function DebugRenderer.ignoredFields(entity)
             end
         end
     end
-	if entity.shape ~= "Image" then
-		doNotIgnore("color")
-	end
 	if entity.shape == "Text" then
 		doNotIgnore("font")
 		doNotIgnore("fontSize")
@@ -159,6 +162,12 @@ function DebugRenderer.draw(room, entity)
     -- Draw shape based on entity's shape type
     if entity.shape == "HollowRectangle" then
         love.graphics.rectangle("line", entity.x, entity.y, entity.width, entity.height)
+	elseif entity.shape == "DottedRectangle" then
+		love.graphics.rectangle("line", entity.x, entity.y, entity.width, entity.height)
+		love.graphics.rectangle("fill", entity.x, entity.y, 2, 2)
+		love.graphics.rectangle("fill", entity.x + entity.width -2, entity.y, 2, 2)
+		love.graphics.rectangle("fill", entity.x, entity.y + entity.height - 2, 2, 2)
+		love.graphics.rectangle("fill", entity.x + entity.width - 2, entity.y + entity.height - 2, 2, 2)
     elseif entity.shape == "FilledRectangle" then
         love.graphics.rectangle("fill", entity.x, entity.y, entity.width, entity.height)
     elseif entity.shape == "Circle" then

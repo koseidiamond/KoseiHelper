@@ -39,7 +39,8 @@ GameDataController.placements = {
 			totalBerriesCollected = "KoseiHelper_totalBerriesCollected",
 			timeRate= "KoseiHelper_timeRateSlider",
 			anxiety = "KoseiHelper_anxietySlider",
-			coyoteFrames = "KoseiHelper_coyoteFrameCounter"
+			coyoteFrames = "KoseiHelper_coyoteFrameCounter",
+			usingWatchtower = "KoseiHelper_usingWatchtower"
 		}
 	}
 }

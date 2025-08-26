@@ -19,10 +19,12 @@ public class DebugRenderer : Entity
     public bool nonDebug;
     public int ellipseSegments;
     public float fontSize;
+    public float alpha;
     public enum Shape
     {
         HollowRectangle,
         FilledRectangle,
+        DottedRectangle,
         Circle,
         Ellipse,
         Point,
@@ -41,6 +43,7 @@ public class DebugRenderer : Entity
     public DebugRenderer(EntityData data, Vector2 offset) : base(data.Position + offset)
     {
         color = data.HexColor("color", Calc.HexToColor("ffffff"));
+        alpha = data.Float("alpha", 1f);
         width = data.Width;
         height = data.Height;
         shape = data.Enum("shape", Shape.HollowRectangle);
@@ -83,31 +86,53 @@ public class DebugRenderer : Entity
             switch (shape)
             {
                 case Shape.HollowRectangle:
-                    Draw.HollowRect(X, Y, width, height, color);
+                    Draw.HollowRect(X, Y, width, height, color * alpha);
+                    break;
+                case Shape.DottedRectangle: // Taken from Cherry Helper (Assist Rectangle) and tweaked for alphas so corners don't overlap
+                    int num = (int)Left;
+                    int num2 = (int)(Left + width);
+                    int num3 = (int)Top;
+                    int num4 = (int)(Top + height);
+                    // Corners
+                    Draw.Rect(num, num3, 2f, 2f, color * alpha);
+                    Draw.Rect(num2 - 2, num3, 2f, 2f, color * alpha);
+                    Draw.Rect(num, num4 - 2, 2f, 2f, color * alpha);
+                    Draw.Rect(num2 - 2, num4 - 2, 2f, 2f, color * alpha);
+                    // Dotted lines
+                    for (float num5 = num + 3; num5 < (float)(num2 - 3); num5 += 3f)
+                    {
+                        Draw.Line(num5, num3, num5 + 2f, num3, color * alpha);
+                        Draw.Line(num5, num4 - 1, num5 + 2f, num4 - 1, color * alpha);
+                    }
+                    for (float num6 = num3 + 3; num6 < (float)(num4 - 3); num6 += 3f)
+                    {
+                        Draw.Line(num + 1, num6, num + 1, num6 + 2f, color * alpha);
+                        Draw.Line(num2, num6, num2, num6 + 2f, color * alpha);
+                    }
                     break;
                 case Shape.FilledRectangle:
-                    Draw.Rect(X, Y, width, height, color);
+                    Draw.Rect(X, Y, width, height, color * alpha);
                     break;
                 case Shape.Circle:
-                    Draw.Circle(new Vector2(X + width / 2, Y + height / 2), width / 2, color, 1);
+                    Draw.Circle(new Vector2(X + width / 2, Y + height / 2), width / 2, color * alpha, 1);
                     break;
                 case Shape.Ellipse:
-                    DrawEllipse(X + width / 2, Y + height / 2, width / 2, height / 2, color);
+                    DrawEllipse(X + width / 2, Y + height / 2, width / 2, height / 2, color * alpha);
                     break;
                 case Shape.Point:
-                    Draw.Point(this.Position, color);
+                    Draw.Point(this.Position, color * alpha);
                     break;
                 case Shape.Line:
-                    Draw.Line(new Vector2(X, Y), node, color);
+                    Draw.Line(new Vector2(X, Y), node, color * alpha);
                     break;
                 case Shape.Text:
                     switch (font)
                     {
                         case Font.Consolas12:
-                            Draw.Text(Draw.DefaultFont, message, new Vector2(X, Y), color, Vector2.Zero, Vector2.One * fontSize, 0);
+                            Draw.Text(Draw.DefaultFont, message, new Vector2(X, Y), color * alpha, Vector2.Zero, Vector2.One * fontSize, 0);
                             break;
                         case Font.Renogare:
-                            ActiveFont.Draw(message, new Vector2(X, Y), Vector2.Zero, Vector2.One * fontSize / 2, color);
+                            ActiveFont.Draw(message, new Vector2(X, Y), Vector2.Zero, Vector2.One * fontSize / 2, color * alpha);
                             break;
                     }
                     break;
@@ -118,6 +143,7 @@ public class DebugRenderer : Entity
                         image.Position = Position;
                         if (scaled)
                             image.Scale = new Vector2(width / image.Width, height / image.Height);
+                        image.Color = color * alpha;
                         image.Render();
                     }
                     break;

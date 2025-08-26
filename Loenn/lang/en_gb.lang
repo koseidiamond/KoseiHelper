@@ -34,7 +34,7 @@ entities.KoseiHelper/SpecialFlutterbird.attributes.description.explodes=Whether 
 entities.KoseiHelper/DebugRenderer.placements.name.DebugRenderer=Debug Renderer
 entities.KoseiHelper/DebugRenderer.placements.description.DebugRenderer=Displays colored shapes on debug (when hitboxes are enabled).
 entities.KoseiHelper/DebugRenderer.attributes.description.color=The color of the shape.
-entities.KoseiHelper/DebugRenderer.attributes.description.shape=HollowRectangle: Outline of a rectangle (like normal hitboxes).\nFilledRectangle: Draws a rectangle that is completely filled (useful for hiding things like fake walls).\nCircle: Draws a circle.\nEllipse: Draws an ellipse (or a polygon with certain amount of sides).\nPoint: A single pixel is drawn at the position of the entity.\nLine: A line that goes from the position towards the node (press N).\nText: A message will appear with the chosen font.\nImage: Draws a texture from a custom path.
+entities.KoseiHelper/DebugRenderer.attributes.description.shape=HollowRectangle: Outline of a rectangle (like normal hitboxes).\nDottedRectangle: Draws a hollow dotted rectangle with little squared corners.\nFilledRectangle: Draws a rectangle that is completely filled (useful for hiding things like fake walls).\nCircle: Draws a circle.\nEllipse: Draws an ellipse (or a polygon with certain amount of sides).\nPoint: A single pixel is drawn at the position of the entity.\nLine: A line that goes from the position towards the node (press N).\nText: A message will appear with the chosen font.\nImage: Draws a texture from a custom path.
 entities.KoseiHelper/DebugRenderer.attributes.description.flag=The flag that needs to be set for the debug shape to appear.\nLeave empty for no flag required.
 entities.KoseiHelper/DebugRenderer.attributes.description.message=If the shape is Text, this is the string that will be rendered.
 entities.KoseiHelper/DebugRenderer.attributes.description.font=If the shape is Text, this is the font chosen for the given string.
@@ -44,6 +44,7 @@ entities.KoseiHelper/DebugRenderer.attributes.description.imagePath=The path to 
 entities.KoseiHelper/DebugRenderer.attributes.description.scaled=If the custom image should be scaled to fill the entire rectangle.\nOtherwise, the sprite will be rendered at the topleft corner.
 entities.KoseiHelper/DebugRenderer.attributes.description.nonDebug=If the shape should also be displayed while not using debug.\nWARNING: Circles display as a rhombus in this mode.
 entities.KoseiHelper/DebugRenderer.attributes.description.depth=The depth at which the Renderer appears in Lönn. Debug always appears above everything else in-game.
+entities.KoseiHelper/DebugRenderer.attributes.description.alpha=The transparency of the shape, from 0 (invisible) to 1 (opaque).
 
 # Debug Map Shapes
 entities.KoseiHelper/DebugMapTile.placements.name.DebugMapTile=Debug Map Shape [Obsolete]
@@ -124,7 +125,8 @@ entities.KoseiHelper/GameDataController.attributes.description.onTopOfWater=Whet
 entities.KoseiHelper/GameDataController.attributes.description.totalBerriesCollected=The total amount of berries collected in this map for the current session.
 entities.KoseiHelper/GameDataController.attributes.description.timeRate=Slider depending on the time rate of the game.
 entities.KoseiHelper/GameDataController.attributes.description.anxiety=Slider depending on the current anxiety effects.
-entities.KoseiHelper/GameDataController.attributes.description.coyoteFrames=Indicates the amount of coyote frames left.
+entities.KoseiHelper/GameDataController.attributes.description.coyoteFrames=Indicates the amount of coyote frames left.\nNote that this counter might be delayed one frame!
+entities.KoseiHelper/GameDataController.attributes.description.usingWatchtower=Flag that indicates whether the player is currently using a watchtower/lookout.
 
 # Set Flag On Berry Collection Controller
 entities.KoseiHelper/SetFlagOnBerryCollectionController.placements.name.SetFlagOnBerryCollectionController=Set Flag On Berry Collection Controller
