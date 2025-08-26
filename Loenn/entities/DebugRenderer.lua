@@ -191,9 +191,14 @@ function DebugRenderer.draw(room, entity)
 		debugImage = drawableSprite.fromTexture(entity.imagePath, entity)
 		if debugImage ~= nil then
 			if entity.scaled then
-				debugImage:setScale(1, 1)
+				local scaleX = entity.width / debugImage.meta.width or 1
+				local scaleY = entity.height / debugImage.meta.height or 1
+				debugImage:setScale(scaleX, scaleY)
+				debugImage:setJustification(0, 0)
+				
 			else
 				debugImage:setScale(1, 1)
+				debugImage:setJustification(0.5, 0.5)
 			end
 			debugImage:draw()
 		else

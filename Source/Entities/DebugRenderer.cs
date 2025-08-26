@@ -140,9 +140,15 @@ public class DebugRenderer : Entity
                     if (!string.IsNullOrEmpty(imagePath))
                     {
                         Image image = new Image(GFX.Game[imagePath]);
-                        image.Position = Position;
                         if (scaled)
+                        {
+                            image.Position = Position;
                             image.Scale = new Vector2(width / image.Width, height / image.Height);
+                        }
+                        else
+                        {
+                            image.Position = Position - new Vector2(image.Width / 2f, image.Height / 2f);
+                        }
                         image.Color = color * alpha;
                         image.Render();
                     }
