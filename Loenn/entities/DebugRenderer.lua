@@ -1,5 +1,6 @@
 local utils = require("utils")
 local drawing = require("utils.drawing")
+local drawableSprite = require("structs.drawable_sprite")
 
 local mods = require("mods")
 local depths = mods.requireFromPlugin("libraries.depths")
@@ -157,6 +158,7 @@ function DebugRenderer.draw(room, entity)
     local colorHex = entity.color or DebugRenderer.color
     local r, g, b = hexToRGB(colorHex)
 	local nodes = entity.nodes or {{x = 0, y = 0}}
+	local debugImage
 	
 	love.graphics.setColor(r, g, b)
     -- Draw shape based on entity's shape type
@@ -186,7 +188,17 @@ function DebugRenderer.draw(room, entity)
         love.graphics.print(entity.message or "Text", entity.x, entity.y)
     elseif entity.shape == "Image" then
 		--love.graphics.setColor(1, 1, 1)
-		love.graphics.print("?", entity.x , entity.y, 0, 4, 4)
+		debugImage = drawableSprite.fromTexture(entity.imagePath, entity)
+		if debugImage ~= nil then
+			if entity.scaled then
+				debugImage:setScale(1, 1)
+			else
+				debugImage:setScale(1, 1)
+			end
+			debugImage:draw()
+		else
+			love.graphics.print("?", entity.x , entity.y, 0, 4, 4)
+		end
 	end
 	 love.graphics.setColor(1, 1, 1)
 end
