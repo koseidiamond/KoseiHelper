@@ -160,7 +160,8 @@ function DebugRenderer.draw(room, entity)
 	local nodes = entity.nodes or {{x = 0, y = 0}}
 	local debugImage
 	
-	love.graphics.setColor(r, g, b)
+	local a = entity.alpha
+	love.graphics.setColor(r, g, b, a)
     -- Draw shape based on entity's shape type
     if entity.shape == "HollowRectangle" then
         love.graphics.rectangle("line", entity.x, entity.y, entity.width, entity.height)
@@ -187,7 +188,6 @@ function DebugRenderer.draw(room, entity)
     elseif entity.shape == "Text" then
         love.graphics.print(entity.message or "Text", entity.x, entity.y)
     elseif entity.shape == "Image" then
-		--love.graphics.setColor(1, 1, 1)
 		debugImage = drawableSprite.fromTexture(entity.imagePath, entity)
 		if debugImage ~= nil then
 			if entity.scaled then
@@ -200,24 +200,15 @@ function DebugRenderer.draw(room, entity)
 				debugImage:setScale(1, 1)
 				debugImage:setJustification(0.5, 0.5)
 			end
-			debugImage:draw()
+			debugImage:draw(a)
 		else
 			love.graphics.print("?", entity.x , entity.y, 0, 4, 4)
 		end
 	end
-	 love.graphics.setColor(1, 1, 1)
+	 love.graphics.setColor(1, 1, 1, 1)
 end
 
--- this would render incorrectly non-images so we're removing it for now
-
---function DebugRenderer.texture(room, entity)
---	if entity.shape == "Image" then
---		return entity.imagePath
---	end
---end
-
 function DebugRenderer.nodeSprite() end
-
 
 function DebugRenderer.nodeRectangle(room, entity, node, nodeIndex, viewport)
     return utils.rectangle(node.x, node.y, entity.width, entity.height)
