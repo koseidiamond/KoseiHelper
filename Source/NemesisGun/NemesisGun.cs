@@ -265,25 +265,33 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
 
                 if (self.Scene?.TimeActive > 0 && GunWasShot && (TalkComponent.PlayerOver == null || !Input.Talk.Pressed))
                 {
-                    if (shotCooldown <= 0 && (self.Dashes > 0 || KoseiHelperModule.Settings.GunSettings.dashBehavior != KoseiHelperModuleSettings.NemesisSettings.DashBehavior.ConsumesDash))
+                    if (shotCooldown <= 0 &&
+                        (self.Dashes > 0 || KoseiHelperModule.Settings.GunSettings.dashBehavior != KoseiHelperModuleSettings.NemesisSettings.DashBehavior.ConsumesDash))
                     {
-                        if (self.StateMachine.state != 11 && self.StateMachine.state != 17 && (self.StateMachine.state != 19 || KoseiHelperModule.Settings.GunSettings.CanShootInFeather))
+                        if (self.StateMachine.state != 11 && self.StateMachine.state != 17 &&
+                            (self.StateMachine.state != 19 || KoseiHelperModule.Settings.GunSettings.CanShootInFeather))
                             Gunshot(self, CursorPos);
                         if (recoilCooldown <= 0 || Extensions.recoilingOnInteraction)
                         {
                             if (GetEightDirectionalAim(KoseiHelperModule.Settings.GunSettings.gunDirections).Y < Math.Sqrt(2) / 2 &&
-                            GetEightDirectionalAim(KoseiHelperModule.Settings.GunSettings.gunDirections).Y > -Math.Sqrt(2) / 2 && !KoseiHelperModule.Settings.GunSettings.RecoilUpwards)
+                            GetEightDirectionalAim(KoseiHelperModule.Settings.GunSettings.gunDirections).Y > -Math.Sqrt(2) / 2 &&
+                            !KoseiHelperModule.Settings.GunSettings.RecoilUpwards)
+                            {
+                                // Climb recoil fix todo
+                                if (self.StateMachine != 1 || (self.StateMachine == 1 && KoseiHelperModule.Settings.GunSettings.recoilWhileClimbing))
                                 self.Speed.X += KoseiHelperModule.Settings.GunSettings.Recoil * (float)(0 - self.Facing); // Horizontal recoil, by default 80f, same as vanilla backboosts
+                            }
                             else if (KoseiHelperModule.Settings.GunSettings.RecoilUpwards)
                                 self.Speed.Y -= KoseiHelperModule.Settings.GunSettings.Recoil;
                             // Recoil for all player clones and such
-                            foreach (Entity entity in self.SceneAs<Level>().Entities)
+                            foreach (Entity entity in self.level.Entities)
                             {
                                 if (entity is Player extraPlayer && extraPlayer != self)
                                 {
                                     if (GetEightDirectionalAim(KoseiHelperModule.Settings.GunSettings.gunDirections).Y < Math.Sqrt(2) / 2 &&
                             GetEightDirectionalAim(KoseiHelperModule.Settings.GunSettings.gunDirections).Y > -Math.Sqrt(2) / 2 && !KoseiHelperModule.Settings.GunSettings.RecoilUpwards)
-                                        extraPlayer.Speed.X += KoseiHelperModule.Settings.GunSettings.Recoil * (float)(0 - extraPlayer.Facing); // Horizontal recoil, by default 80f, same as vanilla backboosts
+                                        // Horizontal recoil, by default 80f, same as vanilla backboosts
+                                        extraPlayer.Speed.X += KoseiHelperModule.Settings.GunSettings.Recoil * (float)(0 - extraPlayer.Facing);
                                     else if (KoseiHelperModule.Settings.GunSettings.RecoilUpwards)
                                         extraPlayer.Speed.Y -= KoseiHelperModule.Settings.GunSettings.Recoil;
                                 }
@@ -292,7 +300,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                             Extensions.recoilingOnInteraction = false;
                         }
                         Celeste.Freeze(Engine.DeltaTime * KoseiHelperModule.Settings.GunSettings.FreezeFrames);
-                        (self.Scene as Level).DirectionalShake(GetGunVector(self, CursorPos, self.Facing) / 5);
+                        (self.level).DirectionalShake(GetGunVector(self, CursorPos, self.Facing) / 5);
                         shotCooldown = KoseiHelperModule.Settings.GunSettings.Cooldown;
                         switch (KoseiHelperModule.Settings.GunSettings.dashBehavior)
                         {

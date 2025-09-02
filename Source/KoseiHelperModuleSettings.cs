@@ -53,6 +53,8 @@ public class KoseiHelperModuleSettings : EverestModuleSettings
 
         [SettingSubText("Whether the recoil should happen only when a bullet interacts with an entity.")]
         public bool RecoilOnlyOnInteraction { get; set; } = false;
+        [SettingSubText("Whether the recoil can happen while the player is grabbing a wall, forcing them to ungrab.")]
+        public bool recoilWhileClimbing { get; set; } = true;
 
         [SettingSubText("How many freeze frames occur each time you shoot. Default 0.")]
         [SettingRange(min: 0, max: 60)]

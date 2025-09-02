@@ -27,6 +27,7 @@ NemesisGunSettings.placements = {
 		recoilCooldown = 16,
 		recoilUpwards = false,
 		recoilOnInteraction = false,
+		recoilWhileClimbing = true,
 		canShootInFeather = true,
 		freezeFrames = 0,
 		horizontalAcceleration = 0,
@@ -43,7 +44,11 @@ function NemesisGunSettings.ignoredFields(entity)
 	local ignored = {
 	"_name",
 	"_id",
-	"customParticleTexture"
+	"customParticleTexture",
+	"recoilCooldown",
+	"recoilUpwards",
+	"recoilOnInteraction",
+	"recoilWhileClimbing",
 	}
     local function doNotIgnore(value)
         for i = #ignored, 1, -1 do
@@ -56,6 +61,12 @@ function NemesisGunSettings.ignoredFields(entity)
 
 	if entity.particleType == "Custom" then
 		doNotIgnore("customParticleTexture")
+	end
+	if entity.recoilStrength > 0 then
+		doNotIgnore("recoilCooldown")
+		doNotIgnore("recoilUpwards")
+		doNotIgnore("recoilOnInteraction")
+		doNotIgnore("recoilWhileClimbing")
 	end
 	return ignored
 end
@@ -184,6 +195,7 @@ NemesisGunSettings.fieldOrder =
 	"loseGunOnRespawn",
 	"recoilUpwards",
 	"recoilOnInteraction",
+	"recoilWhileClimbing",
 	"canShootInFeather",
 	"bulletExplosion"
 	
