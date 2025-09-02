@@ -544,14 +544,15 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
             {
                 CollisionCheck_FrostHelper();
             }
-            if (owner.Scene.CollideFirst<BadelineBoost>(Hitbox) is BadelineBoost badelineBoost && !dead && owner is Player playerBadelineBoost)
+            if (owner.Scene.CollideFirst<BadelineBoost>(Hitbox) is BadelineBoost badelineBoost && !dead && owner is Player playerBadelineBoost &&
+                KoseiHelperModule.Settings.GunInteractions.CollectBadelineOrbs)
             {
                 badelineBoost.OnPlayer(playerBadelineBoost);
                 DestroyBullet();
                 return;
             }
 
-            if (owner.Scene.CollideFirst<HeartGem>(Hitbox) is HeartGem heartGem && KoseiHelperModule.Settings.GunInteractions.CollectBadelineOrbs && !dead)
+            if (owner.Scene.CollideFirst<HeartGem>(Hitbox) is HeartGem heartGem && KoseiHelperModule.Settings.GunInteractions.Collectables && !dead)
             {
                 if (owner is Player p && !heartGem.collected)
                 {

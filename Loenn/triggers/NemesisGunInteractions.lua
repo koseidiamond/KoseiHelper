@@ -38,6 +38,16 @@ NemesisGunInteractions.placements = {
 	}
 }
 
+NemesisGunInteractions.fieldOrder =
+{
+	"x",
+	"y",
+	"width",
+	"height",
+	"triggerMode"
+	-- the other fields
+}
+
 NemesisGunInteractions.fieldInformation = 
 {
 	triggerMode =

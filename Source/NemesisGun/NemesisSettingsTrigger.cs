@@ -94,7 +94,7 @@ public class NemesisGunSettingsTrigger : Trigger
         KoseiHelperModule.Settings.GunSettings.Recoil = recoil;
         KoseiHelperModule.Settings.GunSettings.RecoilUpwards = recoilUpwards;
         KoseiHelperModule.Settings.GunSettings.RecoilOnlyOnInteraction = recoilOnInteraction;
-        KoseiHelperModule.Settings.GunSettings.recoilWhileClimbing = recoilWhileClimbing;
+        KoseiHelperModule.Settings.GunSettings.RecoilWhileClimbing = recoilWhileClimbing;
         KoseiHelperModule.Settings.GunSettings.RecoilCooldown = recoilCooldown;
         KoseiHelperModule.Settings.GunSettings.CanShootInFeather = canShootInFeather;
         KoseiHelperModule.Settings.GunSettings.FreezeFrames = freezeFrames;
