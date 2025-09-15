@@ -19,7 +19,7 @@ internal class TrailDecalRegistryHandler : DecalRegistryHandler
     {
         trailDuration = Get(xml, "trailDuration", 0.5f);
         trailSpawnInterval = Get(xml, "trailSpawnInterval", 0.1f);
-        //trailColor = Get(xml, "trailColor", null) ?? trailColor; // todo
+        trailColor = GetHexColor(xml, "trailColor", Color.White * 0.5f);
     }
 
     public override void ApplyTo(Decal decal)
