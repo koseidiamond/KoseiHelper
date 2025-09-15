@@ -26,37 +26,28 @@ internal class KillDecalRegistryHandler : DecalRegistryHandler
         decal.Add(new KillComponent(offsetX, offsetY, width, height, flag));
     }
 
-    internal class KillComponent(float offsetX, float offsetY, float width, float height, string flag) : Component(active: true, visible: false)
+    internal class KillComponent(float offsetX, float offsetY, float width, float height, string flag)
+    : Component(active: true, visible: false)
     {
-        public override void EntityAwake()
-        {
-            base.EntityAwake();
-            Decal decal = (Decal)Entity;
-            float x = offsetX, y = offsetY, w = width, h = height;
-            decal.ScaleRectangle(ref x, ref y, ref w, ref h);
-            Vector2 position = decal.Position + new Vector2(x, y);
-            decal.Scene.Add(new KillDecal(position, w, h, flag));
-        }
+        private readonly Hitbox hitbox = new(width, height, offsetX, offsetY);
+        private readonly string flag;
 
-        private class KillDecal : Entity
+        public override void Update()
         {
-            private readonly string flag;
-            public KillDecal(Vector2 position, float width, float height, string flag)
-            {
-                Position = position;
-                Collider = new Hitbox(width, height);
-                this.flag = flag;
-                Add(new PlayerCollider(OnPlayer));
-            }
+            base.Update();
 
-            private void OnPlayer(Player player)
-            {
-                if (!player.Dead && (string.IsNullOrEmpty(flag) || player.SceneAs<Level>().Session.GetFlag(flag)))
-                {
-                    player.Die((player.Center - Center).SafeNormalize());
-                    RemoveSelf();
-                }
-            }
+            if (Entity is not Decal decal || decal.Scene is not Level level)
+                return;
+
+            if (!string.IsNullOrEmpty(flag) && !level.Session.GetFlag(flag))
+                return;
+
+            Player player = level.Tracker.GetEntity<Player>();
+            if (player == null || player.Dead)
+                return;
+            Rectangle killRect = new((int)(decal.X + hitbox.Left), (int)(decal.Y + hitbox.Top), (int)hitbox.Width, (int)hitbox.Height);
+            if (player.CollideRect(killRect))
+                player.Die((player.Center - decal.Center).SafeNormalize());
         }
     }
 }

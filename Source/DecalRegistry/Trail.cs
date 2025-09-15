@@ -8,6 +8,7 @@ namespace Celeste.Mod.KoseiHelper.DecalRegistry;
 
 internal class TrailDecalRegistryHandler : DecalRegistryHandler
 {
+    private float offsetX, offsetY;
     private float trailDuration;
     private float trailSpawnInterval;
     private Color trailColor;
@@ -17,6 +18,8 @@ internal class TrailDecalRegistryHandler : DecalRegistryHandler
 
     public override void Parse(XmlAttributeCollection xml)
     {
+        offsetX = Get(xml, "offsetX", 0f);
+        offsetY = Get(xml, "offsetY", 0f);
         trailDuration = Get(xml, "duration", 0.5f);
         trailSpawnInterval = Get(xml, "spawnInterval", 0.1f);
         trailColor = KoseiHelperUtils.ParseHexColorWithAlpha(xml, "color", Color.White * 0.4f);
@@ -25,10 +28,10 @@ internal class TrailDecalRegistryHandler : DecalRegistryHandler
 
     public override void ApplyTo(Decal decal)
     {
-        decal.Add(new TrailDecalComponent(trailDuration, trailSpawnInterval, trailColor, flag));
+        decal.Add(new TrailDecalComponent(offsetX, offsetY, trailDuration, trailSpawnInterval, trailColor, flag));
     }
 
-    private class TrailDecalComponent(float trailDuration, float trailSpawnInterval, Color trailColor, string flag)
+    private class TrailDecalComponent(float offsetX, float offsetY, float trailDuration, float trailSpawnInterval, Color trailColor, string flag)
     : Component(active: true, visible: true)
     {
         private readonly float trailDuration = trailDuration;
@@ -62,7 +65,7 @@ internal class TrailDecalRegistryHandler : DecalRegistryHandler
                 {
                     trailTimer -= trailSpawnInterval;
                     MTexture currentTexture = decal.textures[(int)decal.frame];
-                    decalTrails.Add(new DecalTrail(decal.Position - new Vector2(decal.Width, decal.Height), currentTexture, trailColor, trailDuration));
+                    decalTrails.Add(new DecalTrail(decal.Position - new Vector2(decal.Width + offsetX, decal.Height - offsetY), currentTexture, trailColor, trailDuration));
                 }
                 previousPosition = decal.Position;
             }
