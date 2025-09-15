@@ -34,7 +34,8 @@ public class DashLimiterController : Entity
         demoDashOnly = data.Bool("demoDashOnly", false);
         indicatorsPerRow = data.Int("indicatorsPerRow", 5);
         sound = data.Attr("sound", "event:/none");
-        indicatorColor = data.HexColor("indicatorColor", Color.LightSlateGray);
+        //indicatorColor = data.HexColor("indicatorColor", Color.LightSlateGray);
+        indicatorColor = KoseiHelperUtils.ParseHexColor(data.Values.TryGetValue("indicatorColor", out object c1) ? c1.ToString() : null, Color.LightSlateGray);
         indicatorShape = data.Enum("indicatorShape", IndicatorShape.FilledCircle);
         Depth = -9999999;
     }

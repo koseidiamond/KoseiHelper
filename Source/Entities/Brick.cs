@@ -20,6 +20,7 @@ public class Brick : Solid
     private string spriteID;
     private bool tryingToBreak, breaking;
     private bool fireMode;
+    public string bumpSound, breakSound;
     public Brick(EntityData data, Vector2 offset) : base(data.Position + offset, 16, 16, true)
     {
         Depth = data.Int("depth", -1000);
@@ -32,6 +33,8 @@ public class Brick : Solid
             sprite.Play("Ice", false, true);
         else
             sprite.Play("Fortress", false, true);
+        bumpSound = data.Attr("bumpSound", "event:/KoseiHelper/brickBump");
+        breakSound = data.Attr("breakSound", "event:/KoseiHelper/brickBreak");
         Collider = new Hitbox(16, 16, -8, -8);
         Add(new CoreModeListener(OnChangeMode));
     }
@@ -102,7 +105,7 @@ public class Brick : Solid
     private IEnumerator TryBreak()
     {
         tryingToBreak = true;
-        Audio.Play("event:/KoseiHelper/brickBump", Center);
+        Audio.Play(bumpSound, Center);
         sprite.Position.Y = Vector2.One.Y - 3f;
         BumpActor();
         yield return 0.1f;
@@ -115,7 +118,7 @@ public class Brick : Solid
     private IEnumerator Break()
     {
         breaking = true;
-        Audio.Play("event:/KoseiHelper/brickBreak", Center);
+        Audio.Play(breakSound, Center);
         BumpActor();
         if (brickType == BrickType.Ice)
         {

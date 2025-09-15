@@ -29,6 +29,7 @@ public class CustomCobweb : Entity
     {
         Depth = data.Int("depth", -1);
         color = data.HexColor("color", Calc.HexToColor("696a6a"));
+
         edgeColor = data.HexColor("edgeColor", Calc.HexToColor("0f0e17"));
         edgeColorAlpha = data.Float("edgeColorAlpha", 0.2f);
         waveMultiplier = data.Float("waveMultiplier", 1f);

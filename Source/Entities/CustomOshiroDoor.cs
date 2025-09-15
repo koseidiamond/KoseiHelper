@@ -35,7 +35,8 @@ public class CustomOshiroDoor : Solid
         base.Depth = data.Int("depth", -9000);
         Add(sprite = GFX.SpriteBank.Create(data.Attr("sprite", "koseiHelper_CustomOshiroDoor")));
         bumpSound = data.Attr("bumpSound", "event:/game/03_resort/forcefield_bump");
-        tint = data.HexColor("color", Color.DarkSlateBlue);
+        //tint = data.HexColor("color", Color.DarkSlateBlue);
+        tint = KoseiHelperUtils.ParseHexColor(data.Values.TryGetValue("color", out object c1) ? c1.ToString() : null, Color.DarkSlateBlue);
         singleUse = data.Bool("singleUse", false);
         collisionMode = data.Enum("collisionMode", OshiroCollisionMode.Vanilla);
         wiggleDuration = data.Float("wiggleDuration", 1f) / (5 / 3);

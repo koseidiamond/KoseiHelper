@@ -28,7 +28,8 @@ namespace Celeste.Mod.KoseiHelper.Entities
             if (persistent)
                 Tag = Tags.Persistent;
             flag = data.Attr("flag", "");
-            color = data.HexColor("color", Color.LimeGreen);
+            //color = data.HexColor("color", Color.LimeGreen);
+            color = KoseiHelperUtils.ParseHexColor(data.Values.TryGetValue("color", out object c1) ? c1.ToString() : null, Color.LimeGreen);
             xPosition = data.Int("xPosition", 80);
             yPosition = data.Int("yPosition", 1000);
             width = data.Int("barWidth", 1760);

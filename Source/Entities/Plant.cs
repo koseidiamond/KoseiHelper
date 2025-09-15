@@ -40,6 +40,7 @@ public class Plant : Actor
     private bool isWaitingAtTop = false;
     public int distance = 64;
     public bool cycleOffset = false;
+    public string sound;
 
     public Plant(EntityData data, Vector2 offset) : base(data.Position + offset)
     {
@@ -50,6 +51,7 @@ public class Plant : Actor
         shootSpeed = data.Float("shootSpeed", 1f);
         distance = data.Int("distance", 64);
         cycleOffset = data.Bool("cycleOffset", false);
+        sound = data.Attr("deathSound", "event:/KoseiHelper/goomba");
         Depth = -100;
         Add(sprite = GFX.SpriteBank.Create("koseiHelper_Plant"));
 

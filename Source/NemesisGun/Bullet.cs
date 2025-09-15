@@ -955,7 +955,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 {
                     plant.RemoveSelf();
                     SceneAs<Level>().ParticlesFG.Emit(Player.P_Split, 5, Position, Vector2.One * 4f, velocity.Angle() - (float)Math.PI / 2f);
-                    Audio.Play("event:/KoseiHelper/goomba", plant.Center);
+                    Audio.Play(plant.sound, plant.Center);
                     if (KoseiHelperModule.Settings.GunSettings.RecoilOnlyOnInteraction && SceneAs<Level>().Session.GetFlag("KoseiHelper_playerIsShooting") && owner is Player pRecoil)
                         RecoilOnInteraction(pRecoil, plant);
                     DestroyBullet();

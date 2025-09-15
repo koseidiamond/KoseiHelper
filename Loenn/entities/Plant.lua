@@ -15,7 +15,8 @@ Plant.placements = {
 			shootSpeed = 1,
 			distance = 64,
 			direction = "Up",
-			cycleOffset = false
+			cycleOffset = false,
+			deathSound = "event:/KoseiHelper/goomba"
 		}
 	}
 }
@@ -92,7 +93,8 @@ Plant.fieldOrder = {
 	"shootSpeed",
 	"distance",
 	"canShoot",
-	"cycleOffset"
+	"cycleOffset",
+	"deathSound"
 	}
 
 function Plant.ignoredFields(entity)

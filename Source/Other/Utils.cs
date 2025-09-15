@@ -6,7 +6,7 @@ namespace Celeste.Mod.KoseiHelper;
 
 public class KoseiHelperUtils
 {
-    public static Color ParseHexColor(string hex, Color defaultColor)
+    public static Color ParseHexColor(string hex, Color defaultColor) // For entities
     {
         if (string.IsNullOrEmpty(hex))
             return defaultColor;
@@ -35,7 +35,7 @@ public class KoseiHelperUtils
         }
         return defaultColor;
     }
-    public static Color ParseHexColorWithAlpha(XmlAttributeCollection xml, string attrName, Color defaultColor)
+    public static Color ParseHexColorWithAlpha(XmlAttributeCollection xml, string attrName, Color defaultColor) // For xmls
     {
         string hex = xml[attrName]?.Value;
         return ParseHexColor(hex, defaultColor);

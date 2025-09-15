@@ -169,7 +169,7 @@ entities.KoseiHelper/CustomCobweb.placements.name.CustomCobweb=Custom Cobweb
 entities.KoseiHelper/CustomCobweb.placements.description.CustomCobweb=Decorative entity composed of two or more curved lines.\nPress N to add more nodes.
 entities.KoseiHelper/CustomCobweb.attributes.description.depth=The depth at which the cobwebs will be rendered.
 entities.KoseiHelper/CustomCobweb.attributes.description.color=The main color of the cobwebs.
-entities.KoseiHelper/CustomCobweb.attributes.description.edgeColor=The color of the offshoots (this is multiplied by the main color).
+entities.KoseiHelper/CustomCobweb.attributes.description.edgeColor=The color of the offshoots (this is multiplied by the main color). Supports alpha values.
 entities.KoseiHelper/CustomCobweb.attributes.description.edgeColorAlpha=How much the color of the offshoots will be applied on top of the main color, from 0 to 1.
 entities.KoseiHelper/CustomCobweb.attributes.description.waveMultiplier=How much the cobwebs should wobble (0 is static, and high values look bouncy).
 entities.KoseiHelper/CustomCobweb.attributes.description.offshoots=The offshoots (extra nodes) can have a slight variation in their position. Lower this value if they look too displaced.
@@ -194,7 +194,7 @@ entities.KoseiHelper/DashLimiterController.attributes.description.count=How many
 entities.KoseiHelper/DashLimiterController.attributes.description.demoDashOnly=Whether the controller should only check for dashes performed with the demo button.
 entities.KoseiHelper/DashLimiterController.attributes.description.sound=The audio that should play each time the player spends a dash.
 entities.KoseiHelper/DashLimiterController.attributes.description.indicatorsPerRow=If indicators are used, how many should appear on each row above the player.\nMods like Extended Variants generally use 5 for things like extra jumps.
-entities.KoseiHelper/DashLimiterController.attributes.description.indicatorColor=The color of the indicator that displays how many dashes are left.
+entities.KoseiHelper/DashLimiterController.attributes.description.indicatorColor=The color of the indicator that displays how many dashes are left. Supports alpha values.
 entities.KoseiHelper/DashLimiterController.attributes.description.indicatorShape=The shape of the indicators.\nIf Number is selected, it will appear in the topleft corner instead.
 entities.KoseiHelper/DashLimiterController.attributes.description.persistent=If the controller is persistent, it will keep track of the dashes even after the player transitions to a different screen.\nThe dashes left will be saved upon transition.\nThe controller won't load in rooms where it was not placed.\nIf you want to keep track of dashes in the entire map, you will want to make it global.
 
@@ -215,7 +215,7 @@ entities.KoseiHelper/ClimbJumpController.attributes.description.speedMultiplierC
 # Counter Bar Controller
 entities.KoseiHelper/CounterBarController.placements.name.CounterBarController=Counter/Slider Bar Display
 entities.KoseiHelper/CounterBarController.placements.description.CounterBarController=Displays a custom HD bar that fills/empties according to the values specified.
-entities.KoseiHelper/CounterBarController.attributes.description.color=The filler color inside the bar.
+entities.KoseiHelper/CounterBarController.attributes.description.color=The filler color inside the bar. Supports alpha values.
 entities.KoseiHelper/CounterBarController.attributes.description.xPosition=Where on the screen (from 0 to 1920) the left side of the bar should be.
 entities.KoseiHelper/CounterBarController.attributes.description.yPosition=Where on the screen (from 0 to 1080) the top side of the bar should be.
 entities.KoseiHelper/CounterBarController.attributes.description.width=How long in pixels the bar should be.\nThis is HD so you might want to multiply it by 6.
@@ -419,6 +419,7 @@ entities.KoseiHelper/Plant.attributes.description.distance=How close in pixels t
 entities.KoseiHelper/Plant.attributes.description.direction=If the plant should be affected by a different type of gravity or coming from a different direction.
 entities.KoseiHelper/Plant.attributes.description.movingSpeed=A multiplier for the speed at which the plant will move.
 entities.KoseiHelper/Plant.attributes.description.cycleOffset=If the plant is green or red, this determines whether the plant should wait 2 seconds before moving for the first time.
+entities.KoseiHelper/Plant.attributes.description.deathSound=The sound the plant produces if it is, somehow, killed (e.g. gun).
 
 #Defrostable Block
 entities.KoseiHelper/DefrostableBlock.placements.name.Defrostable Block=Defrostable Block
@@ -463,7 +464,7 @@ entities.KoseiHelper/CustomOshiroDoor.placements.name.CustomOshiroDoorSprite= Cu
 entities.KoseiHelper/CustomOshiroDoor.placements.description.CustomOshiroDoorSprite= The bouncy oshiro/ghost door but more customizable.
 entities.KoseiHelper/CustomOshiroDoor.attributes.description.bumpSound=The sound that the oshiro door makes when bumped.
 entities.KoseiHelper/CustomOshiroDoor.attributes.description.sprite=The sprite tag that the oshiro door should use.\nYou can copy the one from vanilla as a reference.
-entities.KoseiHelper/CustomOshiroDoor.attributes.description.color=The tint that will be applied on top of the sprite.
+entities.KoseiHelper/CustomOshiroDoor.attributes.description.color=The tint that will be applied on top of the sprite. Supports alpha values.
 entities.KoseiHelper/CustomOshiroDoor.attributes.description.singleUse=If the oshiro door should be destroyed after being bumped.
 entities.KoseiHelper/CustomOshiroDoor.attributes.description.wiggleDuration=The time it should keep wiggling after being bumped.
 entities.KoseiHelper/CustomOshiroDoor.attributes.description.wiggleFrequency=How much it wiggles when being bumped.
@@ -534,6 +535,8 @@ entities.KoseiHelper/Brick.placements.description.Brick=16x16 blocks that can be
 entities.KoseiHelper/Brick.attributes.description.type=Normal: Can be broken from below. No need to dash, but Madeline can't be "small" (crouched/feather).\nIce: Like normal blocks, but they can also be broken with a Plant bullet / Hot Core Mode.\nFortress: Can be broken only with a summit launch (Badeline orb), red booster, or setting the flag KoseiHelper_BreakFortressBrick.
 entities.KoseiHelper/Brick.attributes.description.sprite=The ID or tag of the sprite in your Sprites.xml.\nYou can copy the default sprite from KoseiHelper/Graphics/Sprites.xml.
 entities.KoseiHelper/Brick.attributes.description.depth=The depth at which the brick will be rendered.
+entities.KoseiHelper/Brick.attributes.description.bumpSound=The sound the brick produces while bumped from the bottom.
+entities.KoseiHelper/Brick.attributes.description.breakSound=The sound the brick produces while breaking.
 
 #Spring Ball
 entities.KoseiHelper/SpringBall.placements.name.SpringBall= Spring Ball
