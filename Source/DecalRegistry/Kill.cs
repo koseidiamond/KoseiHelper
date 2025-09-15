@@ -25,57 +25,34 @@ internal class KillDecalRegistryHandler : DecalRegistryHandler
         decal.Add(new KillComponent(offsetX, offsetY, width, height));
     }
 
-    internal class KillComponent : Component
+    internal class KillComponent(float offsetX, float offsetY, float width, float height) : Component(active: true, visible: false)
     {
-        public Decal decal => (Decal)base.Entity;
-
-        public KillComponent(float offsetX, float offsetY, float width, float height) : base(active: true, visible: true)
-        {
-            //collider = new Hitbox(width, height, offsetX, offsetY);
-            SceneAs<Level>().Add(new KillDecal(offsetX, offsetY, width, height));
-        }
-
         public override void EntityAwake()
         {
-
-            Player player = SceneAs<Level>().Tracker.GetEntity<Player>();
             base.EntityAwake();
+            Decal decal = (Decal)Entity;
+            float x = offsetX, y = offsetY, w = width, h = height;
+            decal.ScaleRectangle(ref x, ref y, ref w, ref h);
+            Vector2 position = decal.Position + new Vector2(x, y);
+            decal.Scene.Add(new KillDecal(position, w, h));
         }
 
-        public override void DebugRender(Camera camera)
+        private class KillDecal : Entity
         {
-            Draw.Point(decal.Position, Color.Cyan);
-            base.DebugRender(camera);
-        }
-    }
-
-    internal class KillDecal : Entity
-    {
-        public KillDecal(float offsetX, float offsetY, float width, float height)
-        {
-        }
-
-        public override void Update()
-        {
-            base.Update();
-            Player player = SceneAs<Level>().Tracker.GetEntity<Player>();
-            if (player != null)
-                KillPlayer(player);
-        }
-
-        private void KillPlayer(Player player)
-        {
+            public KillDecal(Vector2 position, float width, float height)
             {
-                DeathEffect component = new DeathEffect(Player.NormalHairColor, base.Center - base.Position + new Vector2(-16, -32))
+                Position = position;
+                Collider = new Hitbox(width, height);
+                Add(new PlayerCollider(OnPlayer));
+            }
+
+            private void OnPlayer(Player player)
+            {
+                if (!player.Dead)
                 {
-                    OnEnd = delegate
-                    {
-                        this.RemoveSelf();
-                    }
-                };
-                player.Add(component);
-                player.Die(Vector2.Zero);
-                RemoveSelf();
+                    player.Die((player.Center - Center).SafeNormalize());
+                    RemoveSelf();
+                }
             }
         }
     }

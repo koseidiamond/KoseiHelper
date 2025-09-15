@@ -19,6 +19,7 @@ entities.KoseiHelper/SpecialFlutterbird.attributes.description.flyAway=Whether t
 entities.KoseiHelper/SpecialFlutterbird.attributes.description.flyAwayFlag=The flag that will be set to true when the bird flies away.
 entities.KoseiHelper/SpecialFlutterbird.attributes.description.sterilizationFlag=The bird will be unable to spawn babies while this flag is true.
 entities.KoseiHelper/SpecialFlutterbird.attributes.description.squishable=Whether the bird can be crushed to death.
+entities.KoseiHelper/SpecialFlutterbird.attributes.description.blood=Whether the bird should bleed upon being killed (with an explosion, gun, crushed, etc).
 entities.KoseiHelper/SpecialFlutterbird.attributes.description.hopSfx=The sound when the bird hops.
 entities.KoseiHelper/SpecialFlutterbird.attributes.description.spriteID=The ID or tag of the sprite in your Sprites.xml.
 entities.KoseiHelper/SpecialFlutterbird.attributes.description.emitLight=Whether the bird should emit light.
