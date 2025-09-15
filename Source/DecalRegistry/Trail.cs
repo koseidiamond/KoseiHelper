@@ -8,18 +8,17 @@ namespace Celeste.Mod.KoseiHelper.DecalRegistry;
 
 internal class TrailDecalRegistryHandler : DecalRegistryHandler
 {
-    private float xSpeed, ySpeed;
     private float trailDuration;
     private float trailSpawnInterval;
-    private Color trailColor = Color.White * 0.5f;
+    private Color trailColor;
 
     public override string Name => "koseihelper.trail";
 
     public override void Parse(XmlAttributeCollection xml)
     {
-        trailDuration = Get(xml, "trailDuration", 0.5f);
-        trailSpawnInterval = Get(xml, "trailSpawnInterval", 0.1f);
-        trailColor = GetHexColor(xml, "trailColor", Color.White * 0.5f);
+        trailDuration = Get(xml, "duration", 0.5f);
+        trailSpawnInterval = Get(xml, "spawnInterval", 0.1f);
+        trailColor = KoseiHelperUtils.ParseHexColorWithAlpha(xml, "color", Color.White * 0.4f);
     }
 
     public override void ApplyTo(Decal decal)
@@ -28,35 +27,42 @@ internal class TrailDecalRegistryHandler : DecalRegistryHandler
     }
 
     private class TrailDecalComponent(float trailDuration, float trailSpawnInterval, Color trailColor)
-        : Component(active: true, visible: true)
+    : Component(active: true, visible: true)
     {
         private readonly float trailDuration = trailDuration;
         private readonly float trailSpawnInterval = trailSpawnInterval;
         private readonly Color trailColor = trailColor;
-
         private float trailTimer = 0f;
         private readonly List<DecalTrail> decalTrails = [];
+        private Vector2 previousPosition;
+
+        public override void Added(Entity entity)
+        {
+            base.Added(entity);
+            if (entity is Decal decal)
+                previousPosition = decal.Position;
+        }
 
         public override void Update()
         {
             base.Update();
-
             if (Entity is not Decal decal)
                 return;
-            trailTimer += Engine.DeltaTime;
-            if (trailTimer >= trailSpawnInterval)
+            if (decal.Position != previousPosition)
             {
-                trailTimer -= trailSpawnInterval;
-
-                MTexture currentTexture = decal.textures[(int)decal.frame];
-                decalTrails.Add(new DecalTrail(decal.Position, currentTexture, trailColor, trailDuration));
+                trailTimer += Engine.DeltaTime;
+                if (trailTimer >= trailSpawnInterval)
+                {
+                    trailTimer -= trailSpawnInterval;
+                    MTexture currentTexture = decal.textures[(int)decal.frame];
+                    decalTrails.Add(new DecalTrail(decal.Position - new Vector2(decal.Width, decal.Height), currentTexture, trailColor, trailDuration));
+                }
+                previousPosition = decal.Position;
             }
             for (int i = decalTrails.Count - 1; i >= 0; i--)
             {
                 if (!decalTrails[i].Update())
-                {
                     decalTrails.RemoveAt(i);
-                }
             }
         }
 
@@ -68,10 +74,10 @@ internal class TrailDecalRegistryHandler : DecalRegistryHandler
             foreach (DecalTrail decalTrail in decalTrails)
                 decalTrail.Render();
         }
+
         private class DecalTrail(Vector2 position, MTexture texture, Color baseColor, float duration)
         {
             private float lifetime = 0f;
-
             public bool Update()
             {
                 lifetime += Engine.DeltaTime;
@@ -84,6 +90,7 @@ internal class TrailDecalRegistryHandler : DecalRegistryHandler
                 baseColor.A = alphaByte;
                 return true;
             }
+
             public void Render()
             {
                 texture.Draw(position, Vector2.Zero, baseColor);

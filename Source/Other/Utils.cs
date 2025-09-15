@@ -1,7 +1,6 @@
 using Microsoft.Xna.Framework;
 using System;
 using System.Xml;
-using System.Xml.Linq;
 
 namespace Celeste.Mod.KoseiHelper;
 
