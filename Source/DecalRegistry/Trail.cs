@@ -11,6 +11,7 @@ internal class TrailDecalRegistryHandler : DecalRegistryHandler
     private float trailDuration;
     private float trailSpawnInterval;
     private Color trailColor;
+    private string flag;
 
     public override string Name => "koseihelper.trail";
 
@@ -19,14 +20,15 @@ internal class TrailDecalRegistryHandler : DecalRegistryHandler
         trailDuration = Get(xml, "duration", 0.5f);
         trailSpawnInterval = Get(xml, "spawnInterval", 0.1f);
         trailColor = KoseiHelperUtils.ParseHexColorWithAlpha(xml, "color", Color.White * 0.4f);
+        flag = Get(xml, "flag", "");
     }
 
     public override void ApplyTo(Decal decal)
     {
-        decal.Add(new TrailDecalComponent(trailDuration, trailSpawnInterval, trailColor));
+        decal.Add(new TrailDecalComponent(trailDuration, trailSpawnInterval, trailColor, flag));
     }
 
-    private class TrailDecalComponent(float trailDuration, float trailSpawnInterval, Color trailColor)
+    private class TrailDecalComponent(float trailDuration, float trailSpawnInterval, Color trailColor, string flag)
     : Component(active: true, visible: true)
     {
         private readonly float trailDuration = trailDuration;
@@ -48,6 +50,11 @@ internal class TrailDecalRegistryHandler : DecalRegistryHandler
             base.Update();
             if (Entity is not Decal decal)
                 return;
+            if (decal.Scene is not Level level)
+                return;
+            if (!string.IsNullOrEmpty(flag) && !level.Session.GetFlag(flag))
+                return;
+
             if (decal.Position != previousPosition)
             {
                 trailTimer += Engine.DeltaTime;

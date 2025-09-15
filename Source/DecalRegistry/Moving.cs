@@ -12,6 +12,7 @@ internal class MovingDecalRegistryHandler : DecalRegistryHandler
     private float offsetX, offsetY;
     private float width, height;
     private bool moveWithWind;
+    private string flag;
 
     public override string Name => "koseihelper.moving";
 
@@ -25,11 +26,12 @@ internal class MovingDecalRegistryHandler : DecalRegistryHandler
         width = Get(xml, "width", 8f);
         height = Get(xml, "height", 8f);
         moveWithWind = Get(xml, "moveWithWind", false);
+        flag = Get(xml, "flag", "");
     }
 
     public override void ApplyTo(Decal decal)
     {
-        decal.Add(new MovingDecalComponent(xSpeed, ySpeed, collideWithSolids, moveWithWind));
+        decal.Add(new MovingDecalComponent(xSpeed, ySpeed, collideWithSolids, moveWithWind, flag));
         decal.Collider = new Hitbox(width, height, offsetX, offsetY);
     }
 
@@ -37,13 +39,15 @@ internal class MovingDecalRegistryHandler : DecalRegistryHandler
     {
         private readonly float xSpeed, ySpeed;
         private readonly bool collideWithSolids, moveWithWind;
+        private readonly string flag;
 
-        public MovingDecalComponent(float xSpeed, float ySpeed, bool collideWithSolids, bool moveWithWind) : base(active: true, visible: false)
+        public MovingDecalComponent(float xSpeed, float ySpeed, bool collideWithSolids, bool moveWithWind, string flag) : base(active: true, visible: false)
         {
             this.xSpeed = xSpeed;
             this.ySpeed = ySpeed;
             this.collideWithSolids = collideWithSolids;
             this.moveWithWind = moveWithWind;
+            this.flag = flag;
         }
 
         public override void Update()
@@ -52,8 +56,14 @@ internal class MovingDecalRegistryHandler : DecalRegistryHandler
             if (Entity is not Decal decal || decal.Collider is not Hitbox hitbox)
                 return;
 
+            if (decal.Scene is not Level level)
+                return;
+
+            if (!string.IsNullOrEmpty(flag) && !level.Session.GetFlag(flag))
+                return;
+
             Vector2 move = new(xSpeed, ySpeed);
-            if (moveWithWind && decal.Scene is Level level)
+            if (moveWithWind)
             {
                 move.X = level.Wind.X * 0.00168f * xSpeed;
                 move.Y = level.Wind.Y * 0.00168f * ySpeed;
