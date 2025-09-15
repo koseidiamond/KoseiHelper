@@ -279,7 +279,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                             {
                                 // Climb recoil fix todo
                                 if (self.StateMachine != 1 || (self.StateMachine == 1 && KoseiHelperModule.Settings.GunSettings.RecoilWhileClimbing))
-                                self.Speed.X += KoseiHelperModule.Settings.GunSettings.Recoil * (float)(0 - self.Facing); // Horizontal recoil, by default 80f, same as vanilla backboosts
+                                    self.Speed.X += KoseiHelperModule.Settings.GunSettings.Recoil * (float)(0 - self.Facing); // Horizontal recoil, by default 80f, same as vanilla backboosts
                             }
                             else if (KoseiHelperModule.Settings.GunSettings.RecoilUpwards)
                                 self.Speed.Y -= KoseiHelperModule.Settings.GunSettings.Recoil;

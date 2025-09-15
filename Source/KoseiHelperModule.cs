@@ -67,6 +67,7 @@ public class KoseiHelperModule : EverestModule
             helpingHandLoaded = true;
 
         Mod.DecalRegistry.AddPropertyHandler<KillDecalRegistryHandler>();
+        Mod.DecalRegistry.AddPropertyHandler<MovingDecal>();
     }
 
     public override void Unload()

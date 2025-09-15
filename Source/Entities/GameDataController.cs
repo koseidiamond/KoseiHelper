@@ -181,29 +181,29 @@ public class GameDataController : Entity
             if (!string.IsNullOrEmpty(demoDashing))
                 session.SetFlag(demoDashing, player.demoDashed);
             if (!string.IsNullOrEmpty(forceMoveX))
-            session.SetSlider(forceMoveX, player.forceMoveXTimer);
+                session.SetSlider(forceMoveX, player.forceMoveXTimer);
             if (!string.IsNullOrEmpty(wallSlide))
-            session.SetSlider(wallSlide, player.wallSlideTimer);
+                session.SetSlider(wallSlide, player.wallSlideTimer);
             if (!string.IsNullOrEmpty(gliderBoost))
-            session.SetFlag(gliderBoost, player.gliderBoostTimer > 0f ? true : false);
+                session.SetFlag(gliderBoost, player.gliderBoostTimer > 0f ? true : false);
 
             if (!string.IsNullOrEmpty(chainedBerries))
-            session.SetCounter(chainedBerries, player.StrawberryCollectIndex);
+                session.SetCounter(chainedBerries, player.StrawberryCollectIndex);
 
             if (!string.IsNullOrEmpty(onTopOfWater))
-            session.SetFlag(onTopOfWater, player._IsOverWater() && !player.SwimUnderwaterCheck());
+                session.SetFlag(onTopOfWater, player._IsOverWater() && !player.SwimUnderwaterCheck());
 
             if (!string.IsNullOrEmpty(totalBerriesCollected))
-            session.SetCounter(totalBerriesCollected, level.strawberriesDisplay.strawberries.amount);
+                session.SetCounter(totalBerriesCollected, level.strawberriesDisplay.strawberries.amount);
 
             if (!string.IsNullOrEmpty(timeRate))
-            session.SetSlider(timeRate, Engine.TimeRate);
+                session.SetSlider(timeRate, Engine.TimeRate);
 
             if (!string.IsNullOrEmpty(anxiety))
-            session.SetSlider(anxiety, Distort.Anxiety);
+                session.SetSlider(anxiety, Distort.Anxiety);
 
             if (!string.IsNullOrEmpty(coyoteFrames))
-            session.SetCounter(coyoteFrames, (int)(player.jumpGraceTimer * 60) - 1);
+                session.SetCounter(coyoteFrames, (int)(player.jumpGraceTimer * 60) - 1);
 
             if (!string.IsNullOrEmpty(usingWatchtower))
             {
