@@ -1,12 +1,11 @@
 using Celeste.Mod.Registry.DecalRegistryHandlers;
 using Microsoft.Xna.Framework;
 using Monocle;
-using System.Reflection.Metadata.Ecma335;
 using System.Xml;
 
 namespace Celeste.Mod.KoseiHelper.DecalRegistry;
 
-internal class MovingDecal : DecalRegistryHandler
+internal class MovingDecalRegistryHandler : DecalRegistryHandler
 {
     private float xSpeed, ySpeed;
     private bool collideWithSolids;
@@ -14,7 +13,7 @@ internal class MovingDecal : DecalRegistryHandler
     private float width, height;
     private bool moveWithWind;
 
-    public override string Name => "koseihelper.movingDecal";
+    public override string Name => "koseihelper.moving";
 
     public override void Parse(XmlAttributeCollection xml)
     {

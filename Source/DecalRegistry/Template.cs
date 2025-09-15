@@ -1,0 +1,93 @@
+using Celeste.Mod.Registry.DecalRegistryHandlers;
+using Microsoft.Xna.Framework;
+using Monocle;
+using System.Collections.Generic;
+using System.Xml;
+
+namespace Celeste.Mod.KoseiHelper.DecalRegistry;
+
+internal class TrailDecalRegistryHandler : DecalRegistryHandler
+{
+    private float xSpeed, ySpeed;
+    private float trailDuration;
+    private float trailSpawnInterval;
+    private Color trailColor = Color.White * 0.5f;
+
+    public override string Name => "koseihelper.trail";
+
+    public override void Parse(XmlAttributeCollection xml)
+    {
+        trailDuration = Get(xml, "trailDuration", 0.5f);
+        trailSpawnInterval = Get(xml, "trailSpawnInterval", 0.1f);
+        //trailColor = Get(xml, "trailColor", null) ?? trailColor; // todo
+    }
+
+    public override void ApplyTo(Decal decal)
+    {
+        decal.Add(new TrailDecalComponent(trailDuration, trailSpawnInterval, trailColor));
+    }
+
+    private class TrailDecalComponent(float trailDuration, float trailSpawnInterval, Color trailColor)
+        : Component(active: true, visible: true)
+    {
+        private readonly float trailDuration = trailDuration;
+        private readonly float trailSpawnInterval = trailSpawnInterval;
+        private readonly Color trailColor = trailColor;
+
+        private float trailTimer = 0f;
+        private readonly List<DecalTrail> decalTrails = [];
+
+        public override void Update()
+        {
+            base.Update();
+
+            if (Entity is not Decal decal)
+                return;
+            trailTimer += Engine.DeltaTime;
+            if (trailTimer >= trailSpawnInterval)
+            {
+                trailTimer -= trailSpawnInterval;
+
+                MTexture currentTexture = decal.textures[(int)decal.frame];
+                decalTrails.Add(new DecalTrail(decal.Position, currentTexture, trailColor, trailDuration));
+            }
+            for (int i = decalTrails.Count - 1; i >= 0; i--)
+            {
+                if (!decalTrails[i].Update())
+                {
+                    decalTrails.RemoveAt(i);
+                }
+            }
+        }
+
+        public override void Render()
+        {
+            base.Render();
+            if (Entity is not Decal)
+                return;
+            foreach (DecalTrail decalTrail in decalTrails)
+                decalTrail.Render();
+        }
+        private class DecalTrail(Vector2 position, MTexture texture, Color baseColor, float duration)
+        {
+            private float lifetime = 0f;
+
+            public bool Update()
+            {
+                lifetime += Engine.DeltaTime;
+                if (lifetime >= duration)
+                    return false;
+
+                float alpha = 1f - (lifetime / duration);
+                alpha = Ease.CubeOut(alpha);
+                byte alphaByte = (byte)(baseColor.A * alpha);
+                baseColor.A = alphaByte;
+                return true;
+            }
+            public void Render()
+            {
+                texture.Draw(position, Vector2.Zero, baseColor);
+            }
+        }
+    }
+}
