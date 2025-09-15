@@ -985,7 +985,7 @@ triggers.KoseiHelper/NemesisGunSettings.placements.description.NemesisGunSetting
 triggers.KoseiHelper/NemesisGunSettings.attributes.description.triggerMode=Whether this trigger should have effect when the player enters/exits it, or while inside.
 triggers.KoseiHelper/NemesisGunSettings.attributes.description.enabled=Whether the Nemesis Gun should be usable, by setting the flag "EnableNemesisGun".
 triggers.KoseiHelper/NemesisGunSettings.attributes.description.gunshotSound=The sfx when the player shoots.
-triggers.KoseiHelper/NemesisGunSettings.attributes.description.dashBehavior=Whether the gun should use the dash/demo buttons (replaces dashes) or the custom keybind, spending (or not) a dash upon shooting.\n(Configurable under Mod Options > Kosei Helper)
+triggers.KoseiHelper/NemesisGunSettings.attributes.description.dashBehavior=Whether the gun should use the dash/demo buttons (replaces dashes) or the custom keybind, spending (or not) a dash upon shooting.\n(Configurable under Mod Options > Kosei Helper)\nTip: you can use a bird tutorial with mod:KoseiHelper/NemesisShot in the Controls field to teach the custom key.
 triggers.KoseiHelper/NemesisGunSettings.attributes.description.cooldown=How much time until the player can shoot again, in frames.
 triggers.KoseiHelper/NemesisGunSettings.attributes.description.gunTexture=The path to your custom weapon texture, relative to Atlases/Gameplay/.
 triggers.KoseiHelper/NemesisGunSettings.attributes.description.bulletTexture=The path to your bullet texture, relative to Atlases/Gameplay/.\nThe bullet hitbox is 6x6 pixels, for reference.
@@ -1008,6 +1008,7 @@ triggers.KoseiHelper/NemesisGunSettings.attributes.description.canShootInFeather
 triggers.KoseiHelper/NemesisGunSettings.attributes.description.freezeFrames=How many freeze frames should give each shot.
 triggers.KoseiHelper/NemesisGunSettings.attributes.description.horizontalAcceleration=How much the bullet should accelerate horizontally on each frame until reaching its max speed.\nBoth accelerations combined can result in curved trajectories!\nRecommended values are between -0.2 (boomerang-like) and 0.2 (onwards).
 triggers.KoseiHelper/NemesisGunSettings.attributes.description.verticalAcceleration=How much the bullet should accelerate vertically on each frame.\nBoth accelerations combined can result in curved trajectories!\nRecommended values are between -0.2 (upwards) and 0.2 (downwards).
+triggers.KoseiHelper/NemesisGunSettings.attributes.description.forceGrabButton=Whether the gun should be set to use the grab button on this map.\nFor those who don't want to force players to use a custom keybind.
 
 triggers.KoseiHelper/NemesisGunInteractions.placements.name.NemesisGunInteractions=Nemesis Gun Interactions
 triggers.KoseiHelper/NemesisGunInteractions.placements.description.NemesisGunInteractions=Configure which entities the Nemesis Gun can affect.

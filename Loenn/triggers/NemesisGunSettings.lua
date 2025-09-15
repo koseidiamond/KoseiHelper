@@ -32,6 +32,7 @@ NemesisGunSettings.placements = {
 		freezeFrames = 0,
 		horizontalAcceleration = 0,
 		verticalAcceleration = 0,
+		forceGrabButton = false
 		--bulletHeight = 6,
         --bulletWidth = 6,
 		--bulletXOffset = 0,
@@ -197,8 +198,8 @@ NemesisGunSettings.fieldOrder =
 	"recoilOnInteraction",
 	"recoilWhileClimbing",
 	"canShootInFeather",
-	"bulletExplosion"
-	
+	"bulletExplosion",
+	"forceGrabButton"
 }
 
 return NemesisGunSettings

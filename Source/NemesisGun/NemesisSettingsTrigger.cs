@@ -24,6 +24,7 @@ public class NemesisGunSettingsTrigger : Trigger
     private float horizontalAcceleration = 0f, verticalAcceleration = 0f;
     private int bulletWidth = 6, bulletHeight = 6, bulletXOffset, bulletYOffset;
     private bool particleDoesntRotate;
+    private bool forceGrabButton;
 
     public KoseiHelperModuleSettings.NemesisSettings.GunDirections gunDirections;
 
@@ -60,6 +61,7 @@ public class NemesisGunSettingsTrigger : Trigger
         bulletXOffset = data.Int("bulletXOffset", 0);
         bulletYOffset = data.Int("bulletYOffset", 0);
         particleDoesntRotate = data.Bool("particleDoesntRotate", false);
+        forceGrabButton = data.Bool("forceGrabButton", false);
     }
 
     public override void OnEnter(Player player)
@@ -114,6 +116,7 @@ public class NemesisGunSettingsTrigger : Trigger
         Extensions.bulletXOffset = bulletXOffset;
         Extensions.bulletYOffset = bulletYOffset;
         Extensions.particleDoesntRotate = particleDoesntRotate;
+        Extensions.forceGrabButton = forceGrabButton;
 
         if (enabled)
         {

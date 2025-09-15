@@ -25,7 +25,18 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
         public static int bulletWidth = 6, bulletHeight = 6, bulletXOffset, bulletYOffset;
         public static bool particleDoesntRotate;
         public static bool recoilingOnInteraction;
-
-        public static bool shotInput => KoseiHelperModule.Settings.GunSettings.dashBehavior == KoseiHelperModuleSettings.NemesisSettings.DashBehavior.ReplacesDash ? Input.Dash.Pressed || Input.CrouchDash.Pressed : KoseiHelperModule.Settings.NemesisShot.Pressed;
+        public static bool forceGrabButton = false;
+        public static bool shotInput
+        {
+            get
+            {
+                if (forceGrabButton)
+                    return Input.Grab.Pressed;
+                if (KoseiHelperModule.Settings.GunSettings.dashBehavior == KoseiHelperModuleSettings.NemesisSettings.DashBehavior.ReplacesDash)
+                    return Input.Dash.Pressed || Input.CrouchDash.Pressed;
+                // else, custom button
+                return KoseiHelperModule.Settings.NemesisShot.Pressed;
+            }
+        }
     }
 }
