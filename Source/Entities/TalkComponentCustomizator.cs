@@ -16,6 +16,7 @@ public class TalkComponentCustomization : Entity
     public float Floatiness = 1f;
     public Color Tint = Color.White;
     public Color TalkTextColor = Color.White;
+    public float TextStroke = 2f;
 }
 [CustomEntity("KoseiHelper/TalkComponentCustomizator")]
 [Tracked]
@@ -27,6 +28,7 @@ public class TalkComponentCustomizator : Entity
     private readonly string sfxIn, sfxOut;
     private readonly float floatiness;
     private Color tint, talkTextColor;
+    private readonly float textStroke;
 
     public TalkComponentCustomizator(EntityData data, Vector2 offset) : base(data.Position + offset)
     {
@@ -35,6 +37,7 @@ public class TalkComponentCustomizator : Entity
         sfxIn = data.Attr("sfxIn", "event:/ui/game/hotspot_main_in");
         sfxOut = data.Attr("sfxOut", "event:/ui/game/hotspot_main_out");
         floatiness = data.Float("floatiness", 1f);
+        textStroke = data.Float("textStroke", 2f);
         tint = KoseiHelperUtils.ParseHexColor(data.Values.TryGetValue("tint", out object tintColor) ? tintColor.ToString() : null, Calc.HexToColor("FFFFFF"));
         talkTextColor = KoseiHelperUtils.ParseHexColor(data.Values.TryGetValue("talkTextColor", out object talkTextC) ? talkTextC.ToString() : null, Calc.HexToColor("FFFFFF"));
     }
@@ -81,7 +84,8 @@ public class TalkComponentCustomizator : Entity
             SfxOut = sfxOut,
             Floatiness = floatiness,
             Tint = tint,
-            TalkTextColor = talkTextColor
+            TalkTextColor = talkTextColor,
+            TextStroke = textStroke
         };
 
         talkComponent.HoverUI.Texture = customization.HighlightTexture;
@@ -106,7 +110,7 @@ public class TalkComponentCustomizator : Entity
     { // TalkComponent Render copypaste because it's hardcoded
         TalkComponent Handler = self.Handler;
 
-        if (!Customizations.TryGetValue(Handler, out TalkComponentCustomization customization))
+        if (!Customizations.TryGetValue(Handler, out TalkComponentCustomization custom))
         {
             orig(self);
             return;
@@ -122,19 +126,17 @@ public class TalkComponentCustomizator : Entity
         vector2.X *= 6f;
         vector2.Y *= 6f;
 
-        float timer = (float)typeof(TalkComponent.TalkComponentUI)
-            .GetField("timer", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).GetValue(self);
-        float alpha = (float)typeof(TalkComponent.TalkComponentUI)
-            .GetField("alpha", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).GetValue(self);
+        float timer = (float)typeof(TalkComponent.TalkComponentUI).GetField("timer", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).GetValue(self);
+        float alpha = (float)typeof(TalkComponent.TalkComponentUI).GetField("alpha", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).GetValue(self);
 
         float wigglerValue = self.Get<Wiggler>()?.Value ?? 0f;
 
         float scale = self.Highlighted ? (1f - wigglerValue * 0.5f) : (1f + wigglerValue * 0.5f);
         float slideEase = Ease.CubeOut(self.slide);
         float visibility = Ease.CubeInOut(self.slide) * alpha;
-        vector2.Y += (float)Math.Sin(timer * 4f) * 12f * customization.Floatiness + 64f * (1f - slideEase);
-        Color drawColor = customization.Tint * visibility;
-        MTexture textureToDraw = self.Highlighted ? customization.HighlightTexture : customization.IdleTexture;
+        vector2.Y += (float)Math.Sin(timer * 4f) * 12f * custom.Floatiness + 64f * (1f - slideEase);
+        Color drawColor = custom.Tint * visibility;
+        MTexture textureToDraw = self.Highlighted ? custom.HighlightTexture : custom.IdleTexture;
         textureToDraw.DrawJustified(vector2, new Vector2(0.5f, 1f), drawColor, scale);
         if (self.Highlighted)
         {
@@ -142,12 +144,12 @@ public class TalkComponentCustomizator : Entity
 
             if (Input.GuiInputController(Input.PrefixMode.Latest))
             {
-                Input.GuiButton(Input.Talk, "controls/keyboard/oemquestion").DrawJustified(inputPos, new Vector2(0.5f), customization.TalkTextColor * visibility, scale);
+                Input.GuiButton(Input.Talk, "controls/keyboard/oemquestion").DrawJustified(inputPos, new Vector2(0.5f), custom.TalkTextColor * visibility, scale);
             }
             else
             {
                 ActiveFont.DrawOutline(Input.FirstKey(Input.Talk).ToString().ToUpper(), inputPos,
-                    new Vector2(0.5f), new Vector2(scale), customization.TalkTextColor * visibility, 2f, Color.Black);
+                    new Vector2(0.5f), new Vector2(scale), custom.TalkTextColor * visibility, custom.TextStroke, Color.Black);
             }
         }
     }

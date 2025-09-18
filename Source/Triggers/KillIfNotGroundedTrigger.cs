@@ -67,7 +67,7 @@ public class KillIfNotGroundedTrigger : Trigger
         session.SetSlider("KoseiHelper_KillIfGrounded_cooldown", cooldown);
     }
 
-    public override void OnLeave(Player player) // todo group compat
+    public override void OnLeave(Player player)
     {
         base.OnLeave(player);
         Level level = SceneAs<Level>();

@@ -537,6 +537,7 @@ entities.KoseiHelper/Brick.attributes.description.sprite=The ID or tag of the sp
 entities.KoseiHelper/Brick.attributes.description.depth=The depth at which the brick will be rendered.
 entities.KoseiHelper/Brick.attributes.description.bumpSound=The sound the brick produces while bumped from the bottom.
 entities.KoseiHelper/Brick.attributes.description.breakSound=The sound the brick produces while breaking.
+entities.KoseiHelper/Brick.attributes.description.brokenByKevins=Whether the brick can be broken by a kevin (crush block).
 
 #Spring Ball
 entities.KoseiHelper/SpringBall.placements.name.SpringBall= Spring Ball
@@ -594,8 +595,10 @@ entities.KoseiHelper/TalkComponentCustomizator.attributes.description.idleTextur
 entities.KoseiHelper/TalkComponentCustomizator.attributes.description.sfxIn=The sound when the texture is swapped to idle.
 entities.KoseiHelper/TalkComponentCustomizator.attributes.description.sfxOut=The sound when the texture is swapped to highlight.
 entities.KoseiHelper/TalkComponentCustomizator.attributes.description.floatiness=How much the talker should move vertically (this is a multiplier).
+entities.KoseiHelper/TalkComponentCustomizator.attributes.name.tint=Talker Color
 entities.KoseiHelper/TalkComponentCustomizator.attributes.description.tint=The color that will be applied to the talker.\nThe alpha field indicates how transparent the talker should be.
 entities.KoseiHelper/TalkComponentCustomizator.attributes.description.talkTextColor=The color of the "Interaction" button text.\nThe alpha field indicates how transparent the button should be.
+entities.KoseiHelper/TalkComponentCustomizator.attributes.description.textStroke=How wide the outline of the "Interaction" button text is.
 
 #CONTROLLERS
 

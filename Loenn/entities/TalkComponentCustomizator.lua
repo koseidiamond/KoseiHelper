@@ -13,7 +13,8 @@ TalkComponentCustomizator.placements = {
 		sfxOut = "event:/ui/game/hotspot_main_out",
 		floatiness = 1,
 		tint = "FFFFFFFF",
-		talkTextColor = "FFFFFFFF"
+		talkTextColor = "FFFFFFFF",
+		textStroke = 2
 		}
 	}
 }
@@ -40,7 +41,10 @@ TalkComponentCustomizator.fieldInformation = {
 			"hover/idle"
 		},
 		editable = true
-	}
+	},
+	textStroke = {
+        minimumValue = 0
+    }
 }
 
 return TalkComponentCustomizator

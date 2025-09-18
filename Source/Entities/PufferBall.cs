@@ -26,7 +26,6 @@ public class PufferBall : Puffer
     public float sineSpeed;
     public bool vertical;
     public string spawnSound;
-    private static bool currentPufferFacesRight;
     public bool horizontalFix;
     public float spawnOffset;
     public string flag;
@@ -114,8 +113,8 @@ public class PufferBall : Puffer
     {
         Level level = SceneAs<Level>();
         Player player = level.Tracker.GetEntity<Player>();
-        if (player != null)
-        { // Makes sure that the player is not close to the bounds of the screen. TODO: fix transitions
+        if (player != null && !player.JustRespawned && !level.Transitioning)
+        { // Makes sure that the player is not close to the bounds of the screen.
             if (((!vertical && speed >= 0 && player.Right < (level.Bounds.Right - 64)) ||
                 (!vertical && speed < 0 && player.Left > level.Bounds.Left + 64) ||
                 (vertical && speed >= 0 && player.Bottom < level.Bounds.Bottom - 48) ||
@@ -142,7 +141,6 @@ public class PufferBall : Puffer
                 }
                 sine.Reset();
                 base.Position = spawnPosition;
-                currentPufferFacesRight = speed >= 0;
             }
         }
         else

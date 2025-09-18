@@ -18,7 +18,8 @@ Brick.placements = {
 			sprite = "koseiHelper_Brick",
 			depth = -1000,
 			bumpSound = "event:/KoseiHelper/brickBump",
-			breakSound = "event:/KoseiHelper/brickBreak"
+			breakSound = "event:/KoseiHelper/brickBreak",
+			brokenByKevins = false
 		}
 	}
 }

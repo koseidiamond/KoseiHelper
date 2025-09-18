@@ -1,6 +1,7 @@
 using Celeste.Mod.Entities;
 using Microsoft.Xna.Framework;
 using Monocle;
+using MonoMod.Utils;
 using System.Collections;
 
 namespace Celeste.Mod.KoseiHelper.Entities;
@@ -21,11 +22,13 @@ public class Brick : Solid
     private bool tryingToBreak, breaking;
     private bool fireMode;
     public string bumpSound, breakSound;
+    private bool brokenByKevins;
     public Brick(EntityData data, Vector2 offset) : base(data.Position + offset, 16, 16, true)
     {
         Depth = data.Int("depth", -1000);
         brickType = data.Enum("type", BrickType.Normal);
         spriteID = data.Attr("sprite", "koseiHelper_Brick");
+        brokenByKevins = data.Bool("brokenByKevins", false);
         Add(sprite = GFX.SpriteBank.Create(spriteID));
         if (brickType == BrickType.Normal)
             sprite.Play("Normal", false, true);
@@ -37,6 +40,8 @@ public class Brick : Solid
         breakSound = data.Attr("breakSound", "event:/KoseiHelper/brickBreak");
         Collider = new Hitbox(16, 16, -8, -8);
         Add(new CoreModeListener(OnChangeMode));
+        Tracker.AddTypeToTracker(typeof(CrushBlock));
+        Tracker.Refresh();
     }
 
     public override void Awake(Scene scene)
@@ -55,6 +60,23 @@ public class Brick : Solid
         base.Update();
         Level level = SceneAs<Level>();
         Player player = level.Tracker.GetEntity<Player>();
+        if (brokenByKevins)
+        {
+            foreach (CrushBlock crushBlock in level.Tracker.GetEntities<CrushBlock>())
+            {
+                DynamicData dd = DynamicData.For(crushBlock);
+                Vector2 crushDir = dd.Get<Vector2>("crushDir");
+                if (crushDir != Vector2.Zero && !breaking)
+                {
+                    Vector2 checkOffset = crushDir.SafeNormalize() * 1f;
+                    if (CollideCheck(crushBlock, Position - checkOffset))
+                    {
+                        Add(new Coroutine(Break()));
+                        break;
+                    }
+                }
+            }
+        }
         if (player != null)
         {
             switch (brickType)
@@ -70,7 +92,6 @@ public class Brick : Solid
                         Add(new Coroutine(TryBreak()));
                     break;
                 case BrickType.Fortress: // Can only be broken with a red booster or badeline launch
-                    // TODO after this pr https://github.com/EverestAPI/Everest/pull/858 is merged, do Kevin compatibility
                     if (player.StateMachine.state != 5 && player.StateMachine.state != 10)
                     {
                         if (CollideCheck(player, BottomCenter + new Vector2(0, -6)) && !tryingToBreak)
@@ -124,19 +145,19 @@ public class Brick : Solid
         {
             for (int i = 0; (float)i < base.Width / 8f; i++)
                 for (int j = 0; (float)j < base.Height / 8f; j++)
-                    base.Scene.Add(Engine.Pooler.Create<Debris>().Init(Position + new Vector2(4 + i * 8, 4 + j * 8), '3', false).BlastFrom(Center));
+                    base.Scene.Add(Engine.Pooler.Create<Debris>().Init(Position + new Vector2(i * 8, 4 + j * 8), '3', false).BlastFrom(Center));
         }
         else if (brickType == BrickType.Fortress)
         {
             for (int i = 0; (float)i < base.Width / 8f; i++)
                 for (int j = 0; (float)j < base.Height / 8f; j++)
-                    base.Scene.Add(Engine.Pooler.Create<Debris>().Init(Position + new Vector2(4 + i * 8, 4 + j * 8), '4', false).BlastFrom(Center));
+                    base.Scene.Add(Engine.Pooler.Create<Debris>().Init(Position + new Vector2(i * 8, 4 + j * 8), '4', false).BlastFrom(Center));
         }
         else
         {
             for (int i = 0; (float)i < base.Width / 8f; i++)
                 for (int j = 0; (float)j < base.Height / 8f; j++)
-                    base.Scene.Add(Engine.Pooler.Create<Debris>().Init(Position + new Vector2(4 + i * 8, 4 + j * 8), '1', false).BlastFrom(Center));
+                    base.Scene.Add(Engine.Pooler.Create<Debris>().Init(Position + new Vector2(i * 8, 4 + j * 8), '1', false).BlastFrom(Center));
         }
 
         yield return null;
