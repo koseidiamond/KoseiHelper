@@ -124,6 +124,8 @@ public class SpawnController : Entity
     public bool absoluteCoords = false;
     private bool ignoreJustRespawned;
     private bool noNode;
+    private bool randomLocation;
+    private Random deterministicRandom;
     //other important variables
     private int entityID = 7388544; // Very high value so it doesn't conflict with other ids (hopefully)
     private List<EntityWithTTL> spawnedEntitiesWithTTL = new List<EntityWithTTL>();
@@ -285,6 +287,7 @@ public class SpawnController : Entity
         everyXDashes = data.Int("everyXDashes", 1);
         poofWhenDisappearing = data.Bool("poofWhenDisappearing", true);
         noNode = data.Bool("noNode", false);
+        randomLocation = data.Bool("randomLocation", false);
         ignoreJustRespawned = data.Bool("ignoreJustRespawned", false);
         canDragAround = data.Bool("canDragAround", false);
         oppositeDragButton = data.Bool("oppositeDragButton", true);
@@ -417,6 +420,10 @@ public class SpawnController : Entity
     {
         base.Added(scene);
         Level level = SceneAs<Level>();
+        int seed = level.Session.Deaths * 37 + this.entityID * 13 + (SaveData.Instance?.Name?.GetHashCode() ?? 0);
+        deterministicRandom = new Random(seed);
+        if (level.Session.GetFlag("CelesteTAS_TAS_Was_Run"))
+            Logger.Info(nameof(KoseiHelperModule), $"EntitySpawnArea RNG seed: Deaths: {level.Session.Deaths}, File: {SaveData.Instance.Name}, Entity ID: {this.entityID}");
         foreach (String slider in level.Session.Sliders.Keys.Where(k => k.StartsWith("KoseiHelper_EntitySpawnerTTL") || k.StartsWith("KoseiHelper_EntitySpawnerCooldown_")))
             level.Session.SetSlider(slider, 0f);
         if (onlyOnBgTiles)
@@ -549,6 +556,58 @@ public class SpawnController : Entity
                     if (relativeToPlayerFacing && player.Facing == Facings.Right && isBlock)
                         spawnPosition = new Vector2(player.Position.X + offsetX - blockWidth, player.Position.Y + offsetY);
                 }
+
+                if (randomLocation)
+                {
+                    var spawnAreas = Scene.Tracker.GetEntities<EntitySpawnArea>().OfType<EntitySpawnArea>().ToList();
+
+                    if (spawnAreas.Count > 0)
+                    {
+                        int attempts = 50;
+                        var weightedAreas = new List<(EntitySpawnArea Area, int Weight)>();
+                        int totalWeight = 0;
+                        foreach (var area in spawnAreas)
+                        {
+                            int areaSize = area.Collider.Bounds.Width * area.Collider.Bounds.Height;
+                            weightedAreas.Add((area, areaSize));
+                            totalWeight += areaSize;
+                        }
+
+                        while (attempts-- > 0)
+                        {
+                            int roll = deterministicRandom.Next(totalWeight);
+                            EntitySpawnArea chosenArea = null;
+
+                            foreach (var (area, weight) in weightedAreas)
+                            {
+                                if (roll < weight)
+                                {
+                                    chosenArea = area;
+                                    break;
+                                }
+                                roll -= weight;
+                            }
+
+                            if (chosenArea == null)
+                                continue; // Just in case
+
+                            Rectangle areaBounds = chosenArea.Collider.Bounds;
+                            float randX = deterministicRandom.Next(areaBounds.Left, areaBounds.Right);
+                            float randY = deterministicRandom.Next(areaBounds.Top, areaBounds.Bottom);
+                            Vector2 testPosition = new(randX, randY);
+
+                            Collider testCollider = spawnedEntity?.Collider?.Clone() ?? new Hitbox(12f, 10f, -6f, -5f);
+                            testCollider.Position = testPosition;
+                            Rectangle testBounds = testCollider.Bounds;
+                            if (areaBounds.Contains(testBounds))
+                            {
+                                spawnPosition = testPosition + new Vector2(offsetX, offsetY);
+                                break;
+                            }
+                        }
+                    }
+                }
+
                 if (spawnCondition == SpawnCondition.LeftClick || spawnCondition == SpawnCondition.RightClick)
                 {
                     float mouseX = MInput.Mouse.Position.X * (320f / 1920f);
@@ -557,8 +616,10 @@ public class SpawnController : Entity
                     if (isBlock)
                         spawnPosition -= new Vector2(blockWidth / 2, blockHeight / 2);
                 }
+
                 if (gridAligned)
                     spawnPosition = new Vector2((float)Math.Floor(spawnPosition.X / 8f) * 8f, (float)Math.Floor(spawnPosition.Y / 8f) * 8f);
+
                 //Calculate node position
                 Vector2 nodePosition = new Vector2(X + nodeX, Y + nodeY);
                 if (!absoluteCoords)
