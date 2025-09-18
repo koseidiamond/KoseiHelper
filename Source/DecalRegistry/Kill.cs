@@ -30,7 +30,7 @@ internal class KillDecalRegistryHandler : DecalRegistryHandler
     : Component(active: true, visible: false)
     {
         private readonly Hitbox hitbox = new(width, height, offsetX, offsetY);
-        private readonly string flag;
+        private readonly string flag = flag;
 
         public override void Update()
         {

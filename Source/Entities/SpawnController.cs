@@ -122,9 +122,10 @@ public class SpawnController : Entity
     public bool flagStop;
     public bool poofWhenDisappearing;
     public bool absoluteCoords = false;
-    private bool ignoreJustRespawned;
-    private bool noNode;
+    public bool ignoreJustRespawned;
+    public bool noNode;
     private bool randomLocation;
+    public Color spawnAreaColor;
     private Random deterministicRandom;
     //other important variables
     private int entityID = 7388544; // Very high value so it doesn't conflict with other ids (hopefully)
@@ -288,6 +289,7 @@ public class SpawnController : Entity
         poofWhenDisappearing = data.Bool("poofWhenDisappearing", true);
         noNode = data.Bool("noNode", false);
         randomLocation = data.Bool("randomLocation", false);
+        spawnAreaColor = data.HexColor("spawnAreaColor", Color.BurlyWood);
         ignoreJustRespawned = data.Bool("ignoreJustRespawned", false);
         canDragAround = data.Bool("canDragAround", false);
         oppositeDragButton = data.Bool("oppositeDragButton", true);
@@ -510,7 +512,7 @@ public class SpawnController : Entity
                 SpawnCondition.OnCassetteBeat => canSpawnFromCassette,
                 SpawnCondition.OnInterval => spawnCooldown == 0,
                 SpawnCondition.OnCustomButtonPress => KoseiHelperModule.Settings.SpawnButton.Pressed && spawnCooldown == 0,
-                SpawnCondition.OnClimb => player.StateMachine.state == 1,
+                SpawnCondition.OnClimb => player.StateMachine.state == 1 && player.climbNoMoveTimer == 0.1f,
                 SpawnCondition.OnJump => playerIsJumping,
                 SpawnCondition.LeftClick => MInput.Mouse.PressedLeftButton,
                 SpawnCondition.RightClick => MInput.Mouse.PressedRightButton,
@@ -559,7 +561,7 @@ public class SpawnController : Entity
 
                 if (randomLocation)
                 {
-                    var spawnAreas = Scene.Tracker.GetEntities<EntitySpawnArea>().OfType<EntitySpawnArea>().ToList();
+                    var spawnAreas = Scene.Tracker.GetEntities<EntitySpawnArea>().OfType<EntitySpawnArea>().Where(area => area.color == spawnAreaColor).ToList();
 
                     if (spawnAreas.Count > 0)
                     {
