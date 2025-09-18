@@ -1202,10 +1202,35 @@ public class SpawnController : Entity
                     {
                         ctorParams.Add(new EntityID(data.Name, entityID++));
                     }
+                    else if (param.ParameterType == typeof(string))
+                    {
+                        ctorParams.Add(entityData.Attr(param.Name, ""));
+                    }
+                    else if (param.ParameterType == typeof(Vector2[])) // hope the naming is correct but idk might work for a few entities
+                    {
+                        ctorParams.Add(entityData.Nodes != null && entityData.Nodes.Length > 0
+                            ? new Vector2[] { entityData.Position }.Concat(entityData.Nodes).ToArray() : new Vector2[] { entityData.Position });
+                    }
+                    else if (param.ParameterType == typeof(Hitbox)) // hope the naming is correct but idk might work for a few entities
+                    {
+                        string prefix = param.Name;
+
+                        float width = entityData.Float($"{prefix}Width", 16f);
+                        float height = entityData.Float($"{prefix}Height", 16f);
+                        float x = entityData.Float($"{prefix}X", 0f);
+                        float y = entityData.Float($"{prefix}Y", 0f);
+                        if (!entityData.Values.ContainsKey($"{prefix}X") && entityData.Values.ContainsKey($"{prefix}XOffset"))
+                            x = entityData.Float($"{prefix}XOffset", 0f);
+
+                        if (!entityData.Values.ContainsKey($"{prefix}Y") && entityData.Values.ContainsKey($"{prefix}YOffset"))
+                            y = entityData.Float($"{prefix}YOffset", 0f);
+
+                        ctorParams.Add(new Hitbox(width, height, x, y));
+                    }
                     else
                     {
-                        Logger.Log(LogLevel.Warn, "KoseiHelper", $"Unhandled parameter type {param.ParameterType}");
-                        ctorParams.Add(null);
+                        Logger.Log(LogLevel.Warn, "KoseiHelper", $"Unhandled parameter type: {param.ParameterType}");
+                        ctorParams.Add(param.ParameterType.IsValueType ? Activator.CreateInstance(param.ParameterType) : null);
                     }
                 }
                 return (Entity)ctor.Invoke(ctorParams.ToArray());
