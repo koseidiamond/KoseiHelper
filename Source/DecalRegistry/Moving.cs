@@ -12,7 +12,7 @@ internal class MovingDecalRegistryHandler : DecalRegistryHandler
     private float offsetX, offsetY;
     private float width, height;
     private bool moveWithWind;
-    private string flag;
+    private string flag, flipFlag;
 
     public override string Name => "koseihelper.moving";
 
@@ -27,11 +27,12 @@ internal class MovingDecalRegistryHandler : DecalRegistryHandler
         height = Get(xml, "height", 8f);
         moveWithWind = Get(xml, "moveWithWind", false);
         flag = Get(xml, "flag", "");
+        flipFlag = Get(xml, "flipFlag", "");
     }
 
     public override void ApplyTo(Decal decal)
     {
-        decal.Add(new MovingDecalComponent(xSpeed, ySpeed, collideWithSolids, moveWithWind, flag));
+        decal.Add(new MovingDecalComponent(xSpeed, ySpeed, collideWithSolids, moveWithWind, flag, flipFlag));
         decal.Collider = new Hitbox(width, height, offsetX, offsetY);
     }
 
@@ -39,15 +40,16 @@ internal class MovingDecalRegistryHandler : DecalRegistryHandler
     {
         private readonly float xSpeed, ySpeed;
         private readonly bool collideWithSolids, moveWithWind;
-        private readonly string flag;
+        private readonly string flag, flipFlag;
 
-        public MovingDecalComponent(float xSpeed, float ySpeed, bool collideWithSolids, bool moveWithWind, string flag) : base(active: true, visible: false)
+        public MovingDecalComponent(float xSpeed, float ySpeed, bool collideWithSolids, bool moveWithWind, string flag, string flipFlag) : base(active: true, visible: false)
         {
             this.xSpeed = xSpeed;
             this.ySpeed = ySpeed;
             this.collideWithSolids = collideWithSolids;
             this.moveWithWind = moveWithWind;
             this.flag = flag;
+            this.flipFlag = flipFlag;
         }
 
         public override void Update()
@@ -62,11 +64,16 @@ internal class MovingDecalRegistryHandler : DecalRegistryHandler
             if (!string.IsNullOrEmpty(flag) && !level.Session.GetFlag(flag))
                 return;
 
-            Vector2 move = new(xSpeed, ySpeed);
+            Vector2 move;
+            if (!string.IsNullOrEmpty(flipFlag) && level.Session.GetFlag(flipFlag))
+                move = new(-xSpeed, -ySpeed);
+            else
+                move = new(xSpeed, ySpeed);
+
             if (moveWithWind)
             {
-                move.X = level.Wind.X * 0.00168f * xSpeed;
-                move.Y = level.Wind.Y * 0.00168f * ySpeed;
+                move.X = level.Wind.X * 0.00168f * move.X;
+                move.Y = level.Wind.Y * 0.00168f * move.Y;
             }
             if (collideWithSolids)
             {
