@@ -1010,7 +1010,7 @@ public class SpawnController : Entity
         EntityWithTTL previousEntity = null;
         foreach (EntityWithTTL wrapper in spawnedEntitiesWithTTL)
         {
-            if (wrapper.TimeToLive >= 0f && (despawnMethod == DespawnMethod.TTL || despawnMethod == DespawnMethod.TTLFlag))
+            if (wrapper.TimeToLive > 0f && (despawnMethod == DespawnMethod.TTL || despawnMethod == DespawnMethod.TTLFlag))
             {
                 wrapper.TimeToLive -= Engine.RawDeltaTime;
                 level.Session.SetSlider("KoseiHelper_EntitySpawnerTTL" + wrapper.Entity.ToString(), wrapper.TimeToLive);

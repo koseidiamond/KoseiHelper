@@ -221,7 +221,16 @@ SpawnController.fieldInformation = function (entity) return {
 	appearSound = {
 		options = {
 		"event:/KoseiHelper/spawn",
-		"event:/new_content/game/10_farewell/ppt_mouseclick"
+		"event:/new_content/game/10_farewell/ppt_mouseclick",
+		"event:/none"
+		},
+		editable = true
+	},
+	disappearSound = {
+		options = {
+		"event:/game/general/assist_dash_aim",
+		"event:/KoseiHelper/nwaps",
+		"event:/none"
 		},
 		editable = true
 	},
