@@ -19,10 +19,12 @@ CustomCobweb.nodeVisibility = "never"
 
 CustomCobweb.fieldInformation = {
     color = {
-        fieldType = "color"
+        fieldType = "color",
+		useAlpha = true
     },
 	edgeColor = {
-        fieldType = "color"
+        fieldType = "color",
+		useAlpha = true
     },
 	offshoots = {
 		minimumValue = 0,

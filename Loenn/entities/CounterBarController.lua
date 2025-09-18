@@ -29,7 +29,10 @@ CounterBarController.placements = {
 }
 
 CounterBarController.fieldInformation = {
-	color = { fieldType = "color" },
+	color = {
+		fieldType = "color",
+		useAlpha = true
+	},
 	xPosition = {
 		minimumValue = 0,
 		fieldType = "integer"

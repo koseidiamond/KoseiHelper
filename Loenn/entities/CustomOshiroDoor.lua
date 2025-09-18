@@ -45,7 +45,10 @@ CustomOshiroDoor.fieldInformation = {
     wiggleDuration = { minimumValue = 0 },
 	wiggleFrequency = { minimumValue = 0 },
 	wiggleScale = { minimumValue = 0 },
-    color = { fieldType = "color" },
+    color = {
+		fieldType = "color",
+		useAlpha = true
+	},
 	collisionMode = {
 		options = {
 			"Vanilla",

@@ -32,7 +32,8 @@ DashLimiterController.fieldInformation = {
 		minimumValue = 1
     },
 	indicatorColor = {
-		fieldType = "color"
+		fieldType = "color",
+		useAlpha = true
 	},
 	indicatorShape = {
 		options = {

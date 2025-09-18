@@ -586,6 +586,17 @@ entities.KoseiHelper/CounterRefill.attributes.description.oneUse=If the refill s
 entities.KoseiHelper/CounterRefill.attributes.description.decrease=If the counter should be decreased instead of increased.
 entities.KoseiHelper/CounterRefill.attributes.description.respawnTime=The time that the refill takes to reappear after being consumed.
 
+#Talk Component Customizator
+entities.KoseiHelper/TalkComponentCustomizator.placements.name.TalkComponentCustomizator=Talk Component Customizator
+entities.KoseiHelper/TalkComponentCustomizator.placements.description.TalkComponentCustomizator=Allows customization of the talker component that is closest to this entity's position.
+entities.KoseiHelper/TalkComponentCustomizator.attributes.description.highlightTexture=The path (relative to Gui/) to the texture when the player is close and able to interact.
+entities.KoseiHelper/TalkComponentCustomizator.attributes.description.idleTexture=The path (relative to Gui/) to the texture when the player is far and unable to interact.
+entities.KoseiHelper/TalkComponentCustomizator.attributes.description.sfxIn=The sound when the texture is swapped to idle.
+entities.KoseiHelper/TalkComponentCustomizator.attributes.description.sfxOut=The sound when the texture is swapped to highlight.
+entities.KoseiHelper/TalkComponentCustomizator.attributes.description.floatiness=How much the talker should move vertically (this is a multiplier).
+entities.KoseiHelper/TalkComponentCustomizator.attributes.description.tint=The color that will be applied to the talker.\nThe alpha field indicates how transparent the talker should be.
+entities.KoseiHelper/TalkComponentCustomizator.attributes.description.talkTextColor=The color of the "Interaction" button text.\nThe alpha field indicates how transparent the button should be.
+
 #CONTROLLERS
 
 

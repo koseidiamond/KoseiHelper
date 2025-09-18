@@ -57,6 +57,7 @@ public class KoseiHelperModule : EverestModule
         ClimbJumpController.Load();
         SpawnController.Load();
         GameDataController.Load();
+        TalkComponentCustomizator.Load();
         Everest.Events.Player.OnRegisterStates += MaryBlock.RegisterBaldState;
 
         if (!frostHelperLoaded && Everest.Loader.DependencyLoaded(new EverestModuleMetadata { Name = "FrostHelper", Version = new Version(1, 66, 0) }))
@@ -84,6 +85,7 @@ public class KoseiHelperModule : EverestModule
         ClimbJumpController.Unload();
         SpawnController.Unload();
         GameDataController.Unload();
+        TalkComponentCustomizator.Unload();
         Everest.Events.Player.OnRegisterStates -= MaryBlock.RegisterBaldState;
 
         frostHelperLoaded = false;
