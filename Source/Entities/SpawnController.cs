@@ -136,8 +136,11 @@ public class SpawnController : Entity
     public static bool playerIsJumping;
     public bool globalEntity;
     public bool gridAligned;
+    public int gridSize;
     private bool onlyOnBgTiles;
     private Entity bgTilesCollider;
+    private bool doNotRepeatSpots;
+    private HashSet<Vector2> usedSpawnPositions = new HashSet<Vector2>();
 
     //entity specific data
 
@@ -301,6 +304,8 @@ public class SpawnController : Entity
         globalEntity = data.Bool("globalEntity", false);
         onlyOnBgTiles = data.Bool("onlyOnBgTiles", false);
         gridAligned = data.Bool("gridAligned", false);
+        gridSize = data.Int("gridSize", 8);
+        doNotRepeatSpots = data.Bool("doNotRepeatSpots", true);
 
         mouseWheelMode = data.Bool("mouseWheelMode", false);
         wheelIndicatorX = data.Float("wheelIndicatorX", 20f);
@@ -565,7 +570,7 @@ public class SpawnController : Entity
 
                     if (spawnAreas.Count > 0)
                     {
-                        int attempts = 50;
+                        int attempts = 60; // tries 60 different spots until it finds a valid one idk how to better one
                         var weightedAreas = new List<(EntitySpawnArea Area, int Weight)>();
                         int totalWeight = 0;
                         foreach (var area in spawnAreas)
@@ -574,12 +579,10 @@ public class SpawnController : Entity
                             weightedAreas.Add((area, areaSize));
                             totalWeight += areaSize;
                         }
-
                         while (attempts-- > 0)
                         {
                             int roll = deterministicRandom.Next(totalWeight);
                             EntitySpawnArea chosenArea = null;
-
                             foreach (var (area, weight) in weightedAreas)
                             {
                                 if (roll < weight)
@@ -589,21 +592,30 @@ public class SpawnController : Entity
                                 }
                                 roll -= weight;
                             }
-
                             if (chosenArea == null)
                                 continue; // Just in case
-
                             Rectangle areaBounds = chosenArea.Collider.Bounds;
                             float randX = deterministicRandom.Next(areaBounds.Left, areaBounds.Right);
                             float randY = deterministicRandom.Next(areaBounds.Top, areaBounds.Bottom);
-                            Vector2 testPosition = new(randX, randY);
+                            Vector2 testPos = new(randX, randY);
+
+                            if (gridAligned) // this is handled later but we need to check used positions here
+                                testPos = new Vector2((float)Math.Floor(testPos.X / gridSize) * gridSize, (float)Math.Floor(testPos.Y / gridSize) * gridSize);
+                            if (doNotRepeatSpots && usedSpawnPositions.Contains(gridAligned
+                                ? new Vector2((float)Math.Floor(testPos.X / gridSize) * gridSize, (float)Math.Floor(testPos.Y / gridSize) * gridSize)
+                                : testPos.Floor()))
+                                continue; // skips this spot because it was used already
 
                             Collider testCollider = spawnedEntity?.Collider?.Clone() ?? new Hitbox(12f, 10f, -6f, -5f);
-                            testCollider.Position = testPosition;
+                            testCollider.Position = testPos;
                             Rectangle testBounds = testCollider.Bounds;
                             if (areaBounds.Contains(testBounds))
                             {
-                                spawnPosition = testPosition + new Vector2(offsetX, offsetY);
+                                spawnPosition = testPos + new Vector2(offsetX, offsetY);
+                                if (doNotRepeatSpots)
+                                    usedSpawnPositions.Add(gridAligned
+                                        ? new Vector2((float)Math.Floor(testPos.X / gridSize) * gridSize, (float)Math.Floor(testPos.Y / gridSize) * gridSize)
+                                        : testPos.Floor());
                                 break;
                             }
                         }
@@ -620,7 +632,7 @@ public class SpawnController : Entity
                 }
 
                 if (gridAligned)
-                    spawnPosition = new Vector2((float)Math.Floor(spawnPosition.X / 8f) * 8f, (float)Math.Floor(spawnPosition.Y / 8f) * 8f);
+                    spawnPosition = new Vector2((float)Math.Floor(spawnPosition.X / gridSize) * gridSize, (float)Math.Floor(spawnPosition.Y / gridSize) * gridSize);
 
                 //Calculate node position
                 Vector2 nodePosition = new Vector2(X + nodeX, Y + nodeY);
@@ -854,6 +866,7 @@ public class SpawnController : Entity
                             AreaData.Areas[level.Session.Area.ID].Mode[(int)level.Session.Area.Mode].MapData.Get(level.Session.Level).Spawns.Add(spawnPosition);
                             level.Session.HitCheckpoint = true;
                             level.Session.RespawnPoint = spawnPosition;
+                            //copypaste because we didn't actually spawn an entity
                             spawnCooldown = spawnTime;
                             hasSpawnedFromSpeed = true;
                             Audio.Play(appearSound, spawnPosition);
@@ -938,7 +951,7 @@ public class SpawnController : Entity
                         spawnedEntity.AddTag(Tags.Global);
                     spawnedEntitiesWithTTL.Add(new EntityWithTTL(spawnedEntity, entityTTL, entityFTL));
                     spawnCooldown = spawnTime;
-                    hasSpawnedFromSpeed = true;
+                    hasSpawnedFromSpeed = true; // defaults to true, we'll set to false later if condition is not met
                     level.Session.IncrementCounter("KoseiHelper_Total_" + spawnedEntity.ToString() + "s_Spawned");
                     level.Session.IncrementCounter("KoseiHelper_TotalEntitiesSpawned");
                     if (!string.IsNullOrEmpty(counterPositive))
@@ -1079,6 +1092,12 @@ public class SpawnController : Entity
         Audio.Play(disappearSound, wrapper.Entity.Position);
         if (poofWhenDisappearing)
             level.ParticlesFG.Emit(poofParticle, 5, wrapper.Entity.Center, Vector2.One * 4f, 0 - (float)Math.PI / 2f);
+
+        if (randomLocation && doNotRepeatSpots) // this spot becomes eligible again (sorry for the long line to whoever reads this)
+            usedSpawnPositions.Remove(gridAligned
+                ? new Vector2((float)Math.Floor((wrapper.Entity.Position - new Vector2(offsetX, offsetY)).X / gridSize) * gridSize,
+                (float)Math.Floor((wrapper.Entity.Position - new Vector2(offsetX, offsetY)).Y / gridSize) * gridSize)
+                : (wrapper.Entity.Position - new Vector2(offsetX, offsetY)).Floor());
 
         //Fixes being stuck in StDummy if the player touches Badeline as she's poofing
         if (wrapper.Entity is BadelineBoost && player != null && player.StateMachine.State == 11)

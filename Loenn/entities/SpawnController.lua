@@ -33,8 +33,10 @@ SpawnController.placements = {
 		poofWhenDisappearing = true,
 		ignoreJustRespawned = false,
 		gridAligned = false,
+		gridSize = 8,
 		randomLocation = false,
 		spawnAreaColor = "deb887",
+		doNotRepeatSpots = true,
 		--Spawn conditions
 		spawnFlag = "koseiHelper_spawn",
 		spawnFlagValue = true,
@@ -273,6 +275,10 @@ SpawnController.fieldInformation = function (entity) return {
 	spawnAreaColor = {
 		fieldType = "color"
 	},
+	gridSize = {
+		fieldType = "integer",
+		minimumValue = 1
+	},
 	-- Specific entities
 	bladeSpeed = {
 		options = {
@@ -428,7 +434,9 @@ function SpawnController.ignoredFields(entity)
 	"disappearSound",
 	"everyXDashes",
 	"cassetteColor",
+	"gridSize",
 	"spawnAreaColor",
+	"doNotRepeatSpots",
 	
 	"canDragAround",
 	"mouseWheelMode",
@@ -556,8 +564,12 @@ function SpawnController.ignoredFields(entity)
 	if entity.spawnCondition == "OnDash" then
 		doNotIgnore("everyXDashes")
 	end
+	if entity.gridAligned then
+		doNotIgnore("gridSize")
+	end
 	if entity.randomLocation then
 		doNotIgnore("spawnAreaColor")
+		doNotIgnore("doNotRepeatSpots")
 	end
 	-- Mouse options
 	if entity.spawnCondition == "LeftClick" or entity.spawnCondition == "RightClick" then
@@ -755,8 +767,9 @@ SpawnController.fieldOrder =  {
 	"wheelOptions",
 	"wheelIndicatorX",
 	"wheelIndicatorY",
+	"gridSize",
 	"spawnAreaColor",
-	
+	"doNotRepeatSpots",
 	-- non-boolean entity-specific attributes
 	"bladeSpeed",
 	
