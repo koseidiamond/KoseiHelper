@@ -125,6 +125,8 @@ public class SpawnController : Entity
     public bool ignoreJustRespawned;
     public bool noNode;
     private bool randomLocation;
+    public float clusteredChance;
+    public bool clustered;
     public Color spawnAreaColor;
     private Random deterministicRandom;
     //other important variables
@@ -141,6 +143,7 @@ public class SpawnController : Entity
     private Entity bgTilesCollider;
     private bool doNotRepeatSpots;
     private HashSet<Vector2> usedSpawnPositions = new HashSet<Vector2>();
+    private bool canSpawnThisFrame = true;
 
     //entity specific data
 
@@ -292,6 +295,8 @@ public class SpawnController : Entity
         poofWhenDisappearing = data.Bool("poofWhenDisappearing", true);
         noNode = data.Bool("noNode", false);
         randomLocation = data.Bool("randomLocation", false);
+        clustered = data.Bool("clustered", false);
+        clusteredChance = Calc.Clamp(data.Float("clusteredChance", 80f) / 100f, 0f, 1f);
         spawnAreaColor = data.HexColor("spawnAreaColor", Color.BurlyWood);
         ignoreJustRespawned = data.Bool("ignoreJustRespawned", false);
         canDragAround = data.Bool("canDragAround", false);
@@ -457,6 +462,7 @@ public class SpawnController : Entity
         base.Update();
         Player player = Scene.Tracker.GetEntity<Player>();
         Level level = SceneAs<Level>();
+        canSpawnThisFrame = true;
         if (spawnCooldown > 0)
         {
             spawnCooldown -= Engine.RawDeltaTime;
@@ -570,7 +576,8 @@ public class SpawnController : Entity
 
                     if (spawnAreas.Count > 0)
                     {
-                        int attempts = 60; // tries 60 different spots until it finds a valid one idk how to better one
+                        int originalAttempts = 3000; // tries tons of different spots until it finds a valid one idk how to better one (sounds expensive but it's not i think)
+                        int attempts = originalAttempts;
                         var weightedAreas = new List<(EntitySpawnArea Area, int Weight)>();
                         int totalWeight = 0;
                         foreach (var area in spawnAreas)
@@ -579,10 +586,14 @@ public class SpawnController : Entity
                             weightedAreas.Add((area, areaSize));
                             totalWeight += areaSize;
                         }
+                        bool foundValidSpot = false;
+                        Vector2 finalTestPosition = Vector2.Zero;
+                        List<Vector2> usedPositionsList = usedSpawnPositions.ToList(); // they are putting chemicals into our code and turning HashSets into Lists
+                        // so we have better performance by doing this before the loop so we can then select a valid clustered spot with basePos
                         while (attempts-- > 0)
                         {
-                            int roll = deterministicRandom.Next(totalWeight);
                             EntitySpawnArea chosenArea = null;
+                            int roll = deterministicRandom.Next(totalWeight);
                             foreach (var (area, weight) in weightedAreas)
                             {
                                 if (roll < weight)
@@ -593,31 +604,139 @@ public class SpawnController : Entity
                                 roll -= weight;
                             }
                             if (chosenArea == null)
-                                continue; // Just in case
+                                continue;
+
                             Rectangle areaBounds = chosenArea.Collider.Bounds;
-                            float randX = deterministicRandom.Next(areaBounds.Left, areaBounds.Right);
-                            float randY = deterministicRandom.Next(areaBounds.Top, areaBounds.Bottom);
-                            Vector2 testPos = new(randX, randY);
+                            Vector2 testPos;
+                            bool tryCluster = clustered && deterministicRandom.NextDouble() < clusteredChance && usedSpawnPositions.Count > 0;
 
-                            if (gridAligned) // this is handled later but we need to check used positions here
-                                testPos = new Vector2((float)Math.Floor(testPos.X / gridSize) * gridSize, (float)Math.Floor(testPos.Y / gridSize) * gridSize);
-                            if (doNotRepeatSpots && usedSpawnPositions.Contains(gridAligned
+                            if (tryCluster)
+                            {
+                                // try to spawn adjacent to a used position
+                                Vector2 basePos = usedPositionsList[deterministicRandom.Next(usedPositionsList.Count)];
+                                // this means that if the cluster chance is very high, it has to be completely adjacent
+                                // and if it's only mildly high, it can be 1 "tile" (gridSize) away, like close but not so much
+                                // e.g. 100% chance will always be adjacent, 80% will be mostly adjacent but sometimes 1 tile away
+                                int range = deterministicRandom.NextDouble() < clusteredChance ? 1 : 2;
+                                int dx = deterministicRandom.Next(-range, range + 1);
+                                int dy = deterministicRandom.Next(-range, range + 1);
+                                testPos = new Vector2(basePos.X + dx * gridSize, basePos.Y + dy * gridSize);
+                            }
+                            else
+                            {
+                                // full random in bounds
+                                float randX = deterministicRandom.Next(areaBounds.Left, areaBounds.Right);
+                                float randY = deterministicRandom.Next(areaBounds.Top, areaBounds.Bottom);
+                                testPos = new Vector2(randX, randY);
+                                if (gridAligned)
+                                    testPos = new Vector2((float)Math.Floor(testPos.X / gridSize) * gridSize, (float)Math.Floor(testPos.Y / gridSize) * gridSize);
+                                // Check if this testPos is adjacent to any previous position
+                                bool isAdjacent = false;
+                                foreach (var pos in usedPositionsList)
+                                {
+                                    float dx = Math.Abs(pos.X - testPos.X);
+                                    float dy = Math.Abs(pos.Y - testPos.Y);
+
+                                    if (dx <= gridSize && dy <= gridSize && (dx > 0 || dy > 0))
+                                    {
+                                        isAdjacent = true;
+                                        break;
+                                    }
+                                }
+                                if (isAdjacent)
+                                {
+                                    if (clusteredChance > 0f)
+                                    {
+                                        // Allow based on chance (usual behavior)
+                                        if (deterministicRandom.NextDouble() >= clusteredChance)
+                                            continue;
+                                    }
+                                    else
+                                    {
+                                        // clusteredChance == 0: only allow adjacent positions if no non-adjacent ones are left
+                                        bool foundNonAdjacent = false;
+                                        for (int i = 0; i < 10; i++)
+                                        {
+                                            float x = deterministicRandom.Next(areaBounds.Left, areaBounds.Right);
+                                            float y = deterministicRandom.Next(areaBounds.Top, areaBounds.Bottom);
+                                            Vector2 altPos = new Vector2(x, y);
+                                            if (gridAligned)
+                                                altPos = new Vector2((float)Math.Floor(altPos.X / gridSize) * gridSize, (float)Math.Floor(altPos.Y / gridSize) * gridSize);
+                                            bool isAltAdjacent = false;
+                                            foreach (var used in usedPositionsList)
+                                            {
+                                                float dx = Math.Abs(used.X - altPos.X);
+                                                float dy = Math.Abs(used.Y - altPos.Y);
+
+                                                if (dx <= gridSize && dy <= gridSize && (dx > 0 || dy > 0))
+                                                {
+                                                    isAltAdjacent = true;
+                                                    break;
+                                                }
+                                            }
+                                            if (!isAltAdjacent && (!doNotRepeatSpots || !usedSpawnPositions.Contains(altPos)))
+                                            {
+                                                foundNonAdjacent = true;
+                                                break;
+                                            }
+                                        }
+                                        if (foundNonAdjacent)
+                                            continue; // There are still non-adjacent candidates — skip this adjacent one
+                                    }
+                                }
+                            }
+
+                            Vector2 normalized = gridAligned
                                 ? new Vector2((float)Math.Floor(testPos.X / gridSize) * gridSize, (float)Math.Floor(testPos.Y / gridSize) * gridSize)
-                                : testPos.Floor()))
-                                continue; // skips this spot because it was used already
+                                : testPos.Floor();
 
-                            Collider testCollider = spawnedEntity?.Collider?.Clone() ?? new Hitbox(12f, 10f, -6f, -5f);
-                            testCollider.Position = testPos;
+                            if (doNotRepeatSpots && usedSpawnPositions.Contains(normalized))
+                                continue;
+
+                            // Do all of this to use the entity collider (to check for distances) while supporting entities with a ColliderList as their base collider (like spinners)
+                            // And fallback to an arbitrary 1-tile hitbox if nothing else works
+                            Entity dummyEntity = new Entity();
+                            dummyEntity.Position = testPos;
+                            Collider testCollider;
+                            try
+                            {
+                                if (spawnedEntity?.Collider != null)
+                                {
+                                    testCollider = spawnedEntity.Collider.Clone();
+                                    testCollider.Position = Vector2.Zero;
+                                    dummyEntity.Collider = testCollider;
+                                }
+                                else
+                                {
+                                    testCollider = new Hitbox(8f, 8f, -4f, -4f);
+                                    testCollider.Position = Vector2.Zero;
+                                    dummyEntity.Collider = testCollider;
+                                }
+                            }
+                            catch (Exception)
+                            {
+                                testCollider = new Hitbox(8f, 8f, -4f, -4f);
+                                testCollider.Position = Vector2.Zero;
+                                dummyEntity.Collider = testCollider;
+                            }
+
                             Rectangle testBounds = testCollider.Bounds;
                             if (areaBounds.Contains(testBounds))
                             {
-                                spawnPosition = testPos + new Vector2(offsetX, offsetY);
+                                finalTestPosition = testPos;
+                                foundValidSpot = true;
+
                                 if (doNotRepeatSpots)
-                                    usedSpawnPositions.Add(gridAligned
-                                        ? new Vector2((float)Math.Floor(testPos.X / gridSize) * gridSize, (float)Math.Floor(testPos.Y / gridSize) * gridSize)
-                                        : testPos.Floor());
+                                    usedSpawnPositions.Add(normalized);
                                 break;
                             }
+                        }
+                        if (foundValidSpot)
+                            spawnPosition = finalTestPosition + new Vector2(offsetX, offsetY);
+                        else
+                        {
+                            Logger.Debug(nameof(KoseiHelperModule), $"Failed to find a valid spawn position after {originalAttempts} attempts.\nMake you have enough space to spawn entities (bigger spawn area or less requirements).");
+                            canSpawnThisFrame = false;
                         }
                     }
                 }
@@ -944,7 +1063,7 @@ public class SpawnController : Entity
                     default:
                         break;
                 }
-                if (spawnedEntity != null && player != null)
+                if (spawnedEntity != null && player != null && canSpawnThisFrame)
                 { // If the entity has been spawned successfully:
                     Scene.Add(spawnedEntity);
                     if (despawnMethod == DespawnMethod.None || globalEntity)
@@ -956,7 +1075,6 @@ public class SpawnController : Entity
                     level.Session.IncrementCounter("KoseiHelper_TotalEntitiesSpawned");
                     if (!string.IsNullOrEmpty(counterPositive))
                         level.Session.SetCounter(counterPositive, level.Session.GetCounter(counterPositive) - 1);
-
                     Audio.Play(appearSound, player.Position);
                 }
             }

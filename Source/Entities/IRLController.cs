@@ -38,7 +38,7 @@ public class IRLController : Entity
         // day of week
         level.Session.SetFlag("kosei_irl" + DateTime.Now.DayOfWeek.ToString());
         // system username
-        level.Session.SetFlag("kosei_irlName" + Environment.UserName);
+        level.Session.SetFlag("kosei_irlName" + SaveData.Instance?.Name); // used to be Environment.UserName but i got a complaints form
         // if a gamepad is plugged to the pc or not
         level.Session.SetFlag("kosei_irlGamePad" + (GamePad.GetState(PlayerIndex.One).IsConnected ? "True" : "False"));
 

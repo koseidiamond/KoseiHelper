@@ -21,7 +21,7 @@ SpawnController.placements = {
 		flagValue = true,
 		relativeToPlayerFacing = true,
 		nodeRelativeToPlayerFacing = true,
-		timeToLive = 0,
+		timeToLive = 9999999,
 		flagToLive = "KoseiHelper_despawnEntity",
 		counterPositive = "",
 		appearSound = "event:/KoseiHelper/spawn",
@@ -37,6 +37,8 @@ SpawnController.placements = {
 		randomLocation = false,
 		spawnAreaColor = "deb887",
 		doNotRepeatSpots = true,
+		clustered = false,
+		clusteredChance = 80,
 		--Spawn conditions
 		spawnFlag = "koseiHelper_spawn",
 		spawnFlagValue = true,
@@ -240,7 +242,7 @@ SpawnController.fieldInformation = function (entity) return {
 		minimumValue = 0
 	},
 	timeToLive = {
-		minimumValue = 0
+		minimumValue = 0.00000001
 	},
 	spawnCondition = {
 		options = {
@@ -257,13 +259,27 @@ SpawnController.fieldInformation = function (entity) return {
 		},
 		editable = false
 	},
-	spawnLimit = { fieldType = "integer"},
-	offsetX = { fieldType = "integer"},
-	offsetY = { fieldType = "integer"},
-	nodeX = { fieldType = "integer"},
-	nodeY = { fieldType = "integer"},
-	blockWidth = { fieldType = "integer"},
-	blockHeight = { fieldType = "integer"},
+	spawnLimit = {
+		fieldType = "integer"
+	},
+	offsetX = {
+		fieldType = "integer"
+	},
+	offsetY = {
+		fieldType = "integer"
+	},
+	nodeX = {
+		fieldType = "integer"
+	},
+	nodeY = {
+		fieldType = "integer"
+	},
+	blockWidth = {
+		fieldType = "integer"
+	},
+	blockHeight = {
+		fieldType = "integer"
+	},
 	blockTileType = {
 		options = fakeTilesHelper.getTilesOptions(entity.fg and "tilesFg"),
 		editable = false
@@ -274,6 +290,10 @@ SpawnController.fieldInformation = function (entity) return {
 	},
 	spawnAreaColor = {
 		fieldType = "color"
+	},
+	clusteredChance = {
+		minimumValue = 0,
+		maximumValue = 100
 	},
 	gridSize = {
 		fieldType = "integer",
@@ -437,6 +457,8 @@ function SpawnController.ignoredFields(entity)
 	"gridSize",
 	"spawnAreaColor",
 	"doNotRepeatSpots",
+	"clustered",
+	"clusteredChance",
 	
 	"canDragAround",
 	"mouseWheelMode",
@@ -570,6 +592,10 @@ function SpawnController.ignoredFields(entity)
 	if entity.randomLocation then
 		doNotIgnore("spawnAreaColor")
 		doNotIgnore("doNotRepeatSpots")
+		doNotIgnore("clustered")
+	end
+	if entity.clustered then
+		doNotIgnore("clusteredChance")
 	end
 	-- Mouse options
 	if entity.spawnCondition == "LeftClick" or entity.spawnCondition == "RightClick" then
@@ -674,6 +700,7 @@ function SpawnController.ignoredFields(entity)
 	end
 	if entity.entityToSpawn == "Spinner" then
 		doNotIgnore("attachToSolid")
+		doNotIgnore("crystalColor")
 	end
 	if entity.entityToSpawn == "SpawnPoint" then
 		doNotIgnore("onlyOnSafeGround")
@@ -769,7 +796,7 @@ SpawnController.fieldOrder =  {
 	"wheelIndicatorY",
 	"gridSize",
 	"spawnAreaColor",
-	"doNotRepeatSpots",
+	"clusteredChance",
 	-- non-boolean entity-specific attributes
 	"bladeSpeed",
 	
@@ -819,6 +846,8 @@ SpawnController.fieldOrder =  {
 	"ignoreJustRespawned",
 	"gridAligned",
 	"randomLocation",
+	"doNotRepeatSpots",
+	"clustered",
 	--"transitionUpdate",
 	"noNode"
 }
