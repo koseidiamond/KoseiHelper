@@ -14,7 +14,14 @@ TalkComponentCustomizator.placements = {
 		floatiness = 1,
 		tint = "FFFFFFFF",
 		talkTextColor = "FFFFFFFF",
-		textStroke = 2
+		textStroke = 2,
+		animationFrames = 0,
+		animationSpeed = 0.1,
+		text = "Talk",
+		textScaleX = 1,
+		textScaleY = 1,
+		iconScaleX = 1,
+		iconScaleY = 1
 		}
 	}
 }
@@ -44,7 +51,49 @@ TalkComponentCustomizator.fieldInformation = {
 	},
 	textStroke = {
         minimumValue = 0
+    },
+	animationFrames = {
+        minimumValue = 0,
+		fieldType = "integer"
+    },
+	animationSpeed = {
+        minimumValue = 0.0000001
+    },
+	textScaleX = {
+        minimumValue = 0
+    },
+	textScaleY = {
+        minimumValue = 0
+    },
+	iconScaleX = {
+        minimumValue = 0
+    },
+	iconScaleY = {
+        minimumValue = 0
     }
+}
+
+TalkComponentCustomizator.fieldOrder = {
+	"x",
+	"y",
+	--icon
+	"idleTexture",
+	"highlightTexture",
+	"tint",
+	"floatiness",
+	"animationFrames",
+	"animationSpeed",
+	"iconScaleX",
+	"iconScaleY",
+	--text
+	"text",
+	"textStroke",
+	"talkTextColor",
+	"textScaleX",
+	"textScaleY",
+	--sfx
+	"sfxIn",
+	"sfxOut"
 }
 
 return TalkComponentCustomizator
