@@ -6,7 +6,9 @@ RestartGameTrigger.placements = {
     data = {
 		triggerMode = "OnEnter",
 		flag = "",
-		restartOnlyLevel = false
+		restartOnlyLevel = false,
+		onlyOnce = false
+		--delay = 0
     }
 }
 
@@ -18,6 +20,9 @@ RestartGameTrigger.fieldInformation = function (entity) return {
 		"OnStay"
 		},
 		editable = false
+	},
+	delay = {
+		minimumValue = 0
 	}
 }
 end

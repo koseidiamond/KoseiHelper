@@ -1,5 +1,6 @@
 using Celeste.Mod.Entities;
 using Microsoft.Xna.Framework;
+using Monocle;
 
 namespace Celeste.Mod.KoseiHelper.Triggers;
 
