@@ -574,47 +574,27 @@ public class SpawnController : Entity
 
                 if (randomLocation)
                 {
-                    var spawnAreas = Scene.Tracker.GetEntities<EntitySpawnArea>().OfType<EntitySpawnArea>().Where(area => area.color == spawnAreaColor).ToList();
+                    List<EntitySpawnArea> spawnAreas = Scene.Tracker.GetEntities<EntitySpawnArea>().OfType<EntitySpawnArea>().Where(area => area.color == spawnAreaColor).ToList();
 
                     if (spawnAreas.Count > 0)
                     {
                         int originalAttempts = 3000; // tries tons of different spots until it finds a valid one idk how to better one (sounds expensive but it's not i think)
                         int attempts = originalAttempts;
-                        var weightedAreas = new List<(EntitySpawnArea Area, int Weight)>();
-                        int totalWeight = 0;
-                        foreach (var area in spawnAreas)
+                        foreach (EntitySpawnArea area in spawnAreas)
                         {
                             int areaSize = area.Collider.Bounds.Width * area.Collider.Bounds.Height;
-                            weightedAreas.Add((area, areaSize));
-                            totalWeight += areaSize;
                         }
                         bool foundValidSpot = false;
                         Vector2 finalTestPosition = Vector2.Zero;
                         List<Vector2> usedPositionsList = usedSpawnPositions.ToList(); // they are putting chemicals into our code and turning HashSets into Lists
                         // so we have better performance by doing this before the loop so we can then select a valid clustered spot with basePos
+
                         while (attempts-- > 0)
                         {
-                            EntitySpawnArea chosenArea = null;
-                            int roll = deterministicRandom.Next(totalWeight);
-                            foreach (var (area, weight) in weightedAreas)
-                            {
-                                if (roll < weight)
-                                {
-                                    chosenArea = area;
-                                    break;
-                                }
-                                roll -= weight;
-                            }
-                            if (chosenArea == null)
-                                continue;
-
-                            Rectangle areaBounds = chosenArea.Collider.Bounds;
                             Vector2 testPos;
                             bool tryCluster = clustered && deterministicRandom.NextDouble() < clusteredChance && usedSpawnPositions.Count > 0;
-
                             if (tryCluster)
-                            {
-                                // try to spawn adjacent to a used position
+                            { // try to spawn adjacent to a used position
                                 Vector2 basePos = usedPositionsList[deterministicRandom.Next(usedPositionsList.Count)];
                                 // this means that if the cluster chance is very high, it has to be completely adjacent
                                 // and if it's only mildly high, it can be 1 "tile" (gridSize) away, like close but not so much
@@ -626,50 +606,54 @@ public class SpawnController : Entity
                             }
                             else
                             {
-                                // full random in bounds
-                                float randX = deterministicRandom.Next(areaBounds.Left, areaBounds.Right);
-                                float randY = deterministicRandom.Next(areaBounds.Top, areaBounds.Bottom);
+                                // Calculate combined bounding rectangle of all spawn areas
+                                int combinedLeft = spawnAreas.Min(area => area.Collider.Bounds.Left);
+                                int combinedTop = spawnAreas.Min(area => area.Collider.Bounds.Top);
+                                int combinedRight = spawnAreas.Max(area => area.Collider.Bounds.Right);
+                                int combinedBottom = spawnAreas.Max(area => area.Collider.Bounds.Bottom);
+                                Rectangle combinedBounds = new(combinedLeft, combinedTop, combinedRight - combinedLeft, combinedBottom - combinedTop);
+                                float randX = deterministicRandom.Next(combinedBounds.Left, combinedBounds.Right);
+                                float randY = deterministicRandom.Next(combinedBounds.Top, combinedBounds.Bottom);
                                 testPos = new Vector2(randX, randY);
+
                                 if (gridAligned)
                                     testPos = new Vector2((float)Math.Floor(testPos.X / gridSize) * gridSize, (float)Math.Floor(testPos.Y / gridSize) * gridSize);
-                                // Check if this testPos is adjacent to any previous position
+                                // Same adjacency rejection logic as before
                                 bool isAdjacent = false;
                                 foreach (Vector2 pos in usedPositionsList)
                                 {
                                     float dx = Math.Abs(pos.X - testPos.X);
                                     float dy = Math.Abs(pos.Y - testPos.Y);
-
                                     if (dx <= gridSize && dy <= gridSize && (dx > 0 || dy > 0))
                                     {
                                         isAdjacent = true;
                                         break;
                                     }
                                 }
+
                                 if (isAdjacent)
                                 {
                                     if (clusteredChance > 0f)
                                     {
-                                        // Allow based on chance (usual behavior)
                                         if (deterministicRandom.NextDouble() >= clusteredChance)
                                             continue;
                                     }
                                     else
                                     {
-                                        // clusteredChance == 0: only allow adjacent positions if no non-adjacent ones are left
                                         bool foundNonAdjacent = false;
                                         for (int i = 0; i < 10; i++)
                                         {
-                                            float x = deterministicRandom.Next(areaBounds.Left, areaBounds.Right);
-                                            float y = deterministicRandom.Next(areaBounds.Top, areaBounds.Bottom);
+                                            float x = deterministicRandom.Next(combinedBounds.Left, combinedBounds.Right);
+                                            float y = deterministicRandom.Next(combinedBounds.Top, combinedBounds.Bottom);
                                             Vector2 altPos = new Vector2(x, y);
                                             if (gridAligned)
                                                 altPos = new Vector2((float)Math.Floor(altPos.X / gridSize) * gridSize, (float)Math.Floor(altPos.Y / gridSize) * gridSize);
+
                                             bool isAltAdjacent = false;
-                                            foreach (var used in usedPositionsList)
+                                            foreach (Vector2 used in usedPositionsList)
                                             {
                                                 float dx = Math.Abs(used.X - altPos.X);
                                                 float dy = Math.Abs(used.Y - altPos.Y);
-
                                                 if (dx <= gridSize && dy <= gridSize && (dx > 0 || dy > 0))
                                                 {
                                                     isAltAdjacent = true;
@@ -683,20 +667,16 @@ public class SpawnController : Entity
                                             }
                                         }
                                         if (foundNonAdjacent)
-                                            continue; // There are still non-adjacent candidates — skip this adjacent one
+                                            continue; // There are still non-adjacent candidates: skip this adjacent one
                                     }
                                 }
                             }
-
                             Vector2 normalized = gridAligned
                                 ? new Vector2((float)Math.Floor(testPos.X / gridSize) * gridSize, (float)Math.Floor(testPos.Y / gridSize) * gridSize)
                                 : testPos.Floor();
 
                             if (doNotRepeatSpots && usedSpawnPositions.Contains(normalized))
                                 continue;
-
-                            // Do all of this to use the entity collider (to check for distances) while supporting entities with a ColliderList as their base collider (like spinners)
-                            // And fallback to an arbitrary 1-tile hitbox if nothing else works
                             Entity dummyEntity = new Entity();
                             dummyEntity.Position = testPos;
                             Collider testCollider;
@@ -721,18 +701,40 @@ public class SpawnController : Entity
                                 testCollider.Position = Vector2.Zero;
                                 dummyEntity.Collider = testCollider;
                             }
-
                             Rectangle testBounds = testCollider.Bounds;
-                            if (areaBounds.Contains(testBounds))
+
+                            // This corner stuff is useful to determine if all corners of a block/rectangle collider fit inside any of the areas
+                            bool allCornersInside = true;
+                            Vector2[] corners = new Vector2[] { 
+                                new Vector2(testBounds.Left, testBounds.Top), new Vector2(testBounds.Right - 1, testBounds.Top),
+                                new Vector2(testBounds.Left, testBounds.Bottom - 1), new Vector2(testBounds.Right - 1, testBounds.Bottom - 1)};
+                            foreach (Vector2 corner in corners)
+                            {
+                                bool cornerInsideAnyArea = false;
+                                foreach (EntitySpawnArea area in spawnAreas)
+                                {
+                                    if (area.Collider.Bounds.Contains((int)corner.X, (int)corner.Y))
+                                    {
+                                        cornerInsideAnyArea = true;
+                                        break;
+                                    }
+                                }
+                                if (!cornerInsideAnyArea)
+                                {
+                                    allCornersInside = false;
+                                    break;
+                                }
+                            }
+                            if (allCornersInside)
                             {
                                 finalTestPosition = testPos;
                                 foundValidSpot = true;
-
                                 if (doNotRepeatSpots)
                                     usedSpawnPositions.Add(normalized);
                                 break;
                             }
                         }
+
                         if (foundValidSpot)
                             spawnPosition = finalTestPosition + new Vector2(offsetX, offsetY);
                         else
