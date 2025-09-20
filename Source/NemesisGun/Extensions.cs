@@ -31,11 +31,11 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
             get
             {
                 if (forceGrabButton)
-                    return Input.Grab.Pressed;
+                    return KoseiHelperModule.Settings.GunSettings.MachineGunMode? Input.Grab.Check : Input.Grab.Pressed;
                 if (KoseiHelperModule.Settings.GunSettings.dashBehavior == KoseiHelperModuleSettings.NemesisSettings.DashBehavior.ReplacesDash)
-                    return Input.Dash.Pressed || Input.CrouchDash.Pressed;
+                    return KoseiHelperModule.Settings.GunSettings.MachineGunMode ? Input.Dash.Check || Input.CrouchDash.Check : Input.Dash.Pressed || Input.CrouchDash.Pressed;
                 // else, custom button
-                return KoseiHelperModule.Settings.NemesisShot.Pressed;
+                return KoseiHelperModule.Settings.GunSettings.MachineGunMode ? KoseiHelperModule.Settings.NemesisShot.Check : KoseiHelperModule.Settings.NemesisShot.Pressed;
             }
         }
     }

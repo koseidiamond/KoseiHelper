@@ -8,7 +8,8 @@ ForceThrowTrigger.placements = {
 		name = "Force Throw Trigger",
 		data = {
 		onlyOnce = false,
-		triggerMode = "OnEnter"
+		triggerMode = "OnEnter",
+		flag = ""
 		}
 	}
 }

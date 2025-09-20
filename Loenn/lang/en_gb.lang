@@ -826,20 +826,26 @@ entities.KoseiHelper/EntitySpawnArea.attributes.description.color=Spawn Controll
 #Force Throw Trigger
 triggers.KoseiHelper/ForceThrowTrigger.placements.name.ForceThrowTrigger=Force Throw Trigger
 triggers.KoseiHelper/ForceThrowTrigger.placements.description.Force Throw Trigger=The player is forced to throw the holdable when touching the trigger.
+triggers.KoseiHelper/ForceThrowTrigger.attributes.description.triggerMode=Whether the trigger should activate when the player enters or exits it, or on every frame (for use with flags).
+triggers.KoseiHelper/ForceThrowTrigger.attributes.description.flag=The trigger will only activate once this flag is true.\nLeave empty for no flag required.
+triggers.KoseiHelper/ForceThrowTrigger.attributes.description.onlyOnce=Whether the trigger should disappear upon being activated.
 
 #Force Hiccup Trigger
 triggers.KoseiHelper/ForceHiccupTrigger.placements.name.ForceHiccupTrigger=Force Hiccup Trigger
 triggers.KoseiHelper/ForceHiccupTrigger.placements.description.Force Hiccup Trigger=The player will have a hiccup.
-triggers.KoseiHelper/ForceHiccupTrigger.attributes.description.triggerMode=If the trigger should activate when the player enters/leaves the trigger,\non a certain interval while the player is inside,\nwhen the beat/cycle of the cassette progresses,\nor whenever the flag specified becomes true.\nClose and open again with OnStay/OnFlag for an extra setting.
+triggers.KoseiHelper/ForceHiccupTrigger.attributes.description.triggerMode=Whether the trigger should activate when the player enters/leaves the trigger,\non a certain interval while the player is inside,\nwhen the beat/cycle of the cassette progresses,\nor whenever the flag specified becomes true.\nClose and open again with OnStay/OnFlag for an extra setting.
+triggers.KoseiHelper/ForceHiccupTrigger.attributes.description.onlyOnce=Whether the trigger should disappear upon being activated.
+triggers.KoseiHelper/ForceHiccupTrigger.attributes.description.interval=The player should have a hiccup every x seconds while inside the trigger.
+triggers.KoseiHelper/ForceHiccupTrigger.attributes.description.flag=The trigger will only activate once this flag is true.\nLeave empty for no flag required.
 
 #OOB Trigger
 triggers.KoseiHelper/OOBTrigger.placements.name.OOBTrigger=OOB Trigger
 triggers.KoseiHelper/OOBTrigger.placements.name.BoundTrigger=Bound Trigger
 triggers.KoseiHelper/OOBTrigger.placements.description.BoundTrigger=The trigger version of Bound Refills.\nAllows to enter the physical space of other rooms without transitioning to them.
 triggers.KoseiHelper/OOBTrigger.attributes.name.inBound=InBound
-triggers.KoseiHelper/OOBTrigger.attributes.description.onlyOnce=If the trigger should disappear upon being activated.
-triggers.KoseiHelper/OOBTrigger.attributes.description.onExit=If the trigger should be enabled when the player enters or exits the trigger.
-triggers.KoseiHelper/OOBTrigger.attributes.description.inBound=If the player should be inbounded (forced to be in the same room where the trigger is placed),\nor outbounded (be unable to transition/escape the room).
+triggers.KoseiHelper/OOBTrigger.attributes.description.onlyOnce=Whether the trigger should disappear upon being activated.
+triggers.KoseiHelper/OOBTrigger.attributes.description.onExit=Whether the trigger should be enabled when the player enters or exits the trigger.
+triggers.KoseiHelper/OOBTrigger.attributes.description.inBound=Whether the player should be inbounded (forced to be in the same room where the trigger is placed),\nor outbounded (be unable to transition/escape the room).
 triggers.KoseiHelper/OOBTrigger.attributes.description.climbFix=In vanilla, the player can't climb if they are to the left/right of the current screen.\nNot recommended to disable.\n(The trigger with the highest ID determines if the player can climb outside the current room or not).
 
 #Kill If Not Grounded Trigger
@@ -853,7 +859,7 @@ triggers.KoseiHelper/KillIfNotGroundedTrigger.attributes.description.group=Multi
 # Metadata Trigger
 triggers.KoseiHelper/MetadataTrigger.placements.name.MetadataTrigger=Metadata Trigger
 triggers.KoseiHelper/MetadataTrigger.placements.description.MetadataTrigger=Changes the map/room metadata.\nImportant: Room metadata will have effect once the room reloads (reenter/F5/respawn).
-triggers.KoseiHelper/MetadataTrigger.attributes.description.onlyOnce=If the trigger should disappear upon being activated.
+triggers.KoseiHelper/MetadataTrigger.attributes.description.onlyOnce=Whether the trigger should disappear upon being activated.
 triggers.KoseiHelper/MetadataTrigger.attributes.description.metadataToAffect=Whether the trigger should alter only the map metadata, the room metadata, or everything.
 triggers.KoseiHelper/MetadataTrigger.attributes.description.theoInBubble=Whether the player is allowed to hold Theo and other holdables while in a booster.
 triggers.KoseiHelper/MetadataTrigger.attributes.description.seekerSlowdown=Whether Seekers should be able to slow down time when attacking the player.\nDisables music layer 3 if enabled.
@@ -923,7 +929,10 @@ triggers.KoseiHelper/ReplaceSpeedWithStoredSpeedTrigger.attributes.description.f
 
 # Restart Game Trigger
 triggers.KoseiHelper/RestartGameTrigger.placements.name.RestartGameTrigger=Restart Game Trigger
-triggers.KoseiHelper/RestartGameTrigger.placements.description.RestartGameTrigger=Fully restarts Celeste.exe when the player enters the trigger.
+triggers.KoseiHelper/RestartGameTrigger.placements.description.RestartGameTrigger=Fully restarts the game or the level when the player enters the trigger.
+triggers.KoseiHelper/RestartGameTrigger.attributes.description.triggerMode=Whether the trigger should activate when the player enters or exits it, or on every frame (for use with flags).
+triggers.KoseiHelper/RestartGameTrigger.attributes.description.flag=The trigger will only activate once this flag is true.\nLeave empty for no flag required.
+triggers.KoseiHelper/RestartGameTrigger.attributes.description.restartOnlyLevel=Whether the trigger should restart only the level (F5) and not the entire game (Ctrl+F5).
 
 # Set Window Size Trigger
 triggers.KoseiHelper/SetWindowSizeTrigger.placements.name.SetWindowSizeTrigger=Set Window Size Trigger
@@ -1040,6 +1049,7 @@ triggers.KoseiHelper/NemesisGunSettings.attributes.description.canShootInFeather
 triggers.KoseiHelper/NemesisGunSettings.attributes.description.freezeFrames=How many freeze frames should give each shot.
 triggers.KoseiHelper/NemesisGunSettings.attributes.description.horizontalAcceleration=How much the bullet should accelerate horizontally on each frame until reaching its max speed.\nBoth accelerations combined can result in curved trajectories!\nRecommended values are between -0.2 (boomerang-like) and 0.2 (onwards).
 triggers.KoseiHelper/NemesisGunSettings.attributes.description.verticalAcceleration=How much the bullet should accelerate vertically on each frame.\nBoth accelerations combined can result in curved trajectories!\nRecommended values are between -0.2 (upwards) and 0.2 (downwards).
+triggers.KoseiHelper/NemesisGunSettings.attributes.description.machineGunMode=Whether the gun should keep shooting as long as the button is held.
 triggers.KoseiHelper/NemesisGunSettings.attributes.description.forceGrabButton=Whether the gun should be set to use the grab button on this map.\nFor those who don't want to force players to use a custom keybind.
 
 triggers.KoseiHelper/NemesisGunInteractions.placements.name.NemesisGunInteractions=Nemesis Gun Interactions

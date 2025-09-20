@@ -36,6 +36,9 @@ public class KoseiHelperModuleSettings : EverestModuleSettings
         [SettingSubText("Whether you can shoot while in the feather state. Default off.")]
         public bool CanShootInFeather { get; set; } = false;
 
+        [SettingSubText("Whether you can shoot multiple times by holding the Nemesis Shot button.\nNot compatible with recoil.")]
+        public bool MachineGunMode { get; set; } = false;
+
         [SettingSubText("How much time until you can shoot again, in frames. Default 8.")]
         [SettingRange(min: 0, max: 999)]
         public int Cooldown { get; set; } = 8;
@@ -245,7 +248,7 @@ public class KoseiHelperModuleSettings : EverestModuleSettings
         "These can be overridden by specific map settings.\n")]
     public NemesisInteractions GunInteractions { get; set; } = new();
 
-    private void CleanGunSettings()
+    private static void CleanGunSettings()
     {
         KoseiHelperModule.Settings.GunSettings.CanShootInFeather = false;
         KoseiHelperModule.Settings.GunSettings.Cooldown = 8;
@@ -261,9 +264,10 @@ public class KoseiHelperModuleSettings : EverestModuleSettings
         KoseiHelperModule.Settings.GunSettings.VerticalAcceleration = 0f;
         KoseiHelperModule.Settings.GunSettings.dashBehavior = NemesisSettings.DashBehavior.None;
         KoseiHelperModule.Settings.GunSettings.gunDirections = NemesisSettings.GunDirections.EightDirections;
+        KoseiHelperModule.Settings.GunSettings.MachineGunMode = false;
     }
 
-    private void CleanGunInteractions()
+    private static void CleanGunInteractions()
     {
         KoseiHelperModule.Settings.GunInteractions.CanKillPlayer = false;
         KoseiHelperModule.Settings.GunInteractions.BreakBounceBlocks = true;

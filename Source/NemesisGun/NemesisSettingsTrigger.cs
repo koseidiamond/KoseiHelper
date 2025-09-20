@@ -25,6 +25,7 @@ public class NemesisGunSettingsTrigger : Trigger
     private int bulletWidth = 6, bulletHeight = 6, bulletXOffset, bulletYOffset;
     private bool particleDoesntRotate;
     private bool forceGrabButton;
+    private bool machineGunMode;
 
     public KoseiHelperModuleSettings.NemesisSettings.GunDirections gunDirections;
 
@@ -62,6 +63,7 @@ public class NemesisGunSettingsTrigger : Trigger
         bulletYOffset = data.Int("bulletYOffset", 0);
         particleDoesntRotate = data.Bool("particleDoesntRotate", false);
         forceGrabButton = data.Bool("forceGrabButton", false);
+        machineGunMode = data.Bool("machineGunMode", false);
     }
 
     public override void OnEnter(Player player)
@@ -102,6 +104,7 @@ public class NemesisGunSettingsTrigger : Trigger
         KoseiHelperModule.Settings.GunSettings.FreezeFrames = freezeFrames;
         KoseiHelperModule.Settings.GunSettings.HorizontalAcceleration = horizontalAcceleration;
         KoseiHelperModule.Settings.GunSettings.VerticalAcceleration = verticalAcceleration;
+        KoseiHelperModule.Settings.GunSettings.MachineGunMode = machineGunMode;
         Extensions.color1 = color1;
         Extensions.color2 = color2;
         Extensions.shotDustType = shotDustType;
@@ -119,12 +122,8 @@ public class NemesisGunSettingsTrigger : Trigger
         Extensions.forceGrabButton = forceGrabButton;
 
         if (enabled)
-        {
             (Scene as Level).Session.SetFlag("EnableNemesisGun", true);
-        }
         else
-        {
             (Scene as Level).Session.SetFlag("EnableNemesisGun", false);
-        }
     }
 }

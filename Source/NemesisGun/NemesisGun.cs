@@ -271,7 +271,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                         if (self.StateMachine.state != 11 && self.StateMachine.state != 17 &&
                             (self.StateMachine.state != 19 || KoseiHelperModule.Settings.GunSettings.CanShootInFeather))
                             Gunshot(self, CursorPos);
-                        if (recoilCooldown <= 0 || Extensions.recoilingOnInteraction)
+                        if ((recoilCooldown <= 0 || Extensions.recoilingOnInteraction) && !KoseiHelperModule.Settings.GunSettings.MachineGunMode)
                         {
                             if (GetEightDirectionalAim(KoseiHelperModule.Settings.GunSettings.gunDirections).Y < Math.Sqrt(2) / 2 &&
                             GetEightDirectionalAim(KoseiHelperModule.Settings.GunSettings.gunDirections).Y > -Math.Sqrt(2) / 2 &&
@@ -282,7 +282,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                             }
                             else if (KoseiHelperModule.Settings.GunSettings.RecoilUpwards)
                                 self.Speed.Y -= KoseiHelperModule.Settings.GunSettings.Recoil;
-                            // Recoil for all player clones and such
+                            // Recoil for all player clones and such (does not work anyways lol)
                             foreach (Entity entity in self.level.Entities)
                             {
                                 if (entity is Player extraPlayer && extraPlayer != self)
