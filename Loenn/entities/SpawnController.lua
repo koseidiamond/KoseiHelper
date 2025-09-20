@@ -103,6 +103,7 @@ SpawnController.placements = {
 		swapBlockTheme = "Normal",
 		
 		refillTwoDashes = false,
+		refillOneUse = false,
 		
 		blockSinks = false,
 		
@@ -514,6 +515,7 @@ function SpawnController.ignoredFields(entity)
 	"spawnSpeed",
 	
 	"refillTwoDashes",
+	"refillOneUse",
 	
 	"blockSinks",
 	
@@ -691,6 +693,7 @@ function SpawnController.ignoredFields(entity)
 	end
 	if entity.entityToSpawn == "Refill" then
 		doNotIgnore("refillTwoDashes")
+		doNotIgnore("refillOneUse")
 	end
 	if entity.entityToSpawn == "GlassBlock" or entity.entityToSpawn == "StarJumpBlock" then
 		doNotIgnore("blockSinks")

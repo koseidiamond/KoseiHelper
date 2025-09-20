@@ -46,6 +46,7 @@ public class TalkComponentCustomizator : Entity
     private readonly float animationSpeed;
     private readonly string text;
     private readonly float textScaleX, textScaleY, iconScaleX, iconScaleY;
+    private readonly bool allEntities;
 
     public TalkComponentCustomizator(EntityData data, Vector2 offset) : base(data.Position + offset)
     {
@@ -64,6 +65,7 @@ public class TalkComponentCustomizator : Entity
         iconScaleY = data.Float("iconScaleY", 1f);
         tint = KoseiHelperUtils.ParseHexColor(data.Values.TryGetValue("tint", out object tintColor) ? tintColor.ToString() : null, Calc.HexToColor("FFFFFF"));
         talkTextColor = KoseiHelperUtils.ParseHexColor(data.Values.TryGetValue("talkTextColor", out object talkTextC) ? talkTextC.ToString() : null, Calc.HexToColor("FFFFFF"));
+        allEntities = data.Bool("allEntities", false);
     }
 
     public override void Awake(Scene scene)
@@ -77,23 +79,33 @@ public class TalkComponentCustomizator : Entity
 
         TalkComponent closestTalkComponent = null;
         float closestDistance = float.MaxValue;
-
-        foreach (Component component in components)
+        if (allEntities)
         {
-            if (component.Entity == null)
-                continue;
-
-            float distance = Vector2.DistanceSquared(Position, component.Entity.Position);
-            if (distance < closestDistance)
+            foreach (Component component in components)
             {
-                closestDistance = distance;
-                closestTalkComponent = (TalkComponent)component;
+                if (component.Entity != null)
+                {
+                    TalkComponent talkComponent = (TalkComponent)component;
+                    CustomizeTalkComponent(talkComponent);
+                }
             }
         }
-
-        if (closestTalkComponent != null)
+        else
         {
-            CustomizeTalkComponent(closestTalkComponent);
+            foreach (Component component in components)
+            {
+                if (component.Entity == null)
+                    continue;
+
+                float distance = Vector2.DistanceSquared(Position, component.Entity.Position);
+                if (distance < closestDistance)
+                {
+                    closestDistance = distance;
+                    closestTalkComponent = (TalkComponent)component;
+                }
+            }
+            if (closestTalkComponent != null)
+                CustomizeTalkComponent(closestTalkComponent);
         }
     }
 
@@ -149,6 +161,11 @@ public class TalkComponentCustomizator : Entity
                 customization.ParsedTextChunks.Add(Input.GuiDirection(dir));
             else if (GFX.Gui.Has(trimmed))
                 customization.ParsedTextChunks.Add(GFX.Gui[trimmed]);
+            else if (trimmed.StartsWith("dialog:"))
+            {
+                string dialogKey = trimmed.Substring("dialog:".Length);
+                customization.ParsedTextChunks.Add(Dialog.Get(dialogKey));
+            }
             else
                 customization.ParsedTextChunks.Add(trimmed);
         }

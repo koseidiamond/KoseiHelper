@@ -606,7 +606,8 @@ entities.KoseiHelper/TalkComponentCustomizator.attributes.description.textScaleX
 entities.KoseiHelper/TalkComponentCustomizator.attributes.description.textScaleY=How tall the text should be.
 entities.KoseiHelper/TalkComponentCustomizator.attributes.description.iconScaleX=How wide the icon (texture) should be.
 entities.KoseiHelper/TalkComponentCustomizator.attributes.description.iconScaleY=How tall the icon (texture) should be.
-entities.KoseiHelper/TalkComponentCustomizator.attributes.description.text=The custom text/button icons to display in the icon, separated by commas. Each part can be:\n- a path to a texture in the Gui atlas (for example "tinyarrow")\n- a direction: Down, DownRight, Right, UpRight, Up, UpLeft, Left, DownLeft\n- a button: Jump, Dash, CrouchDash, Grab, Talk, ESC, Pause, MenuLeft, MenuRight, MenuUp, MenuDown, MenuConfirm, MenuCancel, MenuJournal, QuickRestart\n- a dialog ID, if you prefix it with "dialog:" (for example, "dialog:TUTORIAL_DREAMJUMP")\n- plain text\n\nLeave as Default if you don't want custom text.
+entities.KoseiHelper/TalkComponentCustomizator.attributes.description.text=The custom text/button icons to display in the icon, separated by commas. Each part can be:\n- a path to a texture in the Gui atlas (for example "tinyarrow")\n- a direction: Down, DownRight, Right, UpRight, Up, UpLeft, Left, DownLeft\n- a button: Jump, Dash, CrouchDash, Grab, Talk, ESC, Pause, MenuLeft, MenuRight, MenuUp, MenuDown, MenuConfirm, MenuCancel, MenuJournal, QuickRestart\n- a dialog ID, if you prefix it with dialog: (for example, dialog:TUTORIAL_DREAMJUMP)\n- plain text\n\nLeave as Default if you don't want custom text.
+entities.KoseiHelper/TalkComponentCustomizator.attributes.description.allEntities=Whether the customizator should affect all talk components in the room, or only the closest one.
 
 #CONTROLLERS
 
@@ -759,8 +760,8 @@ entities.KoseiHelper/SpawnController.attributes.description.dashSwitchSide=Flips
 entities.KoseiHelper/SpawnController.attributes.description.fallingBlockBadeline=If the block should behave as Badeline (boss) Falling Blocks.
 entities.KoseiHelper/SpawnController.attributes.description.fallingBlockClimbFall=After a delay, the block will physically fall down until it comes into contact with another block.
 
-entities.KoseiHelper/SpawnController.attributes.description.featherShielded=If the feather should be inside a shield/bubble.
-entities.KoseiHelper/SpawnController.attributes.description.featherSingleUse=If the feather should be instantly consumed after used.
+entities.KoseiHelper/SpawnController.attributes.description.featherShielded=Whether the feather should be inside a shield/bubble.
+entities.KoseiHelper/SpawnController.attributes.description.featherSingleUse=Whether the feather is single use, not reappearing (but not completely deleting itself) after usage.
 
 entities.KoseiHelper/SpawnController.attributes.description.flagCycleAt=The "spawned flag" will cycle until reaching this number, then it will reset the values again.\nFor example, if the cycle is 3, the process will be:\nkoseiFlag1 > koseiFlag2 > koseiFlag3 > !koseiFlag1 > !koseiFlag2 > !koseiFlag3 > koseiFlag1 > ...
 entities.KoseiHelper/SpawnController.attributes.description.flagStop=The spawner will remove itself (stop) after the flag koseiFlagN has reached the Cycle At value.
@@ -781,7 +782,8 @@ entities.KoseiHelper/SpawnController.attributes.description.blockSinks=If the bl
 
 entities.KoseiHelper/SpawnController.attributes.description.playerSpriteMode=The sprite of the spawned player clones.
 
-entities.KoseiHelper/SpawnController.attributes.description.refillTwoDashes=If the refill should give two dashes instead of one.
+entities.KoseiHelper/SpawnController.attributes.description.refillTwoDashes=Whether the refill should give two dashes instead of one.
+entities.KoseiHelper/SpawnController.attributes.description.refillOneUse=Whether the refill should respawn after being used or delete itself.
 
 entities.KoseiHelper/SpawnController.attributes.description.attachToSolid=Whether the spinner attaches to solids, and can be moved by them.
 entities.KoseiHelper/SpawnController.attributes.description.crystalColor=The color of the spinner.

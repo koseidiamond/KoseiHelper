@@ -17,11 +17,12 @@ TalkComponentCustomizator.placements = {
 		textStroke = 2,
 		animationFrames = 0,
 		animationSpeed = 0.1,
-		text = "Talk",
+		text = "Default",
 		textScaleX = 1,
 		textScaleY = 1,
 		iconScaleX = 1,
-		iconScaleY = 1
+		iconScaleY = 1,
+		allEntities = false
 		}
 	}
 }
@@ -91,9 +92,10 @@ TalkComponentCustomizator.fieldOrder = {
 	"talkTextColor",
 	"textScaleX",
 	"textScaleY",
-	--sfx
+	--other
 	"sfxIn",
-	"sfxOut"
+	"sfxOut",
+	"allEntities"
 }
 
 return TalkComponentCustomizator

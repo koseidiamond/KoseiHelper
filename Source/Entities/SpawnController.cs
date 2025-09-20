@@ -192,6 +192,7 @@ public class SpawnController : Entity
     public SwapBlockNoBg.Themes swapBlockTheme;
 
     public bool refillTwoDashes;
+    public bool refillOneUse;
 
     public bool blockSinks;
 
@@ -371,6 +372,7 @@ public class SpawnController : Entity
         jellyfishBubble = data.Bool("jellyfishBubble", false);
 
         refillTwoDashes = data.Bool("refillTwoDashes", false);
+        refillOneUse = data.Bool("refillOneUse", false);
 
         moveBlockCanSteer = data.Bool("moveBlockCanSteer", false);
         moveBlockFast = data.Bool("moveBlockFast", true);
@@ -632,7 +634,7 @@ public class SpawnController : Entity
                                     testPos = new Vector2((float)Math.Floor(testPos.X / gridSize) * gridSize, (float)Math.Floor(testPos.Y / gridSize) * gridSize);
                                 // Check if this testPos is adjacent to any previous position
                                 bool isAdjacent = false;
-                                foreach (var pos in usedPositionsList)
+                                foreach (Vector2 pos in usedPositionsList)
                                 {
                                     float dx = Math.Abs(pos.X - testPos.X);
                                     float dy = Math.Abs(pos.Y - testPos.Y);
@@ -967,7 +969,7 @@ public class SpawnController : Entity
                         spawnedEntity = new Player(spawnPosition, playerSpriteMode);
                         break;
                     case EntityType.Refill:
-                        spawnedEntity = new Refill(spawnPosition, refillTwoDashes, true);
+                        spawnedEntity = new Refill(spawnPosition, refillTwoDashes, refillOneUse);
                         break;
                     case EntityType.StarJumpBlock:
                         spawnedEntity = new StarJumpBlock(spawnPosition, blockWidth, blockHeight, blockSinks);
