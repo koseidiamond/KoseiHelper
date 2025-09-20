@@ -976,6 +976,17 @@ triggers.KoseiHelper/CreateSpawnPointTrigger.attributes.description.flag=The tri
 triggers.KoseiHelper/CreateSpawnPointTrigger.attributes.onlyOnce=Whether the trigger should remove itself once used.
 triggers.KoseiHelper/CreateSpawnPointTrigger.attributes.room=The name of the room where the spawn should be created.\nLeave as empty if it should be the same as the one the player is currently in.\nUseful if the player is trying to enter a filler room while out of bounds.
 
+# Replace Entities Trigger
+triggers.KoseiHelper/ReplaceEntitiesTrigger.placements.name.ReplaceEntitiesTrigger=Replace Entities Trigger
+triggers.KoseiHelper/ReplaceEntitiesTrigger.placements.description.ReplaceEntitiesTrigger=Converts all entities of one type into a different type of entities.
+triggers.KoseiHelper/ReplaceEntitiesTrigger.attributes.description.onlyOnce=Whether the trigger should remove itself once used.
+triggers.KoseiHelper/ReplaceEntitiesTrigger.attributes.description.fromEntity=The full path to the entity class that will be replaced.
+triggers.KoseiHelper/ReplaceEntitiesTrigger.attributes.description.toEntity=The full path to the entity class that will replace the other one.\nSpawning will only work for entities that accept an EntityData and Vector2 parameterized constructor.\n For example, Celeste.Mod.KoseiHelper.Entities.PregnantFlutterbird.
+triggers.KoseiHelper/ReplaceEntitiesTrigger.attributes.description.attributes=The names of the keys the Values dictionary of the EntityData used to spawn the entity will use.\nMust match the ones expected by the entity in its constructor for the Entity to find them.\nIn simple words, the parameters separated by commas. For example: winged,moon.
+triggers.KoseiHelper/ReplaceEntitiesTrigger.attributes.description.attributeValues=The Values of the dictionary of the EntityData used to spawn the entity.\nEach value will be associated with the corresponding key as the values are organized, first key with first value and so forth.\nAny values that exceed the amount of keys will be ignored, and any keys with no corresponding value will have no value.\nIn simple words, the values of the parameters/attributes (in the same order, separated by commas). For example, true,false.
+triggers.KoseiHelper/ReplaceEntitiesTrigger.attributes.description.flag=The trigger will only activate once this flag is true.\nLeave empty for no flag required.
+triggers.KoseiHelper/ReplaceEntitiesTrigger.attributes.description.triggerMode=Whether the entities will be replaced when the player enters or exits the trigger, or on every frame (for use with flags).
+
 # Styleground Modifier Trigger
 triggers.KoseiHelper/StylegroundModifierTrigger.placements.name.StylegroundModifierTrigger=Styleground Modifier Trigger
 triggers.KoseiHelper/StylegroundModifierTrigger.placements.description.StylegroundModifierTrigger=Modifies a specific value of a given styleground or links it to a counter/slider.

@@ -10,7 +10,7 @@ public class CreateSpawnPointTrigger : Trigger
     public TriggerMode triggerMode;
     public string flag, room;
     private bool current, previous;
-    public Vector2[] array;
+    public Vector2[] nodeArray;
     public Vector2 Target;
     public int lastSpawnAdded;
     public CreateSpawnPointTrigger(EntityData data, Vector2 offset) : base(data, offset)
@@ -19,9 +19,9 @@ public class CreateSpawnPointTrigger : Trigger
         triggerMode = data.Enum("triggerMode", TriggerMode.OnStay);
         flag = data.Attr("flag", "");
         room = data.Attr("room", "");
-        array = data.NodesOffset(offset);
-        if (array.Length != 0)
-            Target = array[0];
+        nodeArray = data.NodesOffset(offset);
+        if (nodeArray.Length != 0)
+            Target = nodeArray[0];
     }
 
     public override void OnEnter(Player player)
@@ -79,7 +79,7 @@ public class CreateSpawnPointTrigger : Trigger
     public void AddSpawn(Session session, Vector2 newSpawn, bool removePrevious = false)
     {
         // If the trigger has a node, we override the newSpawn position
-        if (array.Length != 0)
+        if (nodeArray.Length != 0)
             newSpawn = Target;
         MapData mapData = AreaData.Areas[session.Area.ID].Mode[(int)session.Area.Mode].MapData;
         if (removePrevious)
