@@ -1,7 +1,6 @@
 using Celeste.Mod.Entities;
 using Microsoft.Xna.Framework;
 using Monocle;
-using System;
 using System.Collections;
 
 namespace Celeste.Mod.KoseiHelper.Triggers;
@@ -62,7 +61,7 @@ public class RestartGameTrigger : Trigger
                 Add(new Coroutine(RestartRoutine()));
             else
                 if (!AssetReloadHelper.IsReloading)
-                    AssetReloadHelper.ReloadLevel(); //Restart();
+                AssetReloadHelper.ReloadLevel(); //Restart();
         }
     }
 

@@ -705,7 +705,7 @@ public class SpawnController : Entity
 
                             // This corner stuff is useful to determine if all corners of a block/rectangle collider fit inside any of the areas
                             bool allCornersInside = true;
-                            Vector2[] corners = new Vector2[] { 
+                            Vector2[] corners = new Vector2[] {
                                 new Vector2(testBounds.Left, testBounds.Top), new Vector2(testBounds.Right - 1, testBounds.Top),
                                 new Vector2(testBounds.Left, testBounds.Bottom - 1), new Vector2(testBounds.Right - 1, testBounds.Bottom - 1)};
                             foreach (Vector2 corner in corners)
@@ -782,7 +782,7 @@ public class SpawnController : Entity
                             Nodes = new Vector2[] { nodePosition },
                             Values = new()
                         };
-                        for (int i = 0; i < dictionaryKeys.Count; i++)
+                        for (int i = 0; i < dictionaryKeys.Count; i++) // ??? why did i do this
                         {
                             bladeData.Values[dictionaryKeys[i]] = dictionaryValues.ElementAtOrDefault(i);
                         }
@@ -884,7 +884,7 @@ public class SpawnController : Entity
                                 Nodes = new Vector2[] { nodePosition },
                                 Values = new()
                             };
-                            for (int i = 0; i < dictionaryKeys.Count; i++)
+                            for (int i = 0; i < dictionaryKeys.Count; i++) // ??? why did i do this
                             {
                                 dustSpinnerData.Values[dictionaryKeys[i]] = dictionaryValues.ElementAtOrDefault(i);
                             }

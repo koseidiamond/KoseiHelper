@@ -31,7 +31,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
             get
             {
                 if (forceGrabButton)
-                    return KoseiHelperModule.Settings.GunSettings.MachineGunMode? Input.Grab.Check : Input.Grab.Pressed;
+                    return KoseiHelperModule.Settings.GunSettings.MachineGunMode ? Input.Grab.Check : Input.Grab.Pressed;
                 if (KoseiHelperModule.Settings.GunSettings.dashBehavior == KoseiHelperModuleSettings.NemesisSettings.DashBehavior.ReplacesDash)
                     return KoseiHelperModule.Settings.GunSettings.MachineGunMode ? Input.Dash.Check || Input.CrouchDash.Check : Input.Dash.Pressed || Input.CrouchDash.Pressed;
                 // else, custom button
