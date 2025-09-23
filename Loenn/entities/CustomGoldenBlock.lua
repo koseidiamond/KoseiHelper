@@ -1,6 +1,7 @@
 local drawableNinePatch = require("structs.drawable_nine_patch")
 local drawableSprite = require("structs.drawable_sprite")
 local enums = require("consts.celeste_enums")
+local fakeTilesHelper = require("helpers.fake_tiles")
 local utils = require("utils")
 
 local mods = require("mods")
@@ -16,92 +17,117 @@ end
 
 CustomGoldenBlock.warnBelowSize = {16, 16}
 CustomGoldenBlock.placements = {
-    name = "CustomGoldenBlock",
-    data = {
-        width = 16,
-        height = 16,
-		sinkOffset = 12,
-		goBackTimer = 0.1,
-		iconTexture = "collectables/goldberry/idle00",
-		blockTexture = "objects/goldblock",
-		surfaceSoundIndex = 32,
-		depth = -10000,
-		occludesLight = true,
-		appearMode = "GoldenBerry",
-		drawOutline = true,
-		appearDistance = 80,
-		safe = false,
-		blockTint = "FFFFFF",
-		iconTint = "FFFFFF",
-		flag = "KoseiHelper_GoldenBlock"
-    }
+    {
+		name = "CustomGoldenBlock",
+		data = {
+			width = 16,
+			height = 16,
+			sinkOffset = 12,
+			goBackTimer = 0.1,
+			iconTexture = "collectables/goldberry/idle00",
+			blockTexture = "objects/goldblock",
+			surfaceSoundIndex = 32,
+			depth = -10000,
+			occludesLight = true,
+			appearMode = "GoldenBerry",
+			drawOutline = true,
+			appearDistance = 80,
+			safe = false,
+			blockTint = "FFFFFF",
+			iconTint = "FFFFFF",
+			flag = "KoseiHelper_GoldenBlock",
+			useTileset = false
+		}
+	},
+	    {
+		name = "CustomGoldenBlockTileset",
+		data = {
+			width = 16,
+			height = 16,
+			sinkOffset = 12,
+			goBackTimer = 0.1,
+			surfaceSoundIndex = 32,
+			depth = -10000,
+			occludesLight = true,
+			appearMode = "GoldenBerry",
+			appearDistance = 80,
+			safe = false,
+			blockTint = "FFFFFF",
+			flag = "KoseiHelper_GoldenBlock",
+			useTileset = true,
+			tiletype = fakeTilesHelper.getPlacementMaterial()
+		}
+	}
 }
 
-CustomGoldenBlock.fieldInformation = {
-	goBackTimer = { minimumValue = 0 },
-	surfaceSoundIndex = {
+CustomGoldenBlock.fieldInformation = function(entity)
+    local tileInfo = fakeTilesHelper.getFieldInformation("tiletype")(entity)
+    tileInfo.surfaceSoundIndex = {
         options = enums.tileset_sound_ids,
         fieldType = "integer"
-    },
-	depth = {
+    }
+    tileInfo.depth = {
         fieldType = "integer",
         options = depths.addDepths(depths.getDepths(), {}),
         editable = true
-    },
-	appearDistance = {
-		fieldType = "integer",
-		minimumValue = "1"
-	},
-	appearMode = {
-		options = {
-			"GoldenBerry",
-			"AllBerries",
-			"NonGoldenBerries",
-			"BerriesAndKeys",
-			"OnlyKeys",
-			"Flag"
-		},
-		editable = false
-	},
-	blockTint = {
+    }
+    tileInfo.appearDistance = {
+        fieldType = "integer",
+        minimumValue = 1
+    }
+    tileInfo.appearMode = {
+        options = {
+            "GoldenBerry",
+            "AllBerries",
+            "NonGoldenBerries",
+            "BerriesAndKeys",
+            "OnlyKeys",
+            "Flag"
+        },
+        editable = false
+    }
+    tileInfo.blockTint = {
         fieldType = "color",
-		useAlpha = true
-    },
-	iconTint = {
+        useAlpha = true
+    }
+    tileInfo.iconTint = {
         fieldType = "color",
-		useAlpha = true
-    },
-	blockTexture = {
-		{
-			fieldType = "string"
-		},
-		options =
-		{
-		"objects/goldblock",
-		"objects/KoseiHelper/goldblock/greyscaleblock"
-		},
-		editable = true
-	},
-	iconTexture = {
-		{
-			fieldType = "string"
-		},
-		options =
-		{
-		"collectables/goldberry/idle00",
-		"collectables/strawberry/normal00",
-		"collectables/key/idle00",
-		"collectables/moonBerry/normal00"
-		},
-		editable = true
-	}
-}
+        useAlpha = true
+    }
+    tileInfo.blockTexture = {
+        {
+            fieldType = "string"
+        },
+        options = {
+            "objects/goldblock",
+            "objects/KoseiHelper/goldblock/greyscaleblock"
+        },
+        editable = true
+    }
+    tileInfo.iconTexture = {
+        {
+            fieldType = "string"
+        },
+        options = {
+            "collectables/goldberry/idle00",
+            "collectables/strawberry/normal00",
+            "collectables/key/idle00",
+            "collectables/moonBerry/normal00"
+        },
+        editable = true
+    }
+
+    return tileInfo
+end
 
 function CustomGoldenBlock.ignoredFields(entity)
 	local ignored = {
 	"_name",
     "_id",
-	"flag"
+	"flag",
+	"useTileset",
+	"iconTint",
+	"surfaceSoundIndex"
 	}
     local function doNotIgnore(value)
         for i = #ignored, 1, -1 do
@@ -113,6 +139,12 @@ function CustomGoldenBlock.ignoredFields(entity)
     end
 	if entity.appearMode == "Flag" then
 		doNotIgnore("flag")
+	end
+	if entity.useTileset then
+		doNotIgnore("tiletype")
+	else
+		doNotIgnore("iconTint")
+		doNotIgnore("surfaceSoundIndex")
 	end
 	return ignored
 end
@@ -140,6 +172,7 @@ CustomGoldenBlock.fieldOrder = {
 	"blockTint",
 	"iconTint",
 	"allBerryTypes",
+	"tiletype",
 	"drawOutline",
 	"safe",
 	"occludesLight"
@@ -154,33 +187,43 @@ end
 
 function CustomGoldenBlock.sprite(room, entity)
     local x, y = entity.x or 0, entity.y or 0
-    local width, height = entity.width or 24, entity.height or 24
-	
-	local colorHex = entity.blockTint or CustomGoldenBlock.blockTint
-	local r, g, b = hexToRGB(colorHex)
+    local width, height = entity.width or 16, entity.height or 16
 
-    local ninePatch = drawableNinePatch.fromTexture(entity.blockTexture, ninePatchOptions, x, y, width, height)
-    local middleSprite = drawableSprite.fromTexture(entity.iconTexture, entity)
-	
-	if entity.blockTint then
+    -- If tileset mode is enabled
+    if entity.useTileset then
+        return fakeTilesHelper.getEntitySpriteFunction("tiletype",false)(room, entity)
+    end
+
+    -- MTexture mode
+    local color, colorIcon = {1, 1, 1}, {1, 1, 1}
+
+    if entity.blockTint then
         local success, r, g, b = utils.parseHexColor(entity.blockTint)
         if success then
             color = {r, g, b}
         end
     end
-	if entity.iconTint then
+    if entity.iconTint then
         local success, r, g, b = utils.parseHexColor(entity.iconTint)
         if success then
             colorIcon = {r, g, b}
         end
     end
-	
-    ninePatch:setColor(color)
-	middleSprite:setColor(colorIcon)
-	
-    local sprites = ninePatch:getDrawableSprite()
 
+    local ninePatchOptions = {
+        mode = "fill",
+        borderMode = "repeat",
+        fillMode = "repeat"
+    }
+
+    local ninePatch = drawableNinePatch.fromTexture(entity.blockTexture, ninePatchOptions, x, y, width, height)
+    local middleSprite = drawableSprite.fromTexture(entity.iconTexture, entity)
+
+    ninePatch:setColor(color)
+    middleSprite:setColor(colorIcon)
     middleSprite:addPosition(math.floor(width / 2), math.floor(height / 2))
+
+    local sprites = ninePatch:getDrawableSprite()
     table.insert(sprites, middleSprite)
 
     return sprites

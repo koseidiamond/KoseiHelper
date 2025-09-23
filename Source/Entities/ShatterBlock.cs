@@ -28,6 +28,7 @@ public class ShatterDashBlock : Solid
     private string flagSet;
     private bool destroyStaticMovers;
     private bool verticalSpeed;
+    private Color tint;
     private enum SubstractSpeedMode
     {
         Substract,
@@ -55,6 +56,7 @@ public class ShatterDashBlock : Solid
         speedAfterShatterMode = data.Enum("substractSpeedMode", SubstractSpeedMode.Substract);
         flagSet = data.Attr("flagSet", "");
         destroyStaticMovers = data.Bool("destroyStaticMovers", false);
+        tint = KoseiHelperUtils.ParseHexColor(data.Values.TryGetValue("tint", out object c1) ? c1.ToString() : null, Color.White);
         OnDashCollide = OnDashed;
         SurfaceSoundIndex = SurfaceIndex.TileToIndex[tileType];
     }
@@ -83,9 +85,13 @@ public class ShatterDashBlock : Solid
             int tilesX = (int)base.Width / 8;
             int tilesY = (int)base.Height / 8;
             tileGrid = GFX.FGAutotiler.GenerateOverlay(tileType, x, y, tilesX, tilesY, solidsData).TileGrid;
+            if (tint != Color.White)
+                tileGrid.Color = tint;
             Add(new EffectCutout());
             base.Depth = -10501;
         }
+        if (tint != Color.White)
+            tileGrid.Color = tint;
         Add(tileGrid);
         Add(new TileInterceptor(tileGrid, highPriority: true));
         if (CollideCheck<Player>())

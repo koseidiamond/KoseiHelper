@@ -323,6 +323,7 @@ entities.KoseiHelper/CustomTrapdoor.attributes.description.tint=The tint applied
 
 # Custom Golden Block
 entities.KoseiHelper/CustomGoldenBlock.placements.name.CustomGoldenBlock=Custom Golden Block
+entities.KoseiHelper/CustomGoldenBlock.placements.name.CustomGoldenBlockTileset=Custom Golden Block (Tileset)
 entities.KoseiHelper/CustomGoldenBlock.placements.description.CustomGoldenBlock=A block that appears if the player is carrying a golden berry (or other items).\nThis check occurs when the player enters the screen.\nBlocks will not appear in the same room as the golden/item without transitioning first.
 entities.KoseiHelper/CustomGoldenBlock.attributes.description.sinkOffset=How much the block will sink when stepped on.
 entities.KoseiHelper/CustomGoldenBlock.attributes.description.goBackTimer=How much time the block should wait until it goes back to its original position.
@@ -336,6 +337,8 @@ entities.KoseiHelper/CustomGoldenBlock.attributes.description.drawOutline=Whethe
 entities.KoseiHelper/CustomGoldenBlock.attributes.description.appearDistance=The block will appear when the player is a certain amount of pixels close to its center.\nNot recommended to lower the appear distance below the width of the blocks.
 entities.KoseiHelper/CustomGoldenBlock.attributes.description.safe=Whether the block is considered "safe ground" (the player can collect berries).
 entities.KoseiHelper/CustomGoldenBlock.attributes.description.flag=The flag that must be set for the block to appear.
+entities.KoseiHelper/CustomGoldenBlock.attributes.description.useTileset=Whether the golden block should use an image (for block/icon) or a normal tileset.
+entities.KoseiHelper/CustomGoldenBlock.attributes.description.tiletype=The tileset id that the block should use.
 
 # Flag Fake Berry
 entities.KoseiHelper/FlagFakeBerry.placements.name.FlagFakeBerry=Flag Fake Berry
@@ -444,7 +447,7 @@ entities.KoseiHelper/CustomTempleCrackedBlock.attributes.description.destroyStat
 #Shatter Dash Block
 entities.KoseiHelper/ShatterDashBlock.placements.name.ShatterDashBlock=Shatter Dash Block
 entities.KoseiHelper/ShatterDashBlock.placements.description.ShatterDashBlock=A Dash block that can be broken with enough speed.
-entities.KoseiHelper/ShatterDashBlock.attributes.description.tiletype=The tileset id.
+entities.KoseiHelper/ShatterDashBlock.attributes.description.tiletype=The tileset id that the block should use.
 entities.KoseiHelper/ShatterDashBlock.attributes.description.blendin=Whether the block should try to blend with other tiles of the same type.
 entities.KoseiHelper/ShatterDashBlock.attributes.description.canDash=Whether the block can be broken with a dash.
 entities.KoseiHelper/ShatterDashBlock.attributes.description.permanent=Whether the block should reappear upon death/transition/room reload or shatter for the entire session.
@@ -459,6 +462,7 @@ entities.KoseiHelper/ShatterDashBlock.attributes.name.substractSpeedMode=Speed M
 entities.KoseiHelper/ShatterDashBlock.attributes.description.substractSpeedMode=Whether the player speed should be decreased by substraction, multiplication, or set to a fixed number.
 entities.KoseiHelper/ShatterDashBlock.attributes.description.destroyStaticMovers=Whether entities attached to this block should be destroyed (or not loaded if it was permanently destroyed).
 entities.KoseiHelper/ShatterDashBlock.attributes.description.verticalSpeed=Whether the shatter block should use the vertical speed as a requirement instead of the horizontal speed.
+entities.KoseiHelper/ShatterDashBlock.attributes.description.tint=Whether the block should have a different color (supports transparency).
 
 #Oshiro Doors
 entities.KoseiHelper/CustomOshiroDoor.placements.name.CustomOshiroDoorSprite= Custom Oshiro Door (Sprite)

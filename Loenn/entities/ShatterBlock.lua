@@ -33,7 +33,8 @@ function ShatterDashBlock.placements()
 			substractSpeedMode = "Substract",
 			destroyStaticMovers = false,
 			verticalSpeed = false,
-			depth = -12999
+			depth = -12999,
+			tint = "FFFFFF"
         }
     }
 end
@@ -54,6 +55,10 @@ ShatterDashBlock.fieldInformation = function(entity)
 	orig.ShakeTime = {
 		minimumValue = 0
 	}
+	orig.tint = {
+        fieldType = "color",
+        useAlpha = true
+    }
 	orig.SpeedDecrease = {
 		minimumValue = 0
 	}

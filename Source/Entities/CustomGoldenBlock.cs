@@ -36,6 +36,10 @@ public class CustomGoldenBlock : Solid
     private AppearMode appearMode;
     public string customFlag;
 
+    private bool useTileset = false;
+    private char tileType = '3';
+    private TileGrid tileGrid;
+
     public CustomGoldenBlock(EntityData data, Vector2 offset) : base(data.Position + offset, data.Width, data.Height, data.Bool("safe", false))
     {
         sinkOffset = data.Float("sinkOffset", 12f);
@@ -52,29 +56,46 @@ public class CustomGoldenBlock : Solid
         iconTint = KoseiHelperUtils.ParseHexColor(data.Values.TryGetValue("iconTint", out object c2) ? c2.ToString() : null, Color.White);
         customFlag = data.Attr("flag", "KoseiHelper_GoldenBlock");
 
+        useTileset = data.Bool("useTileset", false);
+        tileType = data.Char("tiletype", '3');
+
         startY = Y;
-        berry = new Image(GFX.Game[iconTexture]);
-        berry.CenterOrigin();
-        berry.Position = new Vector2(Width / 2f, Height / 2f);
-        MTexture blockTexture = GFX.Game[blockTexturePath];
-        nineSlice = new MTexture[3, 3];
-        for (int i = 0; i < 3; i++)
+        if (!useTileset)
         {
-            for (int j = 0; j < 3; j++)
+            berry = new Image(GFX.Game[iconTexture]);
+            berry.CenterOrigin();
+            berry.Position = new Vector2(Width / 2f, Height / 2f);
+            MTexture blockTexture = GFX.Game[blockTexturePath];
+            nineSlice = new MTexture[3, 3];
+            for (int i = 0; i < 3; i++)
             {
-                nineSlice[i, j] = blockTexture.GetSubtexture(new Rectangle(i * 8, j * 8, 8, 8));
+                for (int j = 0; j < 3; j++)
+                {
+                    nineSlice[i, j] = blockTexture.GetSubtexture(new Rectangle(i * 8, j * 8, 8, 8));
+                }
             }
         }
         Depth = depth;
         if (occludesLight)
             Add(new LightOcclude());
         Add(new MirrorSurface());
-        SurfaceSoundIndex = surfaceSoundIndex;
+        if (useTileset)
+            SurfaceSoundIndex = SurfaceIndex.TileToIndex[tileType];
+        else
+            SurfaceSoundIndex = surfaceSoundIndex;
     }
 
     public override void Awake(Scene scene)
     {
         base.Awake(scene);
+        if (useTileset)
+        {
+            tileGrid = GFX.FGAutotiler.GenerateBox(tileType, (int)Width / 8, (int)Height / 8).TileGrid;
+            if (blockTint != Color.White)
+                tileGrid.Color = blockTint;
+            Add(tileGrid);
+            Add(new TileInterceptor(tileGrid, highPriority: true));
+        }
         DisableStaticMovers();
         Visible = false;
         Collidable = false;
@@ -165,11 +186,17 @@ public class CustomGoldenBlock : Solid
                 Visible = true;
                 Collidable = true;
                 renderLerp = 1f;
+
             }
         }
         if (Visible)
         {
             renderLerp = Calc.Approach(renderLerp, 0f, Engine.DeltaTime * 3f);
+            if (useTileset && tileGrid != null)
+            {
+                float renderOffsetY = ((SceneAs<Level>().Bounds.Bottom - startY + 32f) * Ease.CubeIn(renderLerp));
+                tileGrid.Position.Y = renderOffsetY;
+            }
         }
         if (HasPlayerRider())
         {
@@ -212,6 +239,9 @@ public class CustomGoldenBlock : Solid
 
     public override void Render()
     {
+        base.Render();
+        if (useTileset)
+            return;
         Level level = base.Scene as Level;
         Vector2 vector = new Vector2(0f, ((float)level.Bounds.Bottom - startY + 32f) * Ease.CubeIn(renderLerp));
         Vector2 position = Position;
