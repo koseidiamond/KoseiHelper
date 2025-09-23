@@ -28,7 +28,8 @@ SpringBall.fieldInformation = {
         editable = false
     },
     color = {
-        fieldType = "color"
+        fieldType = "color",
+		useAlpha = true
     }
 }
 

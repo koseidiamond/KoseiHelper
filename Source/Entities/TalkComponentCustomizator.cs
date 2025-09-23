@@ -17,14 +17,14 @@ public class TalkComponentCustomization : Entity
     public Color Tint = Color.White;
     public Color TalkTextColor = Color.White;
     public float TextStroke = 2f;
-    public int AnimationFrames = 0;
+    public int IdleAnimationFrames = 0, HighlightAnimationFrames = 0;
     public string Text = "Talk";
     public float TextScaleX = 1f, TextScaleY = 1f, IconScaleX = 1f, IconScaleY = 1f;
 
     //Animation variables
-    public float AnimationTimer = 0f;
-    public float AnimationSpeed = 0.1f;
-    public int CurrentFrame = 0;
+    public float IdleAnimationTimer = 0f, HighlightAnimationTimer = 0f;
+    public float IdleAnimationSpeed = 0.1f, HighlightAnimationSpeed = 0.1f;
+    public int IdleCurrentFrame = 0, HighlightCurrentFrame = 0;
     public string HighlightBaseName, HighlightFrameFormat;
     public string IdleBaseName, IdleFrameFormat;
 
@@ -42,11 +42,14 @@ public class TalkComponentCustomizator : Entity
     private readonly float floatiness;
     private Color tint, talkTextColor;
     private readonly float textStroke;
-    private readonly int animationFrames;
-    private readonly float animationSpeed;
+    private readonly int idleAnimationFrames, highlightAnimationFrames;
+    private readonly float idleAnimationSpeed, highlightAnimationSpeed;
     private readonly string text;
     private readonly float textScaleX, textScaleY, iconScaleX, iconScaleY;
     private readonly bool allEntities;
+    private readonly string flag;
+    private bool flagAlreadyApplied = false;
+
 
     public TalkComponentCustomizator(EntityData data, Vector2 offset) : base(data.Position + offset)
     {
@@ -56,8 +59,10 @@ public class TalkComponentCustomizator : Entity
         sfxOut = data.Attr("sfxOut", "event:/ui/game/hotspot_main_out");
         floatiness = data.Float("floatiness", 1f);
         textStroke = data.Float("textStroke", 2f);
-        animationFrames = data.Int("animationFrames", 0);
-        animationSpeed = data.Float("animationSpeed", 0.1f);
+        idleAnimationFrames = data.Int("idleAnimationFrames", 0);
+        idleAnimationSpeed = data.Float("idleAnimationSpeed", 0.1f);
+        highlightAnimationFrames = data.Int("highlightAnimationFrames", 0);
+        highlightAnimationSpeed = data.Float("highlightAnimationSpeed", 0.1f);
         text = data.Attr("text", "Talk");
         textScaleX = data.Float("textScaleX", 1f);
         textScaleY = data.Float("textScaleY", 1f);
@@ -66,28 +71,47 @@ public class TalkComponentCustomizator : Entity
         tint = KoseiHelperUtils.ParseHexColor(data.Values.TryGetValue("tint", out object tintColor) ? tintColor.ToString() : null, Calc.HexToColor("FFFFFF"));
         talkTextColor = KoseiHelperUtils.ParseHexColor(data.Values.TryGetValue("talkTextColor", out object talkTextC) ? talkTextC.ToString() : null, Calc.HexToColor("FFFFFF"));
         allEntities = data.Bool("allEntities", false);
+        flag = data.Attr("flag", "");
     }
 
     public override void Awake(Scene scene)
     {
         base.Awake(scene);
-        Level level = SceneAs<Level>();
         Tracker.AddTypeToTracker(typeof(TalkComponent));
         Tracker.Refresh(scene);
+        TryApplyCustomization();
+    }
+
+    public override void Update()
+    {
+        base.Update();
+
+        if (!flagAlreadyApplied)
+            TryApplyCustomization();
+    }
+
+    private void TryApplyCustomization()
+    {
+        Level level = SceneAs<Level>();
+        if (level == null) return;
+
+        if (!string.IsNullOrEmpty(flag) && !level.Session.GetFlag(flag))
+            return;
+
+        if (flagAlreadyApplied)
+            return;
+
         List<Component> components = level.Tracker.GetComponents<TalkComponent>();
         if (components.Count == 0) return;
-
         TalkComponent closestTalkComponent = null;
         float closestDistance = float.MaxValue;
+
         if (allEntities)
         {
             foreach (Component component in components)
             {
                 if (component.Entity != null)
-                {
-                    TalkComponent talkComponent = (TalkComponent)component;
-                    CustomizeTalkComponent(talkComponent);
-                }
+                    CustomizeTalkComponent((TalkComponent)component);
             }
         }
         else
@@ -107,9 +131,11 @@ public class TalkComponentCustomizator : Entity
             if (closestTalkComponent != null)
                 CustomizeTalkComponent(closestTalkComponent);
         }
+        flagAlreadyApplied = true;
     }
 
-    private static readonly Dictionary<string, Vector2> DirectionMap = new()
+
+    private static readonly Dictionary<string, Vector2> DirectionMap = new() // for custom texts
     {
         { "Left", new Vector2(-1, 0) },
         { "Right", new Vector2(1, 0) },
@@ -118,7 +144,7 @@ public class TalkComponentCustomizator : Entity
         { "UpLeft", new Vector2(-1, -1) },
         { "UpRight", new Vector2(1, -1) },
         { "DownLeft", new Vector2(-1, 1) },
-        { "DownRight", new Vector2(1, 1) },
+        { "DownRight", new Vector2(1, 1) }
     };
 
     private void CustomizeTalkComponent(TalkComponent talkComponent)
@@ -131,8 +157,10 @@ public class TalkComponentCustomizator : Entity
             Tint = tint,
             TalkTextColor = talkTextColor,
             TextStroke = textStroke,
-            AnimationFrames = animationFrames,
-            AnimationSpeed = animationSpeed,
+            IdleAnimationFrames = idleAnimationFrames,
+            IdleAnimationSpeed = idleAnimationSpeed,
+            HighlightAnimationFrames = highlightAnimationFrames,
+            HighlightAnimationSpeed = highlightAnimationSpeed,
             Text = text,
             TextScaleX = textScaleX,
             TextScaleY = textScaleY,
@@ -214,20 +242,29 @@ public class TalkComponentCustomizator : Entity
         vector2.Y += (float)Math.Sin(timer * 4f) * 12f * custom.Floatiness + 64f * (1f - slideEase);
         Color drawColor = custom.Tint * visibility;
 
-        custom.AnimationTimer += Engine.DeltaTime;
-        if (custom.AnimationFrames > 1)
+
+        if (!self.Highlighted && custom.IdleAnimationFrames > 1)
         {
-            if (custom.AnimationTimer >= custom.AnimationSpeed)
+            custom.IdleAnimationTimer += Engine.DeltaTime;
+            if (custom.IdleAnimationTimer >= custom.IdleAnimationSpeed)
             {
-                custom.AnimationTimer -= custom.AnimationSpeed;
-                custom.CurrentFrame = (custom.CurrentFrame + 1) % custom.AnimationFrames;
+                custom.IdleAnimationTimer -= custom.IdleAnimationSpeed;
+                custom.IdleCurrentFrame = (custom.IdleCurrentFrame + 1) % custom.IdleAnimationFrames;
+            }
+        }
+        else if (self.Highlighted && custom.HighlightAnimationFrames > 1) {
+            custom.HighlightAnimationTimer += Engine.DeltaTime;
+            if (custom.HighlightAnimationTimer >= custom.HighlightAnimationSpeed)
+            {
+                custom.HighlightAnimationTimer -= custom.HighlightAnimationSpeed;
+                custom.HighlightCurrentFrame = (custom.HighlightCurrentFrame + 1) % custom.HighlightAnimationFrames;
             }
         }
 
-        MTexture textureToDraw;
-        if (custom.AnimationFrames > 1)
+            MTexture textureToDraw;
+        if (custom.IdleAnimationFrames > 1 || custom.HighlightAnimationFrames > 1)
         {
-            int frame = custom.CurrentFrame;
+            int frame = self.Highlighted ? custom.HighlightCurrentFrame : custom.IdleCurrentFrame;
 
             if (self.Highlighted && custom.HighlightFrameFormat != null)
             {
@@ -252,8 +289,7 @@ public class TalkComponentCustomizator : Entity
             Vector2 inputPos = vector2 + Handler.HoverUI.InputPosition * scale;
 
             if (custom.Text == "Default")
-            {
-                // Use original TalkComponent behavior
+            { // Use original TalkComponent behavior
                 if (Input.GuiInputController(Input.PrefixMode.Latest))
                 {
                     Input.GuiButton(Input.Talk, "controls/keyboard/oemquestion").DrawJustified(
@@ -311,7 +347,7 @@ public class TalkComponentCustomizator : Entity
         }
     }
 
-    // For animations
+    // For animations (that no one will use probably)
     private static void ExtractBaseNameAndFormat(string path, out string baseName, out string format)
     {
         path = path.Replace('\\', '/');

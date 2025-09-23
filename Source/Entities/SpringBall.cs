@@ -38,7 +38,7 @@ public class SpringBall : Spring
         sineSpeed = data.Float("sineSpeed", 0.5f);
         vertical = data.Bool("vertical", false);
         visible = data.Bool("visible", true);
-        color = data.HexColor("color", Color.White);
+        color = KoseiHelperUtils.ParseHexColor(data.Values.TryGetValue("color", out object c1) ? c1.ToString() : null, Color.White);
         spawnSound = data.Attr("spawnSound", "event:/none");
         trackTheo = data.Bool("trackTheo", false);
         spawnOffset = data.Float("offset", 0f);

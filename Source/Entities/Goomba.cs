@@ -85,8 +85,8 @@ public class Goomba : Actor
         canEnableTouchSwitches = data.Bool("canEnableTouchSwitches", false);
         deathSound = data.Attr("deathSound", "event:/KoseiHelper/goomba");
         minisAmount = data.Int("minisAmount", 10);
-        color = data.HexColor("color", Color.White);
-        particleColor = data.HexColor("particleColor", Player.P_Split.Color); // aka ff6def
+        color = KoseiHelperUtils.ParseHexColor(data.Values.TryGetValue("color", out object c1) ? c1.ToString() : null, Color.White);
+        particleColor = KoseiHelperUtils.ParseHexColor(data.Values.TryGetValue("particleColor", out object c2) ? c2.ToString() : null, Player.P_Split.Color); // aka ff6def
         slowdownDistanceMax = data.Float("slowdownDistanceMax", 40f);
         slowdownDistanceMin = data.Float("slowdownDistanceMin", 16f);
         if (!isWide)

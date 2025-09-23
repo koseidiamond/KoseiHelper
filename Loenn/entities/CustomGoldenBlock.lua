@@ -64,10 +64,12 @@ CustomGoldenBlock.fieldInformation = {
 		editable = false
 	},
 	blockTint = {
-        fieldType = "color"
+        fieldType = "color",
+		useAlpha = true
     },
 	iconTint = {
-        fieldType = "color"
+        fieldType = "color",
+		useAlpha = true
     },
 	blockTexture = {
 		{

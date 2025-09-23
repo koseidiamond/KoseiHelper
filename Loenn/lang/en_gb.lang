@@ -161,6 +161,7 @@ entities.KoseiHelper/FlagCounterSliderTranslator.attributes.description.minValue
 entities.KoseiHelper/FlagCounterSliderTranslator.attributes.description.maxValueForTrue=The flag will be turned to true once the counter/slider reaches this value or is above it.
 entities.KoseiHelper/FlagCounterSliderTranslator.attributes.description.flagSuffix=If a suffix is used, the flag name will include the counter/slider (no decimals) value after the name.\nFor example, if the counter is 5 and the flag is "hi", the flag set will be "hi5".\nThen, when counter increases to 6, the flag "hi5" will stay true and the flag "hi6" will also be true.
 entities.KoseiHelper/FlagCounterSliderTranslator.attributes.description.absoluteValue=Whether the values of this counter/slider will be always considered positive.
+entities.KoseiHelper/FlagCounterSliderTranslator.attributes.name.reverseValue=Negate Value
 entities.KoseiHelper/FlagCounterSliderTranslator.attributes.description.reverseValue=Reverts the value after being translated.\nFlags are false when the counter/slider has the max value and true when the counter/slider has the min value.\nCounters/Sliders will have the opposed sign.
 entities.KoseiHelper/FlagCounterSliderTranslator.attributes.description.multiplierFactor=The resulting counter/slider will have the value multiplied by this factor.
 
@@ -589,7 +590,7 @@ entities.KoseiHelper/CounterRefill.attributes.description.respawnTime=The time t
 
 #Talk Component Customizator
 entities.KoseiHelper/TalkComponentCustomizator.placements.name.TalkComponentCustomizator=Talk Component Customizator
-entities.KoseiHelper/TalkComponentCustomizator.placements.description.TalkComponentCustomizator=Allows customization of the talker component that is closest to this entity's position.
+entities.KoseiHelper/TalkComponentCustomizator.placements.description.TalkComponentCustomizator=Allows customization of the talker component that is closest to this entity's position.\nNot compatible with zoomout.
 entities.KoseiHelper/TalkComponentCustomizator.attributes.description.highlightTexture=The path (relative to Gui/) to the texture when the player is close and able to interact.\nIf your texture is animated, the path should end with the digits (0,00...).
 entities.KoseiHelper/TalkComponentCustomizator.attributes.description.idleTexture=The path (relative to Gui/) to the texture when the player is far and unable to interact.\nIf your texture is animated, the path should end with the digits (0,00...).
 entities.KoseiHelper/TalkComponentCustomizator.attributes.description.sfxIn=The sound when the texture is swapped to idle.
@@ -600,14 +601,17 @@ entities.KoseiHelper/TalkComponentCustomizator.attributes.description.tint=The c
 entities.KoseiHelper/TalkComponentCustomizator.attributes.name.talkTextColor=Text Color
 entities.KoseiHelper/TalkComponentCustomizator.attributes.description.talkTextColor=The color of the "Interaction" button text.\nThe alpha field indicates how transparent the button should be.
 entities.KoseiHelper/TalkComponentCustomizator.attributes.description.textStroke=How wide the outline of the "Interaction" button text is.
-entities.KoseiHelper/TalkComponentCustomizator.attributes.description.animationFrames=If your custom textures are animated, this is the amount of frames that will be played.\nBoth textures (idle and highlight) should have the same amount of frames.
-entities.KoseiHelper/TalkComponentCustomizator.attributes.description.animationSpeed=How many seconds each frame lasts.\n0.1 equals 10fps.
+entities.KoseiHelper/TalkComponentCustomizator.attributes.description.idleAnimationFrames=If your idle custom textures are animated, this is the amount of frames that will be played.\nBoth textures (idle and highlight) should have the same amount of frames.
+entities.KoseiHelper/TalkComponentCustomizator.attributes.description.highlightAnimationFrames=If your highlight custom textures are animated, this is the amount of frames that will be played.\nBoth textures (idle and highlight) should have the same amount of frames.
+entities.KoseiHelper/TalkComponentCustomizator.attributes.description.idleAnimationSpeed=How many seconds each idle frame lasts.\n0.1 equals 10fps.
+entities.KoseiHelper/TalkComponentCustomizator.attributes.description.highlightAnimationSpeed=How many seconds each highlight frame lasts.\n0.1 equals 10fps.
 entities.KoseiHelper/TalkComponentCustomizator.attributes.description.textScaleX=How wide the text should be.
 entities.KoseiHelper/TalkComponentCustomizator.attributes.description.textScaleY=How tall the text should be.
 entities.KoseiHelper/TalkComponentCustomizator.attributes.description.iconScaleX=How wide the icon (texture) should be.
 entities.KoseiHelper/TalkComponentCustomizator.attributes.description.iconScaleY=How tall the icon (texture) should be.
 entities.KoseiHelper/TalkComponentCustomizator.attributes.description.text=The custom text/button icons to display in the icon, separated by commas. Each part can be:\n- a path to a texture in the Gui atlas (for example "tinyarrow")\n- a direction: Down, DownRight, Right, UpRight, Up, UpLeft, Left, DownLeft\n- a button: Jump, Dash, CrouchDash, Grab, Talk, ESC, Pause, MenuLeft, MenuRight, MenuUp, MenuDown, MenuConfirm, MenuCancel, MenuJournal, QuickRestart\n- a dialog ID, if you prefix it with dialog: (for example, dialog:TUTORIAL_DREAMJUMP)\n- plain text\n\nLeave as Default if you don't want custom text.
 entities.KoseiHelper/TalkComponentCustomizator.attributes.description.allEntities=Whether the customizator should affect all talk components in the room, or only the closest one.
+entities.KoseiHelper/TalkComponentCustomizator.attributes.description.flag=The talk component(s) will only be customized if the flag is true.\nLeave flag for no flag required.\nNote that the customization will not be unapplied if the flag becomes false, until the level reloads again.
 
 #CONTROLLERS
 
@@ -982,7 +986,7 @@ triggers.KoseiHelper/ReplaceEntitiesTrigger.placements.description.ReplaceEntiti
 triggers.KoseiHelper/ReplaceEntitiesTrigger.attributes.description.onlyOnce=Whether the trigger should remove itself once used.
 triggers.KoseiHelper/ReplaceEntitiesTrigger.attributes.description.fromEntity=The full path to the entity class that will be replaced.
 triggers.KoseiHelper/ReplaceEntitiesTrigger.attributes.description.toEntity=The full path to the entity class that will replace the other one.\nSpawning will only work for entities that accept an EntityData and Vector2 parameterized constructor.\n For example, Celeste.Mod.KoseiHelper.Entities.PregnantFlutterbird.
-triggers.KoseiHelper/ReplaceEntitiesTrigger.attributes.description.attributes=The names of the keys the Values dictionary of the EntityData used to spawn the entity will use.\nMust match the ones expected by the entity in its constructor for the Entity to find them.\nIn simple words, the parameters separated by commas. For example: winged,moon.
+triggers.KoseiHelper/ReplaceEntitiesTrigger.attributes.description.attributes=The names of the keys the Values dictionary of the EntityData used to spawn the entity will use.\nMust match the ones expected by the entity in its constructor for the Entity to find them.\nIn simple words, the parameters separated by commas. For example: winged,moon,width,height...
 triggers.KoseiHelper/ReplaceEntitiesTrigger.attributes.description.attributeValues=The Values of the dictionary of the EntityData used to spawn the entity.\nEach value will be associated with the corresponding key as the values are organized, first key with first value and so forth.\nAny values that exceed the amount of keys will be ignored, and any keys with no corresponding value will have no value.\nIn simple words, the values of the parameters/attributes (in the same order, separated by commas). For example, true,false.
 triggers.KoseiHelper/ReplaceEntitiesTrigger.attributes.description.flag=The trigger will only activate once this flag is true.\nLeave empty for no flag required.
 triggers.KoseiHelper/ReplaceEntitiesTrigger.attributes.description.triggerMode=Whether the entities will be replaced when the player enters or exits the trigger, or on every frame (for use with flags).

@@ -32,7 +32,8 @@ CustomTempleCrackedBlock.placements = {
 
 CustomTempleCrackedBlock.fieldInformation = {
     tint = {
-        fieldType = "color"
+        fieldType = "color",
+		useAlpha = true
     },
 	health = {
 		fieldType = "integer",

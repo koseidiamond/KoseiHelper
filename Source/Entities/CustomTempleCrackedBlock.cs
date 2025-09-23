@@ -24,7 +24,7 @@ public class CustomTempleCrackedBlock : TempleCrackedBlock
         Depth = data.Int("depth", -9000);
         this.id = id;
         persistent = data.Bool("persistent", false);
-        tint = data.HexColor("tint", Color.White);
+        tint = KoseiHelperUtils.ParseHexColor(data.Values.TryGetValue("tint", out object c1) ? c1.ToString() : null, Color.White);
         breakSound = data.Attr("breakSound", "event:/none");
         prebreakSound = data.Attr("prebreakSound", "event:/none");
         health = data.Int("health", 1); //Number of times it needs to be hit until it breaks

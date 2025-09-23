@@ -15,14 +15,17 @@ TalkComponentCustomizator.placements = {
 		tint = "FFFFFFFF",
 		talkTextColor = "FFFFFFFF",
 		textStroke = 2,
-		animationFrames = 0,
-		animationSpeed = 0.1,
+		idleAnimationFrames = 0,
+		highlightAnimationFrames = 0,
+		idleAnimationSpeed = 0.1,
+		highlightAnimationSpeed = 0.1,
 		text = "Default",
 		textScaleX = 1,
 		textScaleY = 1,
 		iconScaleX = 1,
 		iconScaleY = 1,
-		allEntities = false
+		allEntities = false,
+		flag = ""
 		}
 	}
 }
@@ -53,11 +56,18 @@ TalkComponentCustomizator.fieldInformation = {
 	textStroke = {
         minimumValue = 0
     },
-	animationFrames = {
+	idleAnimationFrames = {
         minimumValue = 0,
 		fieldType = "integer"
     },
-	animationSpeed = {
+	highlightAnimationFrames = {
+        minimumValue = 0,
+		fieldType = "integer"
+    },
+	idleAnimationSpeed = {
+        minimumValue = 0.0000001
+    },
+	highlightAnimationSpeed = {
         minimumValue = 0.0000001
     },
 	textScaleX = {
@@ -82,19 +92,22 @@ TalkComponentCustomizator.fieldOrder = {
 	"highlightTexture",
 	"tint",
 	"floatiness",
-	"animationFrames",
-	"animationSpeed",
+	"idleAnimationFrames",
+	"idleAnimationSpeed",
+	"highlightAnimationFrames",
+	"highlightAnimationSpeed",
 	"iconScaleX",
 	"iconScaleY",
 	--text
 	"text",
 	"textStroke",
-	"talkTextColor",
 	"textScaleX",
 	"textScaleY",
+	"talkTextColor",
 	--other
 	"sfxIn",
 	"sfxOut",
+	"flag",
 	"allEntities"
 }
 

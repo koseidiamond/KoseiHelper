@@ -67,10 +67,12 @@ end
 
 Goomba.fieldInformation = {
 	color = {
-        fieldType = "color"
+        fieldType = "color",
+		useAlpha = true
     },
 	particleColor = {
-        fieldType = "color"
+        fieldType = "color",
+		useAlpha = true
     },
 	timeToSpawnMinis = {
 		minimumValue = 0.001

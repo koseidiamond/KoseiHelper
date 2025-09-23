@@ -48,8 +48,8 @@ public class CustomGoldenBlock : Solid
         occludesLight = data.Bool("occludesLight", true);
         appearMode = data.Enum("appearMode", AppearMode.GoldenBerry);
         drawOutline = data.Bool("drawOutline", true);
-        blockTint = data.HexColor("blockTint", Color.White);
-        iconTint = data.HexColor("iconTint", Color.White);
+        blockTint = KoseiHelperUtils.ParseHexColor(data.Values.TryGetValue("blockTint", out object c1) ? c1.ToString() : null, Color.White);
+        iconTint = KoseiHelperUtils.ParseHexColor(data.Values.TryGetValue("iconTint", out object c2) ? c2.ToString() : null, Color.White);
         customFlag = data.Attr("flag", "KoseiHelper_GoldenBlock");
 
         startY = Y;
