@@ -21,12 +21,14 @@ CustomTempleCrackedBlock.placements = {
         persistent = false,
         texture = "objects/KoseiHelper/CustomTempleCrackedBlock/breakBlock",
         debris = "1",
+		debrisTexture = "debris/KoseiHelper/tintableDebris",
         tint = "d42c19",
         breakSound = "event:/game/05_mirror_temple/crackedwall_vanish",
 		prebreakSound = "event:/KoseiHelper/crackedwall_prebreak",
         health = 1,
 		destroyStaticMovers = false,
-		depth = -9000
+		depth = -9000,
+		legacy = false
     }
 }
 
@@ -45,6 +47,16 @@ CustomTempleCrackedBlock.fieldInformation = {
         editable = true
     }
 }
+
+function CustomTempleCrackedBlock.ignoredFields(entity)
+	local ignored = {
+	"_name",
+	"_id",
+	"legacy",
+	"debris"
+	}
+	return ignored
+end
 
 local function hexToRGB(hex)
     local r = tonumber(hex:sub(1, 2), 16) / 255

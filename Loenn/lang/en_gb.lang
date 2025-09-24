@@ -443,6 +443,7 @@ entities.KoseiHelper/CustomTempleCrackedBlock.attributes.description.breakSound=
 entities.KoseiHelper/CustomTempleCrackedBlock.attributes.description.prebreakSound=The sound that will play if the health is reduced but the block is not broken yet.
 entities.KoseiHelper/CustomTempleCrackedBlock.attributes.description.health=The number of hits until the block is broken.
 entities.KoseiHelper/CustomTempleCrackedBlock.attributes.description.destroyStaticMovers=Whether entities attached to this block should be destroyed (or not loaded if it was permanently destroyed).
+entities.KoseiHelper/CustomTempleCrackedBlock.attributes.description.debrisTexture=The path to the custom debris texture that the block will use, relative to Gameplay/.\nWill match the tinted color.
 
 #Shatter Dash Block
 entities.KoseiHelper/ShatterDashBlock.placements.name.ShatterDashBlock=Shatter Dash Block
@@ -593,29 +594,29 @@ entities.KoseiHelper/CounterRefill.attributes.description.decrease=If the counte
 entities.KoseiHelper/CounterRefill.attributes.description.respawnTime=The time that the refill takes to reappear after being consumed.
 
 #Talk Component Customizator
-entities.KoseiHelper/TalkComponentCustomizator.placements.name.TalkComponentCustomizator=Talk Component Customizator
-entities.KoseiHelper/TalkComponentCustomizator.placements.description.TalkComponentCustomizator=Allows customization of the talker component that is closest to this entity's position.\nNot compatible with zoomout.
-entities.KoseiHelper/TalkComponentCustomizator.attributes.description.highlightTexture=The path (relative to Gui/) to the texture when the player is close and able to interact.\nIf your texture is animated, the path should end with the digits (0,00...).
-entities.KoseiHelper/TalkComponentCustomizator.attributes.description.idleTexture=The path (relative to Gui/) to the texture when the player is far and unable to interact.\nIf your texture is animated, the path should end with the digits (0,00...).
-entities.KoseiHelper/TalkComponentCustomizator.attributes.description.sfxIn=The sound when the texture is swapped to idle.
-entities.KoseiHelper/TalkComponentCustomizator.attributes.description.sfxOut=The sound when the texture is swapped to highlight.
-entities.KoseiHelper/TalkComponentCustomizator.attributes.description.floatiness=How much the talker should move vertically (this is a multiplier).
-entities.KoseiHelper/TalkComponentCustomizator.attributes.name.tint=Icon Color
-entities.KoseiHelper/TalkComponentCustomizator.attributes.description.tint=The color that will be applied to the talker.\nThe alpha field indicates how transparent the talker should be.
-entities.KoseiHelper/TalkComponentCustomizator.attributes.name.talkTextColor=Text Color
-entities.KoseiHelper/TalkComponentCustomizator.attributes.description.talkTextColor=The color of the "Interaction" button text.\nThe alpha field indicates how transparent the button should be.
-entities.KoseiHelper/TalkComponentCustomizator.attributes.description.textStroke=How wide the outline of the "Interaction" button text is.
-entities.KoseiHelper/TalkComponentCustomizator.attributes.description.idleAnimationFrames=If your idle custom textures are animated, this is the amount of frames that will be played.\nBoth textures (idle and highlight) should have the same amount of frames.
-entities.KoseiHelper/TalkComponentCustomizator.attributes.description.highlightAnimationFrames=If your highlight custom textures are animated, this is the amount of frames that will be played.\nBoth textures (idle and highlight) should have the same amount of frames.
-entities.KoseiHelper/TalkComponentCustomizator.attributes.description.idleAnimationSpeed=How many seconds each idle frame lasts.\n0.1 equals 10fps.
-entities.KoseiHelper/TalkComponentCustomizator.attributes.description.highlightAnimationSpeed=How many seconds each highlight frame lasts.\n0.1 equals 10fps.
-entities.KoseiHelper/TalkComponentCustomizator.attributes.description.textScaleX=How wide the text should be.
-entities.KoseiHelper/TalkComponentCustomizator.attributes.description.textScaleY=How tall the text should be.
-entities.KoseiHelper/TalkComponentCustomizator.attributes.description.iconScaleX=How wide the icon (texture) should be.
-entities.KoseiHelper/TalkComponentCustomizator.attributes.description.iconScaleY=How tall the icon (texture) should be.
-entities.KoseiHelper/TalkComponentCustomizator.attributes.description.text=The custom text/button icons to display in the icon, separated by commas. Each part can be:\n- a path to a texture in the Gui atlas (for example "tinyarrow")\n- a direction: Down, DownRight, Right, UpRight, Up, UpLeft, Left, DownLeft\n- a button: Jump, Dash, CrouchDash, Grab, Talk, ESC, Pause, MenuLeft, MenuRight, MenuUp, MenuDown, MenuConfirm, MenuCancel, MenuJournal, QuickRestart\n- a dialog ID, if you prefix it with dialog: (for example, dialog:TUTORIAL_DREAMJUMP)\n- plain text\n\nLeave as Default if you don't want custom text.
-entities.KoseiHelper/TalkComponentCustomizator.attributes.description.allEntities=Whether the customizator should affect all talk components in the room, or only the closest one.
-entities.KoseiHelper/TalkComponentCustomizator.attributes.description.flag=The talk component(s) will only be customized if the flag is true.\nLeave flag for no flag required.\nNote that the customization will not be unapplied if the flag becomes false, until the level reloads again.
+# entities.KoseiHelper/TalkComponentCustomizator.placements.name.TalkComponentCustomizator=Talk Component Customizator
+# entities.KoseiHelper/TalkComponentCustomizator.placements.description.TalkComponentCustomizator=Allows customization of the talker component that is closest to this entity's position.\nNot compatible with zoomout.
+# entities.KoseiHelper/TalkComponentCustomizator.attributes.description.highlightTexture=The path (relative to Gui/) to the texture when the player is close and able to interact.\nIf your texture is animated, the path should end with the digits (0,00...).
+# entities.KoseiHelper/TalkComponentCustomizator.attributes.description.idleTexture=The path (relative to Gui/) to the texture when the player is far and unable to interact.\nIf your texture is animated, the path should end with the digits (0,00...).
+# entities.KoseiHelper/TalkComponentCustomizator.attributes.description.sfxIn=The sound when the texture is swapped to idle.
+# entities.KoseiHelper/TalkComponentCustomizator.attributes.description.sfxOut=The sound when the texture is swapped to highlight.
+# entities.KoseiHelper/TalkComponentCustomizator.attributes.description.floatiness=How much the talker should move vertically (this is a multiplier).
+# entities.KoseiHelper/TalkComponentCustomizator.attributes.name.tint=Icon Color
+# entities.KoseiHelper/TalkComponentCustomizator.attributes.description.tint=The color that will be applied to the talker.\nThe alpha field indicates how transparent the talker should be.
+# entities.KoseiHelper/TalkComponentCustomizator.attributes.name.talkTextColor=Text Color
+# entities.KoseiHelper/TalkComponentCustomizator.attributes.description.talkTextColor=The color of the "Interaction" button text.\nThe alpha field indicates how transparent the button should be.
+# entities.KoseiHelper/TalkComponentCustomizator.attributes.description.textStroke=How wide the outline of the "Interaction" button text is.
+# entities.KoseiHelper/TalkComponentCustomizator.attributes.description.idleAnimationFrames=If your idle custom textures are animated, this is the amount of frames that will be played.\nBoth textures (idle and highlight) should have the same amount of frames.
+# entities.KoseiHelper/TalkComponentCustomizator.attributes.description.highlightAnimationFrames=If your highlight custom textures are animated, this is the amount of frames that will be played.\nBoth textures (idle and highlight) should have the same amount of frames.
+# entities.KoseiHelper/TalkComponentCustomizator.attributes.description.idleAnimationSpeed=How many seconds each idle frame lasts.\n0.1 equals 10fps.
+# entities.KoseiHelper/TalkComponentCustomizator.attributes.description.highlightAnimationSpeed=How many seconds each highlight frame lasts.\n0.1 equals 10fps.
+# entities.KoseiHelper/TalkComponentCustomizator.attributes.description.textScaleX=How wide the text should be.
+# entities.KoseiHelper/TalkComponentCustomizator.attributes.description.textScaleY=How tall the text should be.
+# entities.KoseiHelper/TalkComponentCustomizator.attributes.description.iconScaleX=How wide the icon (texture) should be.
+# entities.KoseiHelper/TalkComponentCustomizator.attributes.description.iconScaleY=How tall the icon (texture) should be.
+# entities.KoseiHelper/TalkComponentCustomizator.attributes.description.text=The custom text/button icons to display in the icon, separated by commas. Each part can be:\n- a path to a texture in the Gui atlas (for example "tinyarrow")\n- a direction: Down, DownRight, Right, UpRight, Up, UpLeft, Left, DownLeft\n- a button: Jump, Dash, CrouchDash, Grab, Talk, ESC, Pause, MenuLeft, MenuRight, MenuUp, MenuDown, MenuConfirm, MenuCancel, MenuJournal, QuickRestart\n- a dialog ID, if you prefix it with dialog: (for example, dialog:TUTORIAL_DREAMJUMP)\n- plain text\n\nLeave as Default if you don't want custom text.
+# entities.KoseiHelper/TalkComponentCustomizator.attributes.description.allEntities=Whether the customizator should affect all talk components in the room, or only the closest one.
+# entities.KoseiHelper/TalkComponentCustomizator.attributes.description.flag=The talk component(s) will only be customized if the flag is true.\nLeave flag for no flag required.\nNote that the customization will not be unapplied if the flag becomes false, until the level reloads again.
 
 #CONTROLLERS
 
@@ -1104,3 +1105,16 @@ triggers.KoseiHelper/NemesisGunInteractions.attributes.description.moveSwapBlock
 triggers.KoseiHelper/NemesisGunInteractions.attributes.description.collideWithPlatforms=Whether bullets should collide with platform entities (jumpthrus, clouds, etc) in the correct direction.\nSideways jumpthrus and upside down ones from Helping Hand are supported.
 triggers.KoseiHelper/NemesisGunInteractions.attributes.description.moveMovingBlocks=Whether bullets can make moving blocks to start moving.
 triggers.KoseiHelper/NemesisGunInteractions.attributes.description.dashOnKevins=Whether bullets can attack kevins on their sides.
+
+# Procedural Generator Trigger
+# triggers.KoseiHelper/ProceduralGeneratorTrigger.placements.name.ProceduralGeneratorTrigger=Procedural Generator Trigger
+# triggers.KoseiHelper/ProceduralGeneratorTrigger.placements.description.ProceduralGeneratorTrigger=Outputs randomized tiles in the console when entered.
+# triggers.KoseiHelper/ProceduralGeneratorTrigger.attributes.description.density=Controls the probability of placing a tile when noise exceeds the threshold (higher = more tiles).
+# triggers.KoseiHelper/ProceduralGeneratorTrigger.attributes.description.noiseScale=Sets the base frequency of the Perlin noise (lower = larger, smoother structures).
+# triggers.KoseiHelper/ProceduralGeneratorTrigger.attributes.description.noiseThreshold=Minimum noise value required to consider placing a tile.
+# triggers.KoseiHelper/ProceduralGeneratorTrigger.attributes.description.octaves=Number of layers of noise used for detail (higher = more detailed noise).
+# triggers.KoseiHelper/ProceduralGeneratorTrigger.attributes.description.persistence=How much each successive octave contributes to the overall noise (lower = smoother).
+# triggers.KoseiHelper/ProceduralGeneratorTrigger.attributes.description.lacunarity=How much the frequency increases with each octave (lower = less variation/detail).
+# triggers.KoseiHelper/ProceduralGeneratorTrigger.attributes.description.sizeX=Width of the area to apply the procedural generation.
+# triggers.KoseiHelper/ProceduralGeneratorTrigger.attributes.description.sizeY=Height of the area to apply the procedural generation.
+# triggers.KoseiHelper/ProceduralGeneratorTrigger.attributes.description.tileChars=string of tileset ids to randomly select from when placing new tiles.

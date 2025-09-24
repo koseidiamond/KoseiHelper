@@ -14,11 +14,13 @@ public class CustomTempleCrackedBlock : TempleCrackedBlock
     public Color tint;
     public string breakSound, prebreakSound, texture;
     public char debris;
+    public string debrisTexture;
     public new MTexture[,,] tiles;
     public new float frame;
     public new int frames;
     private bool destroyStaticMovers;
     private EntityID id;
+    public bool legacy;
     public CustomTempleCrackedBlock(EntityData data, Vector2 offset, EntityID id) : base(id, data.Position + offset, data.Width, data.Height, persistent)
     {
         Depth = data.Int("depth", -9000);
@@ -30,7 +32,9 @@ public class CustomTempleCrackedBlock : TempleCrackedBlock
         health = data.Int("health", 1); //Number of times it needs to be hit until it breaks
         texture = data.Attr("texture", "objects/KoseiHelper/CustomTempleCrackedBlock/breakBlock");
         debris = data.Char("debris", '1');
+        debrisTexture = data.Attr("debrisTexture", "debris/KoseiHelper/tintableDebris");
         destroyStaticMovers = data.Bool("destroyStaticMovers", false);
+        legacy = data.Bool("legacy", true);
 
         int num = (int)(data.Width / 8f);
         int num2 = (int)(data.Height / 8f);
@@ -93,7 +97,16 @@ public class CustomTempleCrackedBlock : TempleCrackedBlock
                 {
                     for (int j = 0; (float)j < self.Height / 8f; j++)
                     {
-                        self.Scene.Add(Engine.Pooler.Create<Debris>().Init(self.Position + new Vector2(i * 8 + 4, j * 8 + 4), customTempleCrackedBlock.debris, playSound: true).BlastFrom(from));
+                        if (customTempleCrackedBlock.legacy)
+                            self.Scene.Add(Engine.Pooler.Create<Debris>().Init(self.Position + new Vector2(i * 8 + 4, j * 8 + 4),
+                                customTempleCrackedBlock.debris, playSound: true).BlastFrom(from));
+                        else
+                        {
+                            CustomDebris debris = Engine.Pooler.Create<CustomDebris>().Init(self.Position + new Vector2(i * 8 + 4, j * 8 + 4),
+                                customTempleCrackedBlock.debris, true).BlastFrom(from).SetTint(customTempleCrackedBlock.tint);
+                            debris.SetTexture(customTempleCrackedBlock.debrisTexture);
+                            self.Scene.Add(debris);
+                        }
                     }
                 }
             }

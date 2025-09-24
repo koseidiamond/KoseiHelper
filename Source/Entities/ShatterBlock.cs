@@ -125,7 +125,13 @@ public class ShatterDashBlock : Solid
         {
             for (int j = 0; (float)j < base.Height / 8f; j++)
             {
-                base.Scene.Add(Engine.Pooler.Create<Debris>().Init(Position + new Vector2(4 + i * 8, 4 + j * 8), tileType, playDebrisSound).BlastFrom(player.Center));
+                if (tint != Color.White)
+                {
+                    CustomDebris debris = Engine.Pooler.Create<CustomDebris>().Init(Position + new Vector2(4 + i * 8, 4 + j * 8), tileType, playDebrisSound).BlastFrom(player.Center).SetTint(tint);
+                    base.Scene.Add(debris);
+                }
+                else
+                    base.Scene.Add(Engine.Pooler.Create<Debris>().Init(Position + new Vector2(4 + i * 8, 4 + j * 8), tileType, playDebrisSound).BlastFrom(player.Center));
             }
         }
 
