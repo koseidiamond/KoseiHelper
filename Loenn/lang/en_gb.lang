@@ -952,6 +952,7 @@ triggers.KoseiHelper/SetWindowSizeTrigger.attributes.description.windowWidth=The
 triggers.KoseiHelper/SetWindowSizeTrigger.attributes.description.windowHeight=The height of the game, in pixels.
 triggers.KoseiHelper/SetWindowSizeTrigger.attributes.description.onLeave=Whether the trigger should have effect when the player leaves the trigger.
 triggers.KoseiHelper/SetWindowSizeTrigger.attributes.description.fullScreen=Whether the trigger should force the game to be full screen instead of windowed.
+triggers.KoseiHelper/SetWindowSizeTrigger.attributes.description.positionMode=The direction of the fade. For example, if set to LeftToRight,\nthe values will fade from min size to max size when the player crosses the trigger from left to right.
 
 # Reverse Depths Trigger
 triggers.KoseiHelper/ReverseDepthsTrigger.placements.name.ReverseDepthsTrigger=Reverse Depths Trigger
@@ -1001,12 +1002,13 @@ triggers.KoseiHelper/StylegroundModifierTrigger.placements.name.StylegroundModif
 triggers.KoseiHelper/StylegroundModifierTrigger.placements.description.StylegroundModifierTrigger=Modifies a specific value of a given styleground or links it to a counter/slider.
 triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.onlyOnce=Whether the trigger should remove itself once used.
 triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.triggerMode=Whether this trigger should have effect when the player enters/exits it, or while inside.
+triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.positionMode=The direction of the fade. For example, if set to LeftToRight,\nthe value (e.g. color) will fade from min value to max value when the player crosses the trigger from left to right.\nYou probably want the trigger mode to be OnStay!
 triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.stylegroundDepth=Whether it should affect background, foreground, or all stylegrounds with the specified tag/texture/index.
 triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.identificationMode=Index: The styleground that appears behind everything else has the index 0, each one above increases the index by one.\nTag:All stylegrounds with the tag specified will be affected.\nTexture: All stylegrounds that contain the specified texture as part of their path will be affected.\nSave and reopen if you change the identification mode to specify your styleground(s)!
 triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.index=The styleground that appears behind everything else has the index 0, each one above increases the index by one.
 triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.tag=All stylegrounds with the tag specified will be affected. Make sure it's not empty!
 triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.texture=All stylegrounds that contain this string in their path will be affected.
-triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.valueType=Specify the value of the field directly, or link the field to a slider/counter/flag.\nSupports linking fields of different value types (e.g. linking the Color to a slider) except for Flag/Not Flag fields.\nSave and reopen to see the new options.
+triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.valueType=Specify the value of the field directly, depending on the player position inside the trigger, or link the field to a slider/counter/flag.\nSupports linking fields of different value types (e.g. linking the Color to a slider) except for Flag/Not Flag fields.\nSave and reopen to see the new options.
 triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.linkedSlider=The name of the slider that will control the field of this styleground.
 triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.linkedCounter=The name of the counter that will control the field of this styleground.
 triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.linkedFlag=The name of the flag that will control the field of this styleground.
@@ -1031,8 +1033,8 @@ triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.instantOu
 triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.loopX=Loops the styleground on the X axis.
 triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.loopY=Loops the styleground on the Y axis.
 triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.absoluteValue=Whether the values of the slider/counter will always be considered positive or not.
-triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.minValue=The minimum value of the slider/counter.\nEverything below this will be considered the same as the min value.
-triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.maxValue=The maximum value of the slider/counter.\nEverything above this will be considered the same as the max value.
+triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.minValue=The minimum value of the slider/counter if the Value Type is Slider/Counter,\nor the minimum positional value it the Value Type is FadeValue.\nIn-game Counter/Slider values below this will be considered the same as the min value.
+triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.maxValue=The maximum value of the slider/counter,\nor the maximum positional value it the Value Type is FadeValue.\nIn-game Counter/Slider values above this will be considered the same as the max value.
 triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.minColor=The color while the slider/counter is at its minimum value (or below).
 triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.maxColor=The color while the slider/counter is at its maximum value (or above).
 triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.colorWhileTrue=The color while the flag is true.

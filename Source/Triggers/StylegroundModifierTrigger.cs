@@ -1,8 +1,10 @@
 using Celeste.Mod.Entities;
 using Microsoft.Xna.Framework;
+using Monocle;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 
 namespace Celeste.Mod.KoseiHelper.Triggers;
 
@@ -38,6 +40,7 @@ public class StylegroundModifierTrigger : Trigger
     public enum ValueType
     {
         DirectValue,
+        FadeValue,
         Slider,
         Counter,
         Flag
@@ -83,12 +86,18 @@ public class StylegroundModifierTrigger : Trigger
     public float minValue, maxValue, valueWhileTrue, valueWhileFalse;
     public Color minColor, maxColor, colorWhileTrue, colorWhileFalse;
 
+    private PositionModes positionMode;
+    private string direction;
+
     public StylegroundModifierTrigger(EntityData data, Vector2 offset) : base(data, offset)
     {
         // General trigger settings
         onlyOnce = data.Bool("onlyOnce", false);
         triggerMode = data.Enum("triggerMode", TriggerMode.OnEnter);
         stylegroundDepth = data.Enum("stylegroundDepth", StylegroundDepth.Background);
+        direction = data.Attr("positionMode");
+        if (!string.IsNullOrEmpty(direction) && Enum.TryParse<PositionModes>(direction.ToString(), ignoreCase: true, out PositionModes result))
+            positionMode = result;
 
         // Identification settings
         identificationMode = data.Enum("identificationMode", IdentificationMode.Index);
@@ -176,13 +185,15 @@ public class StylegroundModifierTrigger : Trigger
             Logger.Log(LogLevel.Error, "KoseiHelper", "A Styleground Modifier is trying to find a styleground with a non-valid index!");
             return;
         }
+        bool stylegroundTextureFound = false;
         foreach (Backdrop bd in backdrops)
         {
             bool match = false;
             switch (identificationMode)
             {
                 case IdentificationMode.Texture:
-                    match = bd.Name.Contains(texture);
+                    if (!string.IsNullOrEmpty(bd.Name))
+                        match = bd.Name.Contains(texture);
                     break;
                 case IdentificationMode.Tag:
                     match = bd.Tags?.Contains(tag) == true;
@@ -198,14 +209,27 @@ public class StylegroundModifierTrigger : Trigger
             {
                 backdrop = bd;
                 ModifyBackdrop(backdrop);
+                stylegroundTextureFound = true;
                 break;
             }
+        }
+        if (!stylegroundTextureFound)
+        {
+            string identifierValue = identificationMode switch
+            {
+                IdentificationMode.Texture => texture,
+                IdentificationMode.Tag => tag,
+                _ => index.ToString()
+            };
+            Logger.Log(LogLevel.Warn, "KoseiHelper", $"StylegroundModifierTrigger: No matching backdrop found using {identificationMode}" +
+                $"\"{(identificationMode == IdentificationMode.Texture ? texture : identificationMode == IdentificationMode.Tag ? tag : index.ToString())}\"!");
         }
     }
 
     private void ModifyBackdrop(Backdrop backdrop)
     {
         Session session = SceneAs<Level>().Session;
+        Player player = SceneAs<Level>().Tracker.GetEntity<Player>();
         switch (fieldToModify)
         {
             case FieldToModify.Flag:
@@ -235,6 +259,11 @@ public class StylegroundModifierTrigger : Trigger
                         else
                             backdrop.Position.X = valueWhileFalse;
                         break;
+                    case ValueType.FadeValue:
+                        if (player == null) return;
+                        float fadeLerp = GetPositionLerp(player, positionMode);
+                        backdrop.Position.X = MathHelper.Lerp(minValue, maxValue, fadeLerp);
+                        break;
                     default: // DirectValue
                         backdrop.Position.X = positionX;
                         break;
@@ -260,6 +289,11 @@ public class StylegroundModifierTrigger : Trigger
                             backdrop.Position.Y = valueWhileTrue;
                         else
                             backdrop.Position.Y = valueWhileFalse;
+                        break;
+                    case ValueType.FadeValue:
+                        if (player == null) return;
+                        float fadeLerp = GetPositionLerp(player, positionMode);
+                        backdrop.Position.Y = MathHelper.Lerp(minValue, maxValue, fadeLerp);
                         break;
                     default: // DirectValue
                         backdrop.Position.Y = positionY;
@@ -287,6 +321,11 @@ public class StylegroundModifierTrigger : Trigger
                         else
                             backdrop.Scroll.X = valueWhileFalse;
                         break;
+                    case ValueType.FadeValue:
+                        if (player == null) return;
+                        float fadeLerp = GetPositionLerp(player, positionMode);
+                        backdrop.Scroll.X = MathHelper.Lerp(minValue, maxValue, fadeLerp);
+                        break;
                     default: // DirectValue
                         backdrop.Scroll.X = scrollX;
                         break;
@@ -312,6 +351,11 @@ public class StylegroundModifierTrigger : Trigger
                             backdrop.Scroll.Y = valueWhileTrue;
                         else
                             backdrop.Scroll.Y = valueWhileFalse;
+                        break;
+                    case ValueType.FadeValue:
+                        if (player == null) return;
+                        float fadeLerp = GetPositionLerp(player, positionMode);
+                        backdrop.Scroll.Y = MathHelper.Lerp(minValue, maxValue, fadeLerp);
                         break;
                     default: // DirectValue
                         backdrop.Scroll.Y = scrollY;
@@ -339,6 +383,11 @@ public class StylegroundModifierTrigger : Trigger
                         else
                             backdrop.Speed.X = valueWhileFalse;
                         break;
+                    case ValueType.FadeValue:
+                        if (player == null) return;
+                        float fadeLerp = GetPositionLerp(player, positionMode);
+                        backdrop.Speed.X = MathHelper.Lerp(minValue, maxValue, fadeLerp);
+                        break;
                     default: // DirectValue
                         backdrop.Speed.X = speedX;
                         break;
@@ -364,6 +413,11 @@ public class StylegroundModifierTrigger : Trigger
                             backdrop.Speed.Y = valueWhileTrue;
                         else
                             backdrop.Speed.Y = valueWhileFalse;
+                        break;
+                    case ValueType.FadeValue:
+                        if (player == null) return;
+                        float fadeLerp = GetPositionLerp(player, positionMode);
+                        backdrop.Speed.Y = MathHelper.Lerp(minValue, maxValue, fadeLerp);
                         break;
                     default: // DirectValue
                         backdrop.Speed.Y = speedY;
@@ -391,6 +445,11 @@ public class StylegroundModifierTrigger : Trigger
                         else
                             backdrop.FadeAlphaMultiplier = valueWhileFalse;
                         break;
+                    case ValueType.FadeValue:
+                        if (player == null) return;
+                        float fadeLerp = GetPositionLerp(player, positionMode);
+                        backdrop.FadeAlphaMultiplier = MathHelper.Lerp(minValue, maxValue, fadeLerp);
+                        break;
                     default: // DirectValue
                         backdrop.FadeAlphaMultiplier = alpha;
                         break;
@@ -417,8 +476,13 @@ public class StylegroundModifierTrigger : Trigger
                         else
                             backdrop.WindMultiplier = valueWhileFalse;
                         break;
+                    case ValueType.FadeValue:
+                        if (player == null) return;
+                        float fadeLerp = GetPositionLerp(player, positionMode);
+                        backdrop.WindMultiplier = MathHelper.Lerp(minValue, maxValue, fadeLerp);
+                        break;
                     default: // DirectValue
-                        backdrop.WindMultiplier = alpha;
+                        backdrop.WindMultiplier = windMultiplier;
                         break;
                 }
                 break;
@@ -427,21 +491,33 @@ public class StylegroundModifierTrigger : Trigger
                 {
                     case ValueType.Counter:
                         if ((!absoluteValue && session.GetCounter(linkedCounter) <= minValue) || (absoluteValue && Math.Abs(session.GetCounter(linkedCounter)) <= minValue))
-                            (backdrop as Parallax).DoFadeIn = false;
+                            if (backdrop is Parallax parallax1)
+                                parallax1.DoFadeIn = false;
                         if ((!absoluteValue && session.GetCounter(linkedCounter) >= maxValue) || (absoluteValue && Math.Abs(session.GetCounter(linkedCounter)) >= maxValue))
-                            (backdrop as Parallax).DoFadeIn = true;
+                            if (backdrop is Parallax parallax2)
+                                parallax2.DoFadeIn = true;
                         break;
                     case ValueType.Slider:
                         if ((!absoluteValue && session.GetSlider(linkedSlider) <= minValue) || (absoluteValue && Math.Abs(session.GetSlider(linkedSlider)) <= minValue))
-                            (backdrop as Parallax).DoFadeIn = false;
+                            if (backdrop is Parallax parallax3)
+                                parallax3.DoFadeIn = false;
                         if ((!absoluteValue && session.GetSlider(linkedSlider) >= maxValue) || (absoluteValue && Math.Abs(session.GetSlider(linkedSlider)) >= maxValue))
-                            (backdrop as Parallax).DoFadeIn = true;
+                            if (backdrop is Parallax parallax4)
+                                parallax4.DoFadeIn = true;
                         break;
                     case ValueType.Flag:
-                        (backdrop as Parallax).DoFadeIn = session.GetFlag(linkedFlag);
+                        if (backdrop is Parallax parallax5)
+                            parallax5.DoFadeIn = session.GetFlag(linkedFlag);
+                        break;
+                    case ValueType.FadeValue:
+                        if (player == null) return;
+                        float fadeLerp = GetPositionLerp(player, positionMode);
+                        if (backdrop is Parallax parallax6)
+                            parallax6.DoFadeIn = fadeLerp >= 0.5f;
                         break;
                     default: // DirectValue
-                        (backdrop as Parallax).DoFadeIn = true;
+                        if (backdrop is Parallax parallax7)
+                            parallax7.DoFadeIn = fadeIn;
                         break;
                 }
                 break;
@@ -462,6 +538,11 @@ public class StylegroundModifierTrigger : Trigger
                         break;
                     case ValueType.Flag:
                         backdrop.FlipX = session.GetFlag(linkedFlag);
+                        break;
+                    case ValueType.FadeValue:
+                        if (player == null) return;
+                        float fadeLerp = GetPositionLerp(player, positionMode);
+                        backdrop.FlipX = fadeLerp >= 0.5f;
                         break;
                     default: // DirectValue
                         backdrop.FlipX = flipX;
@@ -486,6 +567,11 @@ public class StylegroundModifierTrigger : Trigger
                     case ValueType.Flag:
                         backdrop.FlipY = session.GetFlag(linkedFlag);
                         break;
+                    case ValueType.FadeValue:
+                        if (player == null) return;
+                        float fadeLerp = GetPositionLerp(player, positionMode);
+                        backdrop.FlipY = fadeLerp >= 0.5f;
+                        break;
                     default: // DirectValue
                         backdrop.FlipY = flipY;
                         break;
@@ -508,6 +594,11 @@ public class StylegroundModifierTrigger : Trigger
                         break;
                     case ValueType.Flag:
                         backdrop.InstantIn = session.GetFlag(linkedFlag);
+                        break;
+                    case ValueType.FadeValue:
+                        if (player == null) return;
+                        float fadeLerp = GetPositionLerp(player, positionMode);
+                        backdrop.InstantIn = fadeLerp >= 0.5f;
                         break;
                     default: // DirectValue
                         backdrop.InstantIn = instantIn;
@@ -532,6 +623,11 @@ public class StylegroundModifierTrigger : Trigger
                     case ValueType.Flag:
                         backdrop.InstantOut = session.GetFlag(linkedFlag);
                         break;
+                    case ValueType.FadeValue:
+                        if (player == null) return;
+                        float fadeLerp = GetPositionLerp(player, positionMode);
+                        backdrop.InstantOut = fadeLerp >= 0.5f;
+                        break;
                     default: // DirectValue
                         backdrop.InstantOut = instantOut;
                         break;
@@ -554,6 +650,11 @@ public class StylegroundModifierTrigger : Trigger
                         break;
                     case ValueType.Flag:
                         backdrop.LoopX = session.GetFlag(linkedFlag);
+                        break;
+                    case ValueType.FadeValue:
+                        if (player == null) return;
+                        float fadeLerp = GetPositionLerp(player, positionMode);
+                        backdrop.LoopX = fadeLerp >= 0.5f;
                         break;
                     default: // DirectValue
                         backdrop.LoopX = loopX;
@@ -578,6 +679,11 @@ public class StylegroundModifierTrigger : Trigger
                     case ValueType.Flag:
                         backdrop.LoopY = session.GetFlag(linkedFlag);
                         break;
+                    case ValueType.FadeValue:
+                        if (player == null) return;
+                        float fadeLerp = GetPositionLerp(player, positionMode);
+                        backdrop.LoopY = fadeLerp >= 0.5f;
+                        break;
                     default: // DirectValue
                         backdrop.LoopY = loopY;
                         break;
@@ -592,7 +698,7 @@ public class StylegroundModifierTrigger : Trigger
                             normalizedCounter = MathHelper.Clamp((Math.Abs(session.GetCounter(linkedCounter)) - minValue) / (maxValue - minValue), 0f, 1f);
                         else
                             normalizedCounter = MathHelper.Clamp((session.GetCounter(linkedCounter) - minValue) / (maxValue - minValue), 0f, 1f);
-                        backdrop.Color = Color.Lerp(minColor, maxColor, MathHelper.Lerp(minValue, maxValue, session.GetSlider(linkedCounter)));
+                        backdrop.Color = Color.Lerp(minColor, maxColor, normalizedCounter);
                         break;
                     case ValueType.Slider: // Gradually changes the color from minColor to maxColor which correspond to minValue and maxValue each
                         float normalizedSlider;
@@ -607,6 +713,11 @@ public class StylegroundModifierTrigger : Trigger
                             backdrop.Color = colorWhileTrue;
                         else
                             backdrop.Color = colorWhileFalse;
+                        break;
+                    case ValueType.FadeValue:
+                        if (player == null) return;
+                        float fadeLerp = GetPositionLerp(player, positionMode);
+                        backdrop.Color = Color.Lerp(minColor, maxColor, fadeLerp);
                         break;
                     default: // DirectValue
                         backdrop.Color = color;

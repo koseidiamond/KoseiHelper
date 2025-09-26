@@ -1,4 +1,5 @@
 local StylegroundModifierTrigger = {}
+local enums = require("consts.celeste_enums")
 
 StylegroundModifierTrigger.name = "KoseiHelper/StylegroundModifierTrigger"
 StylegroundModifierTrigger.depth = 100
@@ -9,6 +10,7 @@ StylegroundModifierTrigger.placements = {
 		data = {
 		onlyOnce = false,
 		triggerMode = "OnEnter",
+		positionMode = "NoEffect",
 		stylegroundDepth = "Background",
 		identificationMode = "Index",
 		index = 0,
@@ -64,6 +66,10 @@ StylegroundModifierTrigger.fieldInformation = function (entity) return {
 		},
 		editable = false
 	},
+	positionMode = {
+        options = enums.trigger_position_modes,
+        editable = false
+    },
 	stylegroundDepth = {
 		options = {
 		"Background",
@@ -83,6 +89,7 @@ StylegroundModifierTrigger.fieldInformation = function (entity) return {
 	valueType = {
 		options = {
 		"DirectValue",
+		"FadeValue",
 		"Slider",
 		"Counter",
 		"Flag"
@@ -151,11 +158,20 @@ StylegroundModifierTrigger.fieldOrder= {
 	"texture",
 	"fieldToModify",
 	"triggerMode",
+	"positionMode",
 	"valueType",
 	"linkedSlider",
 	"linkedCounter",
 	"linkedFlag",
-	"multiplier"
+	"multiplier",
+	"minValue",
+	"maxValue",
+	"minColor",
+	"maxColor",
+	"valueWhileFalse",
+	"valueWhileTrue",
+	"colorWhileFalse",
+	"colorWhileTrue"
 }
 
 function StylegroundModifierTrigger.ignoredFields(entity)
@@ -163,6 +179,7 @@ function StylegroundModifierTrigger.ignoredFields(entity)
 	"_name",
 	"_id",
 	
+	"positionMode",
 	"linkedSlider",
 	"linkedCounter",
 	"linkedFlag",
@@ -277,6 +294,7 @@ function StylegroundModifierTrigger.ignoredFields(entity)
 			doNotIgnore("loopY")
 		end
 	end
+	
 	if entity.valueType == "Slider" then
 		doNotIgnore("linkedSlider")
 		doNotIgnore("absoluteValue")
@@ -297,6 +315,7 @@ function StylegroundModifierTrigger.ignoredFields(entity)
 			doNotIgnore("maxValue") -- max value for the bool to change to true
 		end
 	end
+	
 	if entity.valueType == "Counter" then
 		doNotIgnore("linkedCounter")
 		doNotIgnore("absoluteValue")
@@ -317,6 +336,7 @@ function StylegroundModifierTrigger.ignoredFields(entity)
 			doNotIgnore("maxValue") -- max value for the bool to change to true
 		end
 	end
+	
 	if entity.valueType == "Flag" then
 		doNotIgnore("linkedFlag")
 		-- Float from bool
@@ -328,6 +348,18 @@ function StylegroundModifierTrigger.ignoredFields(entity)
 		if entity.fieldToModify == "Color" then
 			doNotIgnore("colorWhileTrue")
 			doNotIgnore("colorWhileFalse")
+		end
+	end
+	
+	if entity.valueType == "FadeValue" then
+		doNotIgnore("positionMode")
+		if entity.fieldToModify == "PositionX" or entity.fieldToModify == "PositionY" or entity.fieldToModify == "ScrollX" or entity.fieldToModify == "ScrollY" or entity.fieldToModify == "SpeedX" or entity.fieldToModify == "SpeedY" or entity.fieldToModify == "Alpha" then
+			doNotIgnore("minValue")
+			doNotIgnore("maxValue")
+		end
+		if entity.fieldToModify == "Color" then
+			doNotIgnore("minColor")
+			doNotIgnore("maxColor")
 		end
 	end
 	return ignored
