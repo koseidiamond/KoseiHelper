@@ -2,6 +2,7 @@ local ReverseDepthsTrigger = {}
 
 ReverseDepthsTrigger.name = "KoseiHelper/ReverseDepthsTrigger"
 ReverseDepthsTrigger.depth = 100
+ReverseDepthsTrigger.category = "visual"
 
 ReverseDepthsTrigger.placements = {
 	{

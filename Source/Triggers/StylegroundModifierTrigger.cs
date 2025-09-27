@@ -1,10 +1,9 @@
 using Celeste.Mod.Entities;
 using Microsoft.Xna.Framework;
-using Monocle;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
+using System.Reflection;
 
 namespace Celeste.Mod.KoseiHelper.Triggers;
 
@@ -66,7 +65,8 @@ public class StylegroundModifierTrigger : Trigger
         InstantIn,
         InstantOut,
         LoopX,
-        LoopY
+        LoopY,
+        Custom
     };
     public FieldToModify fieldToModify;
     public string flag, notFlag;
@@ -88,6 +88,7 @@ public class StylegroundModifierTrigger : Trigger
 
     private PositionModes positionMode;
     private string direction;
+    public string customFieldName, customFieldValue;
 
     public StylegroundModifierTrigger(EntityData data, Vector2 offset) : base(data, offset)
     {
@@ -116,7 +117,7 @@ public class StylegroundModifierTrigger : Trigger
         fieldToModify = data.Enum("fieldToModify", FieldToModify.Color);
         flag = data.Attr("flag", "");
         notFlag = data.Attr("notFlag", "");
-        color = data.HexColor("color", Color.White);
+        color = KoseiHelperUtils.ParseHexColor(data.Values.TryGetValue("color", out object c1) ? c1.ToString() : null, Color.White);
         positionX = data.Float("positionX", 0f);
         positionY = data.Float("positionY", 0f);
         scrollX = data.Float("scrollX", 0f);
@@ -133,14 +134,16 @@ public class StylegroundModifierTrigger : Trigger
         loopX = data.Bool("loopX", false);
         loopY = data.Bool("loopY", false);
         absoluteValue = data.Bool("absoluteValue", false);
+        customFieldName = data.Attr("customFieldName", "");
+        customFieldValue = data.Attr("customFieldValue", "1.0");
 
         // Parsing settings while linking to flag/counter/slider
         minValue = data.Float("minValue", 0f);
         maxValue = data.Float("maxValue", 1f);
-        minColor = data.HexColor("minColor", Color.White);
-        maxColor = data.HexColor("maxColor", Color.Black);
-        colorWhileTrue = data.HexColor("colorWhileTrue", Color.White);
-        colorWhileFalse = data.HexColor("colorWhileFalse", Color.Black);
+        minColor = KoseiHelperUtils.ParseHexColor(data.Values.TryGetValue("minColor", out object c2) ? c2.ToString() : null, Color.White);
+        maxColor = KoseiHelperUtils.ParseHexColor(data.Values.TryGetValue("maxColor", out object c3) ? c3.ToString() : null, Color.Black);
+        colorWhileTrue = KoseiHelperUtils.ParseHexColor(data.Values.TryGetValue("colorWhileTrue", out object c4) ? c4.ToString() : null, Color.White);
+        colorWhileFalse = KoseiHelperUtils.ParseHexColor(data.Values.TryGetValue("colorWhileFalse", out object c5) ? c5.ToString() : null, Color.Black);
         valueWhileTrue = data.Float("valueWhileTrue", 1f);
         valueWhileFalse = data.Float("valueWhileFalse", 0f);
     }
@@ -221,7 +224,7 @@ public class StylegroundModifierTrigger : Trigger
                 IdentificationMode.Tag => tag,
                 _ => index.ToString()
             };
-            Logger.Log(LogLevel.Warn, "KoseiHelper", $"StylegroundModifierTrigger: No matching backdrop found using {identificationMode}" +
+            Logger.Log(LogLevel.Warn, "KoseiHelper", $"StylegroundModifierTrigger: No matching backdrop found using {identificationMode} " +
                 $"\"{(identificationMode == IdentificationMode.Texture ? texture : identificationMode == IdentificationMode.Tag ? tag : index.ToString())}\"!");
         }
     }
@@ -689,7 +692,7 @@ public class StylegroundModifierTrigger : Trigger
                         break;
                 }
                 break;
-            default: // Color
+            case FieldToModify.Color: // Color
                 switch (valueType)
                 {
                     case ValueType.Counter: // Gradually changes the color from minColor to maxColor which correspond to minValue and maxValue each
@@ -724,8 +727,121 @@ public class StylegroundModifierTrigger : Trigger
                         break;
                 }
                 break;
+            case FieldToModify.Custom:
+                if (string.IsNullOrEmpty(customFieldName))
+                    break;
+                object value = null;
+                Type targetType = backdrop.GetType().
+                    GetField(customFieldName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.IgnoreCase)?.FieldType ??
+                    backdrop.GetType().GetProperty(customFieldName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)?.PropertyType;
+                if (targetType == null) break;
+                float fadeAmount;
+                switch (valueType)
+                {
+                    case ValueType.Counter:
+                        float counterVal = session.GetCounter(linkedCounter);
+                        if (absoluteValue) counterVal = Math.Abs(counterVal);
+                        fadeAmount = MathHelper.Clamp((counterVal - minValue) / (maxValue - minValue), 0f, 1f);
+                        value = targetType == typeof(Color)
+                            ? (object)Color.Lerp(minColor, maxColor, fadeAmount)
+                            : (object)MathHelper.Lerp(minValue, maxValue, fadeAmount);
+                        break;
+
+                    case ValueType.Slider:
+                        float sliderVal = session.GetSlider(linkedSlider);
+                        if (absoluteValue) sliderVal = Math.Abs(sliderVal);
+                        fadeAmount = MathHelper.Clamp((sliderVal - minValue) / (maxValue - minValue), 0f, 1f);
+                        value = targetType == typeof(Color)
+                            ? (object)Color.Lerp(minColor, maxColor, fadeAmount)
+                            : (object)MathHelper.Lerp(minValue, maxValue, fadeAmount);
+                        break;
+
+                    case ValueType.FadeValue:
+                        if (player == null)
+                            break;
+                        fadeAmount = GetPositionLerp(player, positionMode);
+                        value = targetType == typeof(Color)
+                            ? (object)Color.Lerp(minColor, maxColor, fadeAmount)
+                            : (object)MathHelper.Lerp(minValue, maxValue, fadeAmount);
+                        break;
+
+                    case ValueType.Flag:
+                        value = session.GetFlag(linkedFlag) ? valueWhileTrue : valueWhileFalse;
+                        break;
+
+                    default: // DirectValue
+                        value = TryConvertValue(customFieldValue, targetType) ?? alpha;
+                        break;
+                }
+
+                SetCustomFieldValue(backdrop, customFieldName, value);
+                break;
         }
     }
+
+    private void SetCustomFieldValue(Backdrop backdrop, string fieldName, object rawValue)
+    {
+        Type type = backdrop.GetType();
+
+        FieldInfo field = type.GetField(fieldName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.IgnoreCase);
+        if (field != null)
+        {
+            object converted = TryConvertValue(rawValue, field.FieldType);
+            if (converted != null)
+            {
+                field.SetValue(backdrop, converted);
+                return;
+            }
+        }
+        PropertyInfo prop = type.GetProperty(fieldName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+        if (prop != null && prop.CanWrite)
+        {
+            object converted = TryConvertValue(rawValue, prop.PropertyType);
+            if (converted != null)
+            {
+                prop.SetValue(backdrop, converted);
+                return;
+            }
+        }
+        Logger.Log(LogLevel.Warn, "KoseiHelper", $"Could not set field or property {fieldName} on {type.Name}. Value type: {rawValue?.GetType()?.Name ?? "null"}");
+    }
+
+    private object TryConvertValue(object rawValue, Type targetType)
+    {
+        try
+        {
+            if (targetType == typeof(float))
+                return Convert.ToSingle(rawValue);
+            if (targetType == typeof(int))
+                return Convert.ToInt32(rawValue);
+            if (targetType == typeof(bool))
+            {
+                if (rawValue is bool b) return b;
+                if (rawValue is float f) return f >= 0.5f;
+                if (rawValue is int i) return i != 0;
+                if (rawValue is string s) return bool.TryParse(s, out bool parsed) && parsed;
+            }
+
+            if (targetType == typeof(string))
+                return rawValue.ToString();
+            if (targetType == typeof(Color))
+            {
+                if (rawValue is Color c)
+                    return c;
+                if (rawValue is string s)
+                    return KoseiHelperUtils.ParseHexColor(s, Color.White);
+            }
+            if (targetType.IsAssignableFrom(rawValue.GetType()))
+                return rawValue;
+            return Convert.ChangeType(rawValue, targetType);
+        }
+        catch (Exception e)
+        {
+            Logger.Log(LogLevel.Warn, "KoseiHelper", $"Could not convert value \"{rawValue}\" ({rawValue?.GetType()?.Name ?? "null"}) to {targetType.Name}: {e.Message}");
+            return null;
+        }
+    }
+
 
     private void Remove()
     {

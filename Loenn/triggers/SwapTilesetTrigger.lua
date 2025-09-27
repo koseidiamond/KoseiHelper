@@ -4,6 +4,7 @@ local SwapTilesetTrigger = {}
 
 SwapTilesetTrigger.name = "KoseiHelper/SwapTilesetTrigger"
 SwapTilesetTrigger.depth = 100
+SwapTilesetTrigger.category = "visual"
 
 SwapTilesetTrigger.placements = {
 	{

@@ -3,6 +3,7 @@ local enums = require("consts.celeste_enums")
 
 StylegroundModifierTrigger.name = "KoseiHelper/StylegroundModifierTrigger"
 StylegroundModifierTrigger.depth = 100
+StylegroundModifierTrigger.category = "visual"
 
 StylegroundModifierTrigger.placements = {
 	{
@@ -24,6 +25,8 @@ StylegroundModifierTrigger.placements = {
 		multiplier = 1,
 		
 		fieldToModify = "Color",
+		customFieldName = "",
+		customFieldValue = "",
 		flag = "",
 		notFlag = "",
 		color = "FFFFFF",
@@ -117,6 +120,8 @@ StylegroundModifierTrigger.fieldInformation = function (entity) return {
 		"InstantOut",
 		"LoopX",
 		"LoopY"
+		-- still wip
+		--"Custom"
 		},
 		editable = false
 	},
@@ -157,6 +162,8 @@ StylegroundModifierTrigger.fieldOrder= {
 	"tag",
 	"texture",
 	"fieldToModify",
+	"customFieldName",
+	"customFieldValue",
 	"triggerMode",
 	"positionMode",
 	"valueType",
@@ -180,6 +187,8 @@ function StylegroundModifierTrigger.ignoredFields(entity)
 	"_id",
 	
 	"positionMode",
+	"customFieldName",
+	"customFieldValue",
 	"linkedSlider",
 	"linkedCounter",
 	"linkedFlag",
@@ -227,7 +236,20 @@ function StylegroundModifierTrigger.ignoredFields(entity)
             end
         end
     end
-
+	if entity.fieldToModify == "Custom" then
+		doNotIgnore("customFieldName")
+		if entity.valueType == "Slider" or entity.valueType == "Counter" or entity.valueType == "FadeValue" then
+			doNotIgnore("minValue")
+			doNotIgnore("maxValue")
+		end
+		if entity.valueType == "DirectValue" then
+			doNotIgnore("customFieldValue")
+		end
+		if entity.valueType == "Flag" then
+		doNotIgnore("valueWhileTrue")
+		doNotIgnore("valueWhileFalse")
+		end
+	end
 	if entity.identificationMode == "Index" then
 		doNotIgnore("index")
 	end

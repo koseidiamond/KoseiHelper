@@ -1004,7 +1004,7 @@ triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.onlyOnce=
 triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.triggerMode=Whether this trigger should have effect when the player enters/exits it, or while inside.
 triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.positionMode=The direction of the fade. For example, if set to LeftToRight,\nthe value (e.g. color) will fade from min value to max value when the player crosses the trigger from left to right.\nYou probably want the trigger mode to be OnStay!
 triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.stylegroundDepth=Whether it should affect background, foreground, or all stylegrounds with the specified tag/texture/index.
-triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.identificationMode=Index: The styleground that appears behind everything else has the index 0, each one above increases the index by one.\nTag:All stylegrounds with the tag specified will be affected.\nTexture: All stylegrounds that contain the specified texture as part of their path will be affected.\nSave and reopen if you change the identification mode to specify your styleground(s)!
+triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.identificationMode=Index: The styleground that appears behind everything else has the index 0, each one above increases the index by one.\nTag:All stylegrounds with the tag specified will be affected.\nTexture: All stylegrounds that contain the specified texture as part of their path will be affected.\nCustom: For specific fields (like the Alpha in Snow Fg), not all fields are supported.\n  You don't need to use this on most occasions.\nSave and reopen if you change the identification mode to specify your styleground(s)!
 triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.index=The styleground that appears behind everything else has the index 0, each one above increases the index by one.
 triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.tag=All stylegrounds with the tag specified will be affected. Make sure it's not empty!
 triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.texture=All stylegrounds that contain this string in their path will be affected.
@@ -1041,7 +1041,8 @@ triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.colorWhil
 triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.colorWhileFalse=The color while the flag is false.
 triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.valueWhileTrue=The value while the flag is true.
 triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.valueWhileFalse=The value while the flag is false.
-
+triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.customFieldName=The name of the field. Supports most* numeric, string and color fields. Don't expect compatibility for everything.\n*It is not possible to fade values between comma-separated fields (like lists of colors).
+triggers.KoseiHelper/StylegroundModifierTrigger.attributes.description.customFieldValue=The value that the custom field should have (like 5.4 or FFFF00).
 
 # Nemesis Gun Triggers
 

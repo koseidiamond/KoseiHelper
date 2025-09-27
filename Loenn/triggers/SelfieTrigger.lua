@@ -2,6 +2,7 @@ local SelfieTrigger = {}
 
 SelfieTrigger.name = "KoseiHelper/SelfieTrigger"
 SelfieTrigger.depth = 100
+SelfieTrigger.category = "visual"
 
 SelfieTrigger.placements = {
 	{
