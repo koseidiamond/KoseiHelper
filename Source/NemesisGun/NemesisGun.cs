@@ -271,7 +271,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                         if (self.StateMachine.state != 11 && self.StateMachine.state != 17 &&
                             (self.StateMachine.state != 19 || KoseiHelperModule.Settings.GunSettings.CanShootInFeather))
                             Gunshot(self, CursorPos);
-                        if ((recoilCooldown <= 0 || Extensions.recoilingOnInteraction) && !KoseiHelperModule.Settings.GunSettings.MachineGunMode)
+                        if ((recoilCooldown <= 0 || Extensions.recoilingOnInteraction) && !KoseiHelperModule.Settings.GunSettings.MachineGunMode && self.InControl)
                         {
                             if (GetEightDirectionalAim(KoseiHelperModule.Settings.GunSettings.gunDirections).Y < Math.Sqrt(2) / 2 &&
                             GetEightDirectionalAim(KoseiHelperModule.Settings.GunSettings.gunDirections).Y > -Math.Sqrt(2) / 2 &&

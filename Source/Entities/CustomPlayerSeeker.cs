@@ -9,6 +9,7 @@ using static Celeste.Session;
 namespace Celeste.Mod.KoseiHelper.Entities;
 
 [CustomEntity("KoseiHelper/CustomPlayerSeeker")]
+[Tracked]
 public class CustomPlayerSeeker : Actor
 {
     private Facings facing;
@@ -26,6 +27,7 @@ public class CustomPlayerSeeker : Actor
 
     public string nextRoom, colorgrade, seekerDash;
     public bool vanillaEffects = false;
+    public bool onlyBreakAnimation = false;
     public bool isFriendly = false;
 
     public bool canDash = true;
@@ -36,6 +38,9 @@ public class CustomPlayerSeeker : Actor
     private bool justRespawned;
     public bool canSwitchCharacters, isMadeline;
     private Collider bounceCollider;
+    private string flagToSwap;
+    private bool lastFlagValue;
+
 
     public static ParticleType boosterParticle = Booster.P_Burst;
     public static ParticleType boosterRedParticle = Booster.P_BurstRed;
@@ -78,11 +83,13 @@ public class CustomPlayerSeeker : Actor
         nextRoom = data.Attr("nextRoom", "c-00");
         colorgrade = data.Attr("colorgrade", "templevoid");
         vanillaEffects = data.Bool("vanillaEffects", false);
+        onlyBreakAnimation = data.Bool("onlyBreakAnimation", false);
         seekerDash = data.Attr("seekerDashSound", "event:/game/05_mirror_temple/seeker_dash");
         canSwitchCharacters = data.Bool("canSwitchCharacters", false);
         speedMultiplier = data.Float("speedMultiplier", 1f);
         isFriendly = data.Bool("isFriendly", false);
-        Add(sprite = GFX.SpriteBank.Create(data.Attr("sprite", "seeker"))); //IMPORTANT: the sprite needs the tags hatch, flipMouth, flipEyes, idle, spotted, attacking and statue to work
+        flagToSwap = data.Attr("flagToSwap", "");
+        Add(sprite = GFX.SpriteBank.Create(data.Attr("sprite", "seeker"))); //the sprite needs the tags hatch, flipMouth, flipEyes, idle, spotted, attacking and statue to work
         if (vanillaEffects)
             sprite.Play("statue");
         else
@@ -114,8 +121,10 @@ public class CustomPlayerSeeker : Actor
         if (!string.IsNullOrEmpty(colorgrade))
             level.Session.ColorGrade = colorgrade;
         level.Session.SetFlag("kosei_PlayerSeeker", true);
-        if (vanillaEffects)
+        if (vanillaEffects && !onlyBreakAnimation)
             level.ScreenPadding = 32f;
+        if (!string.IsNullOrEmpty(flagToSwap))
+            lastFlagValue = level.Session.GetFlag(flagToSwap);
     }
 
     public override void Added(Scene scene)
@@ -129,7 +138,7 @@ public class CustomPlayerSeeker : Actor
     {
         Level level = Scene as Level;
         yield return null;
-        if (vanillaEffects)
+        if (vanillaEffects && !onlyBreakAnimation)
             Glitch.Value = 0.05f;
         Player player = level.Tracker.GetEntity<Player>();
         player.Sprite.Play("asleep");
@@ -141,11 +150,11 @@ public class CustomPlayerSeeker : Actor
         player.StateMachine.Locked = true;
         player.DummyAutoAnimate = false;
         player.DummyGravity = true;
-        if (vanillaEffects)
+        if (vanillaEffects && !onlyBreakAnimation)
             yield return 1f;
         Vector2 from = level.Camera.Position;
 
-        if (vanillaEffects)
+        if (vanillaEffects && !onlyBreakAnimation)
         {
             Tween tween = Tween.Create(Tween.TweenMode.Oneshot, Ease.SineInOut, 2f, start: true);
             tween.OnUpdate = (Tween f) =>
@@ -172,7 +181,7 @@ public class CustomPlayerSeeker : Actor
         else
             level.Camera.Position = Position - new Vector2(180, 90);
         enabled = true;
-        if (vanillaEffects)
+        if (vanillaEffects && !onlyBreakAnimation)
         {
             yield return 0.4f;
             BreakOutParticles();
@@ -297,7 +306,7 @@ public class CustomPlayerSeeker : Actor
                             speed.X = Calc.Approach(speed.X, 0f, 400f * Engine.DeltaTime);
                         if (vector2.Length() > 0f && sprite.CurrentAnimationID == "idle")
                         {
-                            if (vanillaEffects)
+                            if (vanillaEffects && !onlyBreakAnimation)
                             {
                                 level.Displacement.AddBurst(Position, 0.5f, 8f, 32f);
                                 sprite.Play("spotted");
@@ -473,7 +482,7 @@ public class CustomPlayerSeeker : Actor
                             player.StateMachine.Locked = false;
                             player.DummyAutoAnimate = false;
                         }
-                        if (vanillaEffects)
+                        if (vanillaEffects && !onlyBreakAnimation)
                         {
                             Distort.Anxiety = Calc.ClampedMap(num4, 0f, 200f, 0.25f, 0f) + Calc.Random.NextFloat(0.05f);
                             Distort.AnxietyOrigin = (new Vector2(entity.X, level.Camera.Top) - level.Camera.Position) / new Vector2(320f, 180f);
@@ -485,8 +494,17 @@ public class CustomPlayerSeeker : Actor
                     entity3.Collidable = false;
                 }
             }
-            if (KoseiHelperModule.Settings.SwapCharacter.Pressed)
-                swapCharacters(cameraTarget, player);
+            if (!string.IsNullOrEmpty(flagToSwap))
+            {
+                bool currentFlagValue = level.Session.GetFlag(flagToSwap);
+                if (currentFlagValue != lastFlagValue && canSwitchCharacters)
+                {
+                    SwapCharacters(cameraTarget, player);
+                    lastFlagValue = currentFlagValue;
+                }
+            }
+            if (KoseiHelperModule.Settings.SwapCharacter.Pressed && string.IsNullOrEmpty(flagToSwap) && canSwitchCharacters)
+                SwapCharacters(cameraTarget, player);
         }
     }
     private void CreateTrail()
@@ -764,38 +782,35 @@ public class CustomPlayerSeeker : Actor
         }
     }
 
-    public void swapCharacters(Vector2 cameraTarget, Player player)
+    public void SwapCharacters(Vector2 cameraTarget, Player player)
     {
-        if (canSwitchCharacters)
+        //Logger.Debug(nameof(KoseiHelperModule), $"Characters swapped! Playing as Madeline: {!isMadeline}");
+        if (isMadeline) // Become Seeker
         {
-            //Logger.Debug(nameof(KoseiHelperModule), $"Characters swapped! Playing as Madeline: {!isMadeline}");
-            if (isMadeline) // Become Seeker
+            Audio.Play("event:/game/05_mirror_temple/seeker_revive", player.Position);
+            sprite.Play("spot");
+            SceneAs<Level>().Session.SetFlag("kosei_PlayerSeeker", true);
+            player.Sprite.Play("asleep");
+            player.StateMachine.State = 11;
+            player.StateMachine.Locked = true;
+            player.DummyAutoAnimate = false;
+            isMadeline = false;
+        }
+        else // Become Madeline
+        {
+            Audio.Play("event:/game/05_mirror_temple/seeker_revive", Position);
+            Tween tween = Tween.Create(Tween.TweenMode.Oneshot, Ease.SineInOut, 2f, start: true);
+            tween.OnUpdate = (Tween f) =>
             {
-                Audio.Play("event:/game/05_mirror_temple/seeker_revive", player.Position);
-                sprite.Play("spot");
-                SceneAs<Level>().Session.SetFlag("kosei_PlayerSeeker", true);
-                player.Sprite.Play("asleep");
-                player.StateMachine.State = 11;
-                player.StateMachine.Locked = true;
-                player.DummyAutoAnimate = false;
-                isMadeline = false;
-            }
-            else // Become Madeline
-            {
-                Audio.Play("event:/game/05_mirror_temple/seeker_revive", Position);
-                Tween tween = Tween.Create(Tween.TweenMode.Oneshot, Ease.SineInOut, 2f, start: true);
-                tween.OnUpdate = (Tween f) =>
-                {
-                    Vector2 cameraTarget = CameraTarget;
-                    SceneAs<Level>().Camera.Position = SceneAs<Level>().Camera.Position + (cameraTarget - SceneAs<Level>().Camera.Position) * f.Eased;
-                };
-                sprite.Play("takeHit");
-                SceneAs<Level>().Session.SetFlag("kosei_PlayerSeeker", false);
-                player.StateMachine.State = 0;
-                player.StateMachine.Locked = false;
-                player.DummyAutoAnimate = true;
-                isMadeline = true;
-            }
+                Vector2 cameraTarget = CameraTarget;
+                SceneAs<Level>().Camera.Position = SceneAs<Level>().Camera.Position + (cameraTarget - SceneAs<Level>().Camera.Position) * f.Eased;
+            };
+            sprite.Play("takeHit");
+            SceneAs<Level>().Session.SetFlag("kosei_PlayerSeeker", false);
+            player.StateMachine.State = 0;
+            player.StateMachine.Locked = false;
+            player.DummyAutoAnimate = true;
+            isMadeline = true;
         }
     }
 }

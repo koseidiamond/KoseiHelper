@@ -526,9 +526,11 @@ entities.KoseiHelper/CustomPlayerSeeker.attributes.description.colorgrade= The c
 entities.KoseiHelper/CustomPlayerSeeker.attributes.description.sprite= The sprite that the Player Seeker will use.\nYou can copy the xml entry if you want to reskin it and give it the new tag here.
 entities.KoseiHelper/CustomPlayerSeeker.attributes.description.seekerDashSound= The sound that the Player Seeker should make when it dashes.
 entities.KoseiHelper/CustomPlayerSeeker.attributes.description.vanillaEffects= If the vanilla effects should appear.\n(Screen padding, break statue intro, anxiety).
+entities.KoseiHelper/CustomPlayerSeeker.attributes.description.onlyBreakAnimation=Whether the only vanilla effect is the break animation.
 entities.KoseiHelper/CustomPlayerSeeker.attributes.description.isFriendly= If the seeker should be able to kill Madeline\n(and attempt to do it like crazy, if it gets too close).
 entities.KoseiHelper/CustomPlayerSeeker.attributes.description.speedMultiplier= The normal speed of the Player Seeker will be multiplied by this factor.\nIt's recommended to leave the default.
 entities.KoseiHelper/CustomPlayerSeeker.attributes.description.canSwitchCharacters=Enable this option to be able to switch between Madeline and Player Seeker.\nThe custom key can be configured in Mod Options>Kosei Helper.
+entities.KoseiHelper/CustomPlayerSeeker.attributes.description.flagToSwap=The control between Madeline and the Seeker will be swapped when this flag toggles its value.\nIf this field is left empty, then the custom keybind will be used instead.
 
 #Winged Key
 entities.KoseiHelper/WingedKey.placements.name.WingedKey= Winged Key
