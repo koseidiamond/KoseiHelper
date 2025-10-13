@@ -17,6 +17,7 @@ CustomPlayerSeeker.placements = {
 			speedMultiplier = 1,
 			isFriendly = false,
 			flagToSwap = "",
+			flagToHatch = "",
 			canShatterSpinners = false
 		}
 	}

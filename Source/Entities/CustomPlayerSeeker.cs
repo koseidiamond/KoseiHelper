@@ -41,8 +41,9 @@ public class CustomPlayerSeeker : Actor
     private bool justRespawned;
     public bool canSwitchCharacters, isMadeline;
     private Collider bounceCollider;
-    private string flagToSwap;
+    private string flagToSwap, flagToHatch;
     private bool lastFlagValue;
+    private bool isWaitingForHatchFlag = false;
     public bool canShatterSpinners;
 
     public static ParticleType boosterParticle = Booster.P_Burst;
@@ -93,6 +94,7 @@ public class CustomPlayerSeeker : Actor
         speedMultiplier = data.Float("speedMultiplier", 1f);
         isFriendly = data.Bool("isFriendly", false);
         flagToSwap = data.Attr("flagToSwap", "");
+        flagToHatch = data.Attr("flagToHatch", "");
         canShatterSpinners = data.Bool("canShatterSpinners", false);
         Add(sprite = GFX.SpriteBank.Create(data.Attr("sprite", "seeker"))); //the sprite needs the tags hatch, flipMouth, flipEyes, idle, spotted, attacking and statue to work
         if (vanillaEffects)
@@ -144,6 +146,15 @@ public class CustomPlayerSeeker : Actor
     {
         Level level = Scene as Level;
         yield return null;
+        if (!string.IsNullOrEmpty(flagToHatch))
+        {
+            isWaitingForHatchFlag = true;
+            while (!level.Session.GetFlag(flagToHatch))
+            {
+                yield return null;
+            }
+            isWaitingForHatchFlag = false;
+        }
         if (vanillaEffects)
             Glitch.Value = 0.05f;
         Player player = level.Tracker.GetEntity<Player>();
@@ -244,9 +255,18 @@ public class CustomPlayerSeeker : Actor
     }
     public override void Update()
     {
+        Level level = base.Scene as Level;
+        if (!string.IsNullOrEmpty(flagToHatch))
+        {
+            if (level.Session.GetFlag(flagToHatch) && !enabled)
+            {
+                enabled = true;
+                isWaitingForHatchFlag = false;
+            }
+        }
+        if (isWaitingForHatchFlag) return;
         foreach (Entity entity2 in base.Scene.Tracker.GetEntities<SeekerBarrier>())
             entity2.Collidable = true;
-        Level level = base.Scene as Level;
         Player player = Scene.Tracker.GetEntity<Player>();
         base.Update();
         if (speed != Vector2.Zero)
@@ -689,6 +709,8 @@ public class CustomPlayerSeeker : Actor
             }
         }
     }
+
+    //looks ugly if not vanillaEffects and waiting to hatch, but whatever
     public override void Render()
     {
         if (!SaveData.Instance.Assists.InvisibleMotion || !enabled || !(speed.LengthSquared() > 100f))
