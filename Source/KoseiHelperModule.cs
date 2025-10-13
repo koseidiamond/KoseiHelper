@@ -1,6 +1,5 @@
 ﻿using Celeste.Mod.KoseiHelper.DecalRegistry;
 using Celeste.Mod.KoseiHelper.Entities;
-using IL.Monocle;
 using MonoMod.ModInterop;
 using System;
 

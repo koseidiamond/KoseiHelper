@@ -51,6 +51,6 @@ public class CustomDebris : Debris
     {
         base.Update();
         Image img = Get<Image>();
-        img?.Color = new Color((img.Color.R * tint.R) / 255,(img.Color.G * tint.G) / 255,(img.Color.B * tint.B) / 255,(img.Color.A * tint.A) / 255);
+        img?.Color = new Color((img.Color.R * tint.R) / 255, (img.Color.G * tint.G) / 255, (img.Color.B * tint.B) / 255, (img.Color.A * tint.A) / 255);
     }
 }

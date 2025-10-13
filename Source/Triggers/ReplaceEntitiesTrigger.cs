@@ -185,7 +185,7 @@ namespace Celeste.Mod.KoseiHelper.Triggers
                 }
                 catch (Exception)
                 {
-                    Logger.Log(LogLevel.Error, "KoseiHelper",$"Failed to replace entity!\nExpected arguments: {string.Join(", ", expectedParams)}\n" +
+                    Logger.Log(LogLevel.Error, "KoseiHelper", $"Failed to replace entity!\nExpected arguments: {string.Join(", ", expectedParams)}\n" +
                         $"Arguments: {string.Join(", ", ctorParams.Select((param, index) => $"{expectedParams[index].Split(' ')[0]}={param}"))}");
 
                 }

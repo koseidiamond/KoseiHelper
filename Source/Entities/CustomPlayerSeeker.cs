@@ -1,10 +1,12 @@
 using Celeste.Mod.Entities;
+using Celeste.Mod.KoseiHelper.DecalRegistry;
 using Microsoft.Xna.Framework;
 using Monocle;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using static Celeste.Mod.KoseiHelper.Entities.CustomPlayerSeeker;
+using System.Drawing;
+using System.Runtime.CompilerServices;
 using static Celeste.Session;
 
 namespace Celeste.Mod.KoseiHelper.Entities;
@@ -41,13 +43,7 @@ public class CustomPlayerSeeker : Actor
     private Collider bounceCollider;
     private string flagToSwap;
     private bool lastFlagValue;
-    public enum SeekerSpinnerInteraction
-    {
-        Nothing,
-        Die,
-        DieAndShatter
-    };
-    public SeekerSpinnerInteraction seekerSpinnerInteraction;
+    public bool canShatterSpinners;
 
     public static ParticleType boosterParticle = Booster.P_Burst;
     public static ParticleType boosterRedParticle = Booster.P_BurstRed;
@@ -67,21 +63,22 @@ public class CustomPlayerSeeker : Actor
         typeof(StarRotateSpinner),
         typeof(StarTrackSpinner),
         typeof(DustRotateSpinner),
-        typeof(CrystalStaticSpinner),
+        //typeof(CrystalStaticSpinner), (these are handled manually, same for frosthelper ones)
         typeof(AngryOshiro),
         typeof(SandwichLava),
         typeof(IceBlock),
         typeof(FireBall),
         typeof(FireBarrier),
         typeof(FinalBossBeam),
-        typeof(FinalBossShot)
+        typeof(FinalBossShot),
+        typeof(KillDecalRegistryHandler.KillComponent)
     };
 
     public Vector2 CameraTarget
     {
         get
         {
-            Rectangle bounds = (base.Scene as Level).Bounds;
+            Microsoft.Xna.Framework.Rectangle bounds = (base.Scene as Level).Bounds;
             return (Position + new Vector2(-160f, -90f)).Clamp(bounds.Left, bounds.Top, bounds.Right - 320, bounds.Bottom - 180);
         }
     }
@@ -96,7 +93,7 @@ public class CustomPlayerSeeker : Actor
         speedMultiplier = data.Float("speedMultiplier", 1f);
         isFriendly = data.Bool("isFriendly", false);
         flagToSwap = data.Attr("flagToSwap", "");
-        seekerSpinnerInteraction = data.Enum("spinnerInteraction", SeekerSpinnerInteraction.Nothing);
+        canShatterSpinners = data.Bool("canShatterSpinners", false);
         Add(sprite = GFX.SpriteBank.Create(data.Attr("sprite", "seeker"))); //the sprite needs the tags hatch, flipMouth, flipEyes, idle, spotted, attacking and statue to work
         if (vanillaEffects)
             sprite.Play("statue");
@@ -115,12 +112,13 @@ public class CustomPlayerSeeker : Actor
         Add(new PlayerCollider(OnPlayerBounce, bounceCollider));
         Add(new MirrorReflection());
         Add(new PlayerCollider(OnPlayer));
-        Add(new VertexLight(Color.White, 1f, 32, 64));
+        Add(new VertexLight(Microsoft.Xna.Framework.Color.White, 1f, 32, 64));
         facing = Facings.Right;
         Add(shaker = new Shaker(on: false));
         Add(new Coroutine(IntroSequence()));
         Add(new CoreModeListener(OnChangeMode));
         Add(new WindMover(WindMove));
+        //if (KoseiHelperModule.Instance.frostHelperLoaded) hazardTypes.Add(typeof(CustomSpinner)); (handled in its own manual method)
     }
     public override void Awake(Scene scene)
     {
@@ -260,7 +258,6 @@ public class CustomPlayerSeeker : Actor
             {
                 Entity entity = new Entity(Position);
                 PlayerSeekerDie();
-
             }
         };
         if (player != null)
@@ -301,7 +298,7 @@ public class CustomPlayerSeeker : Actor
                     else
                     {
                         Vector2 vector2 = Input.Aim.Value.SafeNormalize();
-                        
+
                         if (enabled)
                             speed += vector2 * 600f * Engine.DeltaTime * speedMultiplier;
                         else
@@ -349,6 +346,43 @@ public class CustomPlayerSeeker : Actor
                                 break; // Exit the loop if a collision is detected
                             }
                         }
+                    }
+                    // Check for spinner collision from any distance because vanilla is hardcoded to unload the hitbox
+                    foreach (CrystalStaticSpinner spinner in Scene.Tracker.GetEntities<CrystalStaticSpinner>())
+                    {
+                        Vector2 spinnerPos = spinner.Position;
+                        RectangleF spinnerHitbox = new RectangleF(spinnerPos.X - 8f, spinnerPos.Y - 8f, 16f, 16f);
+
+                        if (spinnerHitbox.Contains(Center.X, Center.Y) || Vector2.Distance(Center, spinnerPos) <= 8f && !isDying && !hasDied)
+                        {
+                            if (canShatterSpinners && dashTimer > 0f)
+                            {
+                                Audio.Play("event:/game/06_reflection/fall_spike_smash", Position);
+                                Microsoft.Xna.Framework.Color color = Microsoft.Xna.Framework.Color.White;
+                                if (spinner.color == CrystalColor.Red)
+                                {
+                                    color = Calc.HexToColor("ff4f4f");
+                                }
+                                else if (spinner.color == CrystalColor.Blue)
+                                {
+                                    color = Calc.HexToColor("639bff");
+                                }
+                                else if (spinner.color == CrystalColor.Purple)
+                                {
+                                    color = Calc.HexToColor("ff4fef");
+                                }
+                                CrystalDebris.Burst(Position, color, false, 8);
+                                spinner.RemoveSelf();
+                                return;
+                            }
+                            else
+                                PlayerSeekerDie();
+                            break;
+                        }
+                    }
+                    if (KoseiHelperModule.Instance.frostHelperLoaded && !isDying && !hasDied)
+                    {
+                        DieFromFrostHelperSpinner();
                     }
                     bool isInWater = false;
                     foreach (Entity entity2 in base.Scene.Entities)
@@ -422,7 +456,7 @@ public class CustomPlayerSeeker : Actor
                                     bumper.OnPlayer(player);
                                     ExplodeLaunch(bumper.Position);
                                 }
-                                if (fireMode)
+                                if (fireMode && !isDying && !hasDied)
                                     PlayerSeekerDie();
                                 break;
                             }
@@ -460,7 +494,7 @@ public class CustomPlayerSeeker : Actor
                         }
                     }
                     canDash = !isInWater;
-                    Position = Position.Clamp(level.Bounds.X + 4, level.Bounds.Y, level.Bounds.Right - 6, level.Bounds.Bottom);
+                    Position = Position.Clamp(level.Bounds.X + 4, level.Bounds.Y + 4, level.Bounds.Right - 5, level.Bounds.Bottom - 4);
                     Player entity = base.Scene.Tracker.GetEntity<Player>();
                     if (entity != null)
                     {
@@ -672,10 +706,11 @@ public class CustomPlayerSeeker : Actor
     public void PlayerSeekerDie()
     {
         if (hasDied) return;
-        hasDied = true;
         isDying = true;
+        hasDied = true;
         speed = Vector2.Zero;
         sprite.Visible = false;
+        bounceCollider = null;
         Collider = null;
         DeathEffect component = new DeathEffect(Seeker.TrailColor, base.Center - Position)
         {
@@ -811,5 +846,90 @@ public class CustomPlayerSeeker : Actor
             player.DummyAutoAnimate = true;
             isMadeline = true;
         }
+    }
+
+    // welcome to hell (all of this to support custom hitboxes). next three helper methods are also for this
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    private void DieFromFrostHelperSpinner()
+    {
+        if (isDying || hasDied) return;
+
+        foreach (FrostHelper.CustomSpinner spinner in Scene.Tracker.GetEntities<FrostHelper.CustomSpinner>())
+        {
+            if (spinner.Collider == null && Collider != null)
+                continue;
+            RectangleF seekerBounds = new RectangleF(Collider.AbsoluteLeft, Collider.AbsoluteTop, Collider.Width, Collider.Height);
+            switch (spinner.Collider)
+            {
+                case Circle circle:
+                    Vector2 circleCenter = spinner.Position + circle.Position;
+                    if (CollideCircleWithRect(circleCenter, circle.Radius, seekerBounds))
+                    {
+                        if (canShatterSpinners && dashTimer > 0f)
+                            ShatterCustomSpinner(spinner);
+                        else
+                            PlayerSeekerDie();
+                        return;
+                    }
+                    break;
+                case Hitbox hitbox:
+                    RectangleF spinnerRect = new RectangleF(spinner.Position.X + hitbox.Position.X, spinner.Position.Y + hitbox.Position.Y, hitbox.Width, hitbox.Height);
+                    if (RectanglesIntersect(seekerBounds, spinnerRect))
+                    {
+                        if (canShatterSpinners && dashTimer > 0f)
+                            ShatterCustomSpinner(spinner);
+                        else
+                            PlayerSeekerDie();
+                        return;
+                    }
+                    break;
+                case ColliderList list:
+                    foreach (Collider sub in list.colliders)
+                    {
+                        if (sub is Circle subCircle)
+                        {
+                            Vector2 subCircleCenter = spinner.Position + subCircle.Position;
+                            if (CollideCircleWithRect(subCircleCenter, subCircle.Radius, seekerBounds))
+                            {
+                                if (canShatterSpinners && dashTimer > 0f)
+                                    ShatterCustomSpinner(spinner);
+                                else
+                                    PlayerSeekerDie();
+                                return;
+                            }
+                        }
+                        else if (sub is Hitbox subHitbox)
+                        {
+                            RectangleF subRect = new RectangleF(spinner.Position.X + subHitbox.Position.X, spinner.Position.Y + subHitbox.Position.Y,
+                                subHitbox.Width, subHitbox.Height);
+                            if (RectanglesIntersect(seekerBounds, subRect))
+                            {
+                                if (canShatterSpinners && dashTimer > 0f)
+                                    ShatterCustomSpinner(spinner);
+                                else
+                                    PlayerSeekerDie();
+                                return;
+                            }
+                        }
+                    }
+                    break;
+            }
+        }
+    }
+    private static bool CollideCircleWithRect(Vector2 circleCenter, float radius, RectangleF rect)
+    {
+        float nearestX = Math.Clamp(circleCenter.X, rect.Left, rect.Right);
+        float nearestY = Math.Clamp(circleCenter.Y, rect.Top, rect.Bottom);
+        return (Math.Pow(circleCenter.X - nearestX,2) + Math.Pow(circleCenter.Y - nearestY,2)) <= radius * radius;
+    }
+    private static bool RectanglesIntersect(RectangleF a, RectangleF b)
+    {
+        return a.Left < b.Right && a.Right > b.Left && a.Top < b.Bottom && a.Bottom > b.Top;
+    }
+    private void ShatterCustomSpinner(FrostHelper.CustomSpinner spinner)
+    {
+        Audio.Play("event:/game/06_reflection/fall_spike_smash", Position);
+        CrystalDebris.Burst(Position, Calc.HexToColor(spinner.destroyColor), false, 8);
+        spinner.RemoveSelf();
     }
 }

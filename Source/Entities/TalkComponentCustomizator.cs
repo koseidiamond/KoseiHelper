@@ -252,7 +252,8 @@ public class TalkComponentCustomizator : Entity
                 custom.IdleCurrentFrame = (custom.IdleCurrentFrame + 1) % custom.IdleAnimationFrames;
             }
         }
-        else if (self.Highlighted && custom.HighlightAnimationFrames > 1) {
+        else if (self.Highlighted && custom.HighlightAnimationFrames > 1)
+        {
             custom.HighlightAnimationTimer += Engine.DeltaTime;
             if (custom.HighlightAnimationTimer >= custom.HighlightAnimationSpeed)
             {
@@ -261,7 +262,7 @@ public class TalkComponentCustomizator : Entity
             }
         }
 
-            MTexture textureToDraw;
+        MTexture textureToDraw;
         if (custom.IdleAnimationFrames > 1 || custom.HighlightAnimationFrames > 1)
         {
             int frame = self.Highlighted ? custom.HighlightCurrentFrame : custom.IdleCurrentFrame;

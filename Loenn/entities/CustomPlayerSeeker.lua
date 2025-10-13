@@ -16,7 +16,8 @@ CustomPlayerSeeker.placements = {
 			canSwitchCharacters = false,
 			speedMultiplier = 1,
 			isFriendly = false,
-			flagToSwap = ""
+			flagToSwap = "",
+			canShatterSpinners = false
 		}
 	}
 }

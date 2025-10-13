@@ -533,6 +533,7 @@ entities.KoseiHelper/CustomPlayerSeeker.attributes.description.isFriendly= If th
 entities.KoseiHelper/CustomPlayerSeeker.attributes.description.speedMultiplier= The normal speed of the Player Seeker will be multiplied by this factor.\nIt's recommended to leave the default.
 entities.KoseiHelper/CustomPlayerSeeker.attributes.description.canSwitchCharacters=Enable this option to be able to switch between Madeline and Player Seeker.\nThe custom key can be configured in Mod Options>Kosei Helper.
 entities.KoseiHelper/CustomPlayerSeeker.attributes.description.flagToSwap=The control between Madeline and the Seeker will be swapped when this flag toggles its value.\nIf this field is left empty, then the custom keybind will be used instead.
+entities.KoseiHelper/CustomPlayerSeeker.attributes.description.canShatterSpinners=Whether the Player Seeker can shatter spinners while dashing.\nSpinners will still kill the seeker if not dashing.\nFrost Helper's Custom Spinners are supported.
 
 #Winged Key
 entities.KoseiHelper/WingedKey.placements.name.WingedKey= Winged Key
