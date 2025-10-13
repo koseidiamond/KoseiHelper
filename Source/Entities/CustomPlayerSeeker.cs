@@ -4,6 +4,7 @@ using Monocle;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using static Celeste.Mod.KoseiHelper.Entities.CustomPlayerSeeker;
 using static Celeste.Session;
 
 namespace Celeste.Mod.KoseiHelper.Entities;
@@ -40,7 +41,13 @@ public class CustomPlayerSeeker : Actor
     private Collider bounceCollider;
     private string flagToSwap;
     private bool lastFlagValue;
-
+    public enum SeekerSpinnerInteraction
+    {
+        Nothing,
+        Die,
+        DieAndShatter
+    };
+    public SeekerSpinnerInteraction seekerSpinnerInteraction;
 
     public static ParticleType boosterParticle = Booster.P_Burst;
     public static ParticleType boosterRedParticle = Booster.P_BurstRed;
@@ -89,6 +96,7 @@ public class CustomPlayerSeeker : Actor
         speedMultiplier = data.Float("speedMultiplier", 1f);
         isFriendly = data.Bool("isFriendly", false);
         flagToSwap = data.Attr("flagToSwap", "");
+        seekerSpinnerInteraction = data.Enum("spinnerInteraction", SeekerSpinnerInteraction.Nothing);
         Add(sprite = GFX.SpriteBank.Create(data.Attr("sprite", "seeker"))); //the sprite needs the tags hatch, flipMouth, flipEyes, idle, spotted, attacking and statue to work
         if (vanillaEffects)
             sprite.Play("statue");
@@ -138,7 +146,7 @@ public class CustomPlayerSeeker : Actor
     {
         Level level = Scene as Level;
         yield return null;
-        if (vanillaEffects && !onlyBreakAnimation)
+        if (vanillaEffects)
             Glitch.Value = 0.05f;
         Player player = level.Tracker.GetEntity<Player>();
         player.Sprite.Play("asleep");
@@ -150,11 +158,11 @@ public class CustomPlayerSeeker : Actor
         player.StateMachine.Locked = true;
         player.DummyAutoAnimate = false;
         player.DummyGravity = true;
-        if (vanillaEffects && !onlyBreakAnimation)
+        if (vanillaEffects)
             yield return 1f;
         Vector2 from = level.Camera.Position;
 
-        if (vanillaEffects && !onlyBreakAnimation)
+        if (vanillaEffects)
         {
             Tween tween = Tween.Create(Tween.TweenMode.Oneshot, Ease.SineInOut, 2f, start: true);
             tween.OnUpdate = (Tween f) =>
@@ -181,7 +189,7 @@ public class CustomPlayerSeeker : Actor
         else
             level.Camera.Position = Position - new Vector2(180, 90);
         enabled = true;
-        if (vanillaEffects && !onlyBreakAnimation)
+        if (vanillaEffects)
         {
             yield return 0.4f;
             BreakOutParticles();
@@ -293,7 +301,11 @@ public class CustomPlayerSeeker : Actor
                     else
                     {
                         Vector2 vector2 = Input.Aim.Value.SafeNormalize();
-                        speed += vector2 * 600f * Engine.DeltaTime * speedMultiplier;
+                        
+                        if (enabled)
+                            speed += vector2 * 600f * Engine.DeltaTime * speedMultiplier;
+                        else
+                            speed = Vector2.Zero;
                         float num = (speed).Length();
                         if (num > 120f)
                         {
@@ -317,7 +329,7 @@ public class CustomPlayerSeeker : Actor
                         int num3 = Math.Sign(speed.X);
                         if (num3 != 0 && num2 != num3 && Math.Sign(Input.Aim.Value.X) == Math.Sign(speed.X) && Math.Abs(speed.X) > 20f && sprite.CurrentAnimationID != "flipMouth" && sprite.CurrentAnimationID != "flipEyes")
                             sprite.Play("flipMouth");
-                        if (Input.Dash.Pressed && canDash)
+                        if (Input.Dash.Pressed && canDash && enabled)
                             Dash(Input.Aim.Value.EightWayNormal());
                     }
                     if (!isDying || !hasDied)
@@ -338,6 +350,7 @@ public class CustomPlayerSeeker : Actor
                             }
                         }
                     }
+                    bool isInWater = false;
                     foreach (Entity entity2 in base.Scene.Entities)
                     {
                         if (entity2 is Puffer puffer) // Eat the fishes
@@ -371,12 +384,7 @@ public class CustomPlayerSeeker : Actor
                         {
                             if (CollideCheck(water))
                             {
-                                canDash = false;
-                                break;
-                            }
-                            else
-                            {
-                                canDash = true;
+                                isInWater = true;
                                 break;
                             }
                         }
@@ -451,7 +459,8 @@ public class CustomPlayerSeeker : Actor
                             }
                         }
                     }
-                    Position = Position.Clamp(level.Bounds.X, level.Bounds.Y, level.Bounds.Right, level.Bounds.Bottom);
+                    canDash = !isInWater;
+                    Position = Position.Clamp(level.Bounds.X + 4, level.Bounds.Y, level.Bounds.Right - 6, level.Bounds.Bottom);
                     Player entity = base.Scene.Tracker.GetEntity<Player>();
                     if (entity != null)
                     {
@@ -516,7 +525,6 @@ public class CustomPlayerSeeker : Actor
     }
     private void OnCollide(CollisionData data)
     {
-        Player player = SceneAs<Level>().Tracker.GetEntity<Player>();
         if (dashTimer <= 0f)
         {
             if (data.Direction.X != 0f)
@@ -560,8 +568,6 @@ public class CustomPlayerSeeker : Actor
         if (data.Hit is SeekerBarrier)
         {
             (data.Hit as SeekerBarrier).OnReflectSeeker();
-            //Logger.Debug(nameof(KoseiHelperModule), $"Seeker barrier hit. Barrier Right: {data.Hit.Right} Barrier Left: {data.Hit.Left}");
-            //Logger.Debug(nameof(KoseiHelperModule), $"Seeker barrier hit. Seeker Right: {Right} Seeker Left: {Left}");
             Audio.Play("event:/game/05_mirror_temple/seeker_hit_lightwall", Position);
             if (data.Hit.Left > Left + 10 || data.Hit.Right < Right - 10 || data.Hit.Top > Top + 10 || data.Hit.Bottom < Bottom - 10)
                 PlayerSeekerDie();
@@ -636,8 +642,7 @@ public class CustomPlayerSeeker : Actor
             SceneAs<Level>().DirectionalShake(dashDirection);
             foreach (DashListener component in base.Scene.Tracker.GetComponents<DashListener>())
             {
-                if (component.OnDash != null)
-                    component.OnDash(dashDirection);
+                component.OnDash?.Invoke(dashDirection);
             }
             Input.Rumble(RumbleStrength.Strong, RumbleLength.Medium);
             Audio.Play(seekerDash, Position);
@@ -681,9 +686,7 @@ public class CustomPlayerSeeker : Actor
         };
         Audio.Play("event:/game/05_mirror_temple/seeker_death", Position);
         this.Add(component);
-        Player player = SceneAs<Level>().Tracker.GetEntity<Player>();
-        if (player != null)
-            player.Die(Vector2.Zero, true);
+        SceneAs<Level>().Tracker.GetEntity<Player>()?.Die(Vector2.Zero, true);
     }
 
     public Vector2 ExplodeLaunch(Vector2 from, bool snapUp = true, bool sidesOnly = false)
@@ -754,13 +757,9 @@ public class CustomPlayerSeeker : Actor
                 if (!CollideCheck<Solid>(Position + Vector2.UnitX * -Math.Sign(move.X) * 3f))
                 {
                     if (move.X < 0f)
-                    {
                         move.X = Math.Max(move.X, (float)level.Bounds.Left - (base.ExactPosition.X + base.Collider.Left));
-                    }
                     else
-                    {
                         move.X = Math.Min(move.X, (float)level.Bounds.Right - (base.ExactPosition.X + base.Collider.Right));
-                    }
                     MoveH(move.X);
                 }
             }

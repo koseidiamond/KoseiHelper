@@ -7,7 +7,7 @@ local depths = mods.requireFromPlugin("libraries.depths")
 local CustomTempleCrackedBlock = {}
 
 CustomTempleCrackedBlock.name = "KoseiHelper/CustomTempleCrackedBlock"
-CustomTempleCrackedBlock.warnBelowSize = {24, 24}
+CustomTempleCrackedBlock.warnBelowSize = {16, 16}
 
 function CustomTempleCrackedBlock.depth(room,entity)
 	return entity.depth

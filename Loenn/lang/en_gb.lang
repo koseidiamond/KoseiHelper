@@ -128,6 +128,8 @@ entities.KoseiHelper/GameDataController.attributes.description.timeRate=Slider d
 entities.KoseiHelper/GameDataController.attributes.description.anxiety=Slider depending on the current anxiety effects.
 entities.KoseiHelper/GameDataController.attributes.description.coyoteFrames=Indicates the amount of coyote frames left.\nNote that this counter might be delayed one frame!
 entities.KoseiHelper/GameDataController.attributes.description.usingWatchtower=Flag that indicates whether the player is currently using a watchtower/lookout.
+entities.KoseiHelper/GameDataController.attributes.description.playerSpriteScaleX=Slider depending on the horizontal scale of the player.\nThis changes for example when fastfalling or jumping.
+entities.KoseiHelper/GameDataController.attributes.description.playerSpriteScaleY=Slider depending on the vertical scale of the player.\nThis changes for example when fastfalling or jumping.
 
 # Set Flag On Berry Collection Controller
 entities.KoseiHelper/SetFlagOnBerryCollectionController.placements.name.SetFlagOnBerryCollectionController=Set Flag On Berry Collection Controller

@@ -40,7 +40,9 @@ GameDataController.placements = {
 			timeRate= "KoseiHelper_timeRateSlider",
 			anxiety = "KoseiHelper_anxietySlider",
 			coyoteFrames = "KoseiHelper_coyoteFrameCounter",
-			usingWatchtower = "KoseiHelper_usingWatchtower"
+			usingWatchtower = "KoseiHelper_usingWatchtower",
+			playerSpriteScaleX = "KoseiHelper_playerSpriteScaleXSlider",
+			playerSpriteScaleY = "KoseiHelper_playerSpriteScaleYSlider"
 		}
 	}
 }

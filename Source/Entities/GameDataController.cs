@@ -38,6 +38,7 @@ public class GameDataController : Entity
     public string anxiety;
     public string coyoteFrames;
     public string usingWatchtower;
+    public string playerSpriteScaleX, playerSpriteScaleY;
 
     private static int timesJumpedCounter, timesWallJumped, timesWallbounced;
 
@@ -77,6 +78,8 @@ public class GameDataController : Entity
         anxiety = data.Attr("anxiety", "KoseiHelper_anxietySlider");
         coyoteFrames = data.Attr("coyoteFrames", "KoseiHelper_coyoteFrameCounter");
         usingWatchtower = data.Attr("usingWatchtower", "KoseiHelper_usingWatchtower");
+        playerSpriteScaleX = data.Attr("playerSpriteScaleX", "KoseiHelper_playerSpriteScaleXSlider");
+        playerSpriteScaleY = data.Attr("playerSpriteScaleY", "KoseiHelper_playerSpriteScaleYSlider");
         base.Tag = Tags.PauseUpdate;
         base.Tag = Tags.TransitionUpdate;
     }
@@ -210,6 +213,10 @@ public class GameDataController : Entity
                 Lookout lookout = level.Tracker.GetNearestEntity<Lookout>(player.Center);
                 session.SetFlag(usingWatchtower, lookout != null && lookout.interacting);
             }
+            if (!string.IsNullOrEmpty(playerSpriteScaleX))
+                session.SetSlider(playerSpriteScaleX, player.Sprite.Scale.X);
+            if (!string.IsNullOrEmpty(playerSpriteScaleY))
+                session.SetSlider(playerSpriteScaleY, player.Sprite.Scale.Y);
         }
     }
 
