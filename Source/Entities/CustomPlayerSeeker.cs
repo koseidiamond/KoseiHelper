@@ -942,7 +942,7 @@ public class CustomPlayerSeeker : Actor
     {
         float nearestX = Math.Clamp(circleCenter.X, rect.Left, rect.Right);
         float nearestY = Math.Clamp(circleCenter.Y, rect.Top, rect.Bottom);
-        return (Math.Pow(circleCenter.X - nearestX,2) + Math.Pow(circleCenter.Y - nearestY,2)) <= radius * radius;
+        return (Math.Pow(circleCenter.X - nearestX, 2) + Math.Pow(circleCenter.Y - nearestY, 2)) <= radius * radius;
     }
     private static bool RectanglesIntersect(RectangleF a, RectangleF b)
     {
