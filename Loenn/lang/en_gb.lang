@@ -93,7 +93,7 @@ entities.KoseiHelper/DebugMapController.attributes.description.roomsToAffect=The
 
 # Game Data Controller
 entities.KoseiHelper/GameDataController.placements.name.GameDataController=Game Data Controller
-entities.KoseiHelper/GameDataController.placements.description.GameDataController=Sets and updates several useful flags (bools), counters (ints) and sliders (floats).\nIt is recommended to use Mapping Utils to check these values in game.
+entities.KoseiHelper/GameDataController.placements.description.GameDataController=Sets and updates several useful flags (bools), counters (ints) and sliders (floats).\nIt is recommended to use Mapping Utils to check these values in game.\nThis controller is NOT persistent, you might want to place one per room (or one in a global room).
 entities.KoseiHelper/GameDataController.attributes.description.ducking=Flag while the player is crouching.
 entities.KoseiHelper/GameDataController.attributes.description.facing=Flag depending on the player's facing direction, with the suffix "Left" or "Right".\nExample: inputting the flag name ""KoseiHelper_Facing" will use the flag names "KoseiHelper_FacingLeft" and "KoseiHelper_FacingRight".
 entities.KoseiHelper/GameDataController.attributes.description.stamina=Slider depending on the player's current stamina.
@@ -673,6 +673,8 @@ entities.KoseiHelper/CustomPauseController.attributes.description.timerHidden=If
 entities.KoseiHelper/CustomPauseController.attributes.description.dieOnUnpause=If the player should be punished with death after pausing the game.\nPrevents pause buffering.
 entities.KoseiHelper/CustomPauseController.attributes.description.persistent=If this controller should persist across rooms.
 entities.KoseiHelper/CustomPauseController.attributes.description.flagWhilePaused=This flag will be true while the game is paused.
+entities.KoseiHelper/CustomPauseController.attributes.description.flagRequired=The controller will only work while this flag is set.\nLeave empty if you don't want to require a flag.\n\nIf you want to update a specific setting like "Can Pause" so it matches a flag value,\nyou can use two controllers with opposite values for some setting(s) and opposite Flag Required Values.
+entities.KoseiHelper/CustomPauseController.attributes.description.flagRequiredValue=Whether the flag required should be true or false in order to have an effect.
 
 # Flag Refill Controller
 entities.KoseiHelper/FlagRefillController.placements.name.FlagRefillController=Flag/Counter Refill Controller

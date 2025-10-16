@@ -15,7 +15,8 @@ public class CustomPauseController : Entity
     public bool pauseTimerWhilePauseMenu = false;
     public bool dieOnUnpause = false;
     public string flagWhilePaused = "KoseiHelper_GameIsPaused";
-
+    public string flagRequired;
+    public bool flagRequiredValue;
     public CustomPauseController(EntityData data, Vector2 offset) : base(data.Position + offset)
     {
         canPause = data.Bool("canPause", true);
@@ -26,6 +27,8 @@ public class CustomPauseController : Entity
         pauseTimerWhilePauseMenu = data.Bool("pauseTimerWhilePauseMenu", false);
         dieOnUnpause = data.Bool("dieOnUnpause", false);
         flagWhilePaused = data.Attr("flagWhilePaused", "KoseiHelper_GameIsPaused");
+        flagRequired = data.Attr("flagRequired");
+        flagRequiredValue = data.Bool("flagRequiredValue", true);
     }
 
     public override void Awake(Scene scene)
@@ -39,16 +42,7 @@ public class CustomPauseController : Entity
     public override void Added(Scene scene)
     {
         base.Added(scene);
-        Level level = SceneAs<Level>();
-        level.PauseLock = !canPause;
-        level.CanRetry = canRetry;
-        level.SaveQuitDisabled = !canSaveAndQuit;
-        level.TimerStopped = timerIsStopped;
-        level.TimerHidden = timerHidden;
-        level.PauseMainMenuOpen = true;
-        level.Session.SetFlag(flagWhilePaused, false);
-        if (level.Paused)
-            level.TimerStopped = true;
+        UpdatePauseOptions(true);
     }
 
     public override void Update()
@@ -57,8 +51,28 @@ public class CustomPauseController : Entity
         Level level = SceneAs<Level>();
         if (Scene.Tracker.GetEntity<Player>() is not { } player) // Checks that there is a player
             return;
-        if (level.unpauseTimer < 0 && dieOnUnpause)
-            Add(new Coroutine(killPlayerRoutine()));
+        if (string.IsNullOrEmpty(flagRequired) || level.Session.GetFlag(flagRequired) == flagRequiredValue)
+        {
+            UpdatePauseOptions(false);
+            if (level.unpauseTimer < 0 && dieOnUnpause)
+                Add(new Coroutine(killPlayerRoutine()));
+        }
+    }
+    public void UpdatePauseOptions(bool fromAdded)
+    {
+        Level level = SceneAs<Level>();
+        if (fromAdded)
+        {
+            level.PauseMainMenuOpen = true;
+            level.Session.SetFlag(flagWhilePaused, false);
+            if (level.Paused)
+                level.TimerStopped = true;
+        }
+        level.PauseLock = !canPause;
+        level.CanRetry = canRetry;
+        level.SaveQuitDisabled = !canSaveAndQuit;
+        level.TimerHidden = timerHidden;
+        level.TimerStopped = timerIsStopped;
     }
     private IEnumerator killPlayerRoutine()
     {

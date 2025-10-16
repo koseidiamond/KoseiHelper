@@ -13,9 +13,25 @@ CustomPauseController.placements = {
 		timerIsStopped = false,
 		timerHidden = false,
 		dieOnUnpause = false,
-		flagWhilePaused = "KoseiHelper_GameIsPaused"
+		flagWhilePaused = "KoseiHelper_GameIsPaused",
+		flagRequired = "",
+		flagRequiredValue = true
 		}
 	}
+}
+
+CustomPauseController.fieldOrder = {
+	"x",
+	"y",
+	"flagWhilePaused",
+	"flagRequired",
+	"canPause",
+	"canRetry",
+	"canSaveAndQuit",
+	"dieOnUnpause",
+	"timerHidden",
+	"timerIsStopped",
+	"flagRequiredValue"
 }
 
 return CustomPauseController
