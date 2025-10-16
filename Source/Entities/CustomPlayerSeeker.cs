@@ -100,7 +100,7 @@ public class CustomPlayerSeeker : Actor
         if (vanillaEffects)
             sprite.Play("statue");
         else
-            sprite.Play("spotted");
+            sprite.Play("spotted"); // TODO why the hell is this anim not playing
         sprite.OnLastFrame = (string a) =>
         {
             if (a == "flipMouth" || a == "flipEyes")
@@ -148,12 +148,15 @@ public class CustomPlayerSeeker : Actor
         yield return null;
         if (!string.IsNullOrEmpty(flagToHatch))
         {
-            isWaitingForHatchFlag = true;
-            while (!level.Session.GetFlag(flagToHatch))
+            if (!level.Session.GetFlag(flagToHatch))
             {
-                yield return null;
+                isWaitingForHatchFlag = true;
+                while (!level.Session.GetFlag(flagToHatch))
+                {
+                    yield return null;
+                }
+                isWaitingForHatchFlag = false;
             }
-            isWaitingForHatchFlag = false;
         }
         if (vanillaEffects)
             Glitch.Value = 0.05f;
@@ -196,7 +199,9 @@ public class CustomPlayerSeeker : Actor
             Input.Rumble(RumbleStrength.Strong, RumbleLength.FullSecond);
         }
         else
+        {
             level.Camera.Position = Position - new Vector2(180, 90);
+        }
         enabled = true;
         if (vanillaEffects)
         {
@@ -264,7 +269,11 @@ public class CustomPlayerSeeker : Actor
                 isWaitingForHatchFlag = false;
             }
         }
-        if (isWaitingForHatchFlag) return;
+        if (isWaitingForHatchFlag)
+        {
+            base.Update();
+            return;
+        }
         foreach (Entity entity2 in base.Scene.Tracker.GetEntities<SeekerBarrier>())
             entity2.Collidable = true;
         Player player = Scene.Tracker.GetEntity<Player>();
@@ -289,7 +298,7 @@ public class CustomPlayerSeeker : Actor
             sprite.Scale.Y = Calc.Approach(sprite.Scale.Y, 1f, 2f * Engine.DeltaTime * 1.5f);
             if (!isMadeline)
             {
-                if (enabled && sprite.CurrentAnimationID != "hatch")
+                if (enabled && sprite.CurrentAnimationID != "hatch" && sprite.CurrentAnimationID != "statue")
                 {
                     if (dashTimer > 0f)
                     {
@@ -349,7 +358,7 @@ public class CustomPlayerSeeker : Actor
                         if (Input.Dash.Pressed && canDash && enabled)
                             Dash(Input.Aim.Value.EightWayNormal());
                     }
-                    if (!isDying || !hasDied)
+                    if ((!isDying || !hasDied) && sprite.CurrentAnimationID != "statue" && sprite.CurrentAnimationID != "hatch")
                     {
                         MoveH(speed.X * Engine.DeltaTime, OnCollide);
                         MoveV(speed.Y * Engine.DeltaTime, OnCollide);
@@ -560,13 +569,14 @@ public class CustomPlayerSeeker : Actor
             if (!string.IsNullOrEmpty(flagToSwap))
             {
                 bool currentFlagValue = level.Session.GetFlag(flagToSwap);
-                if (currentFlagValue != lastFlagValue && canSwitchCharacters)
+                if (currentFlagValue != lastFlagValue && canSwitchCharacters && sprite.CurrentAnimationID != "hatch" && sprite.CurrentAnimationID != "statue")
                 {
                     SwapCharacters(cameraTarget, player);
                     lastFlagValue = currentFlagValue;
                 }
             }
-            if (KoseiHelperModule.Settings.SwapCharacter.Pressed && string.IsNullOrEmpty(flagToSwap) && canSwitchCharacters)
+            if (KoseiHelperModule.Settings.SwapCharacter.Pressed && string.IsNullOrEmpty(flagToSwap) && canSwitchCharacters
+                && sprite.CurrentAnimationID != "hatch" && sprite.CurrentAnimationID != "statue")
                 SwapCharacters(cameraTarget, player);
         }
     }
