@@ -149,7 +149,7 @@ public class GameDataController : Entity
                 session.SetFlag(carryingGolden, session.GrabbedGolden);
 
             if (!string.IsNullOrEmpty(darknessAlpha))
-                session.SetSlider(darknessAlpha, session.LightingAlphaAdd);
+                session.SetSlider(darknessAlpha, level.Lighting.Alpha);
             if (!string.IsNullOrEmpty(bloomAmount))
                 session.SetSlider(bloomAmount, session.BloomBaseAdd);
 
