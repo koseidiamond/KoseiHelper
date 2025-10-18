@@ -499,6 +499,7 @@ entities.KoseiHelper/TilesetOshiroDoor.attributes.description.giveFreezeFrames=I
 entities.KoseiHelper/TilesetOshiroDoor.attributes.description.debris=If the oshiro block should spawn debris when destroyed.
 entities.KoseiHelper/TilesetOshiroDoor.attributes.description.destroyAttached=If entities attached (like spikes) should be destroyed when the door does.\nThe entities will still load if the block doesn't appear due to the enabled flag.
 entities.KoseiHelper/TilesetOshiroDoor.attributes.description.depth=The depth at which the Oshiro Door will be rendered.
+entities.KoseiHelper/TilesetOshiroDoor.attributes.description.tint=The color of the Tileset Oshiro Door.
 
 #Bound Refill
 entities.KoseiHelper/BoundRefill.placements.name.BoundRefill=Bound Refill

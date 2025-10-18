@@ -38,7 +38,8 @@ end
 CustomHahaha.fieldInformation = {
 	depth = { fieldType = "integer" },
 	tint = {
-        fieldType = "color"
+        fieldType = "color",
+		useAlpha = true
     },
 	spriteCount = { fieldType = "integer" },
 	groupSize = { fieldType = "integer" },

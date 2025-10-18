@@ -26,7 +26,8 @@ TilesetOshiroDoor.placements = {
 			destroyAttached = true,
 			width = 8,
             height = 8,
-			depth = -9000
+			depth = -9000,
+			tint = "FFFFFF"
 		}
 	}
 }
@@ -46,6 +47,10 @@ TilesetOshiroDoor.fieldInformation = function(entity)
         fieldType = "integer",
         options = depths.addDepths(depths.getDepths(), {}),
         editable = true
+    }
+	orig.tint = {
+        fieldType = "color",
+        useAlpha = true
     }
 	return orig
 end

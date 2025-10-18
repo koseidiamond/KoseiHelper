@@ -26,6 +26,7 @@ public class TilesetOshiroDoor : Solid
     public bool giveFreezeFrames;
     public bool debris;
     public bool destroyAttached = true;
+    public Color tint;
 
     public TilesetOshiroDoor(EntityData data, Vector2 offset)
         : base(data.Position + offset, data.Width, data.Height, safe: false)
@@ -41,6 +42,7 @@ public class TilesetOshiroDoor : Solid
         refillDash = data.Bool("refillDash", false);
         giveFreezeFrames = data.Bool("giveFreezeFrames", false);
         debris = data.Bool("debris", false);
+        tint = KoseiHelperUtils.ParseHexColor(data.Values.TryGetValue("tint", out object c1) ? c1.ToString() : null, Color.White);
         OnDashCollide = OnDashed;
         SurfaceSoundIndex = SurfaceIndex.TileToIndex[tileType];
     }
@@ -51,6 +53,8 @@ public class TilesetOshiroDoor : Solid
         TileGrid tileGrid;
         tileGrid = GFX.FGAutotiler.GenerateBox(tileType, (int)Width / 8, (int)Height / 8).TileGrid;
         Add(new LightOcclude());
+        if (tint != Color.White)
+            tileGrid.Color = tint;
         Add(tileGrid);
         Add(new TileInterceptor(tileGrid, highPriority: true));
         if (CollideCheck<Player>())

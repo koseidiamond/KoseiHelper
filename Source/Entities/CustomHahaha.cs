@@ -95,7 +95,7 @@ namespace Celeste.Mod.KoseiHelper.Entities
             sineAmplitude = data.Float("sineAmplitude", 1f);
             synchronizedSfx = data.Bool("synchronizedSfx", false);
             vertical = data.Bool("vertical", false);
-            tint = data.HexColor("tint", Color.White);
+            tint = KoseiHelperUtils.ParseHexColor(data.Values.TryGetValue("tint", out object c1) ? c1.ToString() : null, Color.White);
             base.Depth = data.Int("depth", -10001);
             this.flag = data.Attr("flag", "");
             if (data.Bool("synchronizedSfx", false))
