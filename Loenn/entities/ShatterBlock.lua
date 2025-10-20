@@ -32,7 +32,8 @@ function ShatterDashBlock.placements()
 			flagSet = "",
 			substractSpeedMode = "Substract",
 			destroyStaticMovers = false,
-			verticalSpeed = false,
+			--verticalSpeed = false,
+			shatterAxis = "Horizontal",
 			depth = -12999,
 			tint = "FFFFFF"
         }
@@ -46,6 +47,14 @@ ShatterDashBlock.fieldInformation = function(entity)
 			"Substract",
 			"Multiply",
 			"Set"
+		},
+		editable = false
+	}
+	orig.shatterAxis = {
+		options = {
+			"Horizontal",
+			"Vertical",
+			"Both"
 		},
 		editable = false
 	}
@@ -81,11 +90,13 @@ ShatterDashBlock.fieldOrder= {
 	"height",
 	"tiletype",
 	"substractSpeedMode",
+	"shatterAxis",
 	"flagSet",
 	"FreezeTime",
 	"ShakeTime",
 	"SpeedDecrease",
 	"SpeedRequirement",
+	"tint",
 	"depth",
 	"blendin",
 	"verticalSpeed",

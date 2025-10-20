@@ -444,7 +444,7 @@ entities.KoseiHelper/CustomTempleCrackedBlock.attributes.description.tint=The ti
 entities.KoseiHelper/CustomTempleCrackedBlock.attributes.description.breakSound=The sound that will play when the block is broken.
 entities.KoseiHelper/CustomTempleCrackedBlock.attributes.description.prebreakSound=The sound that will play if the health is reduced but the block is not broken yet.
 entities.KoseiHelper/CustomTempleCrackedBlock.attributes.description.health=The number of hits until the block is broken.
-entities.KoseiHelper/CustomTempleCrackedBlock.attributes.description.destroyStaticMovers=Whether entities attached to this block should be destroyed (or not loaded if it was permanently destroyed).
+entities.KoseiHelper/CustomTempleCrackedBlock.attributes.description.destroyStaticMovers=Whether entities (like decals or spikes) attached to this block should be destroyed\n(or not loaded if it was permanently destroyed).
 entities.KoseiHelper/CustomTempleCrackedBlock.attributes.description.debrisTexture=The path to the custom debris texture that the block will use, relative to Gameplay/.\nWill match the tinted color.
 
 #Shatter Dash Block
@@ -455,17 +455,19 @@ entities.KoseiHelper/ShatterDashBlock.attributes.description.blendin=Whether the
 entities.KoseiHelper/ShatterDashBlock.attributes.description.canDash=Whether the block can be broken with a dash.
 entities.KoseiHelper/ShatterDashBlock.attributes.description.permanent=Whether the block should reappear upon death/transition/room reload or shatter for the entire session.
 entities.KoseiHelper/ShatterDashBlock.attributes.description.FreezeTime=How much time the game should freeze when shattering.\nVanilla dash blocks give 3f (0.05s). Fractured Iridescence (SJ) used 0.03s.
-entities.KoseiHelper/ShatterDashBlock.attributes.description.SpeedRequirement=The minimum horizontal speed that the player should be moving in order to shatter the block.
-entities.KoseiHelper/ShatterDashBlock.attributes.description.SpeedDecrease=How much speed should be substracted when shattering the block.\nThe resulting speed depends on the substract speed mode.
+entities.KoseiHelper/ShatterDashBlock.attributes.description.SpeedRequirement=The minimum speed that the player should be moving in order to shatter the block.\nFor reference, the speed from dashing cardinally after idling is 240, 169.71 when dashing diagonally, and 325 from a hyper.
+entities.KoseiHelper/ShatterDashBlock.attributes.description.SpeedDecrease=How much speed should be subtracted when shattering the block.\nThe resulting speed depends on the speed mode.
+entities.KoseiHelper/ShatterDashBlock.attributes.name.ShakeTime=Screen Shake Time
 entities.KoseiHelper/ShatterDashBlock.attributes.description.ShakeTime=The time the screen should shake when shattering.\nPlayers with Photosensitive Mode enabled won't see this.
 entities.KoseiHelper/ShatterDashBlock.attributes.description.givesCoyote=Whether the block should give 5 coyote frames when shattering.
 entities.KoseiHelper/ShatterDashBlock.attributes.description.requireOnlySpeed=Whether the block can be broken if the speed requirement is met, regardless of the dash state.
 entities.KoseiHelper/ShatterDashBlock.attributes.description.flagSet=The flag that will be set when the block is shattered.
 entities.KoseiHelper/ShatterDashBlock.attributes.name.substractSpeedMode=Speed Mode
-entities.KoseiHelper/ShatterDashBlock.attributes.description.substractSpeedMode=Whether the player speed should be decreased by substraction, multiplication, or set to a fixed number.
-entities.KoseiHelper/ShatterDashBlock.attributes.description.destroyStaticMovers=Whether entities attached to this block should be destroyed (or not loaded if it was permanently destroyed).
+entities.KoseiHelper/ShatterDashBlock.attributes.description.substractSpeedMode=Whether the player speed should be decreased by subtraction, multiplication, or set to a fixed number.
+entities.KoseiHelper/ShatterDashBlock.attributes.description.destroyStaticMovers=Whether entities (like decals or spikes) attached to this block should be destroyed\n(or not loaded if it was permanently destroyed).
 entities.KoseiHelper/ShatterDashBlock.attributes.description.verticalSpeed=Whether the shatter block should use the vertical speed as a requirement instead of the horizontal speed.
 entities.KoseiHelper/ShatterDashBlock.attributes.description.tint=Whether the block should have a different color (supports transparency).
+entities.KoseiHelper/ShatterDashBlock.attributes.description.shatterAxis=Whether the shatter block should use the vertical speed as a requirement instead of the horizontal speed, or either of them.
 
 #Oshiro Doors
 entities.KoseiHelper/CustomOshiroDoor.placements.name.CustomOshiroDoorSprite= Custom Oshiro Door (Sprite)
