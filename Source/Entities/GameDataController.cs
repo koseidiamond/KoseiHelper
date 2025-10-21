@@ -125,7 +125,7 @@ public class GameDataController : Entity
                 session.SetSlider(stamina, player.Stamina);
 
             if (!string.IsNullOrEmpty(justRespawned))
-                session.SetFlag(justRespawned, player.JustRespawned);
+                session.SetFlag(justRespawned, player.JustRespawned || player.IsIntroState);
 
             if (!string.IsNullOrEmpty(speedX))
                 session.SetSlider(speedX, player.Speed.X);
