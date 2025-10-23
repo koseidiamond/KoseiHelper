@@ -1132,3 +1132,14 @@ triggers.KoseiHelper/NemesisGunInteractions.attributes.description.dashOnKevins=
 # triggers.KoseiHelper/ProceduralGeneratorTrigger.attributes.description.sizeX=Width of the area to apply the procedural generation.
 # triggers.KoseiHelper/ProceduralGeneratorTrigger.attributes.description.sizeY=Height of the area to apply the procedural generation.
 # triggers.KoseiHelper/ProceduralGeneratorTrigger.attributes.description.tileChars=string of tileset ids to randomly select from when placing new tiles.
+
+Multinode Camera Trigger
+triggers.KoseiHelper/MultinodeCameraTrigger.placements.name.MultinodeCameraTrigger=Multinode Camera Trigger
+triggers.KoseiHelper/MultinodeCameraTrigger.placements.description.MultinodeCameraTrigger=The camera will lerp smoothly between the nodes closest to the player.
+triggers.KoseiHelper/MultinodeCameraTrigger.attributes.description.onlyOnce=Whether the trigger should disappear upon exiting it.
+triggers.KoseiHelper/MultinodeCameraTrigger.attributes.description.flag=The trigger will only update the camera while the flag is true.\nLeave empty for no flag required.
+triggers.KoseiHelper/MultinodeCameraTrigger.attributes.description.lerpStrength=How much the camera should lerp between the nodes and the player with the current offset.\nIn other words, the effectiveness of the trigger.
+triggers.KoseiHelper/MultinodeCameraTrigger.attributes.description.xOnly=Whether the trigger should only smoothly lerp in the horizontal axis.
+triggers.KoseiHelper/MultinodeCameraTrigger.attributes.description.yOnly=Whether the trigger should only smoothly lerp in the vertical axis.
+triggers.KoseiHelper/MultinodeCameraTrigger.attributes.description.smoothingStrength=The intensity of the smoothing effect.
+triggers.KoseiHelper/MultinodeCameraTrigger.attributes.description.maxSmoothingDistance=The nodes that are more than this distance away from the player will be ignored.

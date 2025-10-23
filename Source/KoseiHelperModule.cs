@@ -21,6 +21,7 @@ public class KoseiHelperModule : EverestModule
     public bool frostHelperLoaded = false;
     public bool collabUtils2Loaded = false;
     public bool helpingHandLoaded = false;
+    public bool doonvHelperLoaded = false;
 
     public KoseiHelperModule()
     {
@@ -66,6 +67,8 @@ public class KoseiHelperModule : EverestModule
             collabUtils2Loaded = true;
         if (!helpingHandLoaded && Everest.Loader.DependencyLoaded(new EverestModuleMetadata { Name = "MaxHelpingHand", Version = new Version(1, 33, 6) }))
             helpingHandLoaded = true;
+        if (!doonvHelperLoaded && Everest.Loader.DependencyLoaded(new EverestModuleMetadata { Name = "DoonvHelper", Version = new Version(1, 0, 0) }))
+            doonvHelperLoaded = true;
 
         Mod.DecalRegistry.AddPropertyHandler<KillDecalRegistryHandler>();
         Mod.DecalRegistry.AddPropertyHandler<MovingDecalRegistryHandler>();
@@ -91,6 +94,7 @@ public class KoseiHelperModule : EverestModule
         frostHelperLoaded = false;
         helpingHandLoaded = false;
         collabUtils2Loaded = false;
+        doonvHelperLoaded = false;
     }
 
     private static bool ClimbCheck(On.Celeste.Player.orig_ClimbBoundsCheck orig, Player self, int dir)

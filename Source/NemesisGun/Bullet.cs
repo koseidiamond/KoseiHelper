@@ -281,6 +281,24 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 return;
             }
         }
+
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        private void CollisionCheck_DoonvNPC()
+        {
+            if (owner.Scene.CollideFirst<DoonvHelper.Entities.CustomNPC>(Hitbox) is DoonvHelper.Entities.CustomNPC customNPC && !dead)
+            {
+                // enemies take 1 damage, other npcs just die
+                if (customNPC is not DoonvHelper.Entities.CustomEnemy)
+                    customNPC.Kill();
+                else
+                    (customNPC as DoonvHelper.Entities.CustomEnemy).Damage(1);
+                if (KoseiHelperModule.Settings.GunSettings.RecoilOnlyOnInteraction && SceneAs<Level>().Session.GetFlag("KoseiHelper_playerIsShooting") && owner is Player pRecoil)
+                    RecoilOnInteraction(pRecoil, customNPC);
+                DestroyBullet();
+                return;
+            }
+        }
+
         [MethodImpl(MethodImplOptions.NoInlining)]
         private void CollisionCheck_HelpingHand()
         {
@@ -543,6 +561,10 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
             if (KoseiHelperModule.Instance.frostHelperLoaded)
             {
                 CollisionCheck_FrostHelper();
+            }
+            if (KoseiHelperModule.Instance.doonvHelperLoaded)
+            {
+                CollisionCheck_DoonvNPC();
             }
             if (owner.Scene.CollideFirst<BadelineBoost>(Hitbox) is BadelineBoost badelineBoost && !dead && owner is Player playerBadelineBoost &&
                 KoseiHelperModule.Settings.GunInteractions.CollectBadelineOrbs)

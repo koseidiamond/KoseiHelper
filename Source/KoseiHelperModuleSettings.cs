@@ -4,6 +4,8 @@ namespace Celeste.Mod.KoseiHelper;
 
 public class KoseiHelperModuleSettings : EverestModuleSettings
 {
+    [SettingSubText("Accesibility option for players who want to disable camera moving too much.\nCurrently it only disables Multinode Camera Triggers placed by mappers.")]
+    public bool MotionSicknessPrevention { get; set; } = false;
     public bool ResetGunSettings { get; set; } = false;
     public void CreateResetGunSettingsEntry(TextMenu menu, bool inGame)
     {
