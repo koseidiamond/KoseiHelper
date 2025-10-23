@@ -925,6 +925,8 @@ triggers.KoseiHelper/SelfieTrigger.attributes.description.oneUse=Whether the tri
 triggers.KoseiHelper/SelfieTrigger.attributes.description.interactable=Whether the trigger requires interaction instead of just touching it.
 triggers.KoseiHelper/SelfieTrigger.attributes.description.talkBubbleX=The horizontal position of the talk icon, relative to the topleft corner of the trigger.
 triggers.KoseiHelper/SelfieTrigger.attributes.description.talkBubbleY=The vertical position of the talk icon, relative to the topleft corner of the trigger.
+triggers.KoseiHelper/SelfieTrigger.attributes.description.openEaser=The easer (type of movement) when the selfie appears.
+triggers.KoseiHelper/SelfieTrigger.attributes.description.endEaser=The easer (type of movement) when the selfie goes away.
 
 # Slider Fade Trigger
 triggers.KoseiHelper/SliderFadeTrigger.placements.name.SliderFadeTrigger=Slider Fade Trigger

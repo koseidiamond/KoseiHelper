@@ -12,6 +12,7 @@ public class Selfie : Entity
     private Image image;
     private bool waitForKeyPress;
     private float timer;
+    private Ease.Easer openEaser, endEaser;
     //private Tween tween;
 
     private string buttonIcon;
@@ -22,18 +23,19 @@ public class Selfie : Entity
         this.level = level;
     }
 
-    public IEnumerator PictureRoutine(string photo, string textboxbutton, string photoInSound, string photoOutSound, string inputSound, float timeToOpen, bool flash)
+    public IEnumerator PictureRoutine(string photo, string textboxbutton, string photoInSound, string photoOutSound, string inputSound,
+        float timeToOpen, bool flash, string openEaser, string endEaser)
     {
         buttonIcon = textboxbutton;
         if (flash)
             level.Flash(Color.White);
         yield return timeToOpen;
-        yield return OpenRoutine(photo, photoInSound);
+        yield return OpenRoutine(photo, photoInSound, openEaser);
         yield return WaitForInput(inputSound);
-        yield return EndRoutine(photoOutSound);
+        yield return EndRoutine(photoOutSound, endEaser);
     }
 
-    public IEnumerator OpenRoutine(string selfie, string photoInSound)
+    public IEnumerator OpenRoutine(string selfie, string photoInSound, string openEaser)
     {
         Audio.Play(photoInSound);
         image = new Image(GFX.Portraits[selfie]);
@@ -42,7 +44,8 @@ public class Selfie : Entity
         while (percent < 1f)
         {
             percent += Engine.DeltaTime;
-            image.Position = Vector2.Lerp(new Vector2(992f, 1080f + image.Height / 2f), new Vector2(960f, 540f), Ease.CubeOut(percent));
+            image.Position = Vector2.Lerp(new Vector2(992f, 1080f + image.Height / 2f), new Vector2(960f, 540f),
+                KoseiHelperUtils.Easer(openEaser, Ease.CubeOut)(percent));
             image.Rotation = MathHelper.Lerp(0.5f, 0f, Ease.BackOut(percent));
             yield return null;
         }
@@ -57,14 +60,15 @@ public class Selfie : Entity
         waitForKeyPress = false;
     }
 
-    public IEnumerator EndRoutine(string photoOutSound)
+    public IEnumerator EndRoutine(string photoOutSound, string endEaser)
     {
         Audio.Play(photoOutSound);
         float percent = 0f;
         while (percent < 1f)
         {
             percent += Engine.DeltaTime * 2f;
-            image.Position = Vector2.Lerp(new Vector2(960f, 540f), new Vector2(928f, (0f - image.Height) / 2f), Ease.BackIn(percent));
+            image.Position = Vector2.Lerp(new Vector2(960f, 540f), new Vector2(928f, (0f - image.Height) / 2f),
+                KoseiHelperUtils.Easer(endEaser, Ease.BackIn)(percent));
             image.Rotation = MathHelper.Lerp(0f, -0.15f, Ease.BackIn(percent));
             yield return null;
         }

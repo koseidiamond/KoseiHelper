@@ -1,3 +1,6 @@
+local mods = require("mods")
+local easers = mods.requireFromPlugin("libraries.easers")
+
 local SelfieTrigger = {}
 
 SelfieTrigger.name = "KoseiHelper/SelfieTrigger"
@@ -20,7 +23,9 @@ SelfieTrigger.placements = {
 		oneUse = true,
 		interactable = false,
 		talkBubbleX = 0,
-		talkBubbleY = 0
+		talkBubbleY = 0,
+		openEaser = "CubeOut",
+		endEaser = "BackIn"
 		}
 	}
 }
@@ -35,7 +40,15 @@ SelfieTrigger.fieldInformation = function (entity) return {
 		editable = false
 	},
 	talkBubbleX = { fieldType = "integer" },
-	talkBubbleY = { fieldType = "integer" }
+	talkBubbleY = { fieldType = "integer" },
+	openEaser = {
+        options = easers.getEasers(),
+        editable = false
+    },
+	endEaser = {
+        options = easers.getEasers(),
+        editable = false
+    },
 }
 end
 
@@ -44,7 +57,8 @@ function SelfieTrigger.ignoredFields(entity)
 	"_name",
 	"_id",
 	"talkBubbleX",
-	"talkBubbleY"
+	"talkBubbleY",
+	"triggerMode"
 	}
     local function doNotIgnore(value)
         for i = #ignored, 1, -1 do
@@ -58,6 +72,8 @@ function SelfieTrigger.ignoredFields(entity)
 	if entity.interactable == true then
 		doNotIgnore("talkBubbleX")
 		doNotIgnore("talkBubbleY")
+	else
+		doNotIgnore("triggerMode")
 	end
 	return ignored
 end

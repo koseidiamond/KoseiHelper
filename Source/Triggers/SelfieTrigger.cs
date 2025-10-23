@@ -1,4 +1,5 @@
 using Celeste.Mod.Entities;
+using FrostHelper;
 using Microsoft.Xna.Framework;
 using Monocle;
 using System.Collections;
@@ -17,6 +18,7 @@ public class SelfieTrigger : Trigger
     private TriggerMode triggerMode;
     private bool interactable;
     private bool showingRoutine = false;
+    private string openEaser, endEaser;
 
     public SelfieTrigger(EntityData data, Vector2 offset) : base(data, offset)
     {
@@ -31,6 +33,8 @@ public class SelfieTrigger : Trigger
         flag = data.Attr("flag", "");
         triggerMode = data.Enum("triggerMode", TriggerMode.OnEnter);
         oneUse = data.Bool("oneUse", true);
+        openEaser = data.Attr("openEaser", "CubeOut");
+        endEaser = data.Attr("endEaser", "BackIn");
 
         if (interactable)
         {
@@ -75,7 +79,7 @@ public class SelfieTrigger : Trigger
             player.StateMachine.Locked = true;
             selfie = new Entities.Selfie(SceneAs<Level>());
             Scene.Add(selfie);
-            yield return selfie.PictureRoutine(image, buttonTexture, photoInSound, photoOutSound, inputSound, timeToOpen, flash);
+            yield return selfie.PictureRoutine(image, buttonTexture, photoInSound, photoOutSound, inputSound, timeToOpen, flash, openEaser, endEaser);
             selfie = null;
             player.StateMachine.Locked = false;
             player.StateMachine.State = 0;
