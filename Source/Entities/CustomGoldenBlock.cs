@@ -17,6 +17,7 @@ public class CustomGoldenBlock : Solid
     private float renderLerp;
     public Color blockTint;
     public Color iconTint;
+    public string sinkEaser;
 
     private float sinkOffset, goBackTimer;
     private float appearDistance = 80f;
@@ -55,9 +56,9 @@ public class CustomGoldenBlock : Solid
         blockTint = KoseiHelperUtils.ParseHexColor(data.Values.TryGetValue("blockTint", out object c1) ? c1.ToString() : null, Color.White);
         iconTint = KoseiHelperUtils.ParseHexColor(data.Values.TryGetValue("iconTint", out object c2) ? c2.ToString() : null, Color.White);
         customFlag = data.Attr("flag", "KoseiHelper_GoldenBlock");
-
         useTileset = data.Bool("useTileset", false);
         tileType = data.Char("tiletype", '3');
+        sinkEaser = data.Attr("sinkEaser", "SineInOut");
 
         startY = Y;
         if (!useTileset)
@@ -214,7 +215,7 @@ public class CustomGoldenBlock : Solid
         {
             yLerp = Calc.Approach(yLerp, 0f, 1f * Engine.DeltaTime);
         }
-        float y = MathHelper.Lerp(startY, startY + sinkOffset, Ease.SineInOut(yLerp));
+        float y = MathHelper.Lerp(startY, startY + sinkOffset, KoseiHelperUtils.Easer(sinkEaser, Ease.CubeInOut)(yLerp));
         MoveToY(y);
         if (renderLerp == 0f)
             EnableStaticMovers();

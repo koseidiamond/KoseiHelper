@@ -14,6 +14,7 @@ public class DetachFollowerTrigger : Trigger
     public bool global, affectBerries, affectKeys, affectOthers, onlyOnce;
     public string sound, flag;
     public TriggerMode triggerMode;
+    public string easer;
 
     public DetachFollowerTrigger(EntityData data, Vector2 offset)
         : base(data, offset)
@@ -31,6 +32,7 @@ public class DetachFollowerTrigger : Trigger
         triggerMode = data.Enum("triggerMode", TriggerMode.OnEnter);
         flag = data.Attr("flag", "");
         onlyOnce = data.Bool("onlyOnce", false);
+        easer = data.Attr("easer", "CubeInOut");
     }
     public override void OnEnter(Player player)
     {
@@ -109,7 +111,7 @@ public class DetachFollowerTrigger : Trigger
         SimpleCurve curve = new SimpleCurve(position, Target, position + (Target - position) * 0.5f + new Vector2(0f, -64f));
         for (float p = 0f; p < 1f; p += Engine.DeltaTime / time)
         {
-            entity.Position = curve.GetPoint(Ease.CubeInOut(p));
+            entity.Position = curve.GetPoint(KoseiHelperUtils.Easer(easer, Ease.CubeInOut)(p));
             yield return null;
         }
         entity.Active = true;

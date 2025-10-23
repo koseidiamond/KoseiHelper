@@ -6,6 +6,7 @@ local utils = require("utils")
 
 local mods = require("mods")
 local depths = mods.requireFromPlugin("libraries.depths")
+local easers = mods.requireFromPlugin("libraries.easers")
 
 local CustomGoldenBlock = {}
 
@@ -36,7 +37,8 @@ CustomGoldenBlock.placements = {
 			blockTint = "FFFFFF",
 			iconTint = "FFFFFF",
 			flag = "KoseiHelper_GoldenBlock",
-			useTileset = false
+			useTileset = false,
+			sinkEaser = "SineInOut"
 		}
 	},
 	    {
@@ -55,7 +57,8 @@ CustomGoldenBlock.placements = {
 			blockTint = "FFFFFF",
 			flag = "KoseiHelper_GoldenBlock",
 			useTileset = true,
-			tiletype = fakeTilesHelper.getPlacementMaterial()
+			tiletype = fakeTilesHelper.getPlacementMaterial(),
+			sinkEaser = "SineInOut"
 		}
 	}
 }
@@ -104,6 +107,9 @@ CustomGoldenBlock.fieldInformation = function(entity)
         },
         editable = true
     }
+	tileInfo.goBackTimer = {
+		minimumValue = 0.01
+	}
     tileInfo.iconTexture = {
         {
             fieldType = "string"
@@ -115,6 +121,10 @@ CustomGoldenBlock.fieldInformation = function(entity)
             "collectables/moonBerry/normal00"
         },
         editable = true
+    }
+	tileInfo.sinkEaser = {
+        options = easers.getEasers(),
+        editable = false
     }
 
     return tileInfo
@@ -165,12 +175,13 @@ CustomGoldenBlock.fieldOrder = {
 	"sinkOffset",
 	"goBackTimer",
 	"appearDistance",
-	"depth",
-	"surfaceSoundIndex",
 	"appearMode",
+	"surfaceSoundIndex",
+	"depth",
 	"flag",
 	"blockTint",
 	"iconTint",
+	"sinkEaser",
 	"allBerryTypes",
 	"tiletype",
 	"drawOutline",

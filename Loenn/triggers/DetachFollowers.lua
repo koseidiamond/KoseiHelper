@@ -1,3 +1,6 @@
+local mods = require("mods")
+local easers = mods.requireFromPlugin("libraries.easers")
+
 local DetachFollowerTrigger = {}
 
 DetachFollowerTrigger.name = "KoseiHelper/DetachFollowerTrigger"
@@ -12,7 +15,8 @@ DetachFollowerTrigger.placements = {
 		sound = "event:/new_content/game/10_farewell/strawberry_gold_detach",
 		triggerMode = "OnEnter",
 		onlyOnce = false,
-		flag = ""
+		flag = "",
+		easer = "CubeInOut"
     }
 }
 
@@ -24,7 +28,11 @@ DetachFollowerTrigger.fieldInformation = function (entity) return {
 		"OnFlagEnabled"
 		},
 		editable = false
-	}
+	},
+	easer = {
+        options = easers.getEasers(),
+        editable = false
+    }
 }
 end
 
