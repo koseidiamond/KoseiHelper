@@ -12,6 +12,7 @@ end
 ReskinnableParallaxDebris.placements = {
 	{
 		name = "ReskinnableParallaxDebris",
+		alternativeName = "ReskinnableForegroundDebris",
 		data = {
 			depth = -999900,
 			texture = "scenery/fgdebris/KoseiHelper/rockA00",

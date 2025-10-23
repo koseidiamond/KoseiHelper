@@ -202,7 +202,14 @@ function CustomGoldenBlock.sprite(room, entity)
 
     -- If tileset mode is enabled
     if entity.useTileset then
-        return fakeTilesHelper.getEntitySpriteFunction("tiletype",false)(room, entity)
+        local color = {1, 1, 1}
+        if entity.blockTint then
+            local success, r, g, b = utils.parseHexColor(entity.blockTint)
+            if success then
+                color = {r, g, b}
+            end
+        end
+        return fakeTilesHelper.getEntitySpriteFunction("tiletype", false, "tilesFg", color, x, y)(room, entity)
     end
 
     -- MTexture mode

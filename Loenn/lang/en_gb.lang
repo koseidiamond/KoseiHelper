@@ -262,6 +262,7 @@ entities.KoseiHelper/CustomWire.attributes.description.flag=Whether a flag needs
 # Reskinnable Parallax Debris
 
 entities.KoseiHelper/ReskinnableParallaxDebris.placements.name.ReskinnableParallaxDebris=Reskinnable Parallax Debris
+entities.KoseiHelper/ReskinnableParallaxDebris.placements.name.ReskinnableForegroundDebris=Reskinnable Foreground Debris
 entities.KoseiHelper/ReskinnableParallaxDebris.placements.description.ReskinnableParallaxDebris=The foreground debris but reskinnable.\nImage or group of images that move in a sine.
 entities.KoseiHelper/ReskinnableParallaxDebris.attributes.description.depth=The depth of the parallax debris.
 entities.KoseiHelper/ReskinnableParallaxDebris.attributes.description.texture=The path to the debris texture, relative to Gameplay/.\nYou can have multiple images grouped by adding 00, 01 and so on.

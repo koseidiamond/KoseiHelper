@@ -59,6 +59,20 @@ function TilesetOshiroDoor.depth(room,entity)
 	return entity.depth
 end
 
-TilesetOshiroDoor.sprite = fakeTilesHelper.getEntitySpriteFunction("tiletype",false)
+--TilesetOshiroDoor.sprite = fakeTilesHelper.getEntitySpriteFunction("tiletype",false)
+
+function TilesetOshiroDoor.sprite(room, entity)
+    local x, y = entity.x or 0, entity.y or 0
+    local width, height = entity.width or 16, entity.height or 16
+
+    local tint = {1, 1, 1}
+    if entity.tint then
+        local success, r, g, b = utils.parseHexColor(entity.tint)
+        if success then
+            tint = {r, g, b}
+        end
+    end
+    return fakeTilesHelper.getEntitySpriteFunction("tiletype", false, "tilesFg", tint, x, y)(room, entity)
+end
 
 return TilesetOshiroDoor

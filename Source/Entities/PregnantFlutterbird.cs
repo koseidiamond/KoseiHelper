@@ -429,7 +429,7 @@ public class PregnantFlutterbird : Actor
         {
             Laser laser = Engine.Pooler.Create<Laser>().Init(this, player, 1.4f, 0.9f);
             laser.owner = this;
-            SceneAs<Level>().Add(laser);
+            level.Add(laser);
         }
         yield return 1.4f;
         laserSfx.Stop();
@@ -544,11 +544,11 @@ public class PregnantFlutterbird : Actor
 
     private IEnumerator FlyAwayRoutine(int direction, float delay)
     {
-        Level level = Scene as Level;
+        Level level = SceneAs<Level>();
         yield return delay;
         sprite.Play("fly");
         if (!string.IsNullOrEmpty(flyAwayFlag))
-            SceneAs<Level>().Session.SetFlag(flyAwayFlag, true);
+            level.Session.SetFlag(flyAwayFlag, true);
         sprite.Scale.X = (float)(-direction) * 1.25f;
         sprite.Scale.Y = 1.25f;
         level.ParticlesFG.Emit(Calc.Random.Choose(ParticleTypes.Dust), Position, -MathF.PI / 2f);
