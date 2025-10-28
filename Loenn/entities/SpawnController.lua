@@ -149,8 +149,9 @@ SpawnController.placements = {
 		oppositeDragButton = false
 		
 		-- Secret attributes that no one should use unless they have a good reason (if you're lurking here you know what you're doing):
-		-- noCollider
-		-- transitionUpdate
+		-- noCollider = false,
+		-- transitionUpdate = false,
+		-- cooldownOffset = 0
 		}
 	}
 }

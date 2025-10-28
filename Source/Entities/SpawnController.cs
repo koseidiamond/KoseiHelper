@@ -96,7 +96,7 @@ public class SpawnController : Entity
     public int offsetX, offsetY;
     public bool removeDash, removeStamina;
     public EntityType entityToSpawn;
-    public float spawnCooldown, spawnTime;
+    public float spawnCooldown, spawnTime, cooldownOffset, originalCooldownOffset;
     public bool relativeToPlayerFacing, nodeRelativeToPlayerFacing;
     public SpawnCondition spawnCondition;
     public CassetteColor cassetteColor;
@@ -274,6 +274,7 @@ public class SpawnController : Entity
         absoluteCoords = data.Bool("absoluteCoords", false);
         entityToSpawn = data.Enum("entityToSpawn", EntityType.Puffer);
         spawnCooldown = spawnTime = data.Float("spawnCooldown", 0f);
+        cooldownOffset = originalCooldownOffset = data.Float("cooldownOffset", 0f);
         removeDash = data.Bool("removeDash", false);
         removeStamina = data.Bool("removeStamina", false);
         relativeToPlayerFacing = data.Bool("relativeToPlayerFacing", true);
@@ -543,8 +544,18 @@ public class SpawnController : Entity
                     conditionMet = false;
             }
             playerIsJumping = false;
-            if (conditionMet && spawnLimit != 0 && spawnCooldown == 0 && player != null)
+            if (conditionMet && spawnLimit != 0 && spawnCooldown == 0)
             {
+                if (player == null) return;
+
+                if (spawnCooldown + cooldownOffset > 0)
+                {
+                    if (cooldownOffset > 0)
+                        cooldownOffset -= Engine.DeltaTime;
+                    if (cooldownOffset < 0)
+                        cooldownOffset = 0;
+                    return;
+                }
                 if (entityToSpawn != EntityType.CustomEntity)
                     Logger.Debug(nameof(KoseiHelperModule), $"An entity is going to spawn: {entityToSpawn}");
                 else //Logs the parameters used in Lönn + the original constructor
@@ -1083,6 +1094,14 @@ public class SpawnController : Entity
                     Audio.Play(appearSound, player.Position);
                 }
             }
+            else // the condition was actually not met for whatever reasons
+            {
+                cooldownOffset = originalCooldownOffset;
+            }
+        }
+        else // the condition was actually not met because flagToEnableSpawner was false
+        {
+            cooldownOffset = originalCooldownOffset;
         }
 
         //Mouse functionality
