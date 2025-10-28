@@ -5,7 +5,7 @@ ForceHiccupTrigger.depth = 100
 
 ForceHiccupTrigger.placements = {
 	{
-		name = "Force Hiccup Trigger",
+		name = "ForceHiccupTrigger",
 		data = {
 		onlyOnce = false,
 		triggerMode = "OnEnter",

@@ -5,7 +5,7 @@ ForceThrowTrigger.depth = 100
 
 ForceThrowTrigger.placements = {
 	{
-		name = "Force Throw Trigger",
+		name = "ForceThrowTrigger",
 		data = {
 		onlyOnce = false,
 		triggerMode = "OnEnter",

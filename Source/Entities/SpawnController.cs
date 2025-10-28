@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Monocle;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using static Celeste.Session;
@@ -416,8 +417,8 @@ public class SpawnController : Entity
         //Custom Entities
         entityPath = data.Attr("entityPath");
         dictionaryKeys = data.Attr("dictKeys").Replace(" ", string.Empty).Split(',').ToList();
-        dictionaryValues = data.Attr("dictValues").Split(',').ToList();
-
+        dictionaryValues = System.Text.RegularExpressions.Regex.Matches(data.Attr("dictValues"), @"\[.*?\]|[^,]+")
+            .Cast<System.Text.RegularExpressions.Match>().Select(m => m.Value.Trim()).ToList(); // parses [a,b] for Vector2
         Add(new CoreModeListener(OnChangeMode));
     }
 
@@ -1313,21 +1314,48 @@ public class SpawnController : Entity
                     else if (param.ParameterType == typeof(Vector2))
                     { //Needs to check if the entity has just the position or position + offset
                         if (param.Name.Contains("position", StringComparison.OrdinalIgnoreCase))
+                        {
                             ctorParams.Add(spawn);
+                        }
                         else
-                            ctorParams.Add(Vector2.Zero);
+                        {
+                            Vector2 vec = Vector2.Zero;
+                            if (entityData.Values.TryGetValue(param.Name, out object val) && val is string s)
+                            {
+                                s = s.Trim();
+                                if ((s.StartsWith("[") && s.EndsWith("]")) || (s.StartsWith("(") && s.EndsWith(")")))
+                                    s = s.Substring(1, s.Length - 2);
+
+                                string[] parts = s.Split(',');
+                                if (parts.Length == 2 &&
+                                    float.TryParse(parts[0], NumberStyles.Float, CultureInfo.InvariantCulture, out float x) &&
+                                    float.TryParse(parts[1], NumberStyles.Float, CultureInfo.InvariantCulture, out float y))
+                                {
+                                    vec = new Vector2(x, y);
+                                }
+                            }
+                            if (vec == Vector2.Zero)
+                            {
+                                float x = entityData.Float(param.Name + "X", 0f);
+                                float y = entityData.Float(param.Name + "Y", 0f);
+                                vec = new Vector2(x, y);
+                            }
+
+                            ctorParams.Add(vec);
+                        }
                     }
                     else if (param.ParameterType.IsEnum)
                     {
-                        string enumValue = entityData.Values.FirstOrDefault(kv => kv.Key == param.Name).Value as string;
-                        if (enumValue != null)
+                        if (entityData.Values.FirstOrDefault(kv => kv.Key == param.Name).Value is string enumValue)
                         {
                             Type enumType = param.ParameterType;
                             Object enumParsed = Enum.Parse(enumType, enumValue);
                             ctorParams.Add(enumParsed);
                         }
                         else
+                        {
                             ctorParams.Add(Enum.GetValues(param.ParameterType).GetValue(0));
+                        }
                     }
                     else if (param.ParameterType == typeof(bool))
                     {
