@@ -190,6 +190,11 @@ entities.KoseiHelper/EvilHoldableController.attributes.description.dropIfNoStami
 entities.KoseiHelper/EvilHoldableController.attributes.description.sound=The sound that evil holdables do when grabbed.
 entities.KoseiHelper/EvilHoldableController.attributes.description.staminaDrainRate=The speed at which the stamina is drained is multiplied by this factor.
 
+# Spawn To Flag Controller
+entities.KoseiHelper/SpawnToFlagController.placements.name.SpawnToFlagController=Spawn To Flag Controller
+entities.KoseiHelper/SpawnToFlagController.placements.description.SpawnToFlagController=Sets a flag with coordinates of the current spawn when the room is loaded.
+entities.KoseiHelper/SpawnToFlagController.attributes.description.flagPrefix=The name of the flag that will be set when the room is reloaded.\nAll other flags that start with this prefix will be unset, so make sure the prefix is unique for each group of spawns.\nIt is recommended to use Mapping Utils to check that you're using this correctly.
+
 # Dash Limiter Controller
 entities.KoseiHelper/DashLimiterController.placements.name.DashLimiterController=Dash Limiter Controller
 entities.KoseiHelper/DashLimiterController.placements.description.DashLimiterController=Limits the amount of dashes that the player can do per screen.
