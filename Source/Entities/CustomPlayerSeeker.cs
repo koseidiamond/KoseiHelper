@@ -45,6 +45,7 @@ public class CustomPlayerSeeker : Actor
     private bool lastFlagValue;
     private bool isWaitingForHatchFlag = false;
     public bool canShatterSpinners;
+    public float freezeFramesWhenDashing;
 
     public static ParticleType boosterParticle = Booster.P_Burst;
     public static ParticleType boosterRedParticle = Booster.P_BurstRed;
@@ -96,6 +97,7 @@ public class CustomPlayerSeeker : Actor
         flagToSwap = data.Attr("flagToSwap", "");
         flagToHatch = data.Attr("flagToHatch", "");
         canShatterSpinners = data.Bool("canShatterSpinners", false);
+        freezeFramesWhenDashing = data.Float("freezeFramesWhenDashing", 0f);
         Add(sprite = GFX.SpriteBank.Create(data.Attr("sprite", "seeker"))); //the sprite needs the tags hatch, flipMouth, flipEyes, idle, spotted, attacking and statue to work
         if (vanillaEffects)
             sprite.Play("statue");
@@ -697,6 +699,7 @@ public class CustomPlayerSeeker : Actor
             }
             dashTimer = 0.3f;
             dashDirection = dir;
+            Celeste.Freeze(freezeFramesWhenDashing);
             if (dashDirection == Vector2.Zero)
                 dashDirection.X = Math.Sign((int)facing);
             if (dashDirection.X != 0f)

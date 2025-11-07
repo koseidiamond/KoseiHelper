@@ -18,7 +18,8 @@ CustomPlayerSeeker.placements = {
 			isFriendly = false,
 			flagToSwap = "",
 			flagToHatch = "",
-			canShatterSpinners = false
+			canShatterSpinners = false,
+			freezeFramesWhenDashing = 0
 		}
 	}
 }
@@ -46,6 +47,12 @@ function CustomPlayerSeeker.ignoredFields(entity)
 	end
 	return ignored
 end
+
+CustomPlayerSeeker.fieldInformation = {
+	freezeFramesWhenDashing = {
+		minimumValue = 0
+	}
+}
 
 CustomPlayerSeeker.texture = "decals/5-temple/statue_e"
 
