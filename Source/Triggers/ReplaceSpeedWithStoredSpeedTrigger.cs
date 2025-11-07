@@ -53,8 +53,15 @@ public class ReplaceSpeedWithStoredSpeedTrigger : Trigger
             else
                 Audio.Play(firstSfx);
         }
-        if (!dontNeedToStore)
+        if (StoreSpeedTrigger.HasStoredSpeed())
+        {
+            storedXA = StoreSpeedTrigger.storedSpeedX.Value;
+            storedYA = StoreSpeedTrigger.storedSpeedY.Value;
+            hasStored = true;
+        }
+        else if (!dontNeedToStore)
             Store(player, storingCycle);
+
         if (hasStored && (string.IsNullOrEmpty(flag) || level.Session.GetFlag(flag)))
             Replace(player, storingCycle);
         hasStored = true;

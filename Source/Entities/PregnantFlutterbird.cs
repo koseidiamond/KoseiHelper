@@ -47,6 +47,7 @@ public class PregnantFlutterbird : Actor
     public int partnerID;
     public Orientation orientation;
     public bool shootLasers;
+    public float laserFrequency, laserChargeTimer;
     public bool killOnContact;
     public bool bouncy;
     public bool flyAway;
@@ -103,6 +104,8 @@ public class PregnantFlutterbird : Actor
         gender = data.Enum("gender", Gender.Nonbinary);
         orientation = data.Enum("orientation", Orientation.Gay);
         shootLasers = data.Bool("shootLasers", false);
+        laserFrequency = data.Float("laserFrequency", 0.7f);
+        laserChargeTimer = data.Float("laserChargeTimer", 1.4f);
         polyamorous = data.Bool("polyamorous", true);
         partnerID = data.Int("partnerID", 0);
         hoppingDistance = data.Float("hoppingDistance", 8f);
@@ -415,23 +418,25 @@ public class PregnantFlutterbird : Actor
         while (true)
         {
             yield return Beam();
-            yield return 0.7f;
+            yield return laserFrequency;
         }
     }
 
     private IEnumerator Beam()
     {
         Level level = SceneAs<Level>();
+        Player player = level.Tracker.GetEntity<Player>();
+        if (player == null || player.JustRespawned) yield break;
         laserSfx.Play("event:/char/badeline/boss_laser_charge");
         yield return 0.1f;
-        Player player = level.Tracker.GetEntity<Player>();
-        if (player != null)
+        
+        if (player != null && !player.JustRespawned)
         {
-            Laser laser = Engine.Pooler.Create<Laser>().Init(this, player, 1.4f, 0.9f);
+            Laser laser = Engine.Pooler.Create<Laser>().Init(this, player, laserChargeTimer, 0.9f);
             laser.owner = this;
             level.Add(laser);
         }
-        yield return 1.4f;
+        yield return laserChargeTimer;
         laserSfx.Stop();
         Audio.Play("event:/char/badeline/boss_laser_fire", Position);
     }

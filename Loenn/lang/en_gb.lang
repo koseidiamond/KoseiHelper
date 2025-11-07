@@ -13,6 +13,8 @@ entities.KoseiHelper/SpecialFlutterbird.attributes.description.texture=The custo
 entities.KoseiHelper/SpecialFlutterbird.attributes.description.chaser=Whether the bird chases Madeline.\nIf the bird has a very low depth (< -13000) it will travel through solids.
 entities.KoseiHelper/SpecialFlutterbird.attributes.description.timeToGiveBirth=Cooldown between babies spawned.
 entities.KoseiHelper/SpecialFlutterbird.attributes.description.shootLasers=Whether the flutterbird shoots deadly giant lasers through its eyes.
+entities.KoseiHelper/SpecialFlutterbird.attributes.description.laserFrequency=How much time between each laser shot.
+entities.KoseiHelper/SpecialFlutterbird.attributes.description.laserChargeTimer=How long the laser will charge before being shot.\nLow values might make the laser unable to aim properly.
 entities.KoseiHelper/SpecialFlutterbird.attributes.description.killOnContact=Whether the bird is evil.
 entities.KoseiHelper/SpecialFlutterbird.attributes.description.bouncy=Whether the bird can bounce the player back.
 entities.KoseiHelper/SpecialFlutterbird.attributes.description.flyAway=Whether the bird should fly away when the player is too close.
@@ -959,6 +961,17 @@ triggers.KoseiHelper/ReplaceSpeedWithStoredSpeedTrigger.attributes.description.r
 triggers.KoseiHelper/ReplaceSpeedWithStoredSpeedTrigger.attributes.description.factor=The speed used for the replacement is premultiplied by this factor.\nE.g.: Stored speed of 300, Add mode, and factor 0.5, entering the trigger with 100 speed will result in a speed of 100+150.
 triggers.KoseiHelper/ReplaceSpeedWithStoredSpeedTrigger.attributes.description.storeFirstSpeedOnly=Whether it should store only the speed when first entered, instead of updating it every time it is entered.
 triggers.KoseiHelper/ReplaceSpeedWithStoredSpeedTrigger.attributes.description.flag=The flag required for this trigger to replace the speed (this does not affect speed storage).\nLeave empty for no flag required.
+
+# Store Speed Trigger
+triggers.KoseiHelper/StoreSpeedTrigger.placements.name.StoreSpeedTrigger=Store Speed Trigger
+triggers.KoseiHelper/StoreSpeedTrigger.placements.description.StoreSpeedTrigger=Stores speed so it can be used by a Replace Speed With Stored Speed Trigger.\nThe speed stored is shared between all Store Speed Triggers in the level.\nThe stored speed is cleared when the level is reset through transition/respawning.
+triggers.KoseiHelper/StoreSpeedTrigger.attributes.description.onlyOnce=Whether the trigger should remove itself after replacing the speed once.
+triggers.KoseiHelper/StoreSpeedTrigger.attributes.description.storesDirection=Whether the direction should be stored too or not.
+triggers.KoseiHelper/StoreSpeedTrigger.attributes.description.addSpeed=If this is true, the speed will be added to the current one instead of set.
+triggers.KoseiHelper/StoreSpeedTrigger.attributes.description.storeSfx=The storing speed sound that will play when the player enters the trigger.
+triggers.KoseiHelper/StoreSpeedTrigger.attributes.description.factor=The speed stored is premultiplied by this factor.\nE.g.: Stored speed of 300, Add mode, and factor 0.5, entering the trigger with 100 speed will result in a speed of 100+150.
+triggers.KoseiHelper/StoreSpeedTrigger.attributes.description.flag=The flag required for this trigger to store the speed.\nLeave empty for no flag required.
+
 
 # Restart Game Trigger
 triggers.KoseiHelper/RestartGameTrigger.placements.name.RestartGameTrigger=Restart Game/Level Trigger

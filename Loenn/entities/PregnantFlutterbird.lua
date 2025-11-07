@@ -18,6 +18,8 @@ PregnantFlutterbird.placements = {
 		gender = "Nonbinary",
 		orientation = "Gay",
 		shootLasers = false,
+		laserFrequency = 0.7,
+		laserChargeTimer = 1.4,
 		killOnContact = false,
 		bouncy = false,
 		flyAway = true,
@@ -73,6 +75,8 @@ PregnantFlutterbird.fieldOrder = {
 	"colliderHeight",
 	"colliderXOffset",
 	"colliderYOffset",
+	"laserFrequency",
+	"laserChargeTimer",
 	"bouncy",
 	"chaser",
 	"coyote",
@@ -133,6 +137,12 @@ PregnantFlutterbird.fieldInformation = {
 	},
 	colliderYOffset = {
 		fieldType = "integer"
+	},
+	laserFrequency = {
+		minimumValue = 0
+	},
+	laserChargeTimer = {
+		minimumValue = 0
 	}
 }
 
@@ -144,7 +154,9 @@ function PregnantFlutterbird.ignoredFields(entity)
 	"hoppingDistance",
 	"scaredDistance",
 	"chaseSpeedXMult",
-	"chaseSpeedYMult"
+	"chaseSpeedYMult",
+	"laserFrequency",
+	"laserChargeTimer"
 	}
 	
     local function doNotIgnore(value)
@@ -164,6 +176,10 @@ function PregnantFlutterbird.ignoredFields(entity)
 	if entity.chaser == true then
 		doNotIgnore("chaseSpeedXMult")
 		doNotIgnore("chaseSpeedYMult")
+	end
+	if entity.shootLasers == true then
+		doNotIgnore("laserFrequency")
+		doNotIgnore("laserChargeTimer")
 	end
 	return ignored
 end
