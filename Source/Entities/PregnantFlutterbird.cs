@@ -426,19 +426,17 @@ public class PregnantFlutterbird : Actor
     {
         Level level = SceneAs<Level>();
         Player player = level.Tracker.GetEntity<Player>();
-        if (player == null || player.JustRespawned) yield break;
-        laserSfx.Play("event:/char/badeline/boss_laser_charge");
-        yield return 0.1f;
-        
-        if (player != null && !player.JustRespawned)
+        if (player != null)
         {
+            laserSfx.Play("event:/char/badeline/boss_laser_charge");
+            yield return 0.1f;
             Laser laser = Engine.Pooler.Create<Laser>().Init(this, player, laserChargeTimer, 0.9f);
             laser.owner = this;
             level.Add(laser);
+            yield return laserChargeTimer;
+            laserSfx.Stop();
+            Audio.Play("event:/char/badeline/boss_laser_fire", Position);
         }
-        yield return laserChargeTimer;
-        laserSfx.Stop();
-        Audio.Play("event:/char/badeline/boss_laser_fire", Position);
     }
 
     private void Explode()
