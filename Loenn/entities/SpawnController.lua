@@ -35,6 +35,7 @@ SpawnController.placements = {
 		gridAligned = false,
 		gridSize = 8,
 		randomLocation = false,
+		extraRandomness = false,
 		spawnAreaColor = "deb887",
 		doNotRepeatSpots = true,
 		clustered = false,
@@ -596,6 +597,7 @@ function SpawnController.ignoredFields(entity)
 		doNotIgnore("spawnAreaColor")
 		doNotIgnore("doNotRepeatSpots")
 		doNotIgnore("clustered")
+		doNotIgnore("extraRandomness")
 	end
 	if entity.clustered then
 		doNotIgnore("clusteredChance")
@@ -850,6 +852,7 @@ SpawnController.fieldOrder =  {
 	"ignoreJustRespawned",
 	"gridAligned",
 	"randomLocation",
+	"extraRandomness",
 	"doNotRepeatSpots",
 	"clustered",
 	--"transitionUpdate",

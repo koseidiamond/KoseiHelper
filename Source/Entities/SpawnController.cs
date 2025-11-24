@@ -130,6 +130,7 @@ public class SpawnController : Entity
     public bool clustered;
     public Color spawnAreaColor;
     private Random deterministicRandom;
+    private bool extraRandomness;
     //other important variables
     private int entityID = 7388544; // Very high value so it doesn't conflict with other ids (hopefully)
     private List<EntityWithTTL> spawnedEntitiesWithTTL = new List<EntityWithTTL>();
@@ -298,6 +299,7 @@ public class SpawnController : Entity
         poofWhenDisappearing = data.Bool("poofWhenDisappearing", true);
         noNode = data.Bool("noNode", false);
         randomLocation = data.Bool("randomLocation", false);
+        extraRandomness = data.Bool("extraRandomness", false);
         clustered = data.Bool("clustered", false);
         clusteredChance = Calc.Clamp(data.Float("clusteredChance", 80f) / 100f, 0f, 1f);
         spawnAreaColor = data.HexColor("spawnAreaColor", Color.BurlyWood);
@@ -604,6 +606,12 @@ public class SpawnController : Entity
                         while (attempts-- > 0)
                         {
                             Vector2 testPos;
+                            if (extraRandomness)
+                            {
+                                int seed = level.Session.Deaths * 37 + this.entityID * 13 + (SaveData.Instance?.Name?.GetHashCode() +
+                                    (int)SaveData.Instance?.Time ?? 0);
+                                deterministicRandom = new Random(seed);
+                            }
                             bool tryCluster = clustered && deterministicRandom.NextDouble() < clusteredChance && usedSpawnPositions.Count > 0;
                             if (tryCluster)
                             { // try to spawn adjacent to a used position

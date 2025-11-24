@@ -93,6 +93,13 @@ entities.KoseiHelper/DebugMapController.attributes.description.blockDebugMap=If 
 entities.KoseiHelper/DebugMapController.attributes.name.roomsToAffect=Room Prefix
 entities.KoseiHelper/DebugMapController.attributes.description.roomsToAffect=The rooms that start with this prefix will be affected. Case sensitive.
 
+entities.KoseiHelper/SetFlagPrefixOnSpawnController.placements.name.SetFlagPrefixOnSpawnController=Set Flag Prefix On Spawn Controller
+entities.KoseiHelper/SetFlagPrefixOnSpawnController.placements.description.SetFlagPrefixOnSpawnController=Sets all flags that start with the specified prefix(es) to the specified value when the player respawns.
+entities.KoseiHelper/SetFlagPrefixOnSpawnController.attributes.description.flag=The session flags to modify when the player enters the room or respawns in it. You can set multiple flag prefixess at once by giving a list separated by commas (flag1,flag2).
+entities.KoseiHelper/SetFlagPrefixOnSpawnController.attributes.description.ifFlag=If checked, the flags will be enabled when the player enters the room or respawns in it. If unchecked, the flags will be disabled instead.
+entities.KoseiHelper/SetFlagPrefixOnSpawnController.attributes.description.enable=If checked, the flags will only be set if the player dies and respawns in the room (and not when they enter the room).
+entities.KoseiHelper/SetFlagPrefixOnSpawnController.attributes.description.onlyOnRespawn=The flags will only be set if this other flag is active. Leave empty if you don't need your flags to depend on another flag.
+
 # Game Data Controller
 entities.KoseiHelper/GameDataController.placements.name.GameDataController=Game Data Controller
 entities.KoseiHelper/GameDataController.placements.description.GameDataController=Sets and updates several useful flags (bools), counters (ints) and sliders (floats).\nIt is recommended to use Mapping Utils to check these values in game.\nThis controller is NOT persistent, you might want to place one per room (or one in a global room).
@@ -745,6 +752,7 @@ entities.KoseiHelper/SpawnController.attributes.description.ignoreJustRespawned=
 entities.KoseiHelper/SpawnController.attributes.description.gridAligned=Whether the entity should be aligned to the tile grid.\nSave and reopen if you need to configure the grid size.
 entities.KoseiHelper/SpawnController.attributes.description.gridSize=The size of the grid. Useful if you want entities spaced by a distance different than 8 pixels.
 entities.KoseiHelper/SpawnController.attributes.description.randomLocation=Whether the entity will spawn at a random location inside an Entity Spawn Area.\nMultiple Entity Spawn Areas can be used to delimit the valid locations but you need at least one.\nSave and reopen for extra settings related to random spawning.
+entities.KoseiHelper/SpawnController.attributes.description.extraRandomness=Adds additional rng.\nUseful if you are using several randomized spawners with slightly different conditions.\nOtherwise please do not use this feature!
 entities.KoseiHelper/SpawnController.attributes.description.doNotRepeatSpots=Whether the eligible spots can't be chosen again.\nIf an entity despawns, its spot will be cleared and eligible again.
 entities.KoseiHelper/SpawnController.attributes.description.clustered=Makes entities prefer forming groups whenever possible. \nSave and reopen if you need to adjust the clustered chances.
 entities.KoseiHelper/SpawnController.attributes.description.clusteredChance=The probability of each spawned entity to be close to a previously used spot.\n\nSome examples:\n- If the chance is close to 100, they will always prefer grouping.\n- If the chance is close to 0, they will prefer scattering and will only be close if they have no other options.\n- If the chance is 90%, they will mostly be grouped, with a 10% to scatter, and additionally,\n  when they choose to be close, they have a 10% to be one extra "tile" (pixel or Grid Size) away from the group.
