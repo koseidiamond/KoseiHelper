@@ -40,10 +40,16 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
         private MTexture gunTexture;
         private int shotCooldown, recoilCooldown;
         public Level level;
+        private static Vector2 lastHeldDirection = Vector2.Zero;
+        private static bool isPlayerUnderwater = false;
 
         private static Vector2 GetEightDirectionalAim(KoseiHelperModuleSettings.NemesisSettings.GunDirections gunDirections)
         {
             Vector2 value = Input.Aim.Value;
+            if (isPlayerUnderwater)
+            {
+                value = lastHeldDirection.SafeNormalize();
+            }
             if (value == Vector2.Zero)
             {
                 return Vector2.Zero;
@@ -250,6 +256,11 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
         private void PlayerUpdated(On.Celeste.Player.orig_Update orig, Player self)
         {
             Session session = self.SceneAs<Level>().Session;
+            isPlayerUnderwater = self.SwimUnderwaterCheck();
+            if (self.SwimUnderwaterCheck() && Input.Aim.Value != Vector2.Zero)
+            {
+                lastHeldDirection = Input.Aim.Value.SafeNormalize();
+            }
             if (self.JustRespawned && Extensions.loseGunOnRespawn)
             {
                 session.SetFlag("EnableNemesisGun", false);

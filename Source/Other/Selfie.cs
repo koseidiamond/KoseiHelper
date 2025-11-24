@@ -12,7 +12,7 @@ public class Selfie : Entity
     private Image image;
     private bool waitForKeyPress;
     private float timer;
-    private Ease.Easer openEaser, endEaser;
+    //private Ease.Easer openEaser, endEaser;
     //private Tween tween;
 
     private string buttonIcon;
