@@ -47,7 +47,7 @@ public class PregnantFlutterbird : Actor
     public int partnerID;
     public Orientation orientation;
     public bool shootLasers;
-    public float laserFrequency, laserChargeTimer;
+    public float laserFrequency, laserChargeTimer; // unused because it broke some map for no reason, apparently
     public bool killOnContact;
     public bool bouncy;
     public bool flyAway;
@@ -418,7 +418,7 @@ public class PregnantFlutterbird : Actor
         while (true)
         {
             yield return Beam();
-            yield return laserFrequency;
+            yield return 0.7f;
         }
     }
 
@@ -430,10 +430,10 @@ public class PregnantFlutterbird : Actor
         {
             laserSfx.Play("event:/char/badeline/boss_laser_charge");
             yield return 0.1f;
-            Laser laser = Engine.Pooler.Create<Laser>().Init(this, player, laserChargeTimer, 0.9f);
+            Laser laser = Engine.Pooler.Create<Laser>().Init(this, player, 1.4f, 0.9f);
             laser.owner = this;
             level.Add(laser);
-            yield return laserChargeTimer;
+            yield return 1.4f;
             laserSfx.Stop();
             Audio.Play("event:/char/badeline/boss_laser_fire", Position);
         }

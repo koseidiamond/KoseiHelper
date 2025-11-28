@@ -177,10 +177,11 @@ function PregnantFlutterbird.ignoredFields(entity)
 		doNotIgnore("chaseSpeedXMult")
 		doNotIgnore("chaseSpeedYMult")
 	end
-	if entity.shootLasers == true then
-		doNotIgnore("laserFrequency")
-		doNotIgnore("laserChargeTimer")
-	end
+	-- unused because it broke BIRDWORLD somehow
+	--if entity.shootLasers == true then
+	--	doNotIgnore("laserFrequency")
+	--	doNotIgnore("laserChargeTimer")
+	--end
 	return ignored
 end
 
