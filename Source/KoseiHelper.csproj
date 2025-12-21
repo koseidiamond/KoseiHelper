@@ -1,80 +1,49 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
-        <AssemblyName>KoseiHelper</AssemblyName>
-        <RootNamespace>Celeste.Mod.KoseiHelper</RootNamespace>
-        <LangVersion>latest</LangVersion>
-        <CelestePrefix Condition="'$(CelestePrefix)' == '' And Exists('..\..\..\Celeste.dll')">..\..\..</CelestePrefix>
-        <CelestePrefix Condition="'$(CelestePrefix)' == ''">lib-stripped</CelestePrefix>
-        <ZippedFiles>..\everest.yaml;..\bin\**\*.*;..\Audio\**\*.*;..\Dialog\**\*.*;..\Graphics\**\*.*;..\Loenn\**\*.*</ZippedFiles>
-		<MSBuildWarningsAsMessages>$(MSBuildWarningsAsMessages);MSB3270</MSBuildWarningsAsMessages>
-		<MSBuildWarningsAsMessages>$(MSBuildWarningsAsMessages);MSB3277</MSBuildWarningsAsMessages>
-    </PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <AssemblyName>KoseiHelper</AssemblyName>
+    <RootNamespace>Celeste.Mod.KoseiHelper</RootNamespace>
+    <LangVersion>latest</LangVersion>
+    <CelestePrefix Condition="'$(CelestePrefix)' == '' And Exists('..\..\..\Celeste.dll')">..\..\..</CelestePrefix>
+    <CelestePrefix Condition="'$(CelestePrefix)' == ''">lib-stripped</CelestePrefix>
+    <MSBuildWarningsAsMessages>$(MSBuildWarningsAsMessages);MSB3270</MSBuildWarningsAsMessages>
+    <MSBuildWarningsAsMessages>$(MSBuildWarningsAsMessages);MSB3277</MSBuildWarningsAsMessages>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+    <OutputPath>..\bin</OutputPath>
+  </PropertyGroup>
 
-    <!--Disable "Copy Local" for all references-->
-    <ItemDefinitionGroup>
-        <PackageReference PrivateAssets="all" ExcludeAssets="runtime" />
-        <Reference Private="false" />
-    </ItemDefinitionGroup>
+  <!--Disable
+  "Copy Local" for all references-->
+  <ItemDefinitionGroup>
+    <PackageReference PrivateAssets="all" ExcludeAssets="runtime" />
+    <Reference Private="false" />
+  </ItemDefinitionGroup>
 
-    <ItemGroup>
-        <PackageReference Include="MonoMod.RuntimeDetour" Version="25.3.1" PrivateAssets="all" ExcludeAssets="runtime">
-          <IncludeAssets>compile; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
-        <PackageReference Include="MonoMod.Patcher" Version="25.0.0-prerelease.2" />
-        <PackageReference Include="CelesteAnalyzer" Version="*" />
-    </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="MonoMod.RuntimeDetour" Version="25.3.1" />
+    <PackageReference Include="MonoMod.Patcher" Version="25.0.0-prerelease.2" />
+    <PackageReference Include="CelesteAnalyzer" Version="*" />
+    <PackageReference Include="CelesteMod.Publicizer" Version="*"
+      CelesteAssembly="$(CelestePrefix)\Celeste.dll" />
+  </ItemGroup>
 
-    <ItemGroup>
-        <PackageReference Include="CelesteMod.Publicizer" Version="*" CelesteAssembly="$(CelestePrefix)\Celeste.dll" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Reference Include="CollabUtils2">
-        <HintPath>..\lib\CollabUtils2.dll</HintPath>
-      </Reference>
-      <Reference Include="ExtendedVariantMode">
-        <HintPath>..\lib\ExtendedVariantMode.dll</HintPath>
-      </Reference>
-      <Reference Include="FNA">
-        <HintPath>..\..\..\FNA.dll</HintPath>
-      </Reference>
-      <Reference Include="FrostTempleHelper">
-        <HintPath>..\lib\FrostTempleHelper.dll</HintPath>
-      </Reference>
-	  <Reference Include="DoonvHelper">
-        <HintPath>..\lib\DoonvHelper.dll</HintPath>
-      </Reference>
-      <Reference Include="LuaCutscenes">
-        <HintPath>..\lib\LuaCutscenes.dll</HintPath>
-      </Reference>
-      <Reference Include="MaxHelpingHand">
-        <HintPath>..\lib\MaxHelpingHand.dll</HintPath>
-      </Reference>
-      <Reference Include="MMHOOK_Celeste">
-        <HintPath>..\..\..\MMHOOK_Celeste.dll</HintPath>
-      </Reference>
-      <Reference Include="YamlDotNet">
-        <HintPath>..\..\..\YamlDotNet.dll</HintPath>
-      </Reference>
-    </ItemGroup>
-
-    <Target Name="CopyFiles" AfterTargets="Build" Inputs="$(OutputPath)\$(AssemblyName).dll;$(OutputPath)\$(AssemblyName).pdb" Outputs="..\bin\$(AssemblyName).dll;..\bin\$(AssemblyName).pdb">
-        <Copy SourceFiles="$(OutputPath)\$(AssemblyName).dll" DestinationFolder="..\bin" />
-        <Copy SourceFiles="$(OutputPath)\$(AssemblyName).pdb" DestinationFolder="..\bin" />
-    </Target>
-    
-    <PropertyGroup>
-        <PathMap>$(MSBuildProjectDirectory)=KoseiHelper/</PathMap>
-    </PropertyGroup>
-    
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-      <LangVersion>preview</LangVersion>
-    </PropertyGroup>
-    
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-      <LangVersion>preview</LangVersion>
-    </PropertyGroup>
-
+  <ItemGroup>
+    <Reference Include="MMHOOK_Celeste" HintPath="$(CelestePrefix)\MMHOOK_Celeste.dll" />
+    <Reference Include="YamlDotNet" HintPath="$(CelestePrefix)\YamlDotNet.dll" />
+    <Reference Include="FNA" HintPath="$(CelestePrefix)\FNA.dll" />
+    <Reference Include="CollabUtils2"
+      HintPath="$(CelestePrefix)\Mods\Cache\CollabUtils2.CollabUtils2.dll" />
+    <Reference Include="ExtendedVariantMode"
+      HintPath="$(CelestePrefix)\Mods\Cache\ExtendedVariantMode.ExtendedVariantMode.dll" />
+    <Reference Include="FrostHelper"
+      HintPath="$(CelestePrefix)\Mods\Cache\FrostHelper.FrostTempleHelper.dll" />
+    <Reference Include="DoonvHelper"
+      HintPath="$(CelestePrefix)\Mods\Cache\DoonvHelper.DoonvHelper.dll" />
+    <Reference Include="LuaCutscenes"
+      HintPath="$(CelestePrefix)\Mods\Cache\LuaCutscenes.LuaCutscenes.dll" />
+    <Reference Include="MaxHelpingHand"
+      HintPath="$(CelestePrefix)\Mods\Cache\MaxHelpingHand.MaxHelpingHand.dll" />
+  </ItemGroup>
 </Project>
