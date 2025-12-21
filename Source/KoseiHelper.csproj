@@ -25,25 +25,18 @@
     <PackageReference Include="MonoMod.RuntimeDetour" Version="25.3.1" />
     <PackageReference Include="MonoMod.Patcher" Version="25.0.0-prerelease.2" />
     <PackageReference Include="CelesteAnalyzer" Version="*" />
-    <PackageReference Include="CelesteMod.Publicizer" Version="*"
-      CelesteAssembly="$(CelestePrefix)\Celeste.dll" />
+    <PackageReference Include="CelesteMod.Publicizer" Version="*" CelesteAssembly="$(CelestePrefix)\Celeste.dll" />
   </ItemGroup>
 
   <ItemGroup>
     <Reference Include="MMHOOK_Celeste" HintPath="$(CelestePrefix)\MMHOOK_Celeste.dll" />
     <Reference Include="YamlDotNet" HintPath="$(CelestePrefix)\YamlDotNet.dll" />
     <Reference Include="FNA" HintPath="$(CelestePrefix)\FNA.dll" />
-    <Reference Include="CollabUtils2"
-      HintPath="$(CelestePrefix)\Mods\Cache\CollabUtils2.CollabUtils2.dll" />
-    <Reference Include="ExtendedVariantMode"
-      HintPath="$(CelestePrefix)\Mods\Cache\ExtendedVariantMode.ExtendedVariantMode.dll" />
-    <Reference Include="FrostHelper"
-      HintPath="$(CelestePrefix)\Mods\Cache\FrostHelper.FrostTempleHelper.dll" />
-    <Reference Include="DoonvHelper"
-      HintPath="$(CelestePrefix)\Mods\Cache\DoonvHelper.DoonvHelper.dll" />
-    <Reference Include="LuaCutscenes"
-      HintPath="$(CelestePrefix)\Mods\Cache\LuaCutscenes.LuaCutscenes.dll" />
-    <Reference Include="MaxHelpingHand"
-      HintPath="$(CelestePrefix)\Mods\Cache\MaxHelpingHand.MaxHelpingHand.dll" />
+    <Reference Include="CollabUtils2" HintPath="$(CelestePrefix)\Mods\Cache\CollabUtils2.CollabUtils2.dll" />
+    <Reference Include="ExtendedVariantMode" HintPath="$(CelestePrefix)\Mods\Cache\ExtendedVariantMode.ExtendedVariantMode.dll" />
+    <Reference Include="FrostHelper" HintPath="$(CelestePrefix)\Mods\Cache\FrostHelper.FrostTempleHelper.dll" />
+    <Reference Include="DoonvHelper" HintPath="$(CelestePrefix)\Mods\Cache\DoonvHelper.DoonvHelper.dll" />
+    <Reference Include="LuaCutscenes" HintPath="$(CelestePrefix)\Mods\Cache\LuaCutscenes.LuaCutscenes.dll" />
+    <Reference Include="MaxHelpingHand" HintPath="$(CelestePrefix)\Mods\Cache\MaxHelpingHand.MaxHelpingHand.dll" />
   </ItemGroup>
 </Project>
