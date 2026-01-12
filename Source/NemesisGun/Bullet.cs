@@ -1,12 +1,12 @@
-using Celeste.Mod.Entities;
-using Celeste.Mod.KoseiHelper.Entities;
-using Microsoft.Xna.Framework;
-using Monocle;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using Celeste.Mod.Entities;
+using Celeste.Mod.KoseiHelper.Entities;
+using Microsoft.Xna.Framework;
+using Monocle;
 
 namespace Celeste.Mod.KoseiHelper.NemesisGun
 {
@@ -510,7 +510,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 return;
             }
 
-            if (owner.Scene.CollideFirst<CustomTempleCrackedBlock>(Hitbox) is CustomTempleCrackedBlock ccrackedblock && !dead)
+            if (owner.Scene.CollideFirst<TempleCrackedBlock>(Hitbox) is CustomTempleCrackedBlock ccrackedblock && !dead)
             {
                 switch (KoseiHelperModule.Settings.GunInteractions.dashBlockBehavior)
                 {
