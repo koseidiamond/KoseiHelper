@@ -13,7 +13,7 @@
         },
         {
             "label": "release build",
-            "command": "rm *.zip;rm bin/*;dotnet build Code -c Release;rm bin/*.json",
+            "command": "rm *.zip;rm bin/*;dotnet build Source -c Release;rm bin/*.json",
             "type": "shell",
             "group": {
                 "kind": "build",
@@ -26,18 +26,8 @@
         },
         {
             "label": "zip build",
-            "command": "C:/Program Files/7-Zip/7z.exe",
-            "args": [
-                "a",
-                "${workspaceFolder}/KoseiHelper.zip",
-                "${workspaceFolder}/everest.yaml",
-                "${workspaceFolder}/bin",
-                "${workspaceFolder}/Audio",
-                "${workspaceFolder}/Dialog",
-                "${workspaceFolder}/Graphics",
-                "${workspaceFolder}/Loenn",
-            ],
-            "type": "process",
+            "command": "cd ${workspaceFolder}; zip -r KoseiHelper.zip Audio bin Dialog Graphics Loenn everest.yaml",
+            "type": "shell",
             "group": {
                 "kind": "build",
                 "isDefault": false
