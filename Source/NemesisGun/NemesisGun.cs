@@ -114,21 +114,22 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                         }
                     }
                 default: // Four directions
-                    if (Calc.AbsAngleDiff(angle, 0f) < angleThreshold)
-                    {
-                        return new Vector2(1f, 0f);
-                    }
-                    else if (Calc.AbsAngleDiff(angle, (float)Math.PI) < angleThreshold)
-                    {
-                        return new Vector2(-1f, 0f);
-                    }
-                    else if (Calc.AbsAngleDiff(angle, -(float)Math.PI / 2f) < angleThreshold)
+                    float angleThreshold4D = (float)Math.PI / 4f;
+                    if (Calc.AbsAngleDiff(angle, -(float)Math.PI / 2f) <= angleThreshold4D)
                     {
                         return new Vector2(0f, -1f);
                     }
-                    else if (Calc.AbsAngleDiff(angle, (float)Math.PI / 2f) < angleThreshold)
+                    else if (Calc.AbsAngleDiff(angle, (float)Math.PI / 2f) <= angleThreshold4D)
                     {
                         return new Vector2(0f, 1f);
+                    }
+                    else if (Calc.AbsAngleDiff(angle, 0f) < angleThreshold4D)
+                    {
+                        return new Vector2(1f, 0f);
+                    }
+                    else if (Calc.AbsAngleDiff(angle, (float)Math.PI) < angleThreshold4D)
+                    {
+                        return new Vector2(-1f, 0f);
                     }
                     break;
             }
