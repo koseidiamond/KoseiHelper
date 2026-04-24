@@ -1,6 +1,9 @@
 local fakeTilesHelper = require("helpers.fake_tiles")
 local enums = require("consts.celeste_enums")
 
+local mods = require("mods")
+local depths = mods.requireFromPlugin("libraries.depths")
+
 local textures = {"wood", "dream", "temple", "templeB", "cliffside", "reflection", "core", "moon"}
 
 local SpawnController = {}
@@ -337,7 +340,9 @@ SpawnController.fieldInformation = function (entity) return {
 		fieldType = "integer"
 	},
 	decalDepth = {
-		fieldType = "integer"
+		fieldType = "integer",
+		options = depths.addDepths(depths.getDepths(), {}),
+        editable = true
 	},
 	flagCycleAt = {
 		fieldType = "integer"
