@@ -708,9 +708,9 @@ entities.KoseiHelper/FlagRefillController.attributes.description.countWhenUsed=C
 entities.KoseiHelper/FlagRefillController.attributes.description.decrease=Counter refills will decrease instead.\nThis option only applies for the Dashing mode because it affects the player instead of individual refills!
 
 # Mouse Controller
-# entities.KoseiHelper/MouseController.placements.name.MouseController=Mouse Controller
-# entities.KoseiHelper/MouseController.placements.description.MouseController=Allows using the mouse to make entities do different things, like exploding puffers.
-# entities.KoseiHelper/MouseController.attributes.name.cursorTexture=The texture of the mouse cursor, relative to Graphics/Atlases/Gui/.
+entities.KoseiHelper/MouseController.placements.name.MouseController=Mouse Controller
+entities.KoseiHelper/MouseController.placements.description.MouseController=Allows using the mouse to interact with entities, like exploding puffers.
+entities.KoseiHelper/MouseController.attributes.description.cursorTexture=The texture of the mouse cursor, relative to Graphics/Atlases/Gui/.
 
 # Spawn Controller - General attributes
 entities.KoseiHelper/SpawnController.placements.name.SpawnController=Spawn Controller
@@ -763,9 +763,11 @@ entities.KoseiHelper/SpawnController.attributes.description.canDragAround=Whethe
 entities.KoseiHelper/SpawnController.attributes.description.oppositeDragButton=Whether the right click should be used to drag if left is used to spawn, and vice versa.\nImportant: Make sure your Time To Live is > 0 or the entities will be undraggable.
 entities.KoseiHelper/SpawnController.attributes.description.mouseWheelMode=Whether it's possible to use the mouse wheel to change between different entity presets (save and reopen to customize list).\nTip: since there is a lot of data, you can customize each entity attributes faster by copypasting this placement into a text editor.\nAlternatively, change the Entity To Spawn and customize each entity one by one.
 entities.KoseiHelper/SpawnController.attributes.description.wheelOptions=A list of entities that can be spawned, separated by commas.\nThese should be the same names as the values in the field Entity To Spawn.\nIf this field is left empty, all default presets will be available.
-entities.KoseiHelper/SpawnController.attributes.description.wheelIndicatorX=The horizontal position of the indicator that shows the currently selected entity.\nIf you're rendering text, this value is multiplied by 6 (1920x1080).\nIf you're rendering images, this value is in game pixels (320x180).
-entities.KoseiHelper/SpawnController.attributes.description.wheelIndicatorY=The vertical position of the indicator that shows the currently selected entity.\nIf you're rendering text, this value is multiplied by 6 (1920x1080).\nIf you're rendering images, this value is in game pixels (320x180).
-entities.KoseiHelper/SpawnController.attributes.description.wheelIndicatorImage=Whether the currently selected entity should be shown as an image instead of as the entity name.
+entities.KoseiHelper/SpawnController.attributes.description.fullyCustomWheel=Whether the Wheel Options should use the full path to entity classes instead of the list in the field Entity To Spawn.\nUseful if you need several custom entities.
+entities.KoseiHelper/SpawnController.attributes.description.wheelIndicatorPaths=The paths of the images that represent all your custom entities, relative to Atlases/gameplay/. Separated by commas.
+entities.KoseiHelper/SpawnController.attributes.description.wheelIndicatorX=The horizontal position of the indicator that shows the currently selected entity.\nThis value is in full resolution (1920x1080).
+entities.KoseiHelper/SpawnController.attributes.description.wheelIndicatorY=The vertical position of the indicator that shows the currently selected entity.\nThis value is in full resolution (1920x1080).
+entities.KoseiHelper/SpawnController.attributes.description.wheelIndicatorImage=Whether the currently selected entity should be shown as an image instead of as the entity name.\nIf paired with Fully Custom Wheel, you can close and reopen to specify the paths to all your custom entities.
 
 #Spawn Controller - specific entity attributes
 entities.KoseiHelper/SpawnController.attributes.description.blockWidth=Width of the block.

@@ -23,8 +23,8 @@ public class MouseController : Entity
         base.Update();
         Scene scene = this.Scene;
         Level level = SceneAs<Level>();
-        mouseX = MInput.Mouse.Position.X * (320f / 1920f);
-        mouseY = MInput.Mouse.Position.Y * (180f / 1080f);
+        mouseX = MInput.Mouse.Position.X * (level.Camera.Viewport.Width / 1920f);
+        mouseY = MInput.Mouse.Position.Y * (level.Camera.Viewport.Height / 1080f);
         Position = new Vector2(level.Camera.Position.X + mouseX - 6f, level.Camera.Position.Y + mouseY - 6f);
         if (MInput.Mouse.PressedLeftButton)
             CollisionCheck(scene);
@@ -34,6 +34,7 @@ public class MouseController : Entity
 
     private void CollisionCheck(Scene scene)
     {
+        // todo add more interactions
         if (scene.CollideFirst<TheoCrystal>(Hitbox) is TheoCrystal theoCrystal)
             theoCrystal.HitSpinner(this);
         if (scene.CollideFirst<DashBlock>(Hitbox) is DashBlock dashBlock)
@@ -134,7 +135,8 @@ public class MouseController : Entity
     {
         Level level = SceneAs<Level>();
         Image image = new Image(GFX.Gui[cursorTexture]);
-        image.Position = new Vector2(mouseX * 6f - image.Width / 2f, mouseY * 6f - image.Height / 2f);
+        image.Position = new Vector2(mouseX * 6f * (320f / level.Camera.Viewport.Width) - image.Width / 2f,
+            mouseY * 6f * (180f / level.Camera.Viewport.Height) - image.Height / 2f);
         image.Render();
     }
 }

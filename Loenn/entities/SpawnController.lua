@@ -144,8 +144,10 @@ SpawnController.placements = {
 		canDragAround = false,
 		mouseWheelMode = false,
 		wheelOptions = "",
-		wheelIndicatorX = 20,
-		wheelIndicatorY = 140,
+		fullyCustomWheel = false,
+		wheelIndicatorPaths = "objects/KoseiHelper/Controllers/SpawnController/Empty",
+		wheelIndicatorX = 1,
+		wheelIndicatorY = 21,
 		wheelIndicatorImage = false,
 		oppositeDragButton = false
 		
@@ -466,6 +468,8 @@ function SpawnController.ignoredFields(entity)
 	"canDragAround",
 	"mouseWheelMode",
 	"wheelOptions",
+	"fullyCustomWheel",
+	"wheelIndicatorPaths",
 	"wheelIndicatorX",
 	"wheelIndicatorY",
 	"wheelIndicatorImage",
@@ -614,6 +618,10 @@ function SpawnController.ignoredFields(entity)
 			doNotIgnore("wheelIndicatorX")
 			doNotIgnore("wheelIndicatorY")
 			doNotIgnore("wheelIndicatorImage")
+			doNotIgnore("fullyCustomWheel")
+		end
+		if entity.fullyCustomWheel == true and entity.wheelIndicatorImage == true then
+			doNotIgnore("wheelIndicatorPaths")
 		end
 	end
 	-- Entity attributes
@@ -798,6 +806,7 @@ SpawnController.fieldOrder =  {
 	"dictKeys",
 	"dictValues",
 	"wheelOptions",
+	"wheelIndicatorPaths",
 	"wheelIndicatorX",
 	"wheelIndicatorY",
 	"gridSize",
@@ -856,7 +865,8 @@ SpawnController.fieldOrder =  {
 	"doNotRepeatSpots",
 	"clustered",
 	--"transitionUpdate",
-	"noNode"
+	"noNode",
+	"fullyCustomWheel"
 }
 
 function SpawnController.texture(room, entity)

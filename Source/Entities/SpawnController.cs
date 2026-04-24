@@ -241,34 +241,59 @@ public class SpawnController : Entity
     public bool oppositeDragButton;
     public bool mouseWheelMode;
     public string wheelOptions;
+    public bool fullyCustomWheel;
+    public string[] CustomWheelIndicatorPaths;
     public float wheelIndicatorX, wheelIndicatorY;
     public bool wheelIndicatorImage;
     private static EntityType[] WheelCycle;
+    private static string[] CustomWheelCycle;
     private static int wheelIndex;
-    public static EntityType currentWheelValue => WheelCycle[wheelIndex];
+    public EntityType currentWheelValue => WheelCycle != null && WheelCycle.Length > 0 ? WheelCycle[wheelIndex] : entityToSpawn;
+    public string currentCustomWheelValue => CustomWheelCycle != null && CustomWheelCycle.Length > 0 ? CustomWheelCycle[wheelIndex] : entityPath;
     private EntityType[] BuildWheelCycle(string wheelList)
     {
+        if (fullyCustomWheel)
+            return null;
+
         if (!string.IsNullOrWhiteSpace(wheelList))
         {
             try
             {
-                return wheelList.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).Select(s => Enum.Parse<EntityType>(s, true)).ToArray();
+                return wheelList
+                    .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                    .Select(s => Enum.Parse<EntityType>(s, true))
+                    .ToArray();
             }
             catch
             {
-                Logger.Log(LogLevel.Error, "KoseiHelper", "An invalid entity type was introduced in the Wheel Options list!\nUsing the default list instead.");
+                Logger.Log(LogLevel.Error, "KoseiHelper",
+                    "Invalid entity type in Wheel Options!\nUsing default list.");
             }
         }
 
-        return Enum.GetValues<EntityType>().Except(new[] { EntityType.Flag, EntityType.Counter, EntityType.SpawnPoint }).ToArray();
+        return Enum.GetValues<EntityType>()
+            .Except(new[] { EntityType.Flag, EntityType.Counter, EntityType.SpawnPoint })
+            .ToArray();
+    }
+    private string[] BuildCustomWheelCycle(string wheelList)
+    {
+        if (!string.IsNullOrWhiteSpace(wheelList))
+        {
+            return wheelList
+                .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+        }
+
+        return Array.Empty<string>();
     }
     private static int lastWheel;
 
     public SpawnController(EntityData data, Vector2 offset) : base(data.Position + offset)
     {
         Add(new PostUpdateHook(() => { }));
+        base.Tag = TagsExt.SubHUD;
         if (!data.Bool("noCollider", false))
             Collider = new Hitbox(8, 8, -4, -4);
+        
         // General attributes
         offsetX = data.Int("offsetX", 0);
         offsetY = data.Int("offsetY", 8);
@@ -324,11 +349,43 @@ public class SpawnController : Entity
         if (mouseWheelMode)
         {
             this.Depth = -300000;
-            if (!wheelIndicatorImage)
-                base.Tag = Tags.HUD;
+            //if (!wheelIndicatorImage)
+            //    base.Tag = TagsExt.SubHUD;
             wheelOptions = data.Attr("wheelOptions", "");
-            WheelCycle = BuildWheelCycle(wheelOptions);
-            entityToSpawn = currentWheelValue;
+            fullyCustomWheel = data.Bool("fullyCustomWheel", false);
+
+            if (fullyCustomWheel)
+            {
+                CustomWheelCycle = BuildCustomWheelCycle(wheelOptions) ?? Array.Empty<string>();
+                CustomWheelIndicatorPaths = data.Attr("wheelIndicatorPaths", "objects/KoseiHelper/Controllers/SpawnController/Empty")
+                    .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                if (CustomWheelIndicatorPaths.Length != CustomWheelCycle.Length && wheelIndicatorImage)
+                {
+                    string[] fixedPaths = new string[CustomWheelCycle.Length];
+                    for (int i = 0; i < fixedPaths.Length; i++)
+                    {
+                        if (i < CustomWheelIndicatorPaths.Length &&
+                            !string.IsNullOrWhiteSpace(CustomWheelIndicatorPaths[i]))
+                        {
+                            fixedPaths[i] = CustomWheelIndicatorPaths[i];
+                        }
+                        else
+                        {
+                            fixedPaths[i] = "objects/KoseiHelper/Controllers/SpawnController/Empty";
+                        }
+                    }
+                    CustomWheelIndicatorPaths = fixedPaths;
+                    Logger.Log(LogLevel.Warn, "KoseiHelper", "The amount of wheel image paths is different than the wheel options!");
+                }
+
+                if (CustomWheelCycle.Length > 0)
+                    entityPath = CustomWheelCycle[wheelIndex];
+            }
+            else
+            {
+                WheelCycle = BuildWheelCycle(wheelOptions);
+                entityToSpawn = currentWheelValue;
+            }
         }
 
         //Entity specific attributes
@@ -531,8 +588,8 @@ public class SpawnController : Entity
                 SpawnCondition.OnCustomButtonPress => KoseiHelperModule.Settings.SpawnButton.Pressed && spawnCooldown == 0,
                 SpawnCondition.OnClimb => player.StateMachine.state == 1 && player.climbNoMoveTimer == 0.1f,
                 SpawnCondition.OnJump => playerIsJumping,
-                SpawnCondition.LeftClick => MInput.Mouse.PressedLeftButton,
-                SpawnCondition.RightClick => MInput.Mouse.PressedRightButton,
+                SpawnCondition.LeftClick => MInput.Mouse.PressedLeftButton && Engine.Instance.IsActive,
+                SpawnCondition.RightClick => MInput.Mouse.PressedRightButton && Engine.Instance.IsActive,
                 _ => false
             };
             if ((despawnMethod == DespawnMethod.Flag || despawnMethod == DespawnMethod.TTLFlag) && level.Session.GetFlag(flagToLive))
@@ -767,8 +824,8 @@ public class SpawnController : Entity
 
                 if (spawnCondition == SpawnCondition.LeftClick || spawnCondition == SpawnCondition.RightClick)
                 {
-                    float mouseX = MInput.Mouse.Position.X * (320f / 1920f);
-                    float mouseY = MInput.Mouse.Position.Y * (180f / 1080f);
+                    float mouseX = MInput.Mouse.Position.X * (level.Camera.Viewport.Width / 1920f);
+                    float mouseY = MInput.Mouse.Position.Y * (level.Camera.Viewport.Height / 1080f);
                     spawnPosition = new Vector2(level.Camera.Position.X + mouseX + offsetX, level.Camera.Position.Y + mouseY + offsetY);
                     if (isBlock)
                         spawnPosition -= new Vector2(blockWidth / 2, blockHeight / 2);
@@ -789,115 +846,20 @@ public class SpawnController : Entity
                 }
                 float entityTTL = timeToLive;
                 string entityFTL = flagToLive;
-                switch (entityToSpawn)
-                { // If relativeToPlayerFacing is true, a positive X value will spawn in front of the player, and a negative X value will spawn behind the player
-                    case EntityType.BadelineBoost:
-                        spawnedEntity = new BadelineBoost(new Vector2[] { spawnPosition, new Vector2(player.Position.X + offsetX, level.Bounds.Top - 200) }, false, false, false, false, false);
-                        break;
-                    case EntityType.Blade:
-                        EntityData bladeData = new()
-                        {
-                            Position = spawnPosition,
-                            Level = level.Session.LevelData,
-                            Nodes = new Vector2[] { nodePosition },
-                            Values = new()
-                        };
-                        for (int i = 0; i < dictionaryKeys.Count; i++) // ??? why did i do this
-                        {
-                            bladeData.Values[dictionaryKeys[i]] = dictionaryValues.ElementAtOrDefault(i);
-                        }
-                        bladeData.Values["startCenter"] = bladeData.Bool("startCenter", bladeStartCenter).ToString();
-                        bladeData.Values["clockwise"] = bladeData.Bool("clockwise", bladeClockwise).ToString();
-                        bladeData.Values["speed"] = bladeData.Enum("speed", bladeSpeed).ToString();
-                        if (circularMovement)
-                        {
-                            if (bladeStar)
-                                spawnedEntity = new StarRotateSpinner(bladeData, Vector2.Zero);
-                            else
-                                spawnedEntity = new BladeRotateSpinner(bladeData, Vector2.Zero);
-                        }
-                        else
-                        {
-                            if (bladeStar)
-                                spawnedEntity = new StarTrackSpinner(bladeData, Vector2.Zero);
-                            else
-                                spawnedEntity = new BladeTrackSpinner(bladeData, Vector2.Zero);
-                        }
-                        break;
-                    case EntityType.Booster:
-                        spawnedEntity = new BoosterNoOutline(spawnPosition, boosterRed, boosterSingleUse); // I had to make a new class so their outline doesn't stay after they poof
-                        break;
-                    case EntityType.BounceBlock:
-                        spawnedEntity = new BounceBlock(spawnPosition, blockWidth, blockHeight);
-                        break;
-                    case EntityType.Bumper:
-                        spawnedEntity = new Bumper(spawnPosition, null);
-                        break;
-                    case EntityType.Cloud:
-                        spawnedEntity = new Cloud(spawnPosition, cloudFragile);
-                        break;
-                    case EntityType.Counter:
-                        if (decreaseCounter && level.Session.GetCounter("koseiCounter") > minCounterCap)
-                            level.Session.SetCounter("koseiCounter", level.Session.GetCounter("koseiCounter") - 1);
-                        if (!decreaseCounter && level.Session.GetCounter("koseiCounter") < maxCounterCap)
-                            level.Session.IncrementCounter("koseiCounter");
-                        Audio.Play(appearSound, player.Position); //Audio is here because it doesn't actually spawn anything
-                        if (spawnCondition == SpawnCondition.OnInterval)
-                            spawnCooldown = spawnTime;
-                        break;
-                    case EntityType.CrumblePlatform:
-                        spawnedEntity = new CrumblePlatform(spawnPosition, blockWidth);
-                        break;
-                    case EntityType.DashBlock:
-                        spawnedEntity = new NoFreezeDashBlock(spawnPosition, blockTileType, blockWidth, blockHeight, false, true, dashBlockCanDash, new EntityID("koseiHelper_spawnedDashBlock", entityID));
-                        entityID++;
-                        break;
-                    case EntityType.DashSwitch:
-                        DashSwitch.Sides side = DashSwitch.Sides.Up;
-                        switch (dashSwitchSide)
-                        {
-                            case "Left":
-                                side = DashSwitch.Sides.Left;
-                                break;
-                            case "Right":
-                                side = DashSwitch.Sides.Right;
-                                break;
-                            case "Down":
-                                side = DashSwitch.Sides.Down;
-                                break;
-                            case "MovingDirection":
-                                if (player.Speed != Vector2.Zero)
-                                {
-                                    side = Math.Abs(player.Speed.X) > Math.Abs(player.Speed.Y)
-                                        ? (player.Speed.X > 0f ? DashSwitch.Sides.Left : DashSwitch.Sides.Right)
-                                        : (player.Speed.Y > 0f ? DashSwitch.Sides.Up : DashSwitch.Sides.Down);
-                                }
-                                else
-                                {
-                                    side = player.onGround
-                                        ? DashSwitch.Sides.Up
-                                        : (player.Facing == Facings.Left ? DashSwitch.Sides.Left : DashSwitch.Sides.Right);
-                                }
-                                break;
-                        }
-                        spawnedEntity = new DashSwitch(spawnPosition + new Vector2(0f, -8f), side, dashSwitchPersistent, dashSwitchAllGates,
-                            new EntityID("koseiHelper_spawnedDashSwitch", entityID), dashSwitchSprite);
-                        break;
-                    case EntityType.Decal:
-                        if (player.Facing == Facings.Left && !dontFlip)
-                            spawnedEntity = new Decal(decalTexture, spawnPosition, new Vector2(-1, 1), decalDepth);
-                        else
-                            spawnedEntity = new Decal(decalTexture, spawnPosition, new Vector2(1, 1), decalDepth);
-                        break;
-                    case EntityType.DreamBlock:
-                        spawnedEntity = new DreamBlock(spawnPosition, blockWidth, blockHeight, null, false, true);
-                        break;
-                    case EntityType.DustBunny:
-                        if (noNode)
-                            spawnedEntity = new DustStaticSpinner(spawnPosition, attachToSolid, false);
-                        else
-                        {
-                            EntityData dustSpinnerData = new()
+                if (fullyCustomWheel)
+                {
+                    entityPath = currentCustomWheelValue;
+                    spawnedEntity = GetEntityFromPath(spawnPosition, nodePosition, level.Session.LevelData);
+                }
+                else
+                {
+                    switch (entityToSpawn)
+                    { // If relativeToPlayerFacing is true, a positive X value will spawn in front of the player, and a negative X value will spawn behind the player
+                        case EntityType.BadelineBoost:
+                            spawnedEntity = new BadelineBoost(new Vector2[] { spawnPosition, new Vector2(player.Position.X + offsetX, level.Bounds.Top - 200) }, false, false, false, false, false);
+                            break;
+                        case EntityType.Blade:
+                            EntityData bladeData = new()
                             {
                                 Position = spawnPosition,
                                 Level = level.Session.LevelData,
@@ -906,186 +868,289 @@ public class SpawnController : Entity
                             };
                             for (int i = 0; i < dictionaryKeys.Count; i++) // ??? why did i do this
                             {
-                                dustSpinnerData.Values[dictionaryKeys[i]] = dictionaryValues.ElementAtOrDefault(i);
+                                bladeData.Values[dictionaryKeys[i]] = dictionaryValues.ElementAtOrDefault(i);
                             }
-                            dustSpinnerData.Values["startCenter"] = dustSpinnerData.Bool("startCenter", bladeStartCenter).ToString();
-                            dustSpinnerData.Values["clockwise"] = dustSpinnerData.Bool("clockwise", bladeClockwise).ToString();
-                            dustSpinnerData.Values["speed"] = dustSpinnerData.Enum("speed", bladeSpeed).ToString();
+                            bladeData.Values["startCenter"] = bladeData.Bool("startCenter", bladeStartCenter).ToString();
+                            bladeData.Values["clockwise"] = bladeData.Bool("clockwise", bladeClockwise).ToString();
+                            bladeData.Values["speed"] = bladeData.Enum("speed", bladeSpeed).ToString();
                             if (circularMovement)
-                                spawnedEntity = new DustRotateSpinner(dustSpinnerData, Vector2.Zero);
-                            else
-                                spawnedEntity = new DustTrackSpinner(dustSpinnerData, Vector2.Zero);
-                        }
-                        break;
-                    case EntityType.ExitBlock:
-                        spawnedEntity = new ExitBlock(spawnPosition, blockWidth, blockHeight, blockTileType);
-                        break;
-                    case EntityType.FallingBlock:
-                        spawnedEntity = new FallingBlock(spawnPosition, blockTileType, blockWidth, blockHeight, fallingBlockBadeline, false, fallingBlockClimbFall);
-                        break;
-                    case EntityType.Feather:
-                        spawnedEntity = new FlyFeather(spawnPosition, featherShielded, featherSingleUse);
-                        break;
-                    case EntityType.Flag:
-                        if (flagCount > flagCycleAt) // If the counter has exceeded the max (e.g. 4>3)
-                        {
-                            level.Session.SetFlag("koseiFlag" + flagCycleAt, false);
-                            if (!flagStop)
-                                flagCount = 1; // The counter is reset
-                            else
-                                RemoveSelf();
-                        }
-                        level.Session.SetFlag("koseiFlag" + flagCount, true);
-                        level.Session.SetFlag("koseiFlag" + (flagCount - 1), false);
-                        Audio.Play(appearSound, player.Position); //Audio is here because it doesn't actually spawn anything
-                        if (spawnCondition == SpawnCondition.OnInterval)
-                            spawnCooldown = spawnTime;
-                        flagCount++;
-                        break;
-                    case EntityType.FloatySpaceBlock:
-                        spawnedEntity = new FloatySpaceBlock(spawnPosition, blockWidth, blockHeight, blockTileType, true);
-                        break;
-                    case EntityType.GlassBlock:
-                        spawnedEntity = new GlassBlock(spawnPosition, blockWidth, blockHeight, blockSinks);
-                        break;
-                    case EntityType.Heart:
-                        spawnedEntity = new FakeHeart(spawnPosition);
-                        break;
-                    case EntityType.Iceball:
-                        spawnedEntity = new FireBall(new Vector2[] { spawnPosition, nodePosition }, 1, 1, 0, iceballSpeed, iceballAlwaysIce);
-                        break;
-                    case EntityType.IceBlock: //It also works for lava actually
-                        if (coreMode == CoreModes.Hot)
-                            spawnedEntity = new FireBarrier(spawnPosition, blockWidth, blockHeight);
-                        else if (coreMode == CoreModes.Cold)
-                            spawnedEntity = new IceBlock(spawnPosition, blockWidth, blockHeight);
-                        if (spawnedEntity is IceBlock iceBlock)
-                        {
-                            Solid solid = iceBlock.solid;
-                            if (solid != null)
-                                spawnedSolids.Add(solid);
-                        }
-                        else if (spawnedEntity is FireBarrier fireBarrier)
-                        {
-                            Solid solid = fireBarrier.solid;
-                            if (solid != null)
-                                spawnedSolids.Add(solid);
-                        }
-                        break;
-                    case EntityType.Jellyfish:
-                        spawnedEntity = new Glider(spawnPosition, jellyfishBubble, false);
-                        break;
-                    case EntityType.JumpthruPlatform:
-                        spawnedEntity = new JumpthruPlatform(spawnPosition, blockWidth, jumpthruTexture, soundIndex);
-                        break;
-                    case EntityType.Kevin:
-                        spawnedEntity = new CrushBlock(spawnPosition, blockWidth, blockHeight, crushBlockAxis, crushBlockChillout);
-                        break;
-                    case EntityType.MoveBlock:
-                        spawnedEntity = new MoveBlock(spawnPosition, blockWidth, blockHeight, moveBlockDirection, moveBlockCanSteer, moveBlockFast);
-                        break;
-                    case EntityType.Oshiro:
-                        spawnedEntity = new AngryOshiro(spawnPosition, false);
-                        break;
-                    case EntityType.Player:
-                        spawnedEntity = new Player(spawnPosition, playerSpriteMode);
-                        break;
-                    case EntityType.Refill:
-                        spawnedEntity = new Refill(spawnPosition, refillTwoDashes, refillOneUse);
-                        break;
-                    case EntityType.StarJumpBlock:
-                        spawnedEntity = new StarJumpBlock(spawnPosition, blockWidth, blockHeight, blockSinks);
-                        break;
-
-                    case EntityType.Puffer:
-                        spawnedEntity = new Puffer(spawnPosition, player.Facing == Facings.Right);
-                        break;
-                    case EntityType.Seeker:
-                        spawnedEntity = new Seeker(spawnPosition, new Vector2[] { spawnPosition });
-                        break;
-                    case EntityType.SpawnPoint:
-                        if (!onlyOnSafeGround || (onlyOnSafeGround && player.OnSafeGround && !player.SwimUnderwaterCheck() && !player._IsOverWater()))
-                        {
-                            AreaData.Areas[level.Session.Area.ID].Mode[(int)level.Session.Area.Mode].MapData.Get(level.Session.Level).Spawns.Add(spawnPosition);
-                            level.Session.HitCheckpoint = true;
-                            level.Session.RespawnPoint = spawnPosition;
-                            //copypaste because we didn't actually spawn an entity
-                            spawnCooldown = spawnTime;
-                            hasSpawnedFromSpeed = true;
-                            Audio.Play(appearSound, spawnPosition);
-                            if (poofWhenDisappearing)
                             {
-                                if (!(entityToSpawn == EntityType.Booster && boosterSingleUse))
-                                    level.ParticlesFG.Emit(poofParticle, 5, spawnPosition, Vector2.One * 4f, 0 - (float)Math.PI / 2f);
+                                if (bladeStar)
+                                    spawnedEntity = new StarRotateSpinner(bladeData, Vector2.Zero);
+                                else
+                                    spawnedEntity = new BladeRotateSpinner(bladeData, Vector2.Zero);
                             }
-                        }
-                        break;
-                    case EntityType.Spinner:
-                        spawnedEntity = new CrystalStaticSpinner(spawnPosition, attachToSolid, crystalColor);
-                        break;
-                    case EntityType.Spring:
-                        switch (orientation)
-                        {
-                            case "WallLeft":
-                                spawnedEntity = new Spring(spawnPosition, Spring.Orientations.WallLeft, playerCanUse);
-                                break;
-                            case "WallRight":
-                                spawnedEntity = new Spring(spawnPosition, Spring.Orientations.WallRight, playerCanUse);
-                                break;
-                            case "PlayerFacing":
-                                if (player.Facing == Facings.Left)
-                                    spawnedEntity = new Spring(spawnPosition, Spring.Orientations.WallRight, playerCanUse);
+                            else
+                            {
+                                if (bladeStar)
+                                    spawnedEntity = new StarTrackSpinner(bladeData, Vector2.Zero);
                                 else
-                                    spawnedEntity = new Spring(spawnPosition, Spring.Orientations.WallLeft, playerCanUse);
-                                break;
-                            case "PlayerFacingOpposite":
-                                if (player.Facing == Facings.Left)
-                                    spawnedEntity = new Spring(spawnPosition, Spring.Orientations.WallLeft, playerCanUse);
+                                    spawnedEntity = new BladeTrackSpinner(bladeData, Vector2.Zero);
+                            }
+                            break;
+                        case EntityType.Booster:
+                            spawnedEntity = new BoosterNoOutline(spawnPosition, boosterRed, boosterSingleUse); // I had to make a new class so their outline doesn't stay after they poof
+                            break;
+                        case EntityType.BounceBlock:
+                            spawnedEntity = new BounceBlock(spawnPosition, blockWidth, blockHeight);
+                            break;
+                        case EntityType.Bumper:
+                            spawnedEntity = new Bumper(spawnPosition, null);
+                            break;
+                        case EntityType.Cloud:
+                            spawnedEntity = new Cloud(spawnPosition, cloudFragile);
+                            break;
+                        case EntityType.Counter:
+                            if (decreaseCounter && level.Session.GetCounter("koseiCounter") > minCounterCap)
+                                level.Session.SetCounter("koseiCounter", level.Session.GetCounter("koseiCounter") - 1);
+                            if (!decreaseCounter && level.Session.GetCounter("koseiCounter") < maxCounterCap)
+                                level.Session.IncrementCounter("koseiCounter");
+                            Audio.Play(appearSound, player.Position); //Audio is here because it doesn't actually spawn anything
+                            if (spawnCondition == SpawnCondition.OnInterval)
+                                spawnCooldown = spawnTime;
+                            break;
+                        case EntityType.CrumblePlatform:
+                            spawnedEntity = new CrumblePlatform(spawnPosition, blockWidth);
+                            break;
+                        case EntityType.DashBlock:
+                            spawnedEntity = new NoFreezeDashBlock(spawnPosition, blockTileType, blockWidth, blockHeight, false, true, dashBlockCanDash, new EntityID("koseiHelper_spawnedDashBlock", entityID));
+                            entityID++;
+                            break;
+                        case EntityType.DashSwitch:
+                            DashSwitch.Sides side = DashSwitch.Sides.Up;
+                            switch (dashSwitchSide)
+                            {
+                                case "Left":
+                                    side = DashSwitch.Sides.Left;
+                                    break;
+                                case "Right":
+                                    side = DashSwitch.Sides.Right;
+                                    break;
+                                case "Down":
+                                    side = DashSwitch.Sides.Down;
+                                    break;
+                                case "MovingDirection":
+                                    if (player.Speed != Vector2.Zero)
+                                    {
+                                        side = Math.Abs(player.Speed.X) > Math.Abs(player.Speed.Y)
+                                            ? (player.Speed.X > 0f ? DashSwitch.Sides.Left : DashSwitch.Sides.Right)
+                                            : (player.Speed.Y > 0f ? DashSwitch.Sides.Up : DashSwitch.Sides.Down);
+                                    }
+                                    else
+                                    {
+                                        side = player.onGround
+                                            ? DashSwitch.Sides.Up
+                                            : (player.Facing == Facings.Left ? DashSwitch.Sides.Left : DashSwitch.Sides.Right);
+                                    }
+                                    break;
+                            }
+                            spawnedEntity = new DashSwitch(spawnPosition + new Vector2(0f, -8f), side, dashSwitchPersistent, dashSwitchAllGates,
+                                new EntityID("koseiHelper_spawnedDashSwitch", entityID), dashSwitchSprite);
+                            break;
+                        case EntityType.Decal:
+                            if (player.Facing == Facings.Left && !dontFlip)
+                                spawnedEntity = new Decal(decalTexture, spawnPosition, new Vector2(-1, 1), decalDepth);
+                            else
+                                spawnedEntity = new Decal(decalTexture, spawnPosition, new Vector2(1, 1), decalDepth);
+                            break;
+                        case EntityType.DreamBlock:
+                            spawnedEntity = new DreamBlock(spawnPosition, blockWidth, blockHeight, null, false, true);
+                            break;
+                        case EntityType.DustBunny:
+                            if (noNode)
+                                spawnedEntity = new DustStaticSpinner(spawnPosition, attachToSolid, false);
+                            else
+                            {
+                                EntityData dustSpinnerData = new()
+                                {
+                                    Position = spawnPosition,
+                                    Level = level.Session.LevelData,
+                                    Nodes = new Vector2[] { nodePosition },
+                                    Values = new()
+                                };
+                                for (int i = 0; i < dictionaryKeys.Count; i++) // ??? why did i do this
+                                {
+                                    dustSpinnerData.Values[dictionaryKeys[i]] = dictionaryValues.ElementAtOrDefault(i);
+                                }
+                                dustSpinnerData.Values["startCenter"] = dustSpinnerData.Bool("startCenter", bladeStartCenter).ToString();
+                                dustSpinnerData.Values["clockwise"] = dustSpinnerData.Bool("clockwise", bladeClockwise).ToString();
+                                dustSpinnerData.Values["speed"] = dustSpinnerData.Enum("speed", bladeSpeed).ToString();
+                                if (circularMovement)
+                                    spawnedEntity = new DustRotateSpinner(dustSpinnerData, Vector2.Zero);
                                 else
-                                    spawnedEntity = new Spring(spawnPosition, Spring.Orientations.WallRight, playerCanUse);
-                                break;
-                            default: // "Floor"
-                                spawnedEntity = new Spring(spawnPosition, Spring.Orientations.Floor, playerCanUse);
-                                break;
-                        }
-                        break;
-                    case EntityType.Strawberry:
-                        EntityData strawberryData = new()
-                        {
-                            Position = spawnPosition,
-                            Level = level.Session.LevelData,
-                            Values = new()
-                        };
-                        for (int i = 0; i < dictionaryKeys.Count; i++)
-                        {
-                            strawberryData.Values[dictionaryKeys[i]] = dictionaryValues.ElementAtOrDefault(i);
-                        }
-                        strawberryData.Values["winged"] = strawberryData.Bool("Winged", isWinged).ToString();
-                        strawberryData.Values["moon"] = strawberryData.Bool("Moon", isMoon).ToString();
-                        EntityID strawberryID = new EntityID(level.Session.LevelData.Name, entityID++);
-                        spawnedEntity = new Strawberry(strawberryData, Vector2.Zero, strawberryID);
-                        break;
-                    case EntityType.SwapBlock:
-                        spawnedEntity = new SwapBlockNoBg(spawnPosition, blockWidth, blockHeight, nodePosition, swapBlockTheme);
-                        break;
-                    case EntityType.TempleGate: // I'm not sure about this levelID thing but hopefully this works
-                        spawnedEntity = new TempleGate(spawnPosition, blockHeight, templeGateType, templeGateSprite, level.Session.LevelData.Name);
-                        break;
-                    case EntityType.TheoCrystal:
-                        spawnedEntity = new TheoCrystal(spawnPosition);
-                        break;
-                    case EntityType.Water:
-                        spawnedEntity = new Water(spawnPosition, hasTop, hasBottom, blockWidth, blockHeight);
-                        break;
-                    case EntityType.ZipMover:
-                        spawnedEntity = new ZipMover(spawnPosition, blockWidth, blockHeight, nodePosition, zipMoverTheme);
-                        break;
+                                    spawnedEntity = new DustTrackSpinner(dustSpinnerData, Vector2.Zero);
+                            }
+                            break;
+                        case EntityType.ExitBlock:
+                            spawnedEntity = new ExitBlock(spawnPosition, blockWidth, blockHeight, blockTileType);
+                            break;
+                        case EntityType.FallingBlock:
+                            spawnedEntity = new FallingBlock(spawnPosition, blockTileType, blockWidth, blockHeight, fallingBlockBadeline, false, fallingBlockClimbFall);
+                            break;
+                        case EntityType.Feather:
+                            spawnedEntity = new FlyFeather(spawnPosition, featherShielded, featherSingleUse);
+                            break;
+                        case EntityType.Flag:
+                            if (flagCount > flagCycleAt) // If the counter has exceeded the max (e.g. 4>3)
+                            {
+                                level.Session.SetFlag("koseiFlag" + flagCycleAt, false);
+                                if (!flagStop)
+                                    flagCount = 1; // The counter is reset
+                                else
+                                    RemoveSelf();
+                            }
+                            level.Session.SetFlag("koseiFlag" + flagCount, true);
+                            level.Session.SetFlag("koseiFlag" + (flagCount - 1), false);
+                            Audio.Play(appearSound, player.Position); //Audio is here because it doesn't actually spawn anything
+                            if (spawnCondition == SpawnCondition.OnInterval)
+                                spawnCooldown = spawnTime;
+                            flagCount++;
+                            break;
+                        case EntityType.FloatySpaceBlock:
+                            spawnedEntity = new FloatySpaceBlock(spawnPosition, blockWidth, blockHeight, blockTileType, true);
+                            break;
+                        case EntityType.GlassBlock:
+                            spawnedEntity = new GlassBlock(spawnPosition, blockWidth, blockHeight, blockSinks);
+                            break;
+                        case EntityType.Heart:
+                            spawnedEntity = new FakeHeart(spawnPosition);
+                            break;
+                        case EntityType.Iceball:
+                            spawnedEntity = new FireBall(new Vector2[] { spawnPosition, nodePosition }, 1, 1, 0, iceballSpeed, iceballAlwaysIce);
+                            break;
+                        case EntityType.IceBlock: //It also works for lava actually
+                            if (coreMode == CoreModes.Hot)
+                                spawnedEntity = new FireBarrier(spawnPosition, blockWidth, blockHeight);
+                            else if (coreMode == CoreModes.Cold)
+                                spawnedEntity = new IceBlock(spawnPosition, blockWidth, blockHeight);
+                            if (spawnedEntity is IceBlock iceBlock)
+                            {
+                                Solid solid = iceBlock.solid;
+                                if (solid != null)
+                                    spawnedSolids.Add(solid);
+                            }
+                            else if (spawnedEntity is FireBarrier fireBarrier)
+                            {
+                                Solid solid = fireBarrier.solid;
+                                if (solid != null)
+                                    spawnedSolids.Add(solid);
+                            }
+                            break;
+                        case EntityType.Jellyfish:
+                            spawnedEntity = new Glider(spawnPosition, jellyfishBubble, false);
+                            break;
+                        case EntityType.JumpthruPlatform:
+                            spawnedEntity = new JumpthruPlatform(spawnPosition, blockWidth, jumpthruTexture, soundIndex);
+                            break;
+                        case EntityType.Kevin:
+                            spawnedEntity = new CrushBlock(spawnPosition, blockWidth, blockHeight, crushBlockAxis, crushBlockChillout);
+                            break;
+                        case EntityType.MoveBlock:
+                            spawnedEntity = new MoveBlock(spawnPosition, blockWidth, blockHeight, moveBlockDirection, moveBlockCanSteer, moveBlockFast);
+                            break;
+                        case EntityType.Oshiro:
+                            spawnedEntity = new AngryOshiro(spawnPosition, false);
+                            break;
+                        case EntityType.Player:
+                            spawnedEntity = new Player(spawnPosition, playerSpriteMode);
+                            break;
+                        case EntityType.Refill:
+                            spawnedEntity = new Refill(spawnPosition, refillTwoDashes, refillOneUse);
+                            break;
+                        case EntityType.StarJumpBlock:
+                            spawnedEntity = new StarJumpBlock(spawnPosition, blockWidth, blockHeight, blockSinks);
+                            break;
 
-                    case EntityType.CustomEntity:
-                        spawnedEntity = GetEntityFromPath(spawnPosition, nodePosition, level.Session.LevelData);
-                        break;
-                    default:
-                        break;
+                        case EntityType.Puffer:
+                            spawnedEntity = new Puffer(spawnPosition, player.Facing == Facings.Right);
+                            break;
+                        case EntityType.Seeker:
+                            spawnedEntity = new Seeker(spawnPosition, new Vector2[] { spawnPosition });
+                            break;
+                        case EntityType.SpawnPoint:
+                            if (!onlyOnSafeGround || (onlyOnSafeGround && player.OnSafeGround && !player.SwimUnderwaterCheck() && !player._IsOverWater()))
+                            {
+                                AreaData.Areas[level.Session.Area.ID].Mode[(int)level.Session.Area.Mode].MapData.Get(level.Session.Level).Spawns.Add(spawnPosition);
+                                level.Session.HitCheckpoint = true;
+                                level.Session.RespawnPoint = spawnPosition;
+                                //copypaste because we didn't actually spawn an entity
+                                spawnCooldown = spawnTime;
+                                hasSpawnedFromSpeed = true;
+                                Audio.Play(appearSound, spawnPosition);
+                                if (poofWhenDisappearing)
+                                {
+                                    if (!(entityToSpawn == EntityType.Booster && boosterSingleUse))
+                                        level.ParticlesFG.Emit(poofParticle, 5, spawnPosition, Vector2.One * 4f, 0 - (float)Math.PI / 2f);
+                                }
+                            }
+                            break;
+                        case EntityType.Spinner:
+                            spawnedEntity = new CrystalStaticSpinner(spawnPosition, attachToSolid, crystalColor);
+                            break;
+                        case EntityType.Spring:
+                            switch (orientation)
+                            {
+                                case "WallLeft":
+                                    spawnedEntity = new Spring(spawnPosition, Spring.Orientations.WallLeft, playerCanUse);
+                                    break;
+                                case "WallRight":
+                                    spawnedEntity = new Spring(spawnPosition, Spring.Orientations.WallRight, playerCanUse);
+                                    break;
+                                case "PlayerFacing":
+                                    if (player.Facing == Facings.Left)
+                                        spawnedEntity = new Spring(spawnPosition, Spring.Orientations.WallRight, playerCanUse);
+                                    else
+                                        spawnedEntity = new Spring(spawnPosition, Spring.Orientations.WallLeft, playerCanUse);
+                                    break;
+                                case "PlayerFacingOpposite":
+                                    if (player.Facing == Facings.Left)
+                                        spawnedEntity = new Spring(spawnPosition, Spring.Orientations.WallLeft, playerCanUse);
+                                    else
+                                        spawnedEntity = new Spring(spawnPosition, Spring.Orientations.WallRight, playerCanUse);
+                                    break;
+                                default: // "Floor"
+                                    spawnedEntity = new Spring(spawnPosition, Spring.Orientations.Floor, playerCanUse);
+                                    break;
+                            }
+                            break;
+                        case EntityType.Strawberry:
+                            EntityData strawberryData = new()
+                            {
+                                Position = spawnPosition,
+                                Level = level.Session.LevelData,
+                                Values = new()
+                            };
+                            for (int i = 0; i < dictionaryKeys.Count; i++)
+                            {
+                                strawberryData.Values[dictionaryKeys[i]] = dictionaryValues.ElementAtOrDefault(i);
+                            }
+                            strawberryData.Values["winged"] = strawberryData.Bool("Winged", isWinged).ToString();
+                            strawberryData.Values["moon"] = strawberryData.Bool("Moon", isMoon).ToString();
+                            EntityID strawberryID = new EntityID(level.Session.LevelData.Name, entityID++);
+                            spawnedEntity = new Strawberry(strawberryData, Vector2.Zero, strawberryID);
+                            break;
+                        case EntityType.SwapBlock:
+                            spawnedEntity = new SwapBlockNoBg(spawnPosition, blockWidth, blockHeight, nodePosition, swapBlockTheme);
+                            break;
+                        case EntityType.TempleGate: // I'm not sure about this levelID thing but hopefully this works
+                            spawnedEntity = new TempleGate(spawnPosition, blockHeight, templeGateType, templeGateSprite, level.Session.LevelData.Name);
+                            break;
+                        case EntityType.TheoCrystal:
+                            spawnedEntity = new TheoCrystal(spawnPosition);
+                            break;
+                        case EntityType.Water:
+                            spawnedEntity = new Water(spawnPosition, hasTop, hasBottom, blockWidth, blockHeight);
+                            break;
+                        case EntityType.ZipMover:
+                            spawnedEntity = new ZipMover(spawnPosition, blockWidth, blockHeight, nodePosition, zipMoverTheme);
+                            break;
+
+                        case EntityType.CustomEntity:
+                            spawnedEntity = GetEntityFromPath(spawnPosition, nodePosition, level.Session.LevelData);
+                            break;
+                        default:
+                            break;
+                    }
                 }
                 if (spawnedEntity != null && player != null && canSpawnThisFrame)
                 { // If the entity has been spawned successfully:
@@ -1115,8 +1180,8 @@ public class SpawnController : Entity
         //Mouse functionality
         if (canDragAround && player != null)
         {
-            float mouseX = MInput.Mouse.Position.X * (320f / 1920f);
-            float mouseY = MInput.Mouse.Position.Y * (180f / 1080f);
+            float mouseX = MInput.Mouse.Position.X * (level.Camera.Viewport.Width / 1920f);
+            float mouseY = MInput.Mouse.Position.Y * (level.Camera.Viewport.Height / 1080f);
             Vector2 mousePosition = new Vector2(level.Camera.Position.X + mouseX, level.Camera.Position.Y + mouseY);
 
             if (isDragging && draggedEntity != null)
@@ -1163,7 +1228,17 @@ public class SpawnController : Entity
                 {
                     lastWheel = wheel;
                     int dir = Math.Sign(movedWheel);
-                    wheelIndex = (wheelIndex + dir + WheelCycle.Length) % WheelCycle.Length;
+                    int wheelLength = fullyCustomWheel ? CustomWheelCycle.Length : WheelCycle.Length;
+
+                    if (wheelLength > 0)
+                    {
+                        wheelIndex = (wheelIndex + dir + wheelLength) % wheelLength;
+
+                        if (fullyCustomWheel)
+                            entityPath = currentCustomWheelValue;
+                        else
+                            entityToSpawn = currentWheelValue;
+                    }
                     entityToSpawn = currentWheelValue;
                 }
             }
@@ -1484,43 +1559,100 @@ public class SpawnController : Entity
             Level level = SceneAs<Level>();
             if (level != null && player != null)
             {
-                if (entityToSpawn == EntityType.CustomEntity)
+                if (fullyCustomWheel)
                 {
-                    if (string.IsNullOrEmpty(entityPath))
+                    string currentPath = currentCustomWheelValue;
+
+                    if (string.IsNullOrEmpty(currentPath))
                     {
                         if (!wheelIndicatorImage)
-                            ActiveFont.Draw("[Custom entity not specified]", new Vector2(wheelIndicatorX, wheelIndicatorY), Vector2.Zero, new Vector2(0.5f, 0.5f), Color.White, 1f, Color.Black, 1f, Color.Black);
+                        {
+                            ActiveFont.Draw("[Custom entity not specified]",
+                                new Vector2(wheelIndicatorX, wheelIndicatorY),
+                                Vector2.Zero, new Vector2(0.5f, 0.5f),
+                                Color.White, 1f, Color.Black, 1f, Color.Black);
+                        }
                         else
                         {
                             Image image = new Image(GFX.Game["objects/KoseiHelper/Controllers/SpawnController/Empty"]);
-                            image.Position = new Vector2(level.Camera.Position.X + wheelIndicatorX, level.Camera.Position.Y + wheelIndicatorY);
+                            image.Position = new Vector2(6 * wheelIndicatorX, 6 * wheelIndicatorY);
+                            image.Scale *= 3;
                             image.Render();
                         }
                     }
                     else
                     {
                         if (!wheelIndicatorImage)
-                            ActiveFont.Draw(entityPath.ToString(), new Vector2(wheelIndicatorX, wheelIndicatorY), Vector2.Zero, new Vector2(0.5f, 0.5f), Color.White, 1f, Color.Black, 1f, Color.Black);
+                        {
+                            ActiveFont.Draw(currentPath,
+                                new Vector2(wheelIndicatorX, wheelIndicatorY),
+                                Vector2.Zero, new Vector2(0.5f, 0.5f),
+                                Color.White, 1f, Color.Black, 1f, Color.Black);
+                        }
                         else
                         {
-                            Image image = new Image(GFX.Game["objects/KoseiHelper/Controllers/SpawnController/Broken"]);
-                            image.Position = new Vector2(level.Camera.Position.X + wheelIndicatorX, level.Camera.Position.Y + wheelIndicatorY);
-                            image.Render();
+                            Image image;
+                            if (CustomWheelIndicatorPaths != null &&
+                                wheelIndex < CustomWheelIndicatorPaths.Length)
+                            {
+                                string imagePath = CustomWheelIndicatorPaths[wheelIndex];
+
+                                if (!string.IsNullOrEmpty(imagePath) && GFX.Game.Has(imagePath))
+                                    image = new Image(GFX.Game[imagePath]);
+                                else
+                                    image = new Image(GFX.Game["objects/KoseiHelper/Controllers/SpawnController/Broken"]);
+                            }
+                            else
+                                image = new Image(GFX.Game["objects/KoseiHelper/Controllers/SpawnController/Broken"]);
+                            RenderWheel(image);
                         }
                     }
                 }
                 else
                 {
-                    if (!wheelIndicatorImage)
-                        ActiveFont.Draw(entityToSpawn.ToString(), new Vector2(wheelIndicatorX, wheelIndicatorY), Vector2.Zero, new Vector2(0.5f, 0.5f), Color.White, 1f, Color.Black, 1f, Color.Black);
+                    if (entityToSpawn == EntityType.CustomEntity)
+                    {
+                        if (string.IsNullOrEmpty(entityPath))
+                        {
+                            if (!wheelIndicatorImage)
+                                ActiveFont.Draw("[Custom entity not specified]", new Vector2(wheelIndicatorX, wheelIndicatorY), Vector2.Zero, new Vector2(0.5f, 0.5f), Color.White, 1f, Color.Black, 1f, Color.Black);
+                            else
+                            {
+                                Image image = new Image(GFX.Game["objects/KoseiHelper/Controllers/SpawnController/Empty"]);
+                                RenderWheel(image);
+                            }
+                        }
+                        else
+                        {
+                            if (!wheelIndicatorImage)
+                                ActiveFont.Draw(entityPath.ToString(), new Vector2(wheelIndicatorX, wheelIndicatorY), Vector2.Zero, new Vector2(0.5f, 0.5f), Color.White, 1f, Color.Black, 1f, Color.Black);
+                            else
+                            {
+                                Image image = new Image(GFX.Game["objects/KoseiHelper/Controllers/SpawnController/Broken"]);
+                                RenderWheel(image);
+                            }
+                        }
+                    }
                     else
                     {
-                        Image image = PreRenderWheelIndicator(level);
-                        image.Render();
+                        if (!wheelIndicatorImage)
+                            ActiveFont.Draw(entityToSpawn.ToString(), new Vector2(wheelIndicatorX, wheelIndicatorY), Vector2.Zero, new Vector2(0.5f, 0.5f), Color.White, 1f, Color.Black, 1f, Color.Black);
+                        else
+                        {
+                            Image image = PreRenderWheelIndicator(level);
+                            RenderWheel(image);
+                        }
                     }
                 }
             }
         }
+    }
+
+    public void RenderWheel(Image image)
+    {
+        image.Position = new Vector2(6 * wheelIndicatorX, 6 * wheelIndicatorY);
+        image.Scale *= 3;
+        image.Render();
     }
 
     public Image PreRenderWheelIndicator(Level level)
@@ -1664,7 +1796,6 @@ public class SpawnController : Entity
                 image = new Image(GFX.Game["objects/KoseiHelper/Controllers/SpawnController/" + entityToSpawn.ToString()]);
                 break;
         }
-        image.Position = new Vector2(level.Camera.Position.X + wheelIndicatorX, level.Camera.Position.Y + wheelIndicatorY);
         return image;
     }
 
