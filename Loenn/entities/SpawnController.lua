@@ -623,7 +623,8 @@ function SpawnController.ignoredFields(entity)
 			doNotIgnore("wheelIndicatorX")
 			doNotIgnore("wheelIndicatorY")
 			doNotIgnore("wheelIndicatorImage")
-			doNotIgnore("fullyCustomWheel")
+			-- still wip!
+			--doNotIgnore("fullyCustomWheel")
 		end
 		if entity.fullyCustomWheel == true and entity.wheelIndicatorImage == true then
 			doNotIgnore("wheelIndicatorPaths")
