@@ -6,6 +6,7 @@ using Monocle;
 using MonoMod.Utils;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 
 namespace Celeste.Mod.KoseiHelper.Entities;
 
@@ -265,6 +266,7 @@ public class DebugMapController : Entity
         }
     }
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     private static void RenderKeys(On.Celeste.Editor.MapEditor.orig_RenderKeys orig, MapEditor self)
     {
         if (renderKeys && !disallowDebugMap && !KoseiHelperModule.Session.DebugMapModified)

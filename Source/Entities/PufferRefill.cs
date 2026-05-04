@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Monocle;
 using System;
 using System.Collections;
+using System.Runtime.CompilerServices;
 
 namespace Celeste.Mod.KoseiHelper.Entities;
 
@@ -258,6 +259,8 @@ public class PufferRefill : Entity
         KoseiHelperModule.Session.HasPufferDash = false;
         orig(self);
     }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
     private static void PufferDashEnd(On.Celeste.Player.orig_DashEnd orig, Player self)
     {
         orig(self);

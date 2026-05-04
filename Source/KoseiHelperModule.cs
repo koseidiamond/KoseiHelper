@@ -74,6 +74,8 @@ public class KoseiHelperModule : EverestModule
         Mod.DecalRegistry.AddPropertyHandler<KillDecalRegistryHandler>();
         Mod.DecalRegistry.AddPropertyHandler<MovingDecalRegistryHandler>();
         Mod.DecalRegistry.AddPropertyHandler<TrailDecalRegistryHandler>();
+        Mod.DecalRegistry.AddPropertyHandler<MultiFlagSwapDecalRegistryHandler>();
+        Mod.DecalRegistry.AddPropertyHandler<CounterSwapDecalRegistryHandler>();
     }
 
     public override void Unload()

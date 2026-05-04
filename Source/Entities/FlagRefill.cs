@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Monocle;
 using System;
 using System.Collections;
+using System.Runtime.CompilerServices;
 
 namespace Celeste.Mod.KoseiHelper.Entities;
 
@@ -256,6 +257,7 @@ public class FlagRefill : Entity
         KoseiHelperModule.Session.HasFlagDash = false;
         orig(self);
     }
+    [MethodImpl(MethodImplOptions.NoInlining)]
     private static void FlagDashEnd(On.Celeste.Player.orig_DashEnd orig, Player self)
     {
         orig(self);

@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Monocle;
 using System;
 using System.Collections;
+using System.Runtime.CompilerServices;
 
 namespace Celeste.Mod.KoseiHelper.Entities;
 
@@ -270,6 +271,8 @@ public class CounterRefill : Entity
         KoseiHelperModule.Session.HasCounterDash = false;
         orig(self);
     }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
     private static void CounterDashEnd(On.Celeste.Player.orig_DashEnd orig, Player self)
     {
         orig(self);

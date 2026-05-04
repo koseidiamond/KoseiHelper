@@ -42,10 +42,10 @@ Brick.fieldInformation = {
 	}
 }
 
-function Brick.selection(room, entity)
-    local width, height = 16, 16
-    return utils.rectangle(entity.x - width / 2, entity.y - height / 2, width, height)
-end
+--function Brick.selection(room, entity)
+--    local width, height = 16, 16
+--    return utils.rectangle(entity.x - width / 2, entity.y - height / 2, width, height)
+--end
 
 function Brick.texture(room, entity)
     local type = entity.type
