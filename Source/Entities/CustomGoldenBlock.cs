@@ -36,6 +36,7 @@ public class CustomGoldenBlock : Solid
     };
     private AppearMode appearMode;
     public string customFlag;
+    public bool flagValue;
 
     private bool useTileset = false;
     private char tileType = '3';
@@ -56,6 +57,7 @@ public class CustomGoldenBlock : Solid
         blockTint = KoseiHelperUtils.ParseHexColor(data.Values.TryGetValue("blockTint", out object c1) ? c1.ToString() : null, Color.White);
         iconTint = KoseiHelperUtils.ParseHexColor(data.Values.TryGetValue("iconTint", out object c2) ? c2.ToString() : null, Color.White);
         customFlag = data.Attr("flag", "KoseiHelper_GoldenBlock");
+        flagValue = data.Bool("flagValue", true);
         useTileset = data.Bool("useTileset", false);
         tileType = data.Char("tiletype", '3');
         sinkEaser = data.Attr("sinkEaser", "SineInOut");
@@ -144,7 +146,7 @@ public class CustomGoldenBlock : Solid
                 }
                 break;
             case AppearMode.Flag:
-                if (SceneAs<Level>().Session.GetFlag(customFlag))
+                if (SceneAs<Level>().Session.GetFlag(customFlag) == flagValue)
                     flag = true;
                 break;
             case AppearMode.NonGoldenBerries:

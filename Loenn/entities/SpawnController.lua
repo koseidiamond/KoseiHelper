@@ -757,9 +757,9 @@ function SpawnController.ignoredFields(entity)
 		doNotIgnore("blockTileType")
 	end
 	--Entities with size
-	if entity.entityToSpawn == "DashBlock" or entity.entityToSpawn == "FallingBlock" or entity.entityToSpawn == "IceBlock" or entity.entityToSpawn == "MoveBlock" or entity.entityToSpawn == "StarJumpBlock"
-	or entity.entityToSpawn == "Kevin"	or entity.entityToSpawn == "SwapBlock" or entity.entityToSpawn == "ZipMover" or entity.entityToSpawn == "DreamBlock" or entity.entityToSpawn == "GlassBlock"
-	or entity.entityToSpawn == "FloatySpaceBlock" or entity.entityToSpawn == "Water" or entity.entityToSpawn == "ExitBlock" then
+	if entity.entityToSpawn == "DashBlock" or entity.entityToSpawn == "FallingBlock" or entity.entityToSpawn == "IceBlock" or entity.entityToSpawn == "MoveBlock"
+	or entity.entityToSpawn == "StarJumpBlock" or entity.entityToSpawn == "Kevin" or entity.entityToSpawn == "SwapBlock" or entity.entityToSpawn == "ZipMover" or entity.entityToSpawn == "DreamBlock"
+	or entity.entityToSpawn == "GlassBlock" or entity.entityToSpawn == "FloatySpaceBlock" or entity.entityToSpawn == "Water" or entity.entityToSpawn == "ExitBlock" then
 		doNotIgnore("blockWidth")
 		doNotIgnore("blockHeight")
 	end

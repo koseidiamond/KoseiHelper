@@ -37,7 +37,7 @@ CustomGoldenBlock.placements = {
 			blockTint = "FFFFFF",
 			iconTint = "FFFFFF",
 			flag = "KoseiHelper_GoldenBlock",
-			useTileset = false,
+			flagValue = true,
 			sinkEaser = "SineInOut"
 		}
 	},
@@ -56,6 +56,7 @@ CustomGoldenBlock.placements = {
 			safe = false,
 			blockTint = "FFFFFF",
 			flag = "KoseiHelper_GoldenBlock",
+			flagValue = true,
 			useTileset = true,
 			tiletype = fakeTilesHelper.getPlacementMaterial(),
 			sinkEaser = "SineInOut"
@@ -135,6 +136,7 @@ function CustomGoldenBlock.ignoredFields(entity)
 	"_name",
     "_id",
 	"flag",
+	"flagValue",
 	"useTileset",
 	"iconTint",
 	"surfaceSoundIndex"
@@ -149,6 +151,7 @@ function CustomGoldenBlock.ignoredFields(entity)
     end
 	if entity.appearMode == "Flag" then
 		doNotIgnore("flag")
+		doNotIgnore("flagValue")
 	end
 	if entity.useTileset then
 		doNotIgnore("tiletype")
@@ -184,6 +187,7 @@ CustomGoldenBlock.fieldOrder = {
 	"sinkEaser",
 	"allBerryTypes",
 	"tiletype",
+	"flagValue",
 	"drawOutline",
 	"safe",
 	"occludesLight"
