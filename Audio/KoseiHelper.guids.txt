@@ -1,3 +1,12 @@
+{6ca0e496-373b-4b76-a240-4448b532ab37} event:/KoseiHelper/Guns/shotDefault
+{82443c2a-e9b0-4137-8878-287059188a95} event:/KoseiHelper/Guns/shotMarioFireball
+{9ff6c4a9-0d0e-4d13-bfb6-ef251a58de57} event:/KoseiHelper/Guns/shotMeow
+{6871ac94-6355-40ac-adce-0fadb353786a} event:/KoseiHelper/Guns/shotBoomerang
+{e8c80df8-583b-42ad-b7f7-0dde5275fabb} event:/KoseiHelper/Guns/shotFirework
+{a87b7a52-17b5-4626-90dd-b92c98389273} event:/KoseiHelper/Guns/shotArrow
+{6c9ed9b9-2a78-4800-9d98-d962d4eb6475} event:/KoseiHelper/Crossover/Chest
+{fdd2348e-2f26-4bf8-b2db-dc8940a9d7d7} event:/KoseiHelper/Crossover/Coin
+{471983cd-5a7a-48ab-a603-256608a0dddf} event:/KoseiHelper/Crossover/Ladder
 {9c23a194-d618-40ae-909c-5a07f07706b6} event:/KoseiHelper/goomba
 {6edb5ee9-6ed2-4d95-b7f9-d58746f7b214} event:/KoseiHelper/mary
 {e6d5f625-a856-4852-9ebf-b40dad40107a} event:/KoseiHelper/maryReappear
@@ -10,13 +19,7 @@
 {9219af63-8873-48da-ac55-d41d50b25f0c} event:/KoseiHelper/brickBump
 {04c6f318-6fa0-4583-87be-70528b48a079} event:/KoseiHelper/fallingPlatform
 {600cf596-96ec-43e9-9afb-4d4e1b8cf021} event:/KoseiHelper/laugh_oneho
-{6ca0e496-373b-4b76-a240-4448b532ab37} event:/KoseiHelper/Guns/shotDefault
-{82443c2a-e9b0-4137-8878-287059188a95} event:/KoseiHelper/Guns/shotMarioFireball
-{9ff6c4a9-0d0e-4d13-bfb6-ef251a58de57} event:/KoseiHelper/Guns/shotMeow
-{6871ac94-6355-40ac-adce-0fadb353786a} event:/KoseiHelper/Guns/shotBoomerang
-{e8c80df8-583b-42ad-b7f7-0dde5275fabb} event:/KoseiHelper/Guns/shotFirework
 {20a4b661-d8c4-44a4-98bd-8d842d211b28} event:/KoseiHelper/shatter_dream_block
-{a87b7a52-17b5-4626-90dd-b92c98389273} event:/KoseiHelper/Guns/shotArrow
 {9397a788-fbd7-4b2d-9810-e7e014bbe65e} event:/KoseiHelper/noAmmo
 {eb0747c7-213e-41d6-9d13-df190d2b60ba} event:/KoseiHelper/forcefield_reappear
 {ba8e885e-d7ef-474b-9ea8-20ba14e4943e} bank:/KoseiHelper

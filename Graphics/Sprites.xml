@@ -1,5 +1,76 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Sprites>
+
+	<koseiHelper_player path="characters/ladder/KoseiHelper/" start="idle">
+		<Origin x="16" y="32" />
+
+		<Loop id="ladder_climb" path="player/ladder_climb" delay="0.1" />
+		<Loop id="ladder_cling" path="player/ladder_cling" delay="0.1" />
+		<Loop id="ladder_bg_climb" path="player/ladder_climbBack" delay="0.1" />
+		<Loop id="ladder_bg_cling" path="player/ladder_clingBack" delay="0.1" />
+		<Loop id="ladder_climbBlue" path="player/ladder_climbBlue" delay="0.1" />
+		<Loop id="ladder_clingBlue" path="player/ladder_clingBlue" delay="0.1" />
+		<Loop id="ladder_bg_climbBlue" path="player/ladder_climbBackBlue" delay="0.1" />
+		<Loop id="ladder_bg_clingBlue" path="player/ladder_clingBackBlue" delay="0.1" />
+		<Loop id="ladder_climbPink" path="player/ladder_climbPink" delay="0.1" />
+		<Loop id="ladder_clingPink" path="player/ladder_clingPink" delay="0.1" />
+		<Loop id="ladder_bg_climbPink" path="player/ladder_climbBackPink" delay="0.1" />
+		<Loop id="ladder_bg_clingPink" path="player/ladder_clingBackPink" delay="0.1" />
+	</koseiHelper_player>
+
+	<koseiHelper_player_no_backpack copy="koseiHelper_player" path="characters/ladder/KoseiHelper/">
+		<Loop id="ladder_climb" path="player_no_backpack/ladder_climb" delay="0.1" />
+		<Loop id="ladder_cling" path="player_no_backpack/ladder_cling" delay="0.1" />
+		<Loop id="ladder_bg_climb" path="player_no_backpack/ladder_climbBack" delay="0.1" />
+		<Loop id="ladder_bg_cling" path="player_no_backpack/ladder_clingBack" delay="0.1" />
+		<Loop id="ladder_climbBlue" path="player_no_backpack/ladder_climbBlue" delay="0.1" />
+		<Loop id="ladder_clingBlue" path="player_no_backpack/ladder_clingBlue" delay="0.1" />
+		<Loop id="ladder_bg_climbBlue" path="player_no_backpack/ladder_climbBackBlue" delay="0.1" />
+		<Loop id="ladder_bg_clingBlue" path="player_no_backpack/ladder_clingBackBlue" delay="0.1" />
+		<Loop id="ladder_climbPink" path="player_no_backpack/ladder_climbPink" delay="0.1" />
+		<Loop id="ladder_clingPink" path="player_no_backpack/ladder_clingPink" delay="0.1" />
+		<Loop id="ladder_bg_climbPink" path="player_no_backpack/ladder_climbBackPink" delay="0.1" />
+		<Loop id="ladder_bg_clingPink" path="player_no_backpack/ladder_clingBackPink" delay="0.1" />
+	</koseiHelper_player_no_backpack>
+
+	<koseiHelper_player_badeline copy="koseiHelper_player" path="characters/ladder/KoseiHelper/">
+		<Loop id="ladder_climb" path="player_badeline/ladder_climb" delay="0.1" />
+		<Loop id="ladder_cling" path="player_badeline/ladder_cling" delay="0.1" />
+		<Loop id="ladder_bg_climb" path="player_badeline/ladder_climbBack" delay="0.1" />
+		<Loop id="ladder_bg_cling" path="player_badeline/ladder_clingBack" delay="0.1" />
+		<Loop id="ladder_climbBlue" path="player_badeline/ladder_climbBlue" delay="0.1" />
+		<Loop id="ladder_clingBlue" path="player_badeline/ladder_clingBlue" delay="0.1" />
+		<Loop id="ladder_bg_climbBlue" path="player_badeline/ladder_climbBackBlue" delay="0.1" />
+		<Loop id="ladder_bg_clingBlue" path="player_badeline/ladder_clingBackBlue" delay="0.1" />
+		<Loop id="ladder_climbPink" path="player_badeline/ladder_climbPink" delay="0.1" />
+		<Loop id="ladder_clingPink" path="player_badeline/ladder_clingPink" delay="0.1" />
+		<Loop id="ladder_bg_climbPink" path="player_badeline/ladder_climbBackPink" delay="0.1" />
+		<Loop id="ladder_bg_clingPink" path="player_badeline/ladder_clingBackPink" delay="0.1" />
+	</koseiHelper_player_badeline>
+  
+	<koseiHelper_player_playback copy="koseiHelper_player" path="characters/ladder/KoseiHelper/">
+		<Loop id="ladder_climb" path="player_playback/ladder_climb" delay="0.1" />
+		<Loop id="ladder_cling" path="player_playback/ladder_cling" delay="0.1" />
+		<Loop id="ladder_bg_climb" path="player_playback/ladder_climbBack" delay="0.1" />
+		<Loop id="ladder_bg_cling" path="player_playback/ladder_clingBack" delay="0.1" />
+		<Loop id="ladder_climbBlue" path="player_playback/ladder_climb" delay="0.1" />
+		<Loop id="ladder_clingBlue" path="player_playback/ladder_cling" delay="0.1" />
+		<Loop id="ladder_bg_climbBlue" path="player_playback/ladder_climbBack" delay="0.1" />
+		<Loop id="ladder_bg_clingBlue" path="player_playback/ladder_clingBack" delay="0.1" />
+		<Loop id="ladder_climbPink" path="player_playback/ladder_climb" delay="0.1" />
+		<Loop id="ladder_clingPink" path="player_playback/ladder_cling" delay="0.1" />
+		<Loop id="ladder_bg_climbPink" path="player_playback/ladder_climbBack" delay="0.1" />
+		<Loop id="ladder_bg_clingPink" path="player_playback/ladder_clingBack" delay="0.1" />
+	</koseiHelper_player_playback>
+	
+	<koseiHelper_badeline path="characters/ladder/KoseiHelper/">
+		<Justify x=".5" y="1" />
+		<Loop id="ladder_climb" path="badeline/ladder_climb" delay="0.1" />
+		<Loop id="ladder_cling" path="badeline/ladder_cling" delay="0.1" />
+		<Loop id="ladder_bg_climb" path="badeline/ladder_climb" delay="0.1" />
+		<Loop id="ladder_bg_cling" path="badeline/ladder_cling" delay="0.1" />
+	</koseiHelper_badeline>
+  
     <koseiHelper_goomba path="objects/KoseiHelper/Goomba/" start="idle">
         <Justify x="0.5" y="0.5" />
         <Loop id="idle" path="idle" delay="0.1" frames="00" />

@@ -1,5 +1,46 @@
 #ENTITIES
 
+# CROSSOVER COLLAB
+
+#Chest
+entities.KoseiHelper/Chest.placements.name.Chest=Chest (Crossover)
+entities.KoseiHelper/Chest.placements.attributes.Chest=A chest that rewards a random amount of coins.
+entities.KoseiHelper/Chest.attributes.description.path=The path to your custom texture, relative to Graphics/Atlases/.\nThere should be three images, each with the suffixes "closed", "opening" and "opened".
+entities.KoseiHelper/Chest.attributes.description.flagSet=The flag that the chest will set once it's opened.\nIf this flag is true, the chest can't be opened again.
+entities.KoseiHelper/Chest.attributes.description.flagRequired=The flag that the chest requires in order to be opened.
+entities.KoseiHelper/Chest.attributes.description.flagForExtra=If this flag is active, the amount of coins will be double than normal.
+entities.KoseiHelper/Chest.attributes.description.minCoins=The minimum amount of coins that the chest should give.
+entities.KoseiHelper/Chest.attributes.description.maxCoins=The maximum amount of coins that the chest should give.
+entities.KoseiHelper/Chest.attributes.description.currencyName=The name of your coins/currency.
+entities.KoseiHelper/Chest.attributes.description.openedMessage=The message that will be displayed if the player interacts with the chest again after it has been opened.\nDirect message, not a dialog ID.
+entities.KoseiHelper/Chest.attributes.description.lockedMessage=The message that will be displayed if the player tries to open a locked chest (Flag Required unset).\nDirect message, not a dialog ID.
+entities.KoseiHelper/Chest.attributes.description.counterName=The name of the session counter that keeps track of the coins.
+
+#Ladder
+entities.KoseiHelper/Ladder.placements.name.Ladder=Ladder (Crossover)
+entities.KoseiHelper/Ladder.placements.description.Ladder=Highly customizable entity that can be climbed as a ladder or as a climb field.
+entities.KoseiHelper/Ladder.attributes.description.isInvisible=If the ladder should not render (useful for bgtiles or decals for example).
+entities.KoseiHelper/Ladder.attributes.description.depth=The depth the ladder should use to render.\nIf depth < 0 the player will use ladder_climb and ladder_cling animation ids.\nIf depth >=0 the player will use ladder_bg_climb and ladder_bg_cling animation ids.\n(Don't forget to add them to your Sprites.xml!)
+entities.KoseiHelper/Ladder.attributes.description.climbSpeed=The velocity the player will climb at.
+entities.KoseiHelper/Ladder.attributes.description.canClimbHorizontally=If the player should be able to move horizontally or climb always on the center of the ladder.\nNot intended to be used with very wide ladders or Require Grab mode.
+entities.KoseiHelper/Ladder.attributes.description.drainsStamina=If the ladders should slowly drain stamina (and more quickly while climbing upwards).\nThey will also require 20 stamina to be grabbed, and 25 stamina will be consumed on each ladder climbjump.
+entities.KoseiHelper/Ladder.attributes.description.color=Tint applied to the texture. Leaving it as FFFFFF will apply a slightly darker tint to background ladders by default.\nPossibly works better with grayscale textures!
+entities.KoseiHelper/Ladder.attributes.description.sound=Climbing sound.
+entities.KoseiHelper/Ladder.attributes.description.leaveLaddersToRegrab=If the player should leave the ladders before being able to interact with them a second time.
+entities.KoseiHelper/Ladder.attributes.description.customTexture=The directory of your custom texture, relative to .\nThe textures should be 8x16 and \nLeave empty to use the default texture.
+entities.KoseiHelper/Ladder.attributes.description.horizontalSpeedLimit=The player should be moving at a lower speed than the specified to be able to grab the ladders.
+entities.KoseiHelper/Ladder.attributes.description.coyoteTime=If the ladders should give coyote time after dashing away from them, allowing tech like ladder hypers/supers.
+entities.KoseiHelper/Ladder.attributes.description.requiresGrabButton=If the grab button needs to be held to climb the ladders, allowing tech like fastfalling.\nRecommended to disable for ladders that you can't climb horizontally or interactions with holdables.
+entities.KoseiHelper/Ladder.attributes.description.texture=The directory to the textures the ladders will use, relative to Graphics/Atlases/Gameplay/.\nThere should be three textures there, with the suffixes: "_side", "_middle" and "_thin", for example: \n"objects/ladder" will use the textures "objects/ladder_side", "objects/ladder_middle" and "objects/ladder_thin".
+entities.KoseiHelper/Ladder.attributes.description.isAttached=If the ladder can be attached to other moving entities (like a switch gate).
+entities.KoseiHelper/Ladder.attributes.description.regrabCooldown=Cooldown time constant until the player can regrab the ladders again.\n0.5 will be half the time, 2 double amount of time, and so on.
+entities.KoseiHelper/Ladder.attributes.description.staminaDrainage=Amount of stamina that the ladders will drain if Drains Stamina mode is enabled.\n0.5 will be half the time, 2 double amount of time, and so on.\nLadder climbjumps always consume 25 regardless of this constant.
+entities.KoseiHelper/Ladder.attributes.description.advancedMode=This will allow extra options to appear (save, close and open again).
+entities.KoseiHelper/Ladder.attributes.description.dummyMode=This will put the player in StDummy instead of StLadder.\nAllows jank, like booster retention or "stability" when colliding with bumpers/puffers.
+entities.KoseiHelper/Ladder.attributes.description.verticalOffset=The vertical offset of the custom texture.
+entities.KoseiHelper/Ladder.attributes.description.decelerationValues= The deceleration when you enter ladders (not compatible with Dummy Mode).It works as some kind of "ladder friction". \nThis value is exponential!
+
+
 # Pregnant Flutterbird
 entities.KoseiHelper/SpecialFlutterbird.placements.name.PregnantFlutterbird="Special" Flutterbird
 entities.KoseiHelper/SpecialFlutterbird.placements.name.SpecialFlutterbird=Pregnant Flutterbird
