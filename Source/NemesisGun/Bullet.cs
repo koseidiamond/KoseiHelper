@@ -5,8 +5,10 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using Celeste.Mod.Entities;
 using Celeste.Mod.KoseiHelper.Entities;
+using Celeste.Mod.FemtoHelper.Entities;
 using Microsoft.Xna.Framework;
 using Monocle;
+using MonoMod.Utils;
 
 namespace Celeste.Mod.KoseiHelper.NemesisGun
 {
@@ -57,6 +59,8 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
 
             Tracker.AddTypeToTracker(typeof(BadelineBoost));
             Tracker.AddTypeToTracker(typeof(FlingBird));
+            if (KoseiHelperModule.Instance.femtoHelperLoaded)
+                AddToTracker_FemtoHelper();
             Tracker.Refresh();
         }
 
@@ -285,7 +289,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
         [MethodImpl(MethodImplOptions.NoInlining)]
         private void CollisionCheck_DoonvNPC()
         {
-            if (owner.Scene.CollideFirst<DoonvHelper.Entities.CustomNPC>(Hitbox) is DoonvHelper.Entities.CustomNPC customNPC && !dead)
+            if (owner.Scene.CollideFirst<DoonvHelper.Entities.CustomNPC>(Hitbox) is DoonvHelper.Entities.CustomNPC customNPC && !dead && KoseiHelperModule.Settings.GunInteractions.HarmEnemies)
             {
                 // enemies take 1 damage, other npcs just die
                 if (customNPC is not DoonvHelper.Entities.CustomEnemy)
@@ -295,6 +299,56 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 if (KoseiHelperModule.Settings.GunSettings.RecoilOnlyOnInteraction && SceneAs<Level>().Session.GetFlag("KoseiHelper_playerIsShooting") && owner is Player pRecoil)
                     RecoilOnInteraction(pRecoil, customNPC);
                 DestroyBullet();
+                return;
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        private void AddToTracker_FemtoHelper()
+        {
+            Tracker.AddTypeToTracker(typeof(FemtoHelper.CustomFakeHeart));
+        }
+
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        private void CollisionCheck_FemtoHeart()
+        {
+            var femtoFakeHeart = owner.Scene.CollideFirst<FemtoHelper.CustomFakeHeart>(Hitbox);
+            if (femtoFakeHeart != null && !dead)
+            {
+                var data = DynamicData.For(femtoFakeHeart);
+                int heartBehavior = data.Get<int>("heartBehavior");
+
+                if (KoseiHelperModule.Settings.GunInteractions.CanKillPlayer && heartBehavior == 1)
+                {
+                    Player player = owner.SceneAs<Level>().Tracker.GetEntity<Player>();
+                    player?.Die(Vector2.Normalize(player.Center - Center));
+                }
+                float bounceDelay = data.Get<float>("bounceSfxDelay");
+                if (bounceDelay <= 0f && heartBehavior != 3)
+                {
+                    Audio.Play(data.Get<bool>("fakeSounds") ? "event:/new_content/game/10_farewell/fakeheart_bounce" : "event:/game/general/crystalheart_bounce", femtoFakeHeart.Position);
+                    data.Set("bounceDelay", 0.1f);
+                }
+
+                if (owner is Player playerFakeHeart && KoseiHelperModule.Settings.GunInteractions.Collectables && (heartBehavior == 0 || heartBehavior == 1))
+                    data.Invoke("Collect", playerFakeHeart, velocity.Angle());
+
+                if (KoseiHelperModule.Settings.GunInteractions.CanBounce && heartBehavior != 3)
+                {
+                    velocity = (Center - femtoFakeHeart.Center).SafeNormalize();
+                    velocity.X *= 1.5f;
+                }
+                string customFlag = data.Get<string>("customFlag");
+                if (!string.IsNullOrEmpty(customFlag))
+                    (owner.Scene as Level).Session.SetFlag(customFlag, data.Get<bool>("flagSet"));
+                data.Get<Wiggler>("moveWiggler")?.Start();
+                femtoFakeHeart.ScaleWiggler.Start();
+                data.Set("moveWiggleDir", (femtoFakeHeart.Center - Center).SafeNormalize(Vector2.UnitY));
+                Input.Rumble(RumbleStrength.Medium, RumbleLength.Medium);
+                if (KoseiHelperModule.Settings.GunSettings.RecoilOnlyOnInteraction && SceneAs<Level>().Session.GetFlag("KoseiHelper_playerIsShooting") && owner is Player pRecoil)
+                    RecoilOnInteraction(pRecoil, femtoFakeHeart);
+                if (heartBehavior == 0 || heartBehavior == 1)
+                    DestroyBullet();
                 return;
             }
         }
@@ -565,6 +619,10 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
             if (KoseiHelperModule.Instance.doonvHelperLoaded)
             {
                 CollisionCheck_DoonvNPC();
+            }
+            if (KoseiHelperModule.Instance.femtoHelperLoaded)
+            {
+                CollisionCheck_FemtoHeart();
             }
             if (owner.Scene.CollideFirst<BadelineBoost>(Hitbox) is BadelineBoost badelineBoost && !dead && owner is Player playerBadelineBoost &&
                 KoseiHelperModule.Settings.GunInteractions.CollectBadelineOrbs)

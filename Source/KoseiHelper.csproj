@@ -36,6 +36,7 @@
     <Reference Include="ExtendedVariantMode" HintPath="$(CelestePrefix)\Mods\Cache\ExtendedVariantMode.ExtendedVariantMode.dll" />
     <Reference Include="FrostHelper" HintPath="$(CelestePrefix)\Mods\Cache\FrostHelper.FrostTempleHelper.dll" />
     <Reference Include="DoonvHelper" HintPath="$(CelestePrefix)\Mods\Cache\DoonvHelper.DoonvHelper.dll" />
+	  <Reference Include="FemtoHelper" HintPath="$(CelestePrefix)\Mods\Cache\FemtoHelper.FemtoHelper.dll" />
     <Reference Include="LuaCutscenes" HintPath="$(CelestePrefix)\Mods\Cache\LuaCutscenes.LuaCutscenes.dll" />
     <Reference Include="MaxHelpingHand" HintPath="$(CelestePrefix)\Mods\Cache\MaxHelpingHand.MaxHelpingHand.dll" />
   </ItemGroup>

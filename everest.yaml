@@ -1,5 +1,5 @@
 - Name: KoseiHelper
-  Version: 1.19.2.0
+  Version: 1.19.2.1
   DLL: bin/KoseiHelper.dll
   Dependencies:
     - Name: Everest
@@ -13,3 +13,5 @@
       Version: 1.66.0
     - Name: DoonvHelper
       Version: 1.0.0
+    - Name: FemtoHelper
+      Version: 1.15.12
