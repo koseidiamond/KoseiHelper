@@ -90,6 +90,7 @@ function FlagCounterSliderTranslator.ignoredFields(entity)
 		doNotIgnore("valueWhileTrue")
 		doNotIgnore("valueWhileFalse")
 		doNotIgnore("multiplierFactor")
+		doNotIgnore("flagSuffix")
 	end
 	if entity.mode == "FlagToSlider" then
 		doNotIgnore("flagName")
@@ -97,6 +98,7 @@ function FlagCounterSliderTranslator.ignoredFields(entity)
 		doNotIgnore("valueWhileTrue")
 		doNotIgnore("valueWhileFalse")
 		doNotIgnore("multiplierFactor")
+		doNotIgnore("flagSuffix")
 	end
 	if entity.mode == "CounterToFlag" then
 		doNotIgnore("counterName")

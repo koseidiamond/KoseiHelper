@@ -2,6 +2,7 @@ using Celeste.Mod.Entities;
 using Microsoft.Xna.Framework;
 using Monocle;
 using System;
+using System.Linq;
 
 namespace Celeste.Mod.KoseiHelper.Entities;
 
@@ -56,151 +57,70 @@ public class FlagCounterSliderTranslator : Entity
         switch (fcs)
         {
             case FCS.FlagToCounter:
-                if (session.GetFlag(flagName))
-                {
-                    if (!reverseValue)
-                        session.SetCounter(counterName, (int)(valueWhileTrue * multiplierFactor));
-                    else
-                        session.SetCounter(counterName, (int)(-valueWhileTrue * multiplierFactor));
-
-                }
-                if (!session.GetFlag(flagName))
-                {
-                    if (!reverseValue)
-                        session.SetCounter(counterName, (int)(valueWhileFalse * multiplierFactor));
-                    else
-                        session.SetCounter(counterName, (int)(-valueWhileFalse * multiplierFactor));
-                }
+                if (flagSuffix)
+                    session.SetCounter(counterName,(int)((reverseValue ? -1 : 1) * session.Flags.Count(f => f.StartsWith(flagName)) * multiplierFactor));
+                else
+                    session.SetCounter(counterName, (int)((reverseValue ? -1 : 1) * (session.GetFlag(flagName) ? valueWhileTrue : valueWhileFalse) * multiplierFactor));
                 break;
             case FCS.FlagToSlider:
-                if (session.GetFlag(flagName))
-                {
-                    if (!reverseValue)
-                        session.SetSlider(sliderName, valueWhileTrue * multiplierFactor);
-                    else
-                        session.SetSlider(sliderName, -valueWhileTrue * multiplierFactor);
-                }
-                if (!session.GetFlag(flagName))
-                {
-                    if (!reverseValue)
-                        session.SetSlider(sliderName, valueWhileFalse * multiplierFactor);
-                    else
-                        session.SetSlider(sliderName, -valueWhileFalse * multiplierFactor);
-                }
+                if (flagSuffix)
+                    session.SetSlider(sliderName, (reverseValue ? -1 : 1) * session.Flags.Count(f=> f.StartsWith(flagName)) * multiplierFactor);
+                else
+                    session.SetSlider(sliderName, (reverseValue ? -1 : 1) * (session.GetFlag(flagName) ? valueWhileTrue : valueWhileFalse) * multiplierFactor);
                 break;
             case FCS.CounterToFlag:
                 if (flagSuffix)
-                {
                     session.SetFlag(flagName + session.GetCounter(counterName).ToString(), true);
-                    break;
-                }
-                if (absoluteValue)
-                {
-                    if (Math.Abs(session.GetCounter(counterName)) <= minValueForFalse)
-                    {
-                        if (!reverseValue)
-                            session.SetFlag(flagName, false);
-                        else
-                            session.SetFlag(flagName, true);
-                    }
-                    if (Math.Abs(session.GetCounter(counterName)) >= maxValueForTrue)
-                    {
-                        if (!reverseValue)
-                            session.SetFlag(flagName, true);
-                        else
-                            session.SetFlag(flagName, false);
-                    }
-                }
                 else
                 {
-                    if (session.GetCounter(counterName) <= minValueForFalse)
+                    if (absoluteValue)
                     {
-                        if (!reverseValue)
-                            session.SetFlag(flagName, false);
-                        else
-                            session.SetFlag(flagName, true);
+                        if (Math.Abs(session.GetCounter(counterName)) <= minValueForFalse)
+                            session.SetFlag(flagName, reverseValue);
+                        if (Math.Abs(session.GetCounter(counterName)) >= maxValueForTrue)
+                            session.SetFlag(flagName, !reverseValue);
                     }
-                    if (session.GetCounter(counterName) >= maxValueForTrue)
+                    else
                     {
-                        if (!reverseValue)
-                            session.SetFlag(flagName, true);
-                        else
-                            session.SetFlag(flagName, false);
+                        if (session.GetCounter(counterName) <= minValueForFalse)
+                            session.SetFlag(flagName, reverseValue);
+                        if (session.GetCounter(counterName) >= maxValueForTrue)
+                            session.SetFlag(flagName, !reverseValue);
                     }
                 }
                 break;
             case FCS.SliderToFlag:
                 if (flagSuffix)
-                {
                     session.SetFlag(flagName + session.GetSlider(sliderName).ToString(), true);
-                    break;
-                }
-                if (absoluteValue)
-                {
-                    if (Math.Abs(session.GetSlider(sliderName)) <= minValueForFalse)
-                    {
-                        if (!reverseValue)
-                            session.SetFlag(flagName, false);
-                        else
-                            session.SetFlag(flagName, true);
-                    }
-                    if (Math.Abs(session.GetSlider(sliderName)) >= maxValueForTrue)
-                    {
-                        if (!reverseValue)
-                            session.SetFlag(flagName, true);
-                        else
-                            session.SetFlag(flagName, false);
-                    }
-                }
                 else
                 {
-                    if (session.GetSlider(sliderName) <= minValueForFalse)
+                    if (absoluteValue)
                     {
-                        if (!reverseValue)
-                            session.SetFlag(flagName, false);
-                        else
-                            session.SetFlag(flagName, true);
+                        if (Math.Abs(session.GetSlider(sliderName)) <= minValueForFalse)
+                            session.SetFlag(flagName, reverseValue);
+                        if (Math.Abs(session.GetSlider(sliderName)) >= maxValueForTrue)
+                            session.SetFlag(flagName, !reverseValue);
                     }
-                    if (session.GetSlider(sliderName) >= maxValueForTrue)
+                    else
                     {
-                        if (!reverseValue)
-                            session.SetFlag(flagName, true);
-                        else
-                            session.SetFlag(flagName, false);
+                        if (session.GetSlider(sliderName) <= minValueForFalse)
+                            session.SetFlag(flagName, reverseValue);
+                        if (session.GetSlider(sliderName) >= maxValueForTrue)
+                            session.SetFlag(flagName, !reverseValue);
                     }
                 }
                 break;
             case FCS.SliderToCounter:
                 if (absoluteValue)
-                {
-                    if (!reverseValue)
-                        session.SetCounter(counterName, (int)(Math.Abs(session.GetSlider(sliderName)) * multiplierFactor));
-                    else
-                        session.SetCounter(counterName, (int)(-Math.Abs(session.GetSlider(sliderName)) * multiplierFactor));
-                }
+                    session.SetCounter(counterName, (int)((reverseValue ? -1 : 1) * Math.Abs(session.GetSlider(sliderName)) * multiplierFactor));
                 else
-                {
-                    if (!reverseValue)
-                        session.SetCounter(counterName, (int)(session.GetSlider(sliderName) * multiplierFactor));
-                    else
-                        session.SetCounter(counterName, (int)(-session.GetSlider(sliderName) * multiplierFactor));
-                }
+                    session.SetCounter(counterName, (int)((reverseValue ? -1 : 1) * session.GetSlider(sliderName) * multiplierFactor));
                 break;
             default: // CounterToSlider
                 if (absoluteValue)
-                {
-                    if (!reverseValue)
-                        session.SetSlider(sliderName, Math.Abs(session.GetCounter(counterName)) * multiplierFactor);
-                    else
-                        session.SetSlider(sliderName, -Math.Abs(session.GetCounter(counterName)) * multiplierFactor);
-                }
+                    session.SetSlider(sliderName, (reverseValue ? -1 : 1) * Math.Abs(session.GetCounter(counterName)) * multiplierFactor);
                 else
-                {
-                    if (!reverseValue)
-                        session.SetSlider(sliderName, session.GetCounter(counterName) * multiplierFactor);
-                    else
-                        session.SetSlider(sliderName, -session.GetCounter(counterName) * multiplierFactor);
-                }
+                    session.SetSlider(sliderName, (reverseValue ? -1 : 1) * session.GetCounter(counterName) * multiplierFactor);
                 break;
         }
     }
