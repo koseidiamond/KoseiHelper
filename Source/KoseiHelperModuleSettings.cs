@@ -21,12 +21,16 @@ public class KoseiHelperModuleSettings : EverestModuleSettings
     [SettingName("SpawnButton")]
     public ButtonBinding SpawnButton { get; set; }
 
+    [DefaultButtonBinding(Buttons.LeftStick, Keys.U)]
+    [SettingName("FluteButton")]
+    public ButtonBinding FluteButton { get; set; }
+
     [DefaultButtonBinding(Buttons.RightShoulder, Keys.K)]
     [SettingName("SwapCharacter")]
     public ButtonBinding SwapCharacter { get; set; }
 
     [DefaultButtonBinding(Buttons.RightStick, Keys.F)]
-    [SettingName("Nemesis Shot")]
+    [SettingName("Nemesis Gun Shot")]
     public ButtonBinding NemesisShot { get; set; }
 
     [SettingSubMenu]

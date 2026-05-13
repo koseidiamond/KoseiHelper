@@ -42,6 +42,15 @@ entities.KoseiHelper/Ladder.attributes.description.verticalOffset=The vertical o
 entities.KoseiHelper/Ladder.attributes.description.decelerationValues= The deceleration when you enter ladders (not compatible with Dummy Mode).It works as some kind of "ladder friction". \nThis value is exponential!
 entities.KoseiHelper/Ladder.attributes.description.singleUse=Whether the ladders should break after being used once.
 
+#Flute Controller
+entities.KoseiHelper/FluteController.placements.name.FluteController=Flute Controller (Crossover)
+entities.KoseiHelper/FluteController.placements.description.FluteController=The dream state changes when the Flute button is pressed.
+entities.KoseiHelper/FluteController.attributes.description.swapMusicLayers=Whether the controller should swap the first and second music layers.
+entities.KoseiHelper/FluteController.attributes.description.flagName=The flag that will be toggled each time the player plays the flute.\nThis flag usually corresponds with the Inventory DreamDash.
+entities.KoseiHelper/FluteController.attributes.description.notePath=The path to your note images, relative to Atlases/Gameplay.\nYou need four images, ending with the suffixes A, B, C and D.
+entities.KoseiHelper/FluteController.attributes.description.sound=The sound that the flute should play.\nThe default one is fmodded with a Multi Instrument for extra variations.
+
+
 # Pregnant Flutterbird
 entities.KoseiHelper/SpecialFlutterbird.placements.name.PregnantFlutterbird="Special" Flutterbird
 entities.KoseiHelper/SpecialFlutterbird.placements.name.SpecialFlutterbird=Pregnant Flutterbird

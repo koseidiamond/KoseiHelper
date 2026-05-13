@@ -7,6 +7,7 @@
 {6c9ed9b9-2a78-4800-9d98-d962d4eb6475} event:/KoseiHelper/Crossover/Chest
 {fdd2348e-2f26-4bf8-b2db-dc8940a9d7d7} event:/KoseiHelper/Crossover/Coin
 {471983cd-5a7a-48ab-a603-256608a0dddf} event:/KoseiHelper/Crossover/Ladder
+{51cd8e6f-bb1e-4f5f-be58-66449926ef38} event:/KoseiHelper/Crossover/YumeFlute
 {9c23a194-d618-40ae-909c-5a07f07706b6} event:/KoseiHelper/goomba
 {6edb5ee9-6ed2-4d95-b7f9-d58746f7b214} event:/KoseiHelper/mary
 {e6d5f625-a856-4852-9ebf-b40dad40107a} event:/KoseiHelper/maryReappear
