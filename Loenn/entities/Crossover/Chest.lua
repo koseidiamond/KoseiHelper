@@ -1,14 +1,25 @@
 local utils = require("utils")
+local mods = require("mods")
+local depths = mods.requireFromPlugin("libraries.depths")
 
 local chest = {}
 
 chest.name = "KoseiHelper/Chest"
-chest.depth = 8999
-chest.justification = {0.5, 0.5}
+
+function chest.depth(room,entity)
+	return entity.depth
+end
+
+function chest.selection(room, entity)
+    return utils.rectangle(entity.x - 8, entity.y - 8, 16, 16)
+end
+
+chest.justification = {0.5, 0.6}
 chest.placements = {
     {
         name = "Chest",
         data = {
+			depth = 8999,
             path = "objects/KoseiHelper/Crossover/Chest/normalchest_",
 			flagSet = "normalchestopened",
 			flagRequired = "",
@@ -26,7 +37,11 @@ chest.placements = {
 }
 
 chest.fieldInformation = {
-	depth = { fieldType = "integer" },
+	depth = {
+        fieldType = "integer",
+        options = depths.addDepths(depths.getDepths(), {}),
+        editable = true
+    },
 	minCoins = {
 		minimumValue = 0,
 		fieldType = "integer"

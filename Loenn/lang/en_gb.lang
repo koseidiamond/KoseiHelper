@@ -15,6 +15,7 @@ entities.KoseiHelper/Chest.attributes.description.currencyName=The name of your 
 entities.KoseiHelper/Chest.attributes.description.openedMessage=The message that will be displayed if the player interacts with the chest again after it has been opened.\nDirect message, not a dialog ID.
 entities.KoseiHelper/Chest.attributes.description.lockedMessage=The message that will be displayed if the player tries to open a locked chest (Flag Required unset).\nDirect message, not a dialog ID.
 entities.KoseiHelper/Chest.attributes.description.counterName=The name of the session counter that keeps track of the coins.
+entities.KoseiHelper/Chest.attributes.description.depth=The depth the chest should have.
 
 #Ladder
 entities.KoseiHelper/Ladder.placements.name.Ladder=Ladder (Crossover)
@@ -39,7 +40,7 @@ entities.KoseiHelper/Ladder.attributes.description.advancedMode=This will allow 
 entities.KoseiHelper/Ladder.attributes.description.dummyMode=This will put the player in StDummy instead of StLadder.\nAllows jank, like booster retention or "stability" when colliding with bumpers/puffers.
 entities.KoseiHelper/Ladder.attributes.description.verticalOffset=The vertical offset of the custom texture.
 entities.KoseiHelper/Ladder.attributes.description.decelerationValues= The deceleration when you enter ladders (not compatible with Dummy Mode).It works as some kind of "ladder friction". \nThis value is exponential!
-
+entities.KoseiHelper/Ladder.attributes.description.singleUse=Whether the ladders should break after being used once.
 
 # Pregnant Flutterbird
 entities.KoseiHelper/SpecialFlutterbird.placements.name.PregnantFlutterbird="Special" Flutterbird
@@ -492,6 +493,7 @@ entities.KoseiHelper/DefrostableBlock.placements.description.Defrostable Block=A
 entities.KoseiHelper/DefrostableBlock.attributes.description.big=If the defrostable block should be 32x32 or 16x16.
 entities.KoseiHelper/DefrostableBlock.attributes.description.sprite=The sprite id that the block should use.\nYou can copy it from KoseiHelper/Graphics/Sprites.xml but make sure your xml path is unique.
 entities.KoseiHelper/DefrostableBlock.attributes.description.sound=The sound when it melts.
+entities.KoseiHelper/DefrostableBlock.attributes.description.depth=The depth the defrostable block should have.
 
 # Custom Temple Cracked Block
 entities.KoseiHelper/CustomTempleCrackedBlock.placements.name.CustomTempleCrackedBlock= Custom Temple Cracked Block

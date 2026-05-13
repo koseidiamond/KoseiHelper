@@ -1,6 +1,8 @@
 local drawableSprite = require("structs.drawable_sprite")
 local drawing = require("utils.drawing")
 local utils = require("utils")
+local mods = require("mods")
+local depths = mods.requireFromPlugin("libraries.depths")
 
 local ladder = {}
 
@@ -133,8 +135,8 @@ function ladder.ignoredFields(entity)
     return ignored
 end
 
-ladder.depth = function(room, entity)
-    return entity.depth or entity.depth or 1
+function ladder.depth(room,entity)
+	return entity.depth
 end
 
 
@@ -164,6 +166,11 @@ end
 ladder.fieldInformation = {
     color = {
         fieldType = "color"
+    },
+	depth = {
+        fieldType = "integer",
+        options = depths.addDepths(depths.getDepths(), {}),
+        editable = true
     }
 }
 

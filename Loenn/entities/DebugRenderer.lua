@@ -15,14 +15,6 @@ end
 DebugRenderer.nodeLineRenderType = "line"
 DebugRenderer.nodeLimits = {0,1}
 DebugRenderer.nodeVisibility= "always"
-DebugRenderer.fieldInformation = {
-    depth = {
-        fieldType = "integer"
-    },
-    color = {
-        fieldType = "color"
-    }
-}
 
 DebugRenderer.placements = {
     name = "DebugRenderer",

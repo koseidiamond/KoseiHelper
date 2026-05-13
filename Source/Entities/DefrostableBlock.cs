@@ -19,7 +19,7 @@ public class DefrostableBlock : Solid
     public DefrostableBlock(EntityData data, Vector2 offset) : base(data.Position + offset - new Vector2(data.Bool("big") ? 16 : 8),
         data.Bool("big", false) ? 32 : 16, data.Bool("big", false) ? 32 : 16, false)
     {
-        Depth = -10050;
+        Depth = data.Int("depth", -10050);
         sound = data.Attr("sound", "event:/none");
         big = data.Bool("big", false);
         spriteID = data.Attr("sprite", "koseiHelper_DefrostableBlock");
