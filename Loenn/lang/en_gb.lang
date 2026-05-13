@@ -65,6 +65,16 @@ entities.KoseiHelper/ReturnToRoomController.attributes.description.loseFollowers
 entities.KoseiHelper/ReturnToRoomController.attributes.name.loseFollowers=Lose Berries
 entities.KoseiHelper/ReturnToRoomController.attributes.description.menuIndex=The location of the new option in the Pause Menu.\nIt is recommended to leave this with the default option.\n\n0 is between Mod Options and Save and Quit,\n-1 is between Options and Mod Options,\n1 is between Save and Quit and Restart Chapter, etc.
 
+# Water Droplets
+entities.KoseiHelper/WaterDropletSpawner.placements.name.droplet=Water Droplet Spawner (Crossover)
+entities.KoseiHelper/WaterDropletSpawner.placements.description.droplet=Randomly spawns small decorative droplets that fall down until colliding with a solid.
+entities.KoseiHelper/WaterDropletSpawner.attributes.description.dropletColor=The color (and transparency) of the droplet.
+entities.KoseiHelper/WaterDropletSpawner.attributes.description.interval=How much time it needs to pass (+-20%) until a new droplet can appear along the droplet spawner.
+entities.KoseiHelper/WaterDropletSpawner.attributes.description.depth=The depth at which the droplet pixel should be rendered.
+entities.KoseiHelper/WaterDropletSpawner.attributes.description.sound=The sound that the droplet produces when it collides with a solid.\nLeaving this field empty will play "event:/char/madeline/landing" with the corresponding tileset sound.\nYou can write "event:/none" to mute it.\nFalling into water always produces the sound "event:/char/madeline/water_in".
+entities.KoseiHelper/WaterDropletSpawner.attributes.description.maxSpeed=The maximum speed that the droplet will have after it accelerates.\nNegative values will make it fall upwards.
+entities.KoseiHelper/WaterDropletSpawner.attributes.description.ignoreSolids=Whether the droplet should keep moving even if it collides with a solid/water until it goes out of bounds or the lifetime is over.
+entities.KoseiHelper/WaterDropletSpawner.attributes.description.lifetime=The droplet will disappear when the lifetime is over.\nLower this value if you need to improve performance.
 
 #KOSEI HELPER ENTITIES
 

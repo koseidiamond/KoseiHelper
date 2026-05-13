@@ -8,6 +8,7 @@ namespace Celeste.Mod.KoseiHelper.Entities;
 
 [CustomEntity("KoseiHelper/FluteController")]
 [Tracked]
+// Original entity by @AuroraAquir! Thanks for making this!
 public class FluteController : Entity
 {
     public bool swapMusicLayers;
@@ -33,7 +34,6 @@ public class FluteController : Entity
                 img.Position.X = offset.X + s * 8f;
             };
         }
-
     }
 
     public FluteController(EntityData data, Vector2 offset) : base(data.Position + offset)
@@ -99,5 +99,4 @@ public class FluteController : Entity
         note.RemoveSelf();
         yield break;
     }
-
 }
