@@ -8,5 +8,7 @@ KoseiHelper_NemesisSettings_dashBlockBehavior=Dash Block Behavior
 KoseiHelper_ResetGunSettings=Reset All Gun Settings
 KoseiHelper_ResetGunInteractions=Reset All Gun Interactions
 
+KoseiHelper_ReturnToRoom=Return To Room
+
 KoseiHelper_MaryBlock_Bald=Wow, that was a close shave!
 KoseiHelper=Kosei Helper Test Map

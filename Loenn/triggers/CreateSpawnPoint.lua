@@ -1,3 +1,5 @@
+local state = require("loaded_state")
+
 local CreateSpawnPointTrigger = {}
 
 CreateSpawnPointTrigger.name = "KoseiHelper/CreateSpawnPointTrigger"
@@ -15,7 +17,18 @@ CreateSpawnPointTrigger.placements = {
 	}
 }
 
-CreateSpawnPointTrigger.fieldInformation = function (entity) return {
+local function getRoomOptions()
+    local rooms = {}
+    if state.map and state.map.rooms then
+        for _, room in ipairs(state.map.rooms) do
+            table.insert(rooms, room.name)
+        end
+    end
+    table.sort(rooms)
+    return rooms
+end
+
+CreateSpawnPointTrigger.fieldInformation = {
 	triggerMode = {
 		options = {
 		"OnEnter",
@@ -23,8 +36,11 @@ CreateSpawnPointTrigger.fieldInformation = function (entity) return {
 		"OnStay"
 		},
 		editable = false
-	}
+	},
+	room = {
+        options = getRoomOptions,
+        editable = true
+    }
 }
-end
 
 return CreateSpawnPointTrigger

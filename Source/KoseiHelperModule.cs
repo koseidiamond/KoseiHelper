@@ -2,6 +2,7 @@
 using Celeste.Mod.KoseiHelper.Entities;
 using MonoMod.ModInterop;
 using System;
+using Microsoft.Xna.Framework;
 
 namespace Celeste.Mod.KoseiHelper;
 
@@ -23,6 +24,8 @@ public class KoseiHelperModule : EverestModule
     public bool helpingHandLoaded = false;
     public bool doonvHelperLoaded = false;
     public bool femtoHelperLoaded = false;
+
+    public static TextMenu ReturnToGDMenu;
 
     public KoseiHelperModule()
     {
@@ -49,6 +52,7 @@ public class KoseiHelperModule : EverestModule
     {
         typeof(ExtendedVariantImports).ModInterop();
         //TopDownViewController.Load();
+        Everest.Events.Level.OnCreatePauseMenuButtons += OnCreatePauseMenuButtons;
         PufferBall.Load();
         CustomTempleCrackedBlock.Load();
         PufferRefill.Load();
@@ -84,6 +88,7 @@ public class KoseiHelperModule : EverestModule
     public override void Unload()
     {
         //TopDownViewController.Unload();
+        Everest.Events.Level.OnCreatePauseMenuButtons -= OnCreatePauseMenuButtons;
         PufferBall.Unload();
         CustomTempleCrackedBlock.Unload();
         PufferRefill.Unload();
@@ -111,5 +116,50 @@ public class KoseiHelperModule : EverestModule
             return true;
         else
             return orig(self, dir);
+    }
+
+    private void OnCreatePauseMenuButtons(Level level, TextMenu menu, bool minimal)
+    {
+        if (level == null) return;
+
+        ReturnToRoomController controller = level.Tracker.GetEntity<ReturnToRoomController>();
+        Player player = level.Tracker.GetEntity<Player>();
+        if (controller != null && player != null &&
+            (string.IsNullOrEmpty(controller.preventionFlag) || !level.Session.GetFlag(controller.preventionFlag)))
+        {
+            int index = menu.Items.FindIndex(item =>
+                item is TextMenu.Button button && button.Label == Dialog.Clean("menu_pause_savequit")
+            );
+            if (index >= 0)
+            {
+                ReturnToGDMenu = menu;
+                menu.Insert(index + controller.menuIndex, new TextMenu.Button(Dialog.Clean(controller.dialogID))
+                {
+                    OnPressed = delegate {
+                        if (!string.IsNullOrEmpty(controller.flagsToUnset))
+                        {
+                            string[] flags = controller.flagsToUnset.Split(',');
+                            foreach (string flag in flags)
+                            {
+                                if (!string.IsNullOrEmpty(flag))
+                                {
+                                    level.Session.SetFlag(flag, false);
+                                }
+                            }
+                        }
+                        Audio.Play(controller.sound, player.Center);
+                        if (controller.loseFollowers)
+                        {
+                            player.Leader.LoseFollowers();
+                        }
+                        level.OnEndOfFrame += () => {
+                            level.TeleportTo(player, controller.roomName, controller.introType,
+                                new Vector2(controller.closestSpawnX, controller.closestSpawnY));
+                        };
+                        level.Paused = false;
+                    }
+                });
+            }
+        }
     }
 }

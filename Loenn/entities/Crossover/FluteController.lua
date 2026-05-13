@@ -1,7 +1,7 @@
 local FluteController = {}
 
 FluteController.name = "KoseiHelper/FluteController"
-FluteController.texture = "objects/KoseiHelper/Crossover/FluteNotes/NoteController"
+FluteController.texture = "objects/KoseiHelper/Crossover/Controllers/FluteController"
 FluteController.depth= -10500
 FluteController.placements = {
     name = "FluteController",

@@ -4,7 +4,7 @@
 
 #Chest
 entities.KoseiHelper/Chest.placements.name.Chest=Chest (Crossover)
-entities.KoseiHelper/Chest.placements.attributes.Chest=A chest that rewards a random amount of coins.
+entities.KoseiHelper/Chest.placements.description.Chest=A chest that rewards a random amount of coins.
 entities.KoseiHelper/Chest.attributes.description.path=The path to your custom texture, relative to Graphics/Atlases/.\nThere should be three images, each with the suffixes "closed", "opening" and "opened".
 entities.KoseiHelper/Chest.attributes.description.flagSet=The flag that the chest will set once it's opened.\nIf this flag is true, the chest can't be opened again.
 entities.KoseiHelper/Chest.attributes.description.flagRequired=The flag that the chest requires in order to be opened.
@@ -50,6 +50,23 @@ entities.KoseiHelper/FluteController.attributes.description.flagName=The flag th
 entities.KoseiHelper/FluteController.attributes.description.notePath=The path to your note images, relative to Atlases/Gameplay.\nYou need four images, ending with the suffixes A, B, C and D.
 entities.KoseiHelper/FluteController.attributes.description.sound=The sound that the flute should play.\nThe default one is fmodded with a Multi Instrument for extra variations.
 
+# Return To Room Controller
+entities.KoseiHelper/ReturnToRoomController.placements.name.ReturnToRoomController=Return To Room Controller (Crossover)
+entities.KoseiHelper/ReturnToRoomController.placements.description.ReturnToRoomController=Allows teleporting to a different room from the pause menu.\nNon-persistent, place one per room.
+entities.KoseiHelper/ReturnToRoomController.attributes.description.roomName=The name of the destination room.\nDouble check that this has the correct room name!
+entities.KoseiHelper/ReturnToRoomController.attributes.description.flagsToUnset=The flags that should be set to false when teleporting, separated by commas.
+entities.KoseiHelper/ReturnToRoomController.attributes.description.preventionFlag=If this flag is true, it will prevent the menu option from appearing.
+entities.KoseiHelper/ReturnToRoomController.attributes.description.introType=The intro type ("animation") that should play while teleporting.
+entities.KoseiHelper/ReturnToRoomController.attributes.description.closestSpawnX=The spawn closest to this point will be preferred.
+entities.KoseiHelper/ReturnToRoomController.attributes.description.closestSpawnY=The spawn closest to this point will be preferred.
+entities.KoseiHelper/ReturnToRoomController.attributes.description.sound=The sound that should play while teleporting.
+entities.KoseiHelper/ReturnToRoomController.attributes.description.dialogID=The id of the dialog that should be displayed on the pause menu.
+entities.KoseiHelper/ReturnToRoomController.attributes.description.loseFollowers=Whether the player should lose the strawberries when returning to the other room.\nDoes not affect keys.
+entities.KoseiHelper/ReturnToRoomController.attributes.name.loseFollowers=Lose Berries
+entities.KoseiHelper/ReturnToRoomController.attributes.description.menuIndex=The location of the new option in the Pause Menu.\nIt is recommended to leave this with the default option.\n\n0 is between Mod Options and Save and Quit,\n-1 is between Options and Mod Options,\n1 is between Save and Quit and Restart Chapter, etc.
+
+
+#KOSEI HELPER ENTITIES
 
 # Pregnant Flutterbird
 entities.KoseiHelper/SpecialFlutterbird.placements.name.PregnantFlutterbird="Special" Flutterbird
@@ -1084,8 +1101,8 @@ triggers.KoseiHelper/CreateSpawnPointTrigger.placements.name.CreateSpawnPointTri
 triggers.KoseiHelper/CreateSpawnPointTrigger.placements.description.CreateSpawnPointTrigger=Creates one point at the player position.\nYou can add a node if the spawn point should instead be created at a different position.
 triggers.KoseiHelper/CreateSpawnPointTrigger.attributes.description.triggerMode=Whether the trigger should activate when the player enters or exits it, or on every frame (for use with flags).
 triggers.KoseiHelper/CreateSpawnPointTrigger.attributes.description.flag=The trigger will only activate once this flag is true.\nLeave empty for no flag required.
-triggers.KoseiHelper/CreateSpawnPointTrigger.attributes.onlyOnce=Whether the trigger should remove itself once used.
-triggers.KoseiHelper/CreateSpawnPointTrigger.attributes.room=The name of the room where the spawn should be created.\nLeave as empty if it should be the same as the one the player is currently in.\nUseful if the player is trying to enter a filler room while out of bounds.
+triggers.KoseiHelper/CreateSpawnPointTrigger.attributes.description.onlyOnce=Whether the trigger should remove itself once used.
+triggers.KoseiHelper/CreateSpawnPointTrigger.attributes.description.room=The name of the room where the spawn should be created.\nLeave as empty if it should be the same as the one the player is currently in.\nUseful if the player is trying to enter a filler room while out of bounds.
 
 # Replace Entities Trigger
 triggers.KoseiHelper/ReplaceEntitiesTrigger.placements.name.ReplaceEntitiesTrigger=Replace Entities Trigger
