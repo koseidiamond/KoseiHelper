@@ -5,7 +5,6 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using Celeste.Mod.Entities;
 using Celeste.Mod.KoseiHelper.Entities;
-using Celeste.Mod.FemtoHelper.Entities;
 using Microsoft.Xna.Framework;
 using Monocle;
 using MonoMod.Utils;
@@ -348,7 +347,11 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 if (KoseiHelperModule.Settings.GunSettings.RecoilOnlyOnInteraction && SceneAs<Level>().Session.GetFlag("KoseiHelper_playerIsShooting") && owner is Player pRecoil)
                     RecoilOnInteraction(pRecoil, femtoFakeHeart);
                 if (heartBehavior == 0 || heartBehavior == 1)
+                {
+                    if (data.Get<bool>("removeBloomOnShatter"))
+                        data.Get<BloomPoint>("bloom").Visible = false;
                     DestroyBullet();
+                }
                 return;
             }
         }
