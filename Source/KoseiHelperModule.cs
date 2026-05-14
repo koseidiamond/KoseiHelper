@@ -43,9 +43,10 @@ public class KoseiHelperModule : EverestModule
     [ModImportName("ExtendedVariantMode")]
     public static class ExtendedVariantImports
     {
+        // The string is the variant name, the second argument is the value, the third argument is whether the change is temporary / revertible
         public static Action<string, float, bool> TriggerFloatVariant;
-        public static Action<string, float, bool> TriggerBooleanVariant;
-        public static Action<string, float, bool> TriggerIntegerVariant;
+        public static Action<string, bool, bool> TriggerBooleanVariant;
+        public static Action<string, int, bool> TriggerIntegerVariant;
         public static Func<string, object> GetCurrentVariantValue;
     }
 
@@ -62,6 +63,7 @@ public class KoseiHelperModule : EverestModule
         On.Celeste.Player.ClimbBoundsCheck += KoseiHelperModule.ClimbCheck;
         DebugMapController.Load();
         ClimbJumpController.Load();
+        ShadowCloakController.Load();
         SpawnController.Load();
         GameDataController.Load();
         TalkComponentCustomizator.Load();
@@ -98,6 +100,7 @@ public class KoseiHelperModule : EverestModule
         On.Celeste.Player.ClimbBoundsCheck -= KoseiHelperModule.ClimbCheck;
         DebugMapController.Unload();
         ClimbJumpController.Unload();
+        ShadowCloakController.Unload();
         SpawnController.Unload();
         GameDataController.Unload();
         TalkComponentCustomizator.Unload();

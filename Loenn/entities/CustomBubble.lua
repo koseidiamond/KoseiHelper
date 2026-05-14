@@ -66,10 +66,10 @@ CustomBubble.fieldOrder = {
 	"wiggliness",
 	"singleUse",
 	"freezeFrames",
+	"coyote",
 	"refillDash",
 	"refillStamina",
 	"releaseFromBooster",
-	"coyote",
 	"renderBubble",
 	"renderSprite"
 }

@@ -76,6 +76,14 @@ entities.KoseiHelper/WaterDropletSpawner.attributes.description.maxSpeed=The max
 entities.KoseiHelper/WaterDropletSpawner.attributes.description.ignoreSolids=Whether the droplet should keep moving even if it collides with a solid/water until it goes out of bounds or the lifetime is over.
 entities.KoseiHelper/WaterDropletSpawner.attributes.description.lifetime=The droplet will disappear when the lifetime is over.\nLower this value if you need to improve performance.
 
+#Shadow Cloak Controller
+entities.KoseiHelper/ShadowCloakController.placements.name.ShadowCloakController=Shadow Cloak Controller (Crossover)
+entities.KoseiHelper/ShadowCloakController.placements.description.ShadowCloakController=Allows shadow dashing when a flag is set, with a cooldown.
+entities.KoseiHelper/ShadowCloakController.attributes.description.flagRequired=The Shadow Cloak will be available after this flag is set.\nLeave empty for no flag required.
+entities.KoseiHelper/ShadowCloakController.attributes.description.cooldown=How long it should take to recover the shadow dash.
+entities.KoseiHelper/ShadowCloakController.attributes.description.recoverShadowDashSfx=The sound that should play to indicate that the player can shadow dash again.
+entities.KoseiHelper/ShadowCloakController.attributes.description.useShadowDashSfx=The sound that should play when the player uses the shadow cloak.
+
 #KOSEI HELPER ENTITIES
 
 # Custom Bubble
@@ -100,6 +108,7 @@ entities.KoseiHelper/CustomBubble.attributes.description.releaseFromBooster=Whet
 entities.KoseiHelper/CustomBubble.attributes.description.freezeFrames=Whether breaking the bubble should give 3 freeze frames.
 entities.KoseiHelper/CustomBubble.attributes.description.radius=The radius of the bubble.\nNote that the sprite will not be resized, only the outline.
 entities.KoseiHelper/CustomBubble.attributes.description.coyote=Whether the bubble should give the player coyote frames (grace jump timer).
+entities.KoseiHelper/CustomBubble.attributes.name.coyote=Coyote Frames
 
 # Pregnant Flutterbird
 entities.KoseiHelper/SpecialFlutterbird.placements.name.PregnantFlutterbird="Special" Flutterbird
