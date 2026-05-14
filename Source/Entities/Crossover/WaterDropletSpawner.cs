@@ -85,7 +85,8 @@ public class WaterDropletSpawner : Entity
         spawnInterval = data.Float("interval", 1f);
         sound = data.Attr("sound", "");
         depth = data.Int("depth", Depths.FGParticles);
-        dropletColor = data.HexColor("dropletColor", Color.FromNonPremultiplied(28, 79, 161, 242));
+        dropletColor = KoseiHelperUtils.ParseHexColor(data.Values.TryGetValue("dropletColor", out object c1) ? c1.ToString() : null,
+            Color.FromNonPremultiplied(28, 79, 161, 242));
         spawnTimer = Calc.Random.Range(0, spawnInterval);
         maxSpeed = data.Float("maxSpeed", 10f);
         ignoreSolids = data.Bool("ignoreSolids", false);

@@ -115,7 +115,8 @@ public class KoseiHelperUtils
         return defaultValue;
     }
 
-    public static void PointBounce(Vector2 from, Player player, bool refillDash = true, bool refillStamina = true, bool releaseBooster = true)
+    public static void PointBounce(Vector2 from, Player player, bool refillDash = true, bool refillStamina = true, bool releaseBooster = true,
+        bool coyote = false)
     {
         if (player.StateMachine.State == 2)
         {
@@ -143,5 +144,7 @@ public class KoseiHelperUtils
             else
                 player.Speed.X = (float)Math.Sign(player.Speed.X) * 100f;
         }
+        if (coyote) // for funsies
+            player.jumpGraceTimer = 0.15f;
     }
 }

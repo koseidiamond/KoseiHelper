@@ -3,7 +3,6 @@ using Microsoft.Xna.Framework;
 using Monocle;
 using System;
 using System.Collections;
-using System.Runtime.CompilerServices;
 
 namespace Celeste.Mod.KoseiHelper.Entities.Crossover;
 
@@ -38,6 +37,8 @@ public class CustomBubble : Entity
     private BubbleBreakBehavior breakBehavior;
     public bool freezeFrames;
     public bool refillDash, refillStamina, releaseFromBooster;
+    public float radius;
+    public bool coyote;
 
     public CustomBubble(Vector2 position) : base(position)
     {
@@ -45,7 +46,8 @@ public class CustomBubble : Entity
 
     public CustomBubble(EntityData data, Vector2 offset) : this(data.Position + offset)
     {
-        Collider = new Circle(10f);
+        radius = (float) data.Int("radius", 10);
+        Collider = new Circle(radius);
         Add(new PlayerCollider(OnPlayer));
         color = KoseiHelperUtils.ParseHexColor(data.Values.TryGetValue("color", out object c1) ? c1.ToString() : null, Color.White);
         spriteID = data.Attr("spriteID", "flyFeather");
@@ -57,7 +59,7 @@ public class CustomBubble : Entity
         Add(bloom = new BloomPoint(0.5f, 20f));
         Add(light = new VertexLight(Color.White, 1f, 16, 48));
         Add(sine = new SineWave(0.6f, 0f).Randomize());
-        Add(wiggler = Wiggler.Create(1f, 4f, [MethodImpl(MethodImplOptions.NoInlining)] (float v) =>
+        Add(wiggler = Wiggler.Create(1f, 4f, (float v) =>
         {
             sprite.Scale = Vector2.One * (1f + v * 0.2f);
         }));
@@ -80,6 +82,7 @@ public class CustomBubble : Entity
         refillDash = data.Bool("refillDash", true);
         refillStamina = data.Bool("refillStamina", true);
         releaseFromBooster = data.Bool("releaseFromBooster", true);
+        coyote = data.Bool("coyote", false);
         if (!renderSprite)
             sprite.Visible = false;
         FeatherCollect.Color = color;
@@ -107,8 +110,10 @@ public class CustomBubble : Entity
     public override void Render()
     {
         base.Render();
-        if (renderBubble && Visible)
-            Draw.Circle(Position + sprite.Position, (float)(10.0 - (double)shieldRadiusWiggle.Value * 2.0), color, 3);
+        if (!renderBubble || !Visible)
+            return;
+        // auto-adjusts resolution for performance while avoiding BIG bubbles to look bad (done by eye)
+        Draw.Circle(Position + sprite.Position, Math.Max(0f, (float)(radius - shieldRadiusWiggle.Value * 2.0)), color, radius < 18 ? 3 : 6);
     }
 
     private void UpdateY()
@@ -122,7 +127,7 @@ public class CustomBubble : Entity
 
     private void OnPlayer(Player player)
     {
-        KoseiHelperUtils.PointBounce(Center, player, refillDash, refillStamina, releaseFromBooster);
+        KoseiHelperUtils.PointBounce(Center, player, refillDash, refillStamina, releaseFromBooster, coyote);
         if (Input.MoveX.Value == Math.Sign(player.Speed.X))
             player.Speed.X *= speedMult;
         moveWiggle.Start();
@@ -150,7 +155,7 @@ public class CustomBubble : Entity
         Visible = false;
         yield return 0.05f;
         float direction = !(playerSpeed != Vector2.Zero) ? (Position - player.Center).Angle() : playerSpeed.Angle();
-        level.ParticlesFG.Emit(FeatherCollect, 10, Position, Vector2.One * 6f);
+        level.ParticlesFG.Emit(FeatherCollect, 10, Center, Vector2.One * 6f);
         SlashFx.Burst(Position, direction);
         if (singleUse)
             RemoveSelf();
@@ -164,7 +169,7 @@ public class CustomBubble : Entity
             Visible = true;
             wiggler.Start();
             Audio.Play("event:/game/06_reflection/feather_reappear", Position);
-            SceneAs<Level>().ParticlesFG.Emit(FeatherRespawn, 16, Position, Vector2.One * 2f);
+            SceneAs<Level>().ParticlesFG.Emit(FeatherRespawn, 16, Center, Vector2.One * 2f);
         }
     }
 }

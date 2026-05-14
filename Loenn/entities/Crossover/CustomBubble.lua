@@ -20,7 +20,9 @@ CustomBubble.placements = {
 		refillDash = true,
 		refillStamina = true,
 		releaseFromBooster = true,
-		freezeFrames = false
+		freezeFrames = false,
+		radius = 10,
+		coyote = false
 	}
 }
 
@@ -29,7 +31,9 @@ function CustomBubble.ignoredFields(entity)
 	"_name",
     "_id",
 	"singleUse",
-	"respawnCooldown"
+	"respawnCooldown",
+	"freezeFrames",
+	"coyote"
 	}
     local function doNotIgnore(value)
         for i = #ignored, 1, -1 do
@@ -43,6 +47,7 @@ function CustomBubble.ignoredFields(entity)
 		doNotIgnore("singleUse")
 		doNotIgnore("respawnCooldown")
 		doNotIgnore("freezeFrames")
+		doNotIgnore("coyote")
 	end
 	return ignored
 end
@@ -53,6 +58,7 @@ CustomBubble.fieldOrder = {
 	"breakBehavior",
 	"respawnCooldown",
 	"speedMult",
+	"radius",
 	"color",
 	"sound",
 	"spriteID",
@@ -63,6 +69,7 @@ CustomBubble.fieldOrder = {
 	"refillDash",
 	"refillStamina",
 	"releaseFromBooster",
+	"coyote",
 	"renderBubble",
 	"renderSprite"
 }
@@ -70,6 +77,10 @@ CustomBubble.fieldOrder = {
 CustomBubble.fieldInformation = {
 	respawnCooldown = {
 		minimumValue = 0
+	},
+	radius = {
+		fieldType = "integer",
+		minimumValue = 1
 	},
 	color = {
 		fieldType = "color",

@@ -80,13 +80,15 @@ entities.KoseiHelper/WaterDropletSpawner.attributes.description.lifetime=The dro
 entities.KoseiHelper/CustomBubble.placements.name.CustomBubble=Custom Bubble
 entities.KoseiHelper/CustomBubble.placements.description.CustomBubble=Bubble like the one from shielded feathers, but more customizable and respritable.\nFeather not included.
 entities.KoseiHelper/CustomBubble.attributes.description.speedMult=The multiplier when the player is moving away from the bubble (by default 1.2 like ultras).
+entities.KoseiHelper/CustomBubble.attributes.name.speedMult=Speed Multiplier
 entities.KoseiHelper/CustomBubble.attributes.description.wiggliness=How much the bubble should wiggle when bounced on.
 entities.KoseiHelper/CustomBubble.attributes.description.floatiness=How much the bubble should move up and down.\n(This effect is only visual)
 entities.KoseiHelper/CustomBubble.attributes.description.renderSprite=Whether a sprite should be rendered or not.
 entities.KoseiHelper/CustomBubble.attributes.description.sound=The sound the bubble should make when touched.
 entities.KoseiHelper/CustomBubble.attributes.description.renderBubble=Whether a white circle (drawn with code) should render or not.
+entities.KoseiHelper/CustomBubble.attributes.name.renderBubble=Render Outline
 entities.KoseiHelper/CustomBubble.attributes.description.spriteID=The id for your sprite, taken from your Sprites.xml.\nYou can copy flyFeather from vanilla and modify as needed.\nUsed only if Render Sprite is checked.
-entities.KoseiHelper/CustomBubble.attributes.description.breakBehavior=Whether the bubble should never break, break only when the player is dashing, or break when touched.
+entities.KoseiHelper/CustomBubble.attributes.description.breakBehavior=Whether the bubble should never break, break only when the player is dashing, or break when touched.\nMore options will be available if the bubble can break (save and reopen).
 entities.KoseiHelper/CustomBubble.attributes.description.respawnCooldown=How long it should take the bubble to reappear.
 entities.KoseiHelper/CustomBubble.attributes.description.color=The tint of the bubble.
 entities.KoseiHelper/CustomBubble.attributes.description.singleUse=Whether the bubble should reappear after a cooldown.
@@ -94,6 +96,8 @@ entities.KoseiHelper/CustomBubble.attributes.description.refillDash=Whether brea
 entities.KoseiHelper/CustomBubble.attributes.description.refillStamina=Whether breaking the bubble should refund the stamina.
 entities.KoseiHelper/CustomBubble.attributes.description.releaseFromBooster=Whether breaking the bubble should force the player to exit the booster (i.e. red boosters).
 entities.KoseiHelper/CustomBubble.attributes.description.freezeFrames=Whether breaking the bubble should give 3 freeze frames.
+entities.KoseiHelper/CustomBubble.attributes.description.radius=The radius of the bubble.\nNote that the sprite will not be resized, only the outline.
+entities.KoseiHelper/CustomBubble.attributes.description.coyote=Whether the bubble should give the player coyote frames (grace jump timer).
 
 #KOSEI HELPER ENTITIES
 
