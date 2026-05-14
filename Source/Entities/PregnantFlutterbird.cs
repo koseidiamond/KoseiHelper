@@ -228,7 +228,6 @@ public class PregnantFlutterbird : Actor
                 player.Die(player.Center);
             if (bouncy)
             {
-                //player.PointBounce(Center);
                 player.Bounce(CenterY);
             }
             if (coyote)

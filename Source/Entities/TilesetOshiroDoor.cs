@@ -106,7 +106,7 @@ public class TilesetOshiroDoor : Solid
             if (refillDash)
                 player.RefillDash();
             if (collisionMode == TilesetOshiroCollisionMode.SideBounce)
-                player.SideBounce((int)direction.X, player.Position.X, player.Position.Y);
+                KoseiHelperUtils.SideBounce((int)direction.X, player.Position.X, player.Position.Y, player);
             if (collisionMode == TilesetOshiroCollisionMode.PointBounce)
                 KoseiHelperUtils.PointBounce(Center, player, refillDash, true, true);
             if (givesCoyote)

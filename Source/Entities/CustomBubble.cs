@@ -4,7 +4,7 @@ using Monocle;
 using System;
 using System.Collections;
 
-namespace Celeste.Mod.KoseiHelper.Entities.Crossover;
+namespace Celeste.Mod.KoseiHelper.Entities;
 
 [CustomEntity("KoseiHelper/CustomBubble")]
 [Tracked]
@@ -46,7 +46,7 @@ public class CustomBubble : Entity
 
     public CustomBubble(EntityData data, Vector2 offset) : this(data.Position + offset)
     {
-        radius = (float) data.Int("radius", 10);
+        radius =  data.Int("radius", 10);
         Collider = new Circle(radius);
         Add(new PlayerCollider(OnPlayer));
         color = KoseiHelperUtils.ParseHexColor(data.Values.TryGetValue("color", out object c1) ? c1.ToString() : null, Color.White);
@@ -59,7 +59,7 @@ public class CustomBubble : Entity
         Add(bloom = new BloomPoint(0.5f, 20f));
         Add(light = new VertexLight(Color.White, 1f, 16, 48));
         Add(sine = new SineWave(0.6f, 0f).Randomize());
-        Add(wiggler = Wiggler.Create(1f, 4f, (float v) =>
+        Add(wiggler = Wiggler.Create(1f, 4f, (v) =>
         {
             sprite.Scale = Vector2.One * (1f + v * 0.2f);
         }));
@@ -136,7 +136,7 @@ public class CustomBubble : Entity
         Audio.Play(customSound, Position);
         Input.Rumble(RumbleStrength.Medium, RumbleLength.Medium);
         SceneAs<Level>().DirectionalShake((player.Center - Center).SafeNormalize(), 0.15f);
-        if (breakBehavior == BubbleBreakBehavior.AlwaysBreak || (breakBehavior == BubbleBreakBehavior.BreakWithDash && player.DashAttacking))
+        if (breakBehavior == BubbleBreakBehavior.AlwaysBreak || breakBehavior == BubbleBreakBehavior.BreakWithDash && player.DashAttacking)
         {
             if (freezeFrames)
                 Celeste.Freeze(0.05f);

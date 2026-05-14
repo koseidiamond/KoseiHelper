@@ -232,7 +232,7 @@ public class MaryBlock : Entity
             }
             if (maryType == MaryType.Potted || maryType == MaryType.Idle)
             {
-                player.SideBounce(direction, Position.X, Position.Y);
+                KoseiHelperUtils.SideBounce(direction, Position.X, Position.Y, player);
             }
             if (maryType == MaryType.Potted)
             {

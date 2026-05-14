@@ -76,6 +76,8 @@ entities.KoseiHelper/WaterDropletSpawner.attributes.description.maxSpeed=The max
 entities.KoseiHelper/WaterDropletSpawner.attributes.description.ignoreSolids=Whether the droplet should keep moving even if it collides with a solid/water until it goes out of bounds or the lifetime is over.
 entities.KoseiHelper/WaterDropletSpawner.attributes.description.lifetime=The droplet will disappear when the lifetime is over.\nLower this value if you need to improve performance.
 
+#KOSEI HELPER ENTITIES
+
 # Custom Bubble
 entities.KoseiHelper/CustomBubble.placements.name.CustomBubble=Custom Bubble
 entities.KoseiHelper/CustomBubble.placements.description.CustomBubble=Bubble like the one from shielded feathers, but more customizable and respritable.\nFeather not included.
@@ -98,8 +100,6 @@ entities.KoseiHelper/CustomBubble.attributes.description.releaseFromBooster=Whet
 entities.KoseiHelper/CustomBubble.attributes.description.freezeFrames=Whether breaking the bubble should give 3 freeze frames.
 entities.KoseiHelper/CustomBubble.attributes.description.radius=The radius of the bubble.\nNote that the sprite will not be resized, only the outline.
 entities.KoseiHelper/CustomBubble.attributes.description.coyote=Whether the bubble should give the player coyote frames (grace jump timer).
-
-#KOSEI HELPER ENTITIES
 
 # Pregnant Flutterbird
 entities.KoseiHelper/SpecialFlutterbird.placements.name.PregnantFlutterbird="Special" Flutterbird

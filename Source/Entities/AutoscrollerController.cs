@@ -106,7 +106,7 @@ public class AutoscrollerController : Entity
                                 if (player.Position.Y > player.CameraAnchor.Y + 204 + behindOffset)
                                 {
                                     player.Position.Y--;
-                                    player.PointBounce(new Vector2(player.CenterX, player.Bottom));
+                                    KoseiHelperUtils.PointBounce(new Vector2(player.CenterX, player.Bottom), player);
                                     Audio.Play("event:/game/general/assist_screenbottom");
                                 }
                                 break;

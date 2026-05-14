@@ -1,8 +1,8 @@
+using ExtendedVariants.Variants;
 using Microsoft.Xna.Framework;
 using Monocle;
 using System;
 using System.Xml;
-using static Celeste.Mod.DoonvHelper.Entities.CustomNPC;
 
 namespace Celeste.Mod.KoseiHelper;
 
@@ -119,14 +119,10 @@ public class KoseiHelperUtils
         bool coyote = false)
     {
         if (player.StateMachine.State == 2)
-        {
             player.StateMachine.State = 0;
-        }
 
         if (player.StateMachine.State == 4 && player.CurrentBooster != null && releaseBooster)
-        {
             player.CurrentBooster.PlayerReleased();
-        }
         if (refillDash)
             player.RefillDash();
         if (refillStamina)
@@ -146,5 +142,44 @@ public class KoseiHelperUtils
         }
         if (coyote) // for funsies
             player.jumpGraceTimer = 0.15f;
+    }
+
+    public static bool SideBounce(int dir, float fromX, float fromY, Player player, bool refillDash = true, bool refillStamina = true, bool alwaysBoost = false,
+        bool coyote = false, bool oppositeDirection = false, float launchSpeed = 240f)
+    {
+        if (Math.Abs(player.Speed.X) > 240f && Math.Sign(player.Speed.X) == dir && !alwaysBoost)
+            return false;
+
+        Collider collider = player.Collider;
+        player.Collider = player.normalHitbox;
+        player.MoveV(Calc.Clamp(fromY - player.Bottom, -4f, 4f));
+        if (dir > 0 || (dir < 0 && oppositeDirection))
+            player.MoveH(fromX - player.Left);
+        else if (dir < 0 || (dir > 0 && oppositeDirection))
+            player.MoveH(fromX - player.Right);
+
+        if (!player.Inventory.NoRefills && refillDash)
+            player.RefillDash();
+        if (refillStamina)
+            player.RefillStamina();
+        player.StateMachine.State = 0;
+        player.jumpGraceTimer = coyote ? 0.15f : 0f;
+        player.varJumpTimer = 0.2f;
+        player.AutoJump = true;
+        player.AutoJumpTimer = 0f;
+        player.dashAttackTimer = 0f;
+        player.gliderBoostTimer = 0f;
+        player.wallSlideTimer = 1.2f;
+        player.forceMoveX = dir;
+        player.forceMoveXTimer = 0.3f;
+        player.wallBoostTimer = 0f;
+        player.launched = false;
+        player.Speed.X = launchSpeed * (float)dir;
+        player.varJumpSpeed = (player.Speed.Y = -140f);
+        player.level.DirectionalShake(Vector2.UnitX * dir, 0.1f);
+        Input.Rumble(RumbleStrength.Medium, RumbleLength.Medium);
+        player.Sprite.Scale = new Vector2(1.5f, 0.5f);
+        player.Collider = collider;
+        return true;
     }
 }
