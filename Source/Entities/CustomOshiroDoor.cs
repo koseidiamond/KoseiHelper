@@ -186,7 +186,7 @@ public class CustomOshiroDoor : Solid
             if (collisionMode == OshiroCollisionMode.SideBounce)
                 player.SideBounce((int)direction.X, player.Position.X, player.Position.Y);
             if (collisionMode == OshiroCollisionMode.PointBounce)
-                player.PointBounce(Center);
+                KoseiHelperUtils.PointBounce(Center, player, refillDash, true, true);
             if (givesCoyote)
                 player.jumpGraceTimer = 0.15f;
         }

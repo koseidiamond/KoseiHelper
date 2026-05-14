@@ -4,7 +4,7 @@ using Monocle;
 using System;
 using System.Collections;
 
-namespace Celeste.Mod.KoseiHelper.Entities;
+namespace Celeste.Mod.KoseiHelper.Entities.Crossover;
 
 [CustomEntity("KoseiHelper/Ladder")]
 [Tracked]
@@ -68,10 +68,10 @@ public class Ladder : Entity
                 if (!canClimbHorizontally)
                 { // Player will be in the middle of the ladder if they can't move horizontally
                     player.Speed.X = 0;
-                    player.Position.X = this.X + (this.Width / 2);
+                    player.Position.X = X + Width / 2;
                 }
                 if (player.OnGround())
-                    player.MoveV(player.CenterY > this.CenterY ? -1f : 1f);
+                    player.MoveV(player.CenterY > CenterY ? -1f : 1f);
             }
             else
                 outOfLadders();
@@ -128,13 +128,13 @@ public class Ladder : Entity
             if (data.HexColor("color") == Color.White) color = Color.LightGray;
             else color = Calc.HexToColor(data.Attr("color"));
         }
-        this.Add(new PlayerCollider(OnPlayer));
+        Add(new PlayerCollider(OnPlayer));
         if (data.Bool("isAttached"))
         {
             // Creates a staticMover that appears behind the attaching entity
             staticMover = new StaticMover();
-            staticMover.SolidChecker = (Solid s) => CollideCheck(s, Position + Vector2.UnitY);
-            staticMover.JumpThruChecker = (JumpThru jt) => CollideCheck(jt, Position + Vector2.UnitY);
+            staticMover.SolidChecker = (s) => CollideCheck(s, Position + Vector2.UnitY);
+            staticMover.JumpThruChecker = (jt) => CollideCheck(jt, Position + Vector2.UnitY);
             Add(staticMover);
         }
 
@@ -167,9 +167,9 @@ public class Ladder : Entity
                 fallThruJumpThruTimer = FallThruJumpThruTime;
                 player.IgnoreJumpThrus = false;
             }
-            if (player.CollideCheck<Ladder>() && (player.StateMachine.State.Equals(0)))
+            if (player.CollideCheck<Ladder>() && player.StateMachine.State.Equals(0))
             { //Conditions for ladder state: collide with player, player is in StNormal...
-                if ((!requiresGrabButton && Input.MoveY.Value == -1 || (verticalMoveCheck && !player.wasOnGround)) || (requiresGrabButton && ((!player.wasOnGround) || (player.onGround && Input.MoveY.Value == -1) && Input.Grab) && player.Speed.X < horizontalSpeedLimit))
+                if (!requiresGrabButton && Input.MoveY.Value == -1 || verticalMoveCheck && !player.wasOnGround || requiresGrabButton && (!player.wasOnGround || player.onGround && Input.MoveY.Value == -1 && Input.Grab) && player.Speed.X < horizontalSpeedLimit)
                 { // ...press up/down (or grab in grab mode)
                     if (!disableUntilLeave && Math.Abs(player.Speed.X) < horizontalSpeedLimit && timeSinceLadderTech <= 0)
                     { // ...player is not moving too fast horizontally, and the LadderJump cooldown is finished
@@ -213,7 +213,7 @@ public class Ladder : Entity
                         outOfLadders();
                     }
                 }
-                if (!player.CollideCheck<Ladder>() || (player.OnGround() && Input.MoveY != -1)) // stops being in ladder state if the player is not colliding anymore (or if they're on ground and crouch)
+                if (!player.CollideCheck<Ladder>() || player.OnGround() && Input.MoveY != -1) // stops being in ladder state if the player is not colliding anymore (or if they're on ground and crouch)
                     InLadderState = false;
                 if (player.CanDash)
                 {
@@ -284,7 +284,7 @@ public class Ladder : Entity
     private void updateSprite(Player player)
     {
         if (player == null) return;
-        if (Input.MoveY.Value != 0f || (canClimbHorizontally && Input.MoveX.Value != 0f && !player.Ducking))
+        if (Input.MoveY.Value != 0f || canClimbHorizontally && Input.MoveX.Value != 0f && !player.Ducking)
         {
             if (Scene.OnInterval(0.35f)) Audio.Play(sound); //Plays sounds when climbing
 
@@ -384,7 +384,7 @@ public class Ladder : Entity
     {
         if (!invisible)
         {
-            if (this.Width <= 15)
+            if (Width <= 15)
                 for (float i = Position.Y; i <= Position.Y + Collider.Height; i += 16)
                     textureThin.GetSubtexture(0, 0, (int)Collider.Width, (int)Collider.Height + 8)
                         .Draw(new Vector2(Position.X, i) - Vector2.UnitY * verticalOffset, Vector2.Zero, color);
@@ -480,11 +480,11 @@ public class Ladder : Entity
     public void Break(Vector2 from, Vector2 direction, bool playSound = true, bool playDebrisSound = true)
     {
         Audio.Play("event:/game/general/wall_break_wood", Position);
-        for (int i = 0; (float)i < base.Width / 8f; i++)
+        for (int i = 0; i < Width / 8f; i++)
         {
-            for (int j = 0; (float)j < base.Height / 8f; j++)
+            for (int j = 0; j < Height / 8f; j++)
             {
-                base.Scene.Add(Engine.Pooler.Create<Debris>().Init(Position + new Vector2(4 + i * 8, 4 + j * 8), '9', playDebrisSound).BlastFrom(from));
+                Scene.Add(Engine.Pooler.Create<Debris>().Init(Position + new Vector2(4 + i * 8, 4 + j * 8), '9', playDebrisSound).BlastFrom(from));
             }
         }
         Collidable = false;
@@ -495,7 +495,7 @@ public class Ladder : Entity
     public override void DebugRender(Camera camera)
     {
         base.DebugRender(camera);
-        Draw.Point(this.Position, Color.Aqua);
+        Draw.Point(Position, Color.Aqua);
     }
 
     public static void OnPlayerSpriteUpdate(On.Celeste.Player.orig_UpdateSprite orig, Player p)

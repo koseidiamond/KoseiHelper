@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework;
 using Monocle;
 using System.Linq;
 
-namespace Celeste.Mod.KoseiHelper.Entities;
+namespace Celeste.Mod.KoseiHelper.Entities.Crossover;
 
 [CustomEntity("KoseiHelper/WaterDropletSpawner")]
 [Tracked]
@@ -59,7 +59,7 @@ public class WaterDropletSpawner : Entity
             }
 
             // If we exited the bounds of the level or lifetime is over, disappear
-            if ((Scene is Level level && !level.IsInBounds(Position)) || (lifetime -= Engine.DeltaTime) <= 0)
+            if (Scene is Level level && !level.IsInBounds(Position) || (lifetime -= Engine.DeltaTime) <= 0)
                 RemoveSelf();
         }
 

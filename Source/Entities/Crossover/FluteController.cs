@@ -4,7 +4,7 @@ using Monocle;
 using System;
 using System.Collections;
 
-namespace Celeste.Mod.KoseiHelper.Entities;
+namespace Celeste.Mod.KoseiHelper.Entities.Crossover;
 
 [CustomEntity("KoseiHelper/FluteController")]
 [Tracked]
@@ -21,9 +21,9 @@ public class FluteController : Entity
             string suffix = new string[] { "A", "B", "C", "D" }[Calc.Random.Next(0, 4)];
             Depth = -1;
             Image img = new Image(GFX.Game[$"{imagePath}{suffix}"]);
-            base.Add(img);
+            Add(img);
             SineWave sine = new SineWave(0.5f);
-            base.Add(sine);
+            Add(sine);
             Vector2 offset = new Vector2(-Math.Sign(player.Speed.X) * 4f, -12f);
             img.CenterOrigin();
             img.Position = offset;
@@ -50,14 +50,14 @@ public class FluteController : Entity
         base.Update();
         if (KoseiHelperModule.Settings.FluteButton.Pressed)
         {
-            Level level = (Engine.Scene as Level);
+            Level level = Engine.Scene as Level;
             Player player = level.Tracker.GetEntity<Player>();
             if (level != null && player != null)
             {
                 bool isDreaming = level.Session.Inventory.DreamDash = !level.Session.Inventory.DreamDash;
                 level.Session.SetFlag(flagName, isDreaming);
                 Audio.Play(sound, player.Center);
-                base.Add(new Coroutine(DisplayNote(level, player), true));
+                Add(new Coroutine(DisplayNote(level, player), true));
 
                 AudioState audio = level.Session.Audio;
 

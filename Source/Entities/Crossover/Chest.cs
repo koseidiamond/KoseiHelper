@@ -4,7 +4,7 @@ using Monocle;
 using System;
 using System.Collections;
 
-namespace Celeste.Mod.KoseiHelper.Entities;
+namespace Celeste.Mod.KoseiHelper.Entities.Crossover;
 
 [CustomEntity("KoseiHelper/Chest")]
 [Tracked]

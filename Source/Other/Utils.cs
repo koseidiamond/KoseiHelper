@@ -2,6 +2,7 @@ using Microsoft.Xna.Framework;
 using Monocle;
 using System;
 using System.Xml;
+using static Celeste.Mod.DoonvHelper.Entities.CustomNPC;
 
 namespace Celeste.Mod.KoseiHelper;
 
@@ -112,5 +113,35 @@ public class KoseiHelperUtils
         }
         Logger.Log(LogLevel.Warn, "KoseiHelper", $"Ease.Easer {easer} cannot be interpreted, using {defaultValue} instead");
         return defaultValue;
+    }
+
+    public static void PointBounce(Vector2 from, Player player, bool refillDash = true, bool refillStamina = true, bool releaseBooster = true)
+    {
+        if (player.StateMachine.State == 2)
+        {
+            player.StateMachine.State = 0;
+        }
+
+        if (player.StateMachine.State == 4 && player.CurrentBooster != null && releaseBooster)
+        {
+            player.CurrentBooster.PlayerReleased();
+        }
+        if (refillDash)
+            player.RefillDash();
+        if (refillStamina)
+            player.RefillStamina();
+        Vector2 vector = (player.Center - from).SafeNormalize();
+        if (vector.Y > -0.2f && vector.Y <= 0.4f)
+            vector.Y = -0.2f;
+
+        player.Speed = vector * 220f;
+        player.Speed.X *= 1.5f;
+        if (Math.Abs(player.Speed.X) < 100f)
+        {
+            if (player.Speed.X == 0f)
+                player.Speed.X = (float)(0 - player.Facing) * 100f;
+            else
+                player.Speed.X = (float)Math.Sign(player.Speed.X) * 100f;
+        }
     }
 }

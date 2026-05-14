@@ -2,8 +2,10 @@ using Celeste.Mod.Entities;
 using Microsoft.Xna.Framework;
 using Monocle;
 using System;
+using System.Collections;
+using System.Runtime.CompilerServices;
 
-namespace Celeste.Mod.KoseiHelper.Entities;
+namespace Celeste.Mod.KoseiHelper.Entities.Crossover;
 
 [CustomEntity("KoseiHelper/CustomBubble")]
 [Tracked]
@@ -11,7 +13,7 @@ public class CustomBubble : Entity
 {
     private readonly BloomPoint bloom;
     private readonly VertexLight light;
-    private readonly Wiggler moveWiggle;
+    private readonly Wiggler wiggler, moveWiggle;
     private readonly Wiggler shieldRadiusWiggle;
     private readonly SineWave sine;
     private readonly Sprite sprite;
@@ -22,6 +24,21 @@ public class CustomBubble : Entity
     public float wiggliness, floatiness;
     public bool renderSprite, renderBubble;
     public string spriteID;
+    public bool singleUse;
+    public Color color;
+    public float respawnCooldown, respawnTimer;
+    private static ParticleType FeatherCollect = FlyFeather.P_Collect;
+    private static ParticleType FeatherRespawn = FlyFeather.P_Respawn;
+    private enum BubbleBreakBehavior
+    {
+        DontBreak,
+        AlwaysBreak,
+        BreakWithDash
+    };
+    private BubbleBreakBehavior breakBehavior;
+    public bool freezeFrames;
+    public bool refillDash, refillStamina, releaseFromBooster;
+
     public CustomBubble(Vector2 position) : base(position)
     {
     }
@@ -30,14 +47,20 @@ public class CustomBubble : Entity
     {
         Collider = new Circle(10f);
         Add(new PlayerCollider(OnPlayer));
+        color = KoseiHelperUtils.ParseHexColor(data.Values.TryGetValue("color", out object c1) ? c1.ToString() : null, Color.White);
         spriteID = data.Attr("spriteID", "flyFeather");
         Add(sprite = GFX.SpriteBank.Create(spriteID));
+        sprite.Color = color;
         Add(Wiggler.Create(1f, 4f, delegate (float v) {
             sprite.Scale = Vector2.One * (float)(1.0 + (double)v * 0.2);
         }));
         Add(bloom = new BloomPoint(0.5f, 20f));
         Add(light = new VertexLight(Color.White, 1f, 16, 48));
         Add(sine = new SineWave(0.6f, 0f).Randomize());
+        Add(wiggler = Wiggler.Create(1f, 4f, [MethodImpl(MethodImplOptions.NoInlining)] (float v) =>
+        {
+            sprite.Scale = Vector2.One * (1f + v * 0.2f);
+        }));
         shieldRadiusWiggle = Wiggler.Create(0.5f, 4f);
         Add(shieldRadiusWiggle);
         moveWiggle = Wiggler.Create(0.8f, 2f);
@@ -50,13 +73,32 @@ public class CustomBubble : Entity
         floatiness = data.Float("floatiness", 2f);
         renderSprite = data.Bool("renderSprite", false);
         renderBubble = data.Bool("renderBubble", true);
+        breakBehavior = data.Enum("breakBehavior", BubbleBreakBehavior.DontBreak);
+        singleUse = data.Bool("singleUse", false);
+        freezeFrames = data.Bool("freezeFrames", false);
+        respawnCooldown = data.Float("respawnCooldown", 3f);
+        refillDash = data.Bool("refillDash", true);
+        refillStamina = data.Bool("refillStamina", true);
+        releaseFromBooster = data.Bool("releaseFromBooster", true);
         if (!renderSprite)
             sprite.Visible = false;
+        FeatherCollect.Color = color;
+        FeatherCollect.Color2 = color;
+        FeatherRespawn.Color = color;
+        FeatherRespawn.Color2 = color;
     }
 
     public override void Update()
     {
         base.Update();
+        if (respawnTimer > 0f)
+        {
+            respawnTimer -= Engine.DeltaTime;
+            if (respawnTimer <= 0f)
+            {
+                Respawn();
+            }
+        }
         UpdateY();
         light.Alpha = Calc.Approach(light.Alpha, sprite.Visible ? 1f : 0f, 4f * Engine.DeltaTime);
         bloom.Alpha = light.Alpha * 0.8f;
@@ -65,8 +107,8 @@ public class CustomBubble : Entity
     public override void Render()
     {
         base.Render();
-        if (renderBubble)
-            Draw.Circle(Position + sprite.Position, (float)(10.0 - (double)shieldRadiusWiggle.Value * 2.0), Color.White, 3);
+        if (renderBubble && Visible)
+            Draw.Circle(Position + sprite.Position, (float)(10.0 - (double)shieldRadiusWiggle.Value * 2.0), color, 3);
     }
 
     private void UpdateY()
@@ -80,7 +122,7 @@ public class CustomBubble : Entity
 
     private void OnPlayer(Player player)
     {
-        player.PointBounce(Center);
+        KoseiHelperUtils.PointBounce(Center, player, refillDash, refillStamina, releaseFromBooster);
         if (Input.MoveX.Value == Math.Sign(player.Speed.X))
             player.Speed.X *= speedMult;
         moveWiggle.Start();
@@ -89,5 +131,40 @@ public class CustomBubble : Entity
         Audio.Play(customSound, Position);
         Input.Rumble(RumbleStrength.Medium, RumbleLength.Medium);
         SceneAs<Level>().DirectionalShake((player.Center - Center).SafeNormalize(), 0.15f);
+        if (breakBehavior == BubbleBreakBehavior.AlwaysBreak || (breakBehavior == BubbleBreakBehavior.BreakWithDash && player.DashAttacking))
+        {
+            if (freezeFrames)
+                Celeste.Freeze(0.05f);
+            Collidable = false;
+            Add(new Coroutine(CollectRoutine(player, player.Speed, player.level)));
+            if (!singleUse)
+            {
+                Visible = true;
+                respawnTimer = respawnCooldown;
+            }
+        }
+    }
+
+    public IEnumerator CollectRoutine(Player player, Vector2 playerSpeed, Level level)
+    {
+        Visible = false;
+        yield return 0.05f;
+        float direction = !(playerSpeed != Vector2.Zero) ? (Position - player.Center).Angle() : playerSpeed.Angle();
+        level.ParticlesFG.Emit(FeatherCollect, 10, Position, Vector2.One * 6f);
+        SlashFx.Burst(Position, direction);
+        if (singleUse)
+            RemoveSelf();
+    }
+
+    public void Respawn()
+    {
+        if (!Collidable)
+        {
+            Collidable = true;
+            Visible = true;
+            wiggler.Start();
+            Audio.Play("event:/game/06_reflection/feather_reappear", Position);
+            SceneAs<Level>().ParticlesFG.Emit(FeatherRespawn, 16, Position, Vector2.One * 2f);
+        }
     }
 }

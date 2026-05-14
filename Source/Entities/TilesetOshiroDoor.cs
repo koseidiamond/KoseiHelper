@@ -108,7 +108,7 @@ public class TilesetOshiroDoor : Solid
             if (collisionMode == TilesetOshiroCollisionMode.SideBounce)
                 player.SideBounce((int)direction.X, player.Position.X, player.Position.Y);
             if (collisionMode == TilesetOshiroCollisionMode.PointBounce)
-                player.PointBounce(Center);
+                KoseiHelperUtils.PointBounce(Center, player, refillDash, true, true);
             if (givesCoyote)
                 player.jumpGraceTimer = 0.15f;
         }

@@ -3,6 +3,7 @@ using Celeste.Mod.KoseiHelper.Entities;
 using MonoMod.ModInterop;
 using System;
 using Microsoft.Xna.Framework;
+using Celeste.Mod.KoseiHelper.Entities.Crossover;
 
 namespace Celeste.Mod.KoseiHelper;
 

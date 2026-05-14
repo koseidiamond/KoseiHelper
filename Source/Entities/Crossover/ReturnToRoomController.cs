@@ -2,7 +2,7 @@ using Celeste.Mod.Entities;
 using Microsoft.Xna.Framework;
 using Monocle;
 
-namespace Celeste.Mod.KoseiHelper.Entities;
+namespace Celeste.Mod.KoseiHelper.Entities.Crossover;
 
 [CustomEntity("KoseiHelper/ReturnToRoomController")]
 [Tracked]
