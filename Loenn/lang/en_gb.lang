@@ -76,6 +76,18 @@ entities.KoseiHelper/WaterDropletSpawner.attributes.description.maxSpeed=The max
 entities.KoseiHelper/WaterDropletSpawner.attributes.description.ignoreSolids=Whether the droplet should keep moving even if it collides with a solid/water until it goes out of bounds or the lifetime is over.
 entities.KoseiHelper/WaterDropletSpawner.attributes.description.lifetime=The droplet will disappear when the lifetime is over.\nLower this value if you need to improve performance.
 
+# Custom Bubble
+entities.KoseiHelper/CustomBubble.placements.name.CustomBubble=Custom Bubble
+entities.KoseiHelper/CustomBubble.placements.description.CustomBubble=Bubble like the one from shielded feathers, but more customizable and respritable.
+entities.KoseiHelper/CustomBubble.attributes.description.speedMult=The multiplier when the player is moving away from the bubble (by default 1.2 like ultras).
+entities.KoseiHelper/CustomBubble.attributes.description.wiggliness=How much the bubble should wiggle when bounced on.
+entities.KoseiHelper/CustomBubble.attributes.description.floatiness=How much the bubble should move up and down.\n(This effect is only visual)
+entities.KoseiHelper/CustomBubble.attributes.description.renderSprite=Whether a sprite should be rendered or not.
+entities.KoseiHelper/CustomBubble.attributes.description.sound=The sound the bubble should make when touched.
+entities.KoseiHelper/CustomBubble.attributes.description.renderBubble=Whether a white circle (drawn with code) should render or not.
+entities.KoseiHelper/CustomBubble.attributes.description.spriteID=The id for your sprite, taken from your Sprites.xml.\nYou can copy flyFeather from vanilla and modify as needed.\nUsed only if Render Sprite is checked.
+
+
 #KOSEI HELPER ENTITIES
 
 # Pregnant Flutterbird
