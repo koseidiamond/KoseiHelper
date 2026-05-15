@@ -188,4 +188,12 @@
 	  <Frames path="sleepy_fiveDashes" hair=""/>
     </Metadata>
   </koseiHelper_player>
+  
+  	<koseiHelper_BalloonTripFish path="objects/KoseiHelper/Crossover/BalloonTripFish/">
+		<Center/>
+		<Loop id="waitBelow" path="BalloonTripFish" delay="0.1" frames="00"/>
+		<Anim id="attack" path="BalloonTripFish" delay="0.08" frames="00-03" goto="waitAbove"/>
+		<Loop id="waitAbove" path="BalloonTripFish" delay="0.1" frames="03"/>
+		<Anim id="dive" path="BalloonTripFish" delay="0.08" frames="04-06" goto="waitBelow"/>
+	</koseiHelper_BalloonTripFish>
 </Sprites>

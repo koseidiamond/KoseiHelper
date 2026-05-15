@@ -84,6 +84,17 @@ entities.KoseiHelper/ShadowCloakController.attributes.description.cooldown=How l
 entities.KoseiHelper/ShadowCloakController.attributes.description.recoverShadowDashSfx=The sound that should play to indicate that the player can shadow dash again.
 entities.KoseiHelper/ShadowCloakController.attributes.description.useShadowDashSfx=The sound that should play when the player uses the shadow cloak.
 
+#Balloon Trip Fish
+#entities.KoseiHelper/BalloonTripFish.placements.name.BalloonTripFish=Balloon Trip Fish (Crossover)
+#entities.KoseiHelper/BalloonTripFish.placements.description.BalloonTripFish=A fish that chases the player horizontally and attacks when the player is too close.
+#entities.KoseiHelper/BalloonTripFish.attributes.description.spriteID=The sprite id in your Sprites.xml.
+#entities.KoseiHelper/BalloonTripFish.attributes.description.distance=The minimum vertical distance that the player must be from the fish to attack.
+#entities.KoseiHelper/BalloonTripFish.attributes.description.flip=Whether the sprite should be flipped horizontally.
+#entities.KoseiHelper/BalloonTripFish.attributes.description.chaseSpeed=The speed at which the fish chases the player.
+#entities.KoseiHelper/BalloonTripFish.attributes.description.hideAfterAttack=Whether the fish should hide after harming the player, and only come back when the player comes close again.
+#entities.KoseiHelper/BalloonTripFish.attributes.description.idleFlag=The fish will not chase the player while this flag is true.
+
+
 #KOSEI HELPER ENTITIES
 
 # Custom Bubble
