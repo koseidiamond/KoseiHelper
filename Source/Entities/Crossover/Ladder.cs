@@ -116,7 +116,7 @@ public class Ladder : Entity
             verticalOffset = data.Int("verticalOffset");
         }
         else invisible = true;
-
+        // TODO read color with my Utils thingie
         // If the ladders are not tinted, the bg ones will be slightly darker
         if (Depth < 0)
         {

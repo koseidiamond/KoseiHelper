@@ -9,6 +9,7 @@
 {471983cd-5a7a-48ab-a603-256608a0dddf} event:/KoseiHelper/Crossover/Ladder
 {51cd8e6f-bb1e-4f5f-be58-66449926ef38} event:/KoseiHelper/Crossover/YumeFlute
 {c657dae5-6fa6-4116-8deb-1bb8d0d8757d} event:/KoseiHelper/Crossover/ShadowCloak
+{08f92921-3dc2-4ca8-bb93-8a2ff8d2614c} event:/KoseiHelper/Crossover/BalloonExplode
 {9c23a194-d618-40ae-909c-5a07f07706b6} event:/KoseiHelper/goomba
 {6edb5ee9-6ed2-4d95-b7f9-d58746f7b214} event:/KoseiHelper/mary
 {e6d5f625-a856-4852-9ebf-b40dad40107a} event:/KoseiHelper/maryReappear

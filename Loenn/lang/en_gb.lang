@@ -94,6 +94,24 @@ entities.KoseiHelper/ShadowCloakController.attributes.description.useShadowDashS
 #entities.KoseiHelper/BalloonTripFish.attributes.description.hideAfterAttack=Whether the fish should hide after harming the player, and only come back when the player comes close again.
 #entities.KoseiHelper/BalloonTripFish.attributes.description.idleFlag=The fish will not chase the player while this flag is true.
 
+#Balloon Trip Collectable
+entities.KoseiHelper/BalloonTripCollectable.placements.name.BalloonTripCollectable=Balloon Collectable (Crossover)
+entities.KoseiHelper/BalloonTripCollectable.placements.description.BalloonTripCollectable=Collectable that increases a counter and plays a sound.
+entities.KoseiHelper/BalloonTripCollectable.placements.attributes.BalloonTripCollectable=A balloon that pops and increases a counter when touched by the player.
+entities.KoseiHelper/BalloonTripCollectable.attributes.description.pointsGiven=How many points should be rewarded when the balloon is popped.
+entities.KoseiHelper/BalloonTripCollectable.attributes.description.counterName=The name of the counter that will be increased.
+entities.KoseiHelper/BalloonTripCollectable.attributes.description.spriteID=The id of the sprite from your Sprites.xml.
+entities.KoseiHelper/BalloonTripCollectable.attributes.description.sound=The sound that the balloon makes when exploding.
+entities.KoseiHelper/BalloonTripCollectable.attributes.description.outline=Whether a black outline should be drawn around the sprite.
+entities.KoseiHelper/BalloonTripCollectable.attributes.description.canReappear=Whether the collectable should stay collected for the rest of the session.
+entities.KoseiHelper/BalloonTripCollectable.attributes.description.collectionEffects=Whether the collectable produces 3 freeze frames and particles when collected.
+entities.KoseiHelper/BalloonTripCollectable.attributes.description.multiplicative=Whether Points Given should multiply the current points instead of being added.
+entities.KoseiHelper/BalloonTripCollectable.attributes.description.hitboxWidth=The width of the collectable.
+entities.KoseiHelper/BalloonTripCollectable.attributes.description.hitboxHeight=The height of the collectable.
+entities.KoseiHelper/BalloonTripCollectable.attributes.description.hitboxXOffset=The horizontal offset of the collectable's hitbox.
+entities.KoseiHelper/BalloonTripCollectable.attributes.description.hitboxYOffset=The vertical offset of the collectable's hitbox.
+entities.KoseiHelper/BalloonTripCollectable.attributes.description.depth=The depth at which the sprite is rendered.
+entities.KoseiHelper/BalloonTripCollectable.attributes.description.particleColor=The color of the particles emitted upon collection.
 
 #KOSEI HELPER ENTITIES
 

@@ -196,4 +196,8 @@
 		<Loop id="waitAbove" path="BalloonTripFish" delay="0.1" frames="03"/>
 		<Anim id="dive" path="BalloonTripFish" delay="0.08" frames="04-06" goto="waitBelow"/>
 	</koseiHelper_BalloonTripFish>
+	
+	<koseiHelper_balloonTripCollectable path="objects/KoseiHelper/Crossover/BalloonTripCollectable/">
+		<Loop id="balloon" path="balloon" delay="0.2" frames="00-03,02,01"/>
+	</koseiHelper_balloonTripCollectable>
 </Sprites>
