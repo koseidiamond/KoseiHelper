@@ -116,8 +116,8 @@ entities.KoseiHelper/BalloonTripCollectable.attributes.description.particleColor
 # Map and Compass Controllers
 entities.KoseiHelper/CompassController.placements.name.CompassController=Compass Controller (Crossover)
 entities.KoseiHelper/CompassController.placements.description.CompassController=Shows the player position on the Map if the flag map_WaywardCompass is true.\nAdditionally, it displays how many berries are on the current room if the flag map_CollectorsMap is true.
-entities.KoseiHelper/CompassController.attributes.description.roomCoordinatesX=The coordinates for the player icon in the current room, from 0 to 1920.
-entities.KoseiHelper/CompassController.attributes.description.roomCoordinatesY=The coordinates for the player icon in the current room, from 0 to 1080.
+entities.KoseiHelper/CompassController.attributes.description.roomCoordinatesX=The coordinates for the player icon in the current room, from 0 to 1920.\nIf multiple compasses are placed in the same room, the one closest to the player will be chosen as the current location.
+entities.KoseiHelper/CompassController.attributes.description.roomCoordinatesY=The coordinates for the player icon in the current room, from 0 to 1080.\nIf multiple compasses are placed in the same room, the one closest to the player will be chosen as the current location.
 entities.KoseiHelper/CompassController.attributes.description.berryCount=The amount of berries that can be collected in the current room.\nThe berry count will be displayed while the flag "map_CollectorsMap" is true.
 
 entities.KoseiHelper/MapController.placements.name.MapController=Map Controller (Crossover)
@@ -126,7 +126,7 @@ entities.KoseiHelper/MapController.attributes.description.mapLayers=A list of al
 entities.KoseiHelper/MapController.attributes.description.pinBerry=The path to the image that represents the berry indicators, relative to Atlases/Gui/.\nIntended to be used with the Compass.\nThe berry count will be displayed while the flag "map_CollectorsMap" is true.
 entities.KoseiHelper/MapController.attributes.description.pinMadeline=The path to the image that represents the current player location, relative to Atlases/Gui/.\nIntended to be used with the Compass.\nThe player location will be displayed while the flag "map_WaywardCompass" is true.
 entities.KoseiHelper/MapController.attributes.description.rootPath=The path to your folder where you have all map images, relative to Atlases/Gui/.
-entities.KoseiHelper/MapController.attributes.description.onlyOnSafeGround=Whether the map can be opened only on safe ground (e.g. not inside trigger spikes and such).
+entities.KoseiHelper/MapController.attributes.description.onlyOnSafeGround=Whether the map can be opened only on safe ground (e.g. not above trigger spikes, clouds, swap blocks and such).\n\nPro tip: place Flag Zones (GameHelper) in places where jank behavior or unfair deaths would occur (such as the path of a fireball) with the Map Disabled Flag.
 entities.KoseiHelper/MapController.attributes.description.mapDisabledFlag=The player will be unable to open the map while this flag is true.
 
 #KOSEI HELPER ENTITIES

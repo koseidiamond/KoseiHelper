@@ -9,6 +9,7 @@ namespace Celeste.Mod.KoseiHelper.Entities.Crossover;
 
 [CustomEntity("KoseiHelper/MapCutscene")]
 [Tracked]
+// Original entity by EllaTAS!
 public class MapCutscene(Player player) : CutsceneEntity
 {
     private readonly Player player = player;
@@ -115,7 +116,7 @@ public class MapCutscene(Player player) : CutsceneEntity
             {
                 for (int i = 0; i < berryCount; i++)
                 {
-                    berryLocations.Draw(new Vector2(1852 - i * 60, 1000), Vector2.Zero, Color.White, 1f);
+                    berryLocations.Draw(new Vector2(1846 - i * 60, 994), Vector2.Zero, Color.White, 1f);
                 }
             }
             if (level.Session.GetFlag("map_WaywardCompass"))

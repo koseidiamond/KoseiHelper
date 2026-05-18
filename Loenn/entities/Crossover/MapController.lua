@@ -9,8 +9,8 @@ MapController.placements = {
     data = {
 		pinMadeline = "KoseiHelper/map/pins/pin_SingleDash",
 		pinBerry = "collectables/strawberry",
-		mapLayers = "filenames,separated,by,commas",
-		rootPath = "",
+		mapLayers = "Base,TestA,TestB",
+		rootPath = "KoseiHelper/map/layers/",
 		onlyOnSafeGround = false,
 		mapDisabledFlag = "KoseiHelper_CantOpenMap"
 	}

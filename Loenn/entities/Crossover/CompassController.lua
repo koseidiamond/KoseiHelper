@@ -6,8 +6,8 @@ CompassController.depth = -20000
 CompassController.placements = {
     name = "CompassController",
     data = {
-        roomCoordinatesX = 0,
-		roomCoordinatesY = 0,
+        roomCoordinatesX = 1084,
+		roomCoordinatesY = 404,
 		berryCount = 0
     }
 }

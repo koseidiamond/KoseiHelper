@@ -122,9 +122,12 @@ public class ShadowCloakController : Entity
         KoseiHelperModule.Session.ShadowDashActive = false;
         if (KoseiHelperModule.Session.HasShadowDash && cooldownTimer <= 0f)
         {
-            cooldownTimer = (float)(self.Scene.Tracker.GetEntity<ShadowCloakController>()?.cooldown);
+            if (self.Scene.Tracker.GetEntity<ShadowCloakController>() != null)
+            {
+                cooldownTimer = (float)(self.Scene.Tracker.GetEntity<ShadowCloakController>().cooldown);
+                Audio.Play(self.Scene.Tracker.GetEntity<ShadowCloakController>()?.useShadowDashSfx, self.Center);
+            }
             playedRecoverEffect = false;
-            Audio.Play(self.Scene.Tracker.GetEntity<ShadowCloakController>()?.useShadowDashSfx, self.Center);
             KoseiHelperModule.Session.ShadowDashActive = true;
             shadowEndDelayCoroutine?.RemoveSelf();
             KoseiHelperModule.ExtendedVariantImports.TriggerBooleanVariant("MadelineIsSilhouette", true, true);
