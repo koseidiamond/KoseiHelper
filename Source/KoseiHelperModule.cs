@@ -55,6 +55,7 @@ public class KoseiHelperModule : EverestModule
         typeof(ExtendedVariantImports).ModInterop();
         //TopDownViewController.Load();
         Everest.Events.Level.OnCreatePauseMenuButtons += OnCreatePauseMenuButtons;
+        MapCutscene.Load();
         PufferBall.Load();
         CustomTempleCrackedBlock.Load();
         PufferRefill.Load();
@@ -92,6 +93,7 @@ public class KoseiHelperModule : EverestModule
     {
         //TopDownViewController.Unload();
         Everest.Events.Level.OnCreatePauseMenuButtons -= OnCreatePauseMenuButtons;
+        MapCutscene.Unload();
         PufferBall.Unload();
         CustomTempleCrackedBlock.Unload();
         PufferRefill.Unload();
