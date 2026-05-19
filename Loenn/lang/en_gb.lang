@@ -1021,6 +1021,24 @@ entities.KoseiHelper/EntitySpawnArea.attributes.description.color=Spawn Controll
 
 #TRIGGERS
 
+#CROSSOVER COLLAB
+
+#PREVENT DUCK TRIGGER
+triggers.KoseiHelper/PreventDuckTrigger.placements.name.PreventDuckTrigger=Prevent Duck Trigger (Crossover)
+triggers.KoseiHelper/PreventDuckTrigger.placements.description.PreventDuckTrigger=Makes the player unable to crouch.\nSome consequences: wavedashes/hypers are replaced by supers, and demos are replaced by dashes.
+triggers.KoseiHelper/PreventDuckTrigger.attributes.description.mode=Whether the player will forcefully uncrouch when they enter or exit the trigger, or always while inside.
+triggers.KoseiHelper/PreventDuckTrigger.attributes.description.flag=The trigger will only have effect if the flag specified is true.\nLeave empty for no flag required.
+
+#FORCE FACING DIRECTION TRIGGER
+triggers.KoseiHelper/ForceFacingDirectionTrigger.placements.name.ForceFacingDirectionTrigger=Force Facing Direction Trigger (Crossover)
+triggers.KoseiHelper/ForceFacingDirectionTrigger.placements.description.ForceFacingDirectionTrigger=Forces the player to look in the direction they are moving.
+triggers.KoseiHelper/ForceFacingDirectionTrigger.attributes.description.mode=Whether the player will forcefully face the moving direction when they enter or exit the trigger, or always while inside.
+triggers.KoseiHelper/ForceFacingDirectionTrigger.attributes.description.flag=The trigger will only have effect if the flag specified is true.\nLeave empty for no flag required.
+triggers.KoseiHelper/ForceFacingDirectionTrigger.attributes.description.speedThreshold=The facing direction will be forced only if the player has at least this speed.
+triggers.KoseiHelper/ForceFacingDirectionTrigger.attributes.description.noSpeedRequired=If this is true, no Speed Threshold will be required.
+triggers.KoseiHelper/ForceFacingDirectionTrigger.attributes.description.flagValue=Whether the flag specified should be true or false.
+
+
 
 #Force Throw Trigger
 triggers.KoseiHelper/ForceThrowTrigger.placements.name.ForceThrowTrigger=Force Throw Trigger
