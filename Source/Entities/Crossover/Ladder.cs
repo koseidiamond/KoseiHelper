@@ -175,7 +175,8 @@ public class Ladder : Entity
                     { // ...player is not moving too fast horizontally, and the LadderJump cooldown is finished
                         if (drainsStamina && player.Stamina > 20 || !drainsStamina)
                         {// Requires 20 stamina to grab on stamina mode
-                            player.Get<LadderStateComponent>().CurrentLadder = this;
+                            if (player.Get<LadderStateComponent>() != null)
+                                player.Get<LadderStateComponent>().CurrentLadder = this;
                             InLadderState = true;
                             if (singleUse && hasBeenUsed)
                                 Break(player.Center, player.BottomCenter);
@@ -288,7 +289,7 @@ public class Ladder : Entity
         {
             if (Scene.OnInterval(0.35f)) Audio.Play(sound); //Plays sounds when climbing
 
-            player.Sprite.Visible = player.Hair.Visible = false;
+            //player.Sprite.Visible = player.Hair.Visible = false;
             if (Depth < 0)
             { //Plays animation depending on bg/fg and number of dashes
                 switch (player.Dashes)

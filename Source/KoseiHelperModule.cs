@@ -70,6 +70,8 @@ public class KoseiHelperModule : EverestModule
         GameDataController.Load();
         TalkComponentCustomizator.Load();
         SetFlagPrefixOnSpawnController.Load();
+        On.Celeste.Player.JumpThruBoostBlockedCheck += Ladder.HookJumpThruBoostCheck;
+        Everest.Events.Player.OnRegisterStates += Ladder.RegisterLadderState;
         Everest.Events.Player.OnRegisterStates += MaryBlock.RegisterBaldState;
 
         if (!frostHelperLoaded && Everest.Loader.DependencyLoaded(new EverestModuleMetadata { Name = "FrostHelper", Version = new Version(1, 66, 0) }))
@@ -109,6 +111,8 @@ public class KoseiHelperModule : EverestModule
         GameDataController.Unload();
         TalkComponentCustomizator.Unload();
         SetFlagPrefixOnSpawnController.Unload();
+        On.Celeste.Player.JumpThruBoostBlockedCheck -= Ladder.HookJumpThruBoostCheck;
+        Everest.Events.Player.OnRegisterStates -= Ladder.RegisterLadderState;
         Everest.Events.Player.OnRegisterStates -= MaryBlock.RegisterBaldState;
 
         frostHelperLoaded = false;
