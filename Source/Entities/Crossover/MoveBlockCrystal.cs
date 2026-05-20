@@ -1,7 +1,5 @@
-using Celeste.Mod.CommunalHelper;
-using Celeste.Mod.CommunalHelper.Components;
-using Celeste.Mod.CommunalHelper.Entities;
 using Celeste.Mod.Entities;
+using Celeste.Mod.KoseiHelper.Components;
 using FMOD.Studio;
 using Microsoft.Xna.Framework;
 using Monocle;
@@ -34,20 +32,11 @@ class MoveBlockCrystal : Entity
     private enum Behavior
     {
         Move,
-        MoveAndChangeDirection,
         ChangeDirection,
         Break
     };
     private Behavior behavior;
     private MoveBlock.Directions direction;
-    private enum MoveBlockType
-    {
-        Vanilla,
-        CommunalConnected,
-        Both
-    };
-
-    private MoveBlockType moveBlockType;
 
     public MoveBlockCrystal(EntityData data, Vector2 offset) : base(data.Position + offset)
     {
@@ -57,11 +46,43 @@ class MoveBlockCrystal : Entity
         behavior = data.Enum("behavior", Behavior.Move);
         direction = data.Enum("direction", MoveBlock.Directions.Right);
         if (float.TryParse(data.Attr("direction"), out float fAngle))
+        {
             angle = fAngle;
+        }
         else
+        {
+            direction = data.Enum<MoveBlock.Directions>("direction");
             angle = direction.Angle();
+        }
+        switch (behavior)
+        {
+            case Behavior.ChangeDirection:
+                switch (direction)
+                {
+                    case MoveBlock.Directions.Left:
+                        spritePrefix += "left/";
+                        break;
+                    case MoveBlock.Directions.Right:
+                        spritePrefix += "right/";
+                        break;
+                    case MoveBlock.Directions.Up:
+                        spritePrefix += "up/";
+                        break;
+                    case MoveBlock.Directions.Down:
+                        spritePrefix += "down/";
+                        break;
+                }
+                break;
+            case Behavior.Break:
+                spritePrefix += "break/";
+                break;
+            case Behavior.Move:
+                spritePrefix += "move/";
+                break;
+
+        }
+        
         refillDash = data.Bool("refillDash", true);
-        moveBlockType = data.Enum("moveBlockType", MoveBlockType.CommunalConnected);
         base.Add(new PlayerCollider(new Action<Player>(OnPlayer), null, null));
         base.Add(outline = new Image(GFX.Game[spritePrefix + "outline"]));
         outline.CenterOrigin();
@@ -118,11 +139,8 @@ class MoveBlockCrystal : Entity
             OnDash = (Vector2 dir) => {
             }
         });
-        if (moveBlockType != MoveBlockType.CommunalConnected)
-        {
-            Tracker.AddTypeToTracker(typeof(MoveBlock));
-            Tracker.Refresh();
-        }
+        Tracker.AddTypeToTracker(typeof(MoveBlock));
+        Tracker.Refresh();
     }
 
     public override void Update()
@@ -175,20 +193,7 @@ class MoveBlockCrystal : Entity
         Audio.Play(soundEffect, Position);
         if (refillDash)
             player.UseRefill(false);
-
-        switch (moveBlockType)
-        {
-            case MoveBlockType.Both:
-                CommunalMoveBlocks(level);
-                VanillaMoveBlocks(level);
-                break;
-            case MoveBlockType.Vanilla:
-                VanillaMoveBlocks(level);
-                break;
-            default: // Communal
-                CommunalMoveBlocks(level);
-                break;
-        }
+        TriggerMoveBlocks(level);
 
         float num = Calc.Angle(player.Position, Position);
 
@@ -204,77 +209,59 @@ class MoveBlockCrystal : Entity
             RemoveSelf();
     }
 
-    private void VanillaMoveBlocks(Level level)
+    private void TriggerMoveBlocks(Level level)
     {
         foreach (Entity entity in level)
-        { // iterate all entities because
-
+        {
             if (entity is MoveBlock mb)
             {
                 switch (behavior)
                 {
                     case Behavior.ChangeDirection:
-                        mb.direction = direction;
-                        break;
-                    case Behavior.MoveAndChangeDirection:
-                        mb.triggered = true;
-                        mb.state = MoveBlock.MovementState.Moving;
-                        mb.direction = direction;
-                        mb.angle = angle;
+                        if (mb.state != MoveBlock.MovementState.Breaking)
+                        {
+                            RedirectMoveBlock(mb);
+                        }
                         break;
                     case Behavior.Break:
                         if (mb.state != MoveBlock.MovementState.Breaking)
                             mb.Add(new Coroutine(BreakRoutine(level, mb), true));
                         break;
                     default: // Move
-                        mb.triggered = true;
-                        mb.state = MoveBlock.MovementState.Moving;
+                        if (mb.state != MoveBlock.MovementState.Breaking)
+                        {
+                            mb.triggered = true;
+                            mb.state = MoveBlock.MovementState.Moving;
+                        }
                         break;
                 }
             }
         }
     }
 
-    private void CommunalMoveBlocks(Level level)
+    private void RedirectMoveBlock(MoveBlock mb)
     {
-        foreach (Entity entity in level)
-        {
-            if (entity is ConnectedMoveBlock cmb)
-            {
-                DynamicData blockData = DynamicData.For(cmb);
-
-                switch (behavior)
-                {
-                    case Behavior.ChangeDirection:
-                        cmb.Direction = direction;
-                        blockData.Set("direction", cmb.Direction);
-                        break;
-                    case Behavior.MoveAndChangeDirection:
-                        blockData.Set("triggered", true);
-                        blockData.Set("State", GroupableMoveBlock.MovementState.Moving);
-                        blockData.Set("angle", angle);
-                        blockData.Set("targetAngle", angle);
-                        cmb.Direction = direction;
-                        blockData.Set("direction", cmb.Direction);
-                        break;
-                    case Behavior.Break:
-                        // whatever (needs to Invoke and stuff, see CornerBoostFallingBlockSequence from FallingDashCrystal for an example)
-                        //if(cmb.state == MoveBlock.MovementState.Idling)
-                        //cmb.Add(new Coroutine(BreakRoutine(level, cmb), true));
-                        break;
-                    default: // Move
-                        blockData.Set("triggered", true);
-                        blockData.Set("State", GroupableMoveBlock.MovementState.Moving);
-                        break;
-                }
-            }
-        }
+        Redirectable redirectable = mb.Get<Redirectable>();
+        if (redirectable == null)
+            return;
+        Coroutine controller = mb.Get<Coroutine>();
+        if (controller == null)
+            return;
+        mb.Remove(controller);
+        float newAngle = angle != 0 ? angle : direction.Angle();
+        redirectable.Direction = direction;
+        redirectable.Angle = newAngle;
+        redirectable.TargetAngle = newAngle;
+        redirectable.TargetSpeed = Math.Max(redirectable.TargetSpeed, 60f);
+        mb.triggered = true;
+        mb.state = MoveBlock.MovementState.Moving;
+        mb.Add(controller);
     }
 
-    private IEnumerator BreakRoutine(Level level, MoveBlock mb)
+
+    private static IEnumerator BreakRoutine(Level level, MoveBlock mb)
     {
         Coroutine controller = null;
-
         foreach (Component c in mb.Components)
         {
             if (c is Coroutine co)
@@ -314,12 +301,10 @@ class MoveBlockCrystal : Entity
         mb.Collidable = true;
         EventInstance instance = Audio.Play("event:/game/04_cliffside/arrowblock_reform_begin", mb.Position);
         MoveBlock moveBlock4 = mb;
-
         Audio.Play("event:/game/04_cliffside/arrowblock_reappear", mb.Position);
         mb.Visible = true;
         mb.Collidable = true;
         mb.triggered = false;
-        //mb.Components.Get<Coroutine>().Cancel()
         mb.Active = true;
         mb.state = MoveBlock.MovementState.Idling;
         mb.EnableStaticMovers();
@@ -351,5 +336,22 @@ class MoveBlockCrystal : Entity
     private void UpdateY()
     {
         flash.Y = (sprite.Y = (bloom.Y = sine.Value * 2f));
+    }
+
+    public static void Load()
+    {
+        On.Celeste.MoveBlock.Awake += MoveBlock_Awake;
+    }
+
+    public static void Unload()
+    {
+        On.Celeste.MoveBlock.Awake -= MoveBlock_Awake;
+    }
+
+    private static void MoveBlock_Awake(On.Celeste.MoveBlock.orig_Awake orig, MoveBlock self, Scene scene)
+    {
+        orig(self, scene);
+        if (self.Get<Redirectable>() == null)
+            self.Add(new Redirectable(self));
     }
 }

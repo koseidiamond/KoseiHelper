@@ -7,11 +7,10 @@ local MoveBlockCrystal = {
             name = "MoveBlockCrystal",
             data = {
 			singleUse = false,
-			sprite = "objects/KoseiHelper/Crossover/MoveBlockCrystal/right/",
+			sprite = "objects/KoseiHelper/Crossover/MoveBlockCrystal/",
 			behavior = "Move",
 			direction = "Right",
-			refillDash = true,
-			moveBlockType = "CommunalConnected"
+			refillDash = true
             }
         }
     }
@@ -21,17 +20,8 @@ MoveBlockCrystal.fieldInformation = {
 	behavior = {
 		options = {
 		"Move",
-		"MoveAndChangeDirection",
 		"ChangeDirection",
 		"Break"
-		},
-		editable = false
-	},
-	moveBlockType = {
-		options = {
-		"Vanilla",
-		"CommunalConnected",
-		"Both",
 		},
 		editable = false
 	},
@@ -43,18 +33,6 @@ MoveBlockCrystal.fieldInformation = {
 		"Up"
 		},
 		editable = false
-	},
-	sprite = {
-		options = {
-		"objects/KoseiHelper/Crossover/MoveBlockCrystal/leftArrow/",
-		"objects/KoseiHelper/Crossover/MoveBlockCrystal/rightArrow/",
-		"objects/KoseiHelper/Crossover/MoveBlockCrystal/down/",
-		"objects/KoseiHelper/Crossover/MoveBlockCrystal/left/",
-		"objects/KoseiHelper/Crossover/MoveBlockCrystal/right/",
-		"objects/KoseiHelper/Crossover/MoveBlockCrystal/up/",
-		"objects/KoseiHelper/Crossover/MoveBlockCrystal/break/"
-		},
-		editable = true
 	}
 }
 
@@ -72,14 +50,29 @@ function MoveBlockCrystal.ignoredFields(entity)
             end
         end
     end
-	if entity.behavior == "MoveAndChangeDirection" or entity.behavior == "ChangeDirection" then
+	if entity.behavior == "ChangeDirection" then
 		doNotIgnore("direction")
 	end
 	return ignored
 end
 
 function MoveBlockCrystal.texture(room, entity)
-	return entity.sprite .. "idle00"
+	if entity.behavior == "ChangeDirection" then
+		if entity.direction == "Left" then
+			return entity.sprite .. "left/idle00"
+		elseif entity.direction == "Right" then
+			return entity.sprite .. "right/idle00"
+		elseif entity.direction == "Down" then
+			return entity.sprite .. "down/idle00"
+		else
+			return entity.sprite .. "up/idle00"
+		end
+	elseif entity.behavior == "Move" then
+		return entity.sprite .. "move/idle00"
+	else
+		return entity.sprite .. "break/idle00"
+	end
+	
 end
 
 return MoveBlockCrystal

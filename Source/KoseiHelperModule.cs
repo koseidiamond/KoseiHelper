@@ -25,7 +25,6 @@ public class KoseiHelperModule : EverestModule
     public bool helpingHandLoaded = false;
     public bool doonvHelperLoaded = false;
     public bool femtoHelperLoaded = false;
-    public bool communalHelperLoaded = false;
 
     public static TextMenu ReturnToGDMenu;
 
@@ -56,6 +55,7 @@ public class KoseiHelperModule : EverestModule
         typeof(ExtendedVariantImports).ModInterop();
         //TopDownViewController.Load();
         Everest.Events.Level.OnCreatePauseMenuButtons += OnCreatePauseMenuButtons;
+        MoveBlockCrystal.Load();
         MapCutscene.Load();
         PufferBall.Load();
         CustomTempleCrackedBlock.Load();
@@ -82,8 +82,6 @@ public class KoseiHelperModule : EverestModule
             doonvHelperLoaded = true;
         if (!femtoHelperLoaded && Everest.Loader.DependencyLoaded(new EverestModuleMetadata { Name = "FemtoHelper", Version = new Version(1, 15, 12) }))
             femtoHelperLoaded = true;
-        if (!communalHelperLoaded && Everest.Loader.DependencyLoaded(new EverestModuleMetadata { Name = "CommunalHelper", Version = new Version(1, 24, 4) }))
-            communalHelperLoaded = true;
 
         Mod.DecalRegistry.AddPropertyHandler<KillDecalRegistryHandler>();
         Mod.DecalRegistry.AddPropertyHandler<MovingDecalRegistryHandler>();
@@ -96,6 +94,7 @@ public class KoseiHelperModule : EverestModule
     {
         //TopDownViewController.Unload();
         Everest.Events.Level.OnCreatePauseMenuButtons -= OnCreatePauseMenuButtons;
+        MoveBlockCrystal.Unload();
         MapCutscene.Unload();
         PufferBall.Unload();
         CustomTempleCrackedBlock.Unload();
@@ -117,7 +116,6 @@ public class KoseiHelperModule : EverestModule
         collabUtils2Loaded = false;
         doonvHelperLoaded = false;
         femtoHelperLoaded = false;
-        communalHelperLoaded = false;
     }
 
     private static bool ClimbCheck(On.Celeste.Player.orig_ClimbBoundsCheck orig, Player self, int dir)

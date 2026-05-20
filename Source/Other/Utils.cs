@@ -6,7 +6,7 @@ using System.Xml;
 
 namespace Celeste.Mod.KoseiHelper;
 
-public class KoseiHelperUtils
+public static class KoseiHelperUtils
 {
     public static Color ParseHexColor(string hex, Color defaultColor) // For entities
     {
@@ -181,5 +181,16 @@ public class KoseiHelperUtils
         player.Sprite.Scale = new Vector2(1.5f, 0.5f);
         player.Collider = collider;
         return true;
+    }
+
+    public static float Angle(this MoveBlock.Directions dir)
+    {
+        return dir switch
+        {
+            MoveBlock.Directions.Left => (float)Math.PI,
+            MoveBlock.Directions.Up => -(float)Math.PI / 2f,
+            MoveBlock.Directions.Down => (float)Math.PI / 2f,
+            _ => 0f
+        };
     }
 }

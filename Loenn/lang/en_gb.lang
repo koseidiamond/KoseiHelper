@@ -133,11 +133,10 @@ entities.KoseiHelper/MapController.attributes.description.mapDisabledFlag=The pl
 entities.KoseiHelper/MoveBlockCrystal.placements.name.MoveBlockCrystal=Move Block Crystal (Crossover)
 entities.KoseiHelper/MoveBlockCrystal.placements.description.MoveBlockCrystal=A crystal that alters Move Blocks when it is collected.
 entities.KoseiHelper/MoveBlockCrystal.attributes.description.singleUse=Whether the crystal should disappear after being collected.
-entities.KoseiHelper/MoveBlockCrystal.attributes.description.sprite=The folder where your sprites are, relative to Atlases/Gameplay/.
+entities.KoseiHelper/MoveBlockCrystal.attributes.description.sprite=The folder where your sprites are, relative to Atlases/Gameplay/.\nThe path expects the sprites to be in the subfolders up/left/down/right/move/break depending on the way you're using it.
 entities.KoseiHelper/MoveBlockCrystal.attributes.description.direction=The new direction of the Move Blocks.
-entities.KoseiHelper/MoveBlockCrystal.attributes.description.behavior=Move: All the Move Blocks will start moving.\nMoveAndChangeDirection: All the Move Blocks will start moving in the same direction (reopen the plugin).\nChangeDirection: All the Move Blocks will have a new direction (reopen the plugin).\nBreak: All the Move Blocks that are currently idling will break.\nNOTE: ONLY THE "MOVE" MODE IS CURRENTLY WORKING. THE OTHERS ARE BUGGY.
+entities.KoseiHelper/MoveBlockCrystal.attributes.description.behavior=Move: All the Move Blocks will start moving.\nChangeDirection: All the Move Blocks will have a new direction (save and reopen to specify direction).\nBreak: All the Move Blocks will break.
 entities.KoseiHelper/MoveBlockCrystal.attributes.description.refillDash=Whether the crystal should refill the dash like most refill crystals.
-entities.KoseiHelper/MoveBlockCrystal.attributes.description.moveBlockType=Whether the crystal should affect vanilla Move Blocks or Communal Helper's Connected Move Blocks.
 
 # Custom Bubble
 entities.KoseiHelper/CustomBubble.placements.name.CustomBubble=Custom Bubble (Crossover)
