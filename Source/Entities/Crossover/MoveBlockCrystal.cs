@@ -8,7 +8,7 @@ using Monocle;
 using MonoMod.Utils;
 using System;
 using System.Collections;
-using static Celeste.MoveBlock;
+using System.Reflection;
 
 namespace Celeste.Mod.KoseiHelper.Entities.Crossover;
 
@@ -223,6 +223,7 @@ class MoveBlockCrystal : Entity
                         mb.angle = angle;
                         break;
                     case Behavior.Break:
+                        if (mb.state != MoveBlock.MovementState.Breaking)
                             mb.Add(new Coroutine(BreakRoutine(level, mb), true));
                         break;
                     default: // Move
@@ -272,9 +273,21 @@ class MoveBlockCrystal : Entity
 
     private IEnumerator BreakRoutine(Level level, MoveBlock mb)
     {
-        Audio.Play("event:/game/04_cliffside/arrowblock_break", Position);
-        mb.moveSfx.Stop();
-        mb.state = MovementState.Breaking;
+        Coroutine controller = null;
+
+        foreach (Component c in mb.Components)
+        {
+            if (c is Coroutine co)
+            {
+                controller = co;
+                break;
+            }
+        }
+        controller?.RemoveSelf();
+
+        Audio.Play("event:/game/04_cliffside/arrowblock_break", mb.Position);
+        mb.moveSfx?.Stop();
+        mb.state = MoveBlock.MovementState.Breaking;
         mb.speed = (mb.targetSpeed = 0f);
         mb.angle = (mb.targetAngle = mb.homeAngle);
         mb.StartShaking(0.2f);
@@ -282,9 +295,10 @@ class MoveBlockCrystal : Entity
         yield return 0.2f;
         mb.BreakParticles();
         MoveBlock moveBlock = mb;
-        Vector2 amount = mb.startPosition - Position;
+        Vector2 amount = mb.startPosition - mb.Position;
         mb.DisableStaticMovers();
         mb.MoveStaticMovers(amount);
+        mb.Position = mb.startPosition;
         MoveBlock moveBlock2 = mb;
         MoveBlock moveBlock3 = mb;
         bool visible = false;
@@ -292,7 +306,7 @@ class MoveBlockCrystal : Entity
         moveBlock2.Visible = visible;
         yield return 2.2f;
 
-        while (CollideCheck<Actor>() || CollideCheck<Solid>())
+        while (mb.CollideCheck<Actor>() || mb.CollideCheck<Solid>())
         {
             yield return null;
         }
@@ -301,7 +315,7 @@ class MoveBlockCrystal : Entity
         EventInstance instance = Audio.Play("event:/game/04_cliffside/arrowblock_reform_begin", mb.Position);
         MoveBlock moveBlock4 = mb;
 
-        Audio.Play("event:/game/04_cliffside/arrowblock_reappear", Position);
+        Audio.Play("event:/game/04_cliffside/arrowblock_reappear", mb.Position);
         mb.Visible = true;
         mb.Collidable = true;
         mb.triggered = false;
@@ -312,9 +326,13 @@ class MoveBlockCrystal : Entity
         mb.speed = (mb.targetSpeed = 0f);
         mb.angle = (mb.targetAngle = mb.homeAngle);
         mb.noSquish = null;
-        mb.fillColor = idleBgFill;
+        mb.fillColor = MoveBlock.idleBgFill;
         mb.UpdateColors();
         mb.flash = 1f;
+
+        DynamicData data = DynamicData.For(mb);
+        IEnumerator controllerEnum = (IEnumerator)typeof(MoveBlock).GetMethod("Controller", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(mb, null);
+        mb.Add(new Coroutine(controllerEnum, true));
     }
 
     private void Respawn(Level level)
