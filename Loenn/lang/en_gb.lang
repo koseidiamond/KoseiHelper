@@ -129,10 +129,18 @@ entities.KoseiHelper/MapController.attributes.description.rootPath=The path to y
 entities.KoseiHelper/MapController.attributes.description.onlyOnSafeGround=Whether the map can be opened only on safe ground (e.g. not above trigger spikes, clouds, swap blocks and such).\n\nPro tip: place Flag Zones (GameHelper) in places where jank behavior or unfair deaths would occur (such as the path of a fireball) with the Map Disabled Flag.
 entities.KoseiHelper/MapController.attributes.description.mapDisabledFlag=The player will be unable to open the map while this flag is true.
 
-#KOSEI HELPER ENTITIES
+# Move Block Crystal
+entities.KoseiHelper/MoveBlockCrystal.placements.name.MoveBlockCrystal=Move Block Crystal (Crossover)
+entities.KoseiHelper/MoveBlockCrystal.placements.description.MoveBlockCrystal=A crystal that alters Move Blocks when it is collected.
+entities.KoseiHelper/MoveBlockCrystal.attributes.description.singleUse=Whether the crystal should disappear after being collected.
+entities.KoseiHelper/MoveBlockCrystal.attributes.description.sprite=The folder where your sprites are, relative to Atlases/Gameplay/.
+entities.KoseiHelper/MoveBlockCrystal.attributes.description.direction=The new direction of the Move Blocks.
+entities.KoseiHelper/MoveBlockCrystal.attributes.description.behavior=Move: All the Move Blocks will start moving.\nMoveAndChangeDirection: All the Move Blocks will start moving in the same direction (reopen the plugin).\nChangeDirection: All the Move Blocks will have a new direction (reopen the plugin).\nBreak: All the Move Blocks that are currently idling will break.\nNOTE: ONLY THE "MOVE" MODE IS CURRENTLY WORKING. THE OTHERS ARE BUGGY.
+entities.KoseiHelper/MoveBlockCrystal.attributes.description.refillDash=Whether the crystal should refill the dash like most refill crystals.
+entities.KoseiHelper/MoveBlockCrystal.attributes.description.moveBlockType=Whether the crystal should affect vanilla Move Blocks or Communal Helper's Connected Move Blocks.
 
 # Custom Bubble
-entities.KoseiHelper/CustomBubble.placements.name.CustomBubble=Custom Bubble
+entities.KoseiHelper/CustomBubble.placements.name.CustomBubble=Custom Bubble (Crossover)
 entities.KoseiHelper/CustomBubble.placements.description.CustomBubble=Bubble like the one from shielded feathers, but more customizable and respritable.\nFeather not included.
 entities.KoseiHelper/CustomBubble.attributes.description.speedMult=The multiplier when the player is moving away from the bubble (by default 1.2 like ultras).
 entities.KoseiHelper/CustomBubble.attributes.name.speedMult=Speed Multiplier
@@ -154,6 +162,10 @@ entities.KoseiHelper/CustomBubble.attributes.description.freezeFrames=Whether br
 entities.KoseiHelper/CustomBubble.attributes.description.radius=The radius of the bubble.\nNote that the sprite will not be resized, only the outline.
 entities.KoseiHelper/CustomBubble.attributes.description.coyote=Whether the bubble should give the player coyote frames (grace jump timer).
 entities.KoseiHelper/CustomBubble.attributes.name.coyote=Coyote Frames
+
+
+#KOSEI HELPER ENTITIES
+
 
 # Pregnant Flutterbird
 entities.KoseiHelper/SpecialFlutterbird.placements.name.PregnantFlutterbird="Special" Flutterbird
