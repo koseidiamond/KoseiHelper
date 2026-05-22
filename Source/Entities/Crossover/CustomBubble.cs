@@ -1,10 +1,11 @@
 using Celeste.Mod.Entities;
+using Celeste.Mod.KoseiHelper;
 using Microsoft.Xna.Framework;
 using Monocle;
 using System;
 using System.Collections;
 
-namespace Celeste.Mod.KoseiHelper.Entities;
+namespace Celeste.Mod.KoseiHelper.Entities.Crossover;
 
 [CustomEntity("KoseiHelper/CustomBubble")]
 [Tracked]
@@ -26,8 +27,8 @@ public class CustomBubble : Entity
     public bool singleUse;
     public Color color;
     public float respawnCooldown, respawnTimer;
-    private static ParticleType FeatherCollect = FlyFeather.P_Collect;
-    private static ParticleType FeatherRespawn = FlyFeather.P_Respawn;
+    private ParticleType FeatherCollect = new ParticleType(FlyFeather.P_Collect);
+    private ParticleType FeatherRespawn = new ParticleType(FlyFeather.P_Respawn);
     private enum BubbleBreakBehavior
     {
         DontBreak,
