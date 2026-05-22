@@ -1,3 +1,5 @@
+local utils = require("utils")
+
 local MaryBlock = {}
 
 MaryBlock.name = "KoseiHelper/MaryBlock"
@@ -53,7 +55,7 @@ end
 
 function MaryBlock.selection(room, entity)
     local width, height = 16, 16
-    return utils.rectangle(entity.x - width / 2, entity.y - height / 2, width, height + 8)
+    return utils.rectangle(entity.x - width / 2, entity.y - height / 2 + 4, width, height + 4)
 end
 
 function MaryBlock.texture(room, entity)

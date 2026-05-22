@@ -1,23 +1,25 @@
 local utils = require("utils")
 local mods = require("mods")
+local depths = mods.requireFromPlugin("libraries.depths")
 
 local DefrostableBlock = {}
 
 DefrostableBlock.name = "KoseiHelper/DefrostableBlock"
+
 function DefrostableBlock.depth(room,entity)
 	return entity.depth
 end
 
 DefrostableBlock.placements = {
 	{
-		name = "Defrostable Block",
+		name = "DefrostableBlock",
 		data = {
 			big = false,
 			sprite = "koseiHelper_DefrostableBlock",
 			sound = "event:/none",
-			depth = -10050,
-		},
-	},
+			depth = -10050
+		}
+	}
 }
 
 function DefrostableBlock.selection(room, entity)
@@ -29,7 +31,7 @@ function DefrostableBlock.selection(room, entity)
 	end
 end
 
-function DefrostableBlock.fieldInformation = {
+DefrostableBlock.fieldInformation = {
 	depth = {
         fieldType = "integer",
         options = depths.addDepths(depths.getDepths(), {}),

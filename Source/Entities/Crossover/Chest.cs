@@ -115,7 +115,7 @@ public class Chest : Entity
                 coinsGiven = (int)(deterministicRandom.NextFloat() * (maxCoins - minCoins) + minCoins) * 2;
             else
                 coinsGiven = (int)(deterministicRandom.NextFloat() * (maxCoins - minCoins) + minCoins);
-            session.SetCounter(counterName, coinsGiven);
+            session.SetCounter(counterName, session.GetCounter(counterName) + coinsGiven);
                 Add(talkRoutine = new Coroutine(Talk(player, "You found {#F94A4A}" + coinsGiven + "{#} " + currencyName + " inside!{n}" +
                 "You have {#F94A4A}" + session.GetCounter(counterName) + "{#} " + currencyName + " now.")));
             session.SetFlag(flagSet, true);
