@@ -72,7 +72,6 @@ function MoveBlockCrystal.texture(room, entity)
 	else
 		return entity.sprite .. "break/idle00"
 	end
-	
 end
 
 return MoveBlockCrystal

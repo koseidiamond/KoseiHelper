@@ -276,38 +276,37 @@ public class Ladder : Entity
 
 
                 // Dummy Mode animations
-                updateSprite(player);
+                UpdateSprite(player);
             }
             base.Update();
         }
     }
 
-    private void updateSprite(Player player)
+    private void UpdateSprite(Player player)
     {
         if (player == null) return;
         if (Input.MoveY.Value != 0f || canClimbHorizontally && Input.MoveX.Value != 0f && !player.Ducking)
         {
             if (Scene.OnInterval(0.35f)) Audio.Play(sound); //Plays sounds when climbing
 
-            //player.Sprite.Visible = player.Hair.Visible = false;
             if (Depth < 0)
             { //Plays animation depending on bg/fg and number of dashes
                 switch (player.Dashes)
                 {
                     case 0:
                         if (player.Inventory.Dashes == 0)
-                            playerSprite.Play("ladder_climb", false);
+                            player.Sprite.Play("ladder_climb", false);
                         else
-                            playerSprite.Play("ladder_climbBlue", false);
+                            player.Sprite.Play("ladder_climbBlue", false);
                         break;
                     case 1:
-                        playerSprite.Play("ladder_climb", false);
+                        player.Sprite.Play("ladder_climb", false);
                         break;
                     case 2:
-                        playerSprite.Play("ladder_climbPink", false);
+                        player.Sprite.Play("ladder_climbPink", false);
                         break;
                     default:
-                        playerSprite.Play("ladder_climb", false);
+                        player.Sprite.Play("ladder_climb", false);
                         break;
                 }
             }
@@ -317,18 +316,18 @@ public class Ladder : Entity
                 {
                     case 0:
                         if (player.Inventory.Dashes == 0)
-                            playerSprite.Play("ladder_bg_climb", false);
+                            player.Sprite.Play("ladder_bg_climb", false);
                         else
-                            playerSprite.Play("ladder_bg_climbBlue", false);
+                            player.Sprite.Play("ladder_bg_climbBlue", false);
                         break;
                     case 1:
-                        playerSprite.Play("ladder_bg_climb", false);
+                        player.Sprite.Play("ladder_bg_climb", false);
                         break;
                     case 2:
-                        playerSprite.Play("ladder_bg_climbPink", false);
+                        player.Sprite.Play("ladder_bg_climbPink", false);
                         break;
                     default:
-                        playerSprite.Play("ladder_bg_climb", false);
+                        player.Sprite.Play("ladder_bg_climb", false);
                         break;
                 }
             }
@@ -341,18 +340,18 @@ public class Ladder : Entity
                 {
                     case 0:
                         if (player.Inventory.Dashes == 0)
-                            playerSprite.Play("ladder_cling", false);
+                            player.Sprite.Play("ladder_cling", false);
                         else
-                            playerSprite.Play("ladder_clingBlue", false);
+                            player.Sprite.Play("ladder_clingBlue", false);
                         break;
                     case 1:
-                        playerSprite.Play("ladder_cling", false);
+                        player.Sprite.Play("ladder_cling", false);
                         break;
                     case 2:
-                        playerSprite.Play("ladder_clingPink", false);
+                        player.Sprite.Play("ladder_clingPink", false);
                         break;
                     default:
-                        playerSprite.Play("ladder_cling", false);
+                        player.Sprite.Play("ladder_cling", false);
                         break;
                 }
             }
@@ -362,23 +361,22 @@ public class Ladder : Entity
                 {
                     case 0:
                         if (player.Inventory.Dashes == 0)
-                            playerSprite.Play("ladder_bg_cling", false);
+                            player.Sprite.Play("ladder_bg_cling", false);
                         else
-                            playerSprite.Play("ladder_bg_clingBlue", false);
+                            player.Sprite.Play("ladder_bg_clingBlue", false);
                         break;
                     case 1:
-                        playerSprite.Play("ladder_bg_cling", false);
+                        player.Sprite.Play("ladder_bg_cling", false);
                         break;
                     case 2:
-                        playerSprite.Play("ladder_bg_clingPink", false);
+                        player.Sprite.Play("ladder_bg_clingPink", false);
                         break;
                     default:
-                        playerSprite.Play("ladder_bg_cling", false);
+                        player.Sprite.Play("ladder_bg_cling", false);
                         break;
                 }
             }
         }
-        Add(playerSprite);
     }
 
     public override void Render()
@@ -441,7 +439,7 @@ public class Ladder : Entity
         ApplyDeceleration(ref player.Speed.Y, maxDeceleration, decelerationThreshold, zeroThreshold);
         Ladder ladder = player.Get<LadderStateComponent>().CurrentLadder;
 
-        ladder.updateSprite(player);
+        ladder.UpdateSprite(player);
 
         return KoseiHelper_StLadder;
     }
@@ -491,12 +489,6 @@ public class Ladder : Entity
         Collidable = false;
         outOfLadders();
         RemoveSelf();
-    }
-
-    public override void DebugRender(Camera camera)
-    {
-        base.DebugRender(camera);
-        Draw.Point(Position, Color.Aqua);
     }
 
     public static void OnPlayerSpriteUpdate(On.Celeste.Player.orig_UpdateSprite orig, Player p)

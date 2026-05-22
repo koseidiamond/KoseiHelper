@@ -14,7 +14,7 @@ function chest.selection(room, entity)
     return utils.rectangle(entity.x - 8, entity.y - 8, 16, 16)
 end
 
-chest.justification = {0.5, 0.6}
+
 chest.placements = {
     {
         name = "Chest",

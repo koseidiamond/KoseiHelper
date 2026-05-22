@@ -4,7 +4,14 @@ local depths = mods.requireFromPlugin("libraries.depths")
 local BalloonTripCollectable = {}
 
 BalloonTripCollectable.name = "KoseiHelper/BalloonTripCollectable"
-BalloonTripCollectable.texture ="objects/KoseiHelper/Crossover/BalloonTripCollectable/balloon00"
+
+function BalloonTripCollectable.texture(room, entity)
+	if entity.spriteID == "koseiHelper_balloonTripCollectable_Blue" then
+		return "objects/KoseiHelper/Crossover/BalloonTripCollectable/balloonBlue00"
+	else
+		return "objects/KoseiHelper/Crossover/BalloonTripCollectable/balloon00"
+	end
+end
 
 function BalloonTripCollectable.depth(room,entity)
 	return entity.depth
@@ -56,6 +63,13 @@ BalloonTripCollectable.fieldInformation = {
 	particleColor = {
 		fieldType = "color",
 		useAlpha = true
+	},
+		spriteID = {
+		options = {
+		"koseiHelper_balloonTripCollectable",
+		"koseiHelper_balloonTripCollectable_Blue"
+		},
+		editable = true
 	}
 }
 
