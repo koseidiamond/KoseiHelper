@@ -195,8 +195,8 @@ public class ShatterDashBlock : Solid
 
     private DashCollisionResults OnDashed(Player player, Vector2 direction)
     {
-        if ((shatterAxis != ShatterBlockDirection.Horizontal && Math.Abs(player.Speed.Y) > speedReq) ||
-            (shatterAxis != ShatterBlockDirection.Vertical && Math.Abs(player.Speed.X) > speedReq) &&
+        if (((shatterAxis != ShatterBlockDirection.Horizontal && Math.Abs(player.Speed.Y) > speedReq) ||
+            (shatterAxis != ShatterBlockDirection.Vertical && Math.Abs(player.Speed.X) > speedReq)) &&
             (canDash || (!canDash && player.StateMachine.state != 2)))
         {
             Break(player, direction, true);

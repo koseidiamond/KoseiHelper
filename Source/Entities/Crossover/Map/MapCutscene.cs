@@ -202,8 +202,8 @@ public class MapCutscene(Player player) : CutsceneEntity
         public override void Render()
         {
             Level level = Scene as Level;
-            if (level?.RetryPlayerCorpse == null && target != null)
-                Draw.SpriteBatch.Draw(target, Position, target.Bounds, Color.White * alpha, 0, new Vector2(target.Width, 0f) / 2f, 1f, SpriteEffects.None, 0f);
+            if (level?.RetryPlayerCorpse == null && target != null) // Idk why I substracted -2 to the X's origin but it works
+                Draw.SpriteBatch.Draw(target, Position, target.Bounds, Color.White * alpha, 0, new Vector2(target.Width -2f, 0f) / 2f, 1f, SpriteEffects.None, 0f);
         }
     }
 
