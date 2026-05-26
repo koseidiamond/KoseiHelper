@@ -186,7 +186,8 @@ entities.KoseiHelper/SpecialFlutterbird.attributes.description.shootLasers=Wheth
 entities.KoseiHelper/SpecialFlutterbird.attributes.description.laserFrequency=How much time between each laser shot.
 entities.KoseiHelper/SpecialFlutterbird.attributes.description.laserChargeTimer=How long the laser will charge before being shot.\nLow values might make the laser unable to aim properly.
 entities.KoseiHelper/SpecialFlutterbird.attributes.description.killOnContact=Whether the bird is evil.
-entities.KoseiHelper/SpecialFlutterbird.attributes.description.bouncy=Whether the bird can bounce the player back.
+#entities.KoseiHelper/SpecialFlutterbird.attributes.description.bouncy=Whether the bird can bounce the player back.
+entities.KoseiHelper/SpecialFlutterbird.attributes.description.bounceType=Whether the bird can bounce the player back (Bouncy), launch them (SideBouncy), or force a super (SuperBouncy).
 entities.KoseiHelper/SpecialFlutterbird.attributes.description.flyAway=Whether the bird should fly away when the player is too close.
 entities.KoseiHelper/SpecialFlutterbird.attributes.description.flyAwayFlag=The flag that will be set to true when the bird flies away.
 entities.KoseiHelper/SpecialFlutterbird.attributes.description.sterilizationFlag=The bird will be unable to spawn babies while this flag is true.
@@ -202,6 +203,8 @@ entities.KoseiHelper/SpecialFlutterbird.attributes.description.partnerID=The ent
 entities.KoseiHelper/SpecialFlutterbird.attributes.description.hoppingDistance=How much the birds should hop horizontally, on average.
 entities.KoseiHelper/SpecialFlutterbird.attributes.description.scaredDistance=The horizontal distance at which the bird will be scared and fly away.
 entities.KoseiHelper/SpecialFlutterbird.attributes.description.explodes=Whether the flutterbird will explode upon touch.
+entities.KoseiHelper/SpecialFlutterbird.attributes.description.stealBerries=Whether the flutterbird can force the berries to be lost upon being touched.
+entities.KoseiHelper/SpecialFlutterbird.attributes.description.giveUltra=Whether touching the flutterbird should multiply the player's horizontal speed by x1.2.\nNOTE: The ultras are not vanilla. The x1.2 is given once for every frame that the player is touching the bird (like an acceleration field).\nMake a bird pregnant or stack multiple birds for a crazy speed build!
 
 # Debug Renderer
 entities.KoseiHelper/DebugRenderer.placements.name.DebugRenderer=Debug Renderer

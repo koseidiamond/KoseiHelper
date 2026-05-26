@@ -191,6 +191,7 @@ ladder.fieldInformation = {
 	options = {
             "objects/KoseiHelper/Crossover/Ladder/ladder_wood",
             "objects/KoseiHelper/Crossover/Ladder/ladder_metal",
+			"objects/KoseiHelper/Crossover/Ladder/ladder_temple",
 			"objects/KoseiHelper/Crossover/Ladder/ladder_template"
         },
         editable = true

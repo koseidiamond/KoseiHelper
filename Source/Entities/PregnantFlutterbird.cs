@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Monocle;
 using System;
 using System.Collections;
+using static Celeste.Mod.KoseiHelper.Entities.Brick;
 
 namespace Celeste.Mod.KoseiHelper.Entities;
 
@@ -50,6 +51,14 @@ public class PregnantFlutterbird : Actor
     public float laserFrequency, laserChargeTimer; // unused because it broke some map for no reason, apparently
     public bool killOnContact;
     public bool bouncy;
+    public enum FlutterbirdBounceType {
+        NotBouncy,
+        Bouncy,
+        SuperBouncy,
+        SideBouncy,
+    };
+    public FlutterbirdBounceType bounceType;
+
     public bool flyAway;
     public string flyAwayFlag;
     public string sterilizationFlag;
@@ -60,6 +69,9 @@ public class PregnantFlutterbird : Actor
     public bool emitLight;
     public bool coyote;
     public bool explodes;
+
+    public bool stealBerries;
+    public bool giveUltra;
 
     public float chaseSpeedXMult, chaseSpeedYMult;
 
@@ -79,6 +91,8 @@ public class PregnantFlutterbird : Actor
 
     private int health = 1;
     private float blinkTimer = 0f;
+
+    private Leader leader;
 
     public PregnantFlutterbird(EntityData data, Vector2 offset, EntityID eid) : base(data.Position + offset)
     {
@@ -115,6 +129,8 @@ public class PregnantFlutterbird : Actor
             Add(new Coroutine(ShootLasers()));
         killOnContact = data.Bool("killOnContact", false);
         bouncy = data.Bool("bouncy", false);
+        bounceType = data.Enum("bounceType", FlutterbirdBounceType.NotBouncy);
+        if (bouncy) bounceType = FlutterbirdBounceType.Bouncy; // legacy
         flyAway = data.Bool("flyAway", true);
         flyAwayFlag = data.Attr("flyAwayFlag", "");
         sterilizationFlag = data.Attr("sterilizationFlag", "");
@@ -132,6 +148,7 @@ public class PregnantFlutterbird : Actor
         blood = data.Bool("blood", true);
         deathSfx = data.Attr("deathSfx", "event:/game/05_mirror_temple/eyebro_eyemove");
         health = data.Int("health", 1);
+        giveUltra = data.Bool("giveUltra", false);
 
         if (emitLight)
         {
@@ -140,15 +157,16 @@ public class PregnantFlutterbird : Actor
         }
         Add(laserSfx = new SoundSource());
         pushRadius = new Circle(6f);
+        stealBerries = data.Bool("stealBerries", true);
     }
 
     // this constructor is used when a baby bird is born.
     // Babies don't have a partner and it doesn't matter if they are poly or not because THEY CAN'T REPRODUCE (they are minors).
     public PregnantFlutterbird(Vector2 position, int childrenCount, float timeToGiveBirth, bool chaser, Gender gender, Orientation orientation, bool shootLasers,
-        bool killOnContact, bool bouncy, bool flyAway, string flyAwayFlag, string sterilizationFlag, bool squishable, string hopSfx, string birthSfx, string spriteID,
+        bool killOnContact, FlutterbirdBounceType bounceType, bool flyAway, string flyAwayFlag, string sterilizationFlag, bool squishable, string hopSfx, string birthSfx, string spriteID,
         int depth, bool emitLight, bool coyote, float hoppingDistance, float scaredDistance, Color color, bool explodes,
         float chaseSpeedXMult, float chaseSpeedYMult, bool blood, string deathSfx, int health,
-        float colliderWidth, float colliderHeight, float colliderXOffset, float colliderYOffset) : base(position)
+        float colliderWidth, float colliderHeight, float colliderXOffset, float colliderYOffset, bool stealBerries, bool giveUltra) : base(position)
     {
         this.start = this.currentPosition = this.Position;
         this.Position.Y += 1f;
@@ -172,7 +190,7 @@ public class PregnantFlutterbird : Actor
         if (this.shootLasers)
             Add(new Coroutine(ShootLasers()));
         this.killOnContact = killOnContact;
-        this.bouncy = bouncy;
+        this.bounceType = bounceType;
         this.flyAwayFlag = flyAwayFlag;
         this.sterilizationFlag = sterilizationFlag;
         this.squishable = squishable;
@@ -188,6 +206,8 @@ public class PregnantFlutterbird : Actor
         this.blood = blood;
         this.deathSfx = deathSfx;
         this.health = health;
+        this.stealBerries = stealBerries;
+        this.giveUltra = giveUltra;
 
         Add(sprite = GFX.SpriteBank.Create(this.spriteID));
         this.sprite.Color = color;
@@ -224,11 +244,37 @@ public class PregnantFlutterbird : Actor
     {
         if (player.Scene != null)
         {
+            if (giveUltra)
+                player.Speed.X *= 1.2f;
+            if (stealBerries)
+            {
+                foreach (Strawberry berry in player.level.Entities.FindAll<Strawberry>())
+                {
+                    if (berry.Follower.Leader != null)
+                    {
+                        for (int num = player.Leader.Followers.Count - 1; num >= 0; num--)
+                            berry.Follower.Leader.LoseFollower(player.Leader.Followers[num]);
+                        break;
+                    }
+                }
+            }
+
+
             if (killOnContact)
                 player.Die(player.Center);
-            if (bouncy)
+            switch (bounceType)
             {
-                player.Bounce(CenterY);
+                case FlutterbirdBounceType.Bouncy:
+                    player.Bounce(CenterY);
+                    break;
+                case FlutterbirdBounceType.SideBouncy:
+                    KoseiHelperUtils.SideBounce(Math.Sign(player.Position.X - this.Position.X), Position.X, Position.Y, player, true, true, false, false, true);
+                    break;
+                case FlutterbirdBounceType.SuperBouncy:
+                    player.SuperBounce(CenterY);
+                    break;
+                default:
+                    break;
             }
             if (coyote)
                 player.jumpGraceTimer = 0.15f;
@@ -496,9 +542,9 @@ public class PregnantFlutterbird : Actor
             childrenCount--;
             Audio.Play(birthSfx, Center);
             SceneAs<Level>().Particles.Emit(ParticleTypes.SparkyDust, Position, Color.Pink);
-            Scene.Add(new PregnantFlutterbird(Position, childrenCount, timeToGiveBirth, chaser, gender, orientation, shootLasers, killOnContact, bouncy, flyAway, flyAwayFlag,
+            Scene.Add(new PregnantFlutterbird(Position, childrenCount, timeToGiveBirth, chaser, gender, orientation, shootLasers, killOnContact, bounceType, flyAway, flyAwayFlag,
                 sterilizationFlag, squishable, hopSfx, birthSfx, spriteID, customDepth, emitLight, coyote, hoppingDistance, scaredDistance, sprite.Color, explodes,
-                chaseSpeedXMult, chaseSpeedYMult, blood, deathSfx, health, colliderWidth, colliderHeight, colliderXOffset, colliderYOffset));
+                chaseSpeedXMult, chaseSpeedYMult, blood, deathSfx, health, colliderWidth, colliderHeight, colliderXOffset, colliderYOffset, stealBerries, giveUltra));
         }
     }
 

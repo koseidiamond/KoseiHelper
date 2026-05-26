@@ -21,7 +21,8 @@ PregnantFlutterbird.placements = {
 		laserFrequency = 0.7,
 		laserChargeTimer = 1.4,
 		killOnContact = false,
-		bouncy = false,
+		--bouncy = false,
+		bounceType = "NotBouncy",
 		flyAway = true,
 		flyAwayFlag = "",
 		sterilizationFlag = "",
@@ -45,7 +46,9 @@ PregnantFlutterbird.placements = {
 		chaseSpeedXMult = 1,
 		chaseSpeedYMult = 1,
 		blood = true,
-		deathSfx = "event:/game/05_mirror_temple/eyebro_eyemove"
+		deathSfx = "event:/game/05_mirror_temple/eyebro_eyemove",
+		stealBerries = false,
+		giveUltra = false
 		-- secret attribute intended to be used with nemesis gun:
 		-- health = 1
 	}
@@ -56,6 +59,7 @@ PregnantFlutterbird.fieldOrder = {
 	"y",
 	"gender",
 	"orientation",
+	"bounceType",
 	"childrenCount",
 	"timeToGiveBirth",
 	"flyAwayFlag",
@@ -87,6 +91,8 @@ PregnantFlutterbird.fieldOrder = {
 	"emitLight",
 	"polyamorous",
 	"explodes",
+	"stealBerries",
+	"giveUltra",
 	"blood"
 }
 
@@ -109,6 +115,15 @@ PregnantFlutterbird.fieldInformation = {
 			"Asexual",
 			"Bisexual",
 			"Self"
+		},
+		editable = false
+	},
+	bounceType = {
+        options = {
+			"NotBouncy",
+			"Bouncy",
+			"SideBouncy",
+			"SuperBouncy"
 		},
 		editable = false
 	},
