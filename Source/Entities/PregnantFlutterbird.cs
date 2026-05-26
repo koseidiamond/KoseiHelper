@@ -580,16 +580,16 @@ public class PregnantFlutterbird : Actor
             }
             yield return null;
         }
-        Die();
+        Die(true);
     }
 
-    public void Die()
+    public void Die(bool suppressEffects = false)
     {
         health--;
         Level level = SceneAs<Level>();
         if (health == 0)
         {
-            if (!flyingAway) // doesn't make sense to actually "die" if they are just oob
+            if (!suppressEffects) // doesn't make sense to actually "die" if they are just oob
             {
                 Audio.Play(deathSfx, Position);
                 if (blood)
@@ -607,7 +607,7 @@ public class PregnantFlutterbird : Actor
         {
             sprite.Color = Color.Red;
             blinkTimer = 0.1f;
-            if (!flyingAway)
+            if (!suppressEffects)
             {
                 Audio.Play(deathSfx, Position);
                 if (blood)

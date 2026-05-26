@@ -82,7 +82,8 @@ public class Ladder : Entity
     {
         player.DummyGravity = true;
         player.StateMachine.Locked = false;
-        player.StateMachine.State = Player.StNormal;
+        if (player.StateMachine.State == KoseiHelper_StLadder || player.StateMachine.State == 11)
+            player.StateMachine.State = Player.StNormal;
         player.ForceCameraUpdate = false;
         player.IgnoreJumpThrus = false;
         player.Sprite.Y = 0;
@@ -94,7 +95,7 @@ public class Ladder : Entity
         Speed = data.Float("climbSpeed", 60f);
         sound = data.Attr("sound", "event:/KoseiHelper/Crossover/Ladder");
         Collider = new Hitbox(data.Width, data.Height);
-        Depth = data.Int("depth");
+        Depth = data.Int("depth", 1);
         drainsStamina = data.Bool("drainsStamina", false);
         leaveLadders = data.Bool("leaveLaddersToRegrab", false);
         horizontalSpeedLimit = data.Float("horizontalSpeedLimit", 330f);
@@ -111,20 +112,25 @@ public class Ladder : Entity
             textureSide = GFX.Game[data.Attr("texture") + "_side"];
             textureMiddle = GFX.Game[data.Attr("texture") + "_middle"];
             textureThin = GFX.Game[data.Attr("texture") + "_thin"];
-            verticalOffset = data.Int("verticalOffset");
+            verticalOffset = data.Int("verticalOffset", 0);
         }
         else invisible = true;
         // TODO read color with my Utils thingie
         // If the ladders are not tinted, the bg ones will be slightly darker
         if (Depth < 0)
         {
-            if (data.HexColor("color") == Color.White) color = Color.White;
-            else color = Calc.HexToColor(data.Attr("color"));
+            if (data.HexColor("color") == Color.White)
+                color = Color.White;
+            else
+                color = KoseiHelperUtils.ParseHexColor(data.Values.TryGetValue("color", out object c1) ? c1.ToString() : null, Color.White);
+
         }
         else
         {
-            if (data.HexColor("color") == Color.White) color = Color.LightGray;
-            else color = Calc.HexToColor(data.Attr("color"));
+            if (data.HexColor("color") == Color.White)
+                color = Color.LightGray;
+            else
+                color = KoseiHelperUtils.ParseHexColor(data.Values.TryGetValue("color", out object c1) ? c1.ToString() : null, Color.White);
         }
         Add(new PlayerCollider(OnPlayer));
         if (data.Bool("isAttached"))
@@ -165,7 +171,9 @@ public class Ladder : Entity
             }
             if (player.CollideCheck<Ladder>() && player.StateMachine.State.Equals(0))
             { //Conditions for ladder state: collide with player, player is in StNormal...
-                if (!requiresGrabButton && Input.MoveY.Value == -1 || verticalMoveCheck && !player.wasOnGround || requiresGrabButton && (!player.wasOnGround || player.onGround && Input.MoveY.Value == -1 && Input.Grab) && player.Speed.X < horizontalSpeedLimit)
+                if (((!requiresGrabButton && (Input.MoveY.Value == -1 || verticalMoveCheck && !player.wasOnGround)) ||
+                    (requiresGrabButton && ((!player.wasOnGround || (player.onGround && Input.MoveY.Value == -1)) && Input.Grab))) &&
+                    Math.Abs(player.Speed.X) < horizontalSpeedLimit)
                 { // ...press up/down (or grab in grab mode)
                     if (!disableUntilLeave && Math.Abs(player.Speed.X) < horizontalSpeedLimit && timeSinceLadderTech <= 0)
                     { // ...player is not moving too fast horizontally, and the LadderJump cooldown is finished
@@ -280,13 +288,31 @@ public class Ladder : Entity
 
     private void UpdateSprite(Player player)
     {
-        if (player == null) return;
-        if (Input.MoveY.Value != 0f || canClimbHorizontally && Input.MoveX.Value != 0f && !player.Ducking)
+        if (player == null)
+            return;
+
+        // Find the topmost ladder currently being touched
+        System.Collections.Generic.List<Entity> ladders = player.CollideAll<Ladder>();
+        float lowestY = float.MaxValue;
+
+        foreach (Entity ladder in ladders)
         {
-            if (Scene.OnInterval(0.35f)) Audio.Play(sound); //Plays sounds when climbing
+            if (ladder.Position.Y < lowestY)
+                lowestY = ladder.Position.Y;
+        }
+
+        // True when the player is actually inside the ladder and not sliding on top of it
+        bool belowTop = player.Position.Y - 8 >= lowestY;
+        bool climbingVertical = (Input.MoveY.Value < 0f && belowTop) || Input.MoveY.Value > 0f;
+        bool climbingHorizontal = belowTop && canClimbHorizontally && Input.MoveX.Value != 0f && !player.Ducking;
+
+        if (climbingVertical || climbingHorizontal)
+        {
+            if (Scene.OnInterval(0.35f))
+                Audio.Play(sound); // Plays sounds when climbing
 
             if (Depth < 0)
-            { //Plays animation depending on bg/fg and number of dashes
+            { // Plays animation depending on bg/fg and number of dashes
                 switch (player.Dashes)
                 {
                     case 0:
@@ -295,12 +321,15 @@ public class Ladder : Entity
                         else
                             KoseiHelperUtils.PlayIfNot(player, "ladder_climbBlue");
                         break;
+
                     case 1:
                         KoseiHelperUtils.PlayIfNot(player, "ladder_climb");
                         break;
+
                     case 2:
                         KoseiHelperUtils.PlayIfNot(player, "ladder_climbPink");
                         break;
+
                     default:
                         KoseiHelperUtils.PlayIfNot(player, "ladder_climb");
                         break;
@@ -316,12 +345,15 @@ public class Ladder : Entity
                         else
                             KoseiHelperUtils.PlayIfNot(player, "ladder_bg_climbBlue");
                         break;
+
                     case 1:
                         KoseiHelperUtils.PlayIfNot(player, "ladder_bg_climb");
                         break;
+
                     case 2:
                         KoseiHelperUtils.PlayIfNot(player, "ladder_bg_climbPink");
                         break;
+
                     default:
                         KoseiHelperUtils.PlayIfNot(player, "ladder_bg_climb");
                         break;
@@ -340,12 +372,15 @@ public class Ladder : Entity
                         else
                             KoseiHelperUtils.PlayIfNot(player, "ladder_clingBlue");
                         break;
+
                     case 1:
                         KoseiHelperUtils.PlayIfNot(player, "ladder_cling");
                         break;
+
                     case 2:
                         KoseiHelperUtils.PlayIfNot(player, "ladder_clingPink");
                         break;
+
                     default:
                         KoseiHelperUtils.PlayIfNot(player, "ladder_cling");
                         break;
@@ -361,12 +396,15 @@ public class Ladder : Entity
                         else
                             KoseiHelperUtils.PlayIfNot(player, "ladder_bg_clingBlue");
                         break;
+
                     case 1:
                         KoseiHelperUtils.PlayIfNot(player, "ladder_bg_cling");
                         break;
+
                     case 2:
                         KoseiHelperUtils.PlayIfNot(player, "ladder_bg_clingPink");
                         break;
+
                     default:
                         KoseiHelperUtils.PlayIfNot(player, "ladder_bg_cling");
                         break;

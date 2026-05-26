@@ -12,36 +12,66 @@ ladder.isInvisible = {false, true}
 ladder.drainsStamina = {true, false}
 ladder.color = "FFFFFF"
 ladder.placements = {
-    name = "Ladder",
-    data = {
-        width = 16,
-        height = 32,
-        climbSpeed = 60,
-        depth = 1,
-        color = "FFFFFF", -- Requires not isInvisible
-        texture = "objects/KoseiHelper/Crossover/Ladder/ladder", -- Requires not isInvisible
-        sound = "event:/KoseiHelper/Crossover/Ladder",
-        isInvisible = false,
-        canClimbHorizontally = true,
-        drainsStamina = false,
-        requiresGrabButton = false,
-        advancedMode = false,
-        -- All below require advancedMode
-        staminaDrainage = 1, -- Requires drainsStamina
-        horizontalSpeedLimit = 330,
-        regrabCooldown = 1,
-        leaveLaddersToRegrab = false,
-        coyoteTime = false,
-        isAttached = false,
-        dummyMode = false,
-        verticalOffset = 6,
-		decelerationValues = 1,
-		singleUse = false
-    }
+	{
+		name = "Ladder",
+		data = {
+			width = 16,
+			height = 32,
+			climbSpeed = 60,
+			depth = 1,
+			color = "FFFFFF", -- Requires not isInvisible
+			texture = "objects/KoseiHelper/Crossover/Ladder/ladder_wood", -- Requires not isInvisible
+			sound = "event:/KoseiHelper/Crossover/Ladder",
+			isInvisible = false,
+			canClimbHorizontally = true,
+			drainsStamina = false,
+			requiresGrabButton = false,
+			advancedMode = false,
+			-- All below require advancedMode
+			staminaDrainage = 1, -- Requires drainsStamina
+			horizontalSpeedLimit = 330,
+			regrabCooldown = 1,
+			leaveLaddersToRegrab = false,
+			coyoteTime = false,
+			isAttached = false,
+			dummyMode = false,
+			verticalOffset = 0,
+			decelerationValues = 1,
+			singleUse = false
+		}
+	},
+	{
+		name = "LadderAdvanced",
+		data = {
+			width = 16,
+			height = 32,
+			climbSpeed = 60,
+			depth = 1,
+			color = "FFFFFF", -- Requires not isInvisible
+			texture = "objects/KoseiHelper/Crossover/Ladder/ladder_wood", -- Requires not isInvisible
+			sound = "event:/KoseiHelper/Crossover/Ladder",
+			isInvisible = false,
+			canClimbHorizontally = true,
+			drainsStamina = false,
+			requiresGrabButton = false,
+			advancedMode = true,
+			-- All below require advancedMode
+			staminaDrainage = 1, -- Requires drainsStamina
+			horizontalSpeedLimit = 330,
+			regrabCooldown = 1,
+			leaveLaddersToRegrab = false,
+			coyoteTime = false,
+			isAttached = false,
+			dummyMode = false,
+			verticalOffset = 0,
+			decelerationValues = 1,
+			singleUse = false
+		}
+	}
+	
 }
 
-function ladder.fieldOrder(entity)
-    local fieldOrder = {
+ladder.fieldOrder = {
         "x",
         "y",
         "width",
@@ -49,37 +79,20 @@ function ladder.fieldOrder(entity)
         "climbSpeed",
         "depth",
         "sound",
+		"color",
+		"texture",
+		"verticalOffset",
+		"staminaDrainage",
+		"regrabCooldown",
+		"horizontalSpeedLimit",
+		"decelerationValues",
         "isInvisible",
         "canClimbHorizontally",
         "drainsStamina",
         "requiresGrabButton",
-        "advancedMode",
-		"isAttached"
-    }
-    if entity.isInvisible == false then
-        table.insert(fieldOrder,"color")
-    end
-    if entity.isInvisible == false then
-        table.insert(fieldOrder,"texture")
-    end
-    if entity.advancedMode == true then
-        table.insert(fieldOrder,"staminaDrainage")
-        if entity.leaveLaddersToRegrab == false then -- it doesn't make sense to have a regrab cooldown if you can't regrab
-            table.insert(fieldOrder,"regrabCooldown")
-        end
-        if entity.isInvisible == false then
-            table.insert(fieldOrder,"verticalOffset")
-        end
-		if entity.dummyMode == false then
-			table.insert(fieldOrder,"decelerationValues")
-		end
-        table.insert(fieldOrder,"horizontalSpeedLimit")
-        table.insert(fieldOrder,"leaveLaddersToRegrab")
-        table.insert(fieldOrder,"coyoteTime")
-        table.insert(fieldOrder,"dummyMode")
-    end
-    return fieldOrder
-end
+		"isAttached",
+		"advancedMode"
+}
 
 function ladder.ignoredFields(entity)
     local ignored = {
@@ -98,7 +111,8 @@ function ladder.ignoredFields(entity)
         "dummyMode",
         "verticalOffset",
         "regrabCooldown",
-		"decelerationValues"
+		"decelerationValues",
+		"advancedMode"
     }
     local function doNotIgnore(value)
         for i = #ignored, 1, -1 do
@@ -165,13 +179,25 @@ end
 
 ladder.fieldInformation = {
     color = {
-        fieldType = "color"
+        fieldType = "color",
+		useAlpha = true
     },
 	depth = {
         fieldType = "integer",
         options = depths.addDepths(depths.getDepths(), {}),
         editable = true
-    }
+    },
+	texture = {
+	options = {
+            "objects/KoseiHelper/Crossover/Ladder/ladder_wood",
+            "objects/KoseiHelper/Crossover/Ladder/ladder_metal",
+			"objects/KoseiHelper/Crossover/Ladder/ladder_template"
+        },
+        editable = true
+	},
+	verticalOffset = {
+		fieldType = "integer"
+	}
 }
 
 return ladder
