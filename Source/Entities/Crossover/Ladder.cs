@@ -291,18 +291,18 @@ public class Ladder : Entity
                 {
                     case 0:
                         if (player.Inventory.Dashes == 0)
-                            player.Sprite.Play("ladder_climb");
+                            PlayIfNot(player, "ladder_climb");
                         else
-                            player.Sprite.Play("ladder_climbBlue");
+                            PlayIfNot(player, "ladder_climbBlue");
                         break;
                     case 1:
-                        player.Sprite.Play("ladder_climb");
+                        PlayIfNot(player, "ladder_climb");
                         break;
                     case 2:
-                        player.Sprite.Play("ladder_climbPink");
+                        PlayIfNot(player, "ladder_climbPink");
                         break;
                     default:
-                        player.Sprite.Play("ladder_climb");
+                        PlayIfNot(player, "ladder_climb");
                         break;
                 }
             }
@@ -312,18 +312,18 @@ public class Ladder : Entity
                 {
                     case 0:
                         if (player.Inventory.Dashes == 0)
-                            player.Sprite.Play("ladder_bg_climb");
+                            PlayIfNot(player, "ladder_bg_climb");
                         else
-                            player.Sprite.Play("ladder_bg_climbBlue");
+                            PlayIfNot(player, "ladder_bg_climbBlue");
                         break;
                     case 1:
-                        player.Sprite.Play("ladder_bg_climb");
+                        PlayIfNot(player, "ladder_bg_climb");
                         break;
                     case 2:
-                        player.Sprite.Play("ladder_bg_climbPink");
+                        PlayIfNot(player, "ladder_bg_climbPink");
                         break;
                     default:
-                        player.Sprite.Play("ladder_bg_climb");
+                        PlayIfNot(player, "ladder_bg_climb");
                         break;
                 }
             }
@@ -336,18 +336,18 @@ public class Ladder : Entity
                 {
                     case 0:
                         if (player.Inventory.Dashes == 0)
-                            player.Sprite.Play("ladder_cling");
+                            PlayIfNot(player, "ladder_cling");
                         else
-                            player.Sprite.Play("ladder_clingBlue");
+                            PlayIfNot(player, "ladder_clingBlue");
                         break;
                     case 1:
-                        player.Sprite.Play("ladder_cling");
+                        PlayIfNot(player, "ladder_cling");
                         break;
                     case 2:
-                        player.Sprite.Play("ladder_clingPink");
+                        PlayIfNot(player, "ladder_clingPink");
                         break;
                     default:
-                        player.Sprite.Play("ladder_cling");
+                        PlayIfNot(player, "ladder_cling");
                         break;
                 }
             }
@@ -357,18 +357,18 @@ public class Ladder : Entity
                 {
                     case 0:
                         if (player.Inventory.Dashes == 0)
-                            player.Sprite.Play("ladder_bg_cling");
+                            PlayIfNot(player, "ladder_bg_cling");
                         else
-                            player.Sprite.Play("ladder_bg_clingBlue");
+                            PlayIfNot(player, "ladder_bg_clingBlue");
                         break;
                     case 1:
-                        player.Sprite.Play("ladder_bg_cling");
+                        PlayIfNot(player, "ladder_bg_cling");
                         break;
                     case 2:
-                        player.Sprite.Play("ladder_bg_clingPink");
+                        PlayIfNot(player, "ladder_bg_clingPink");
                         break;
                     default:
-                        player.Sprite.Play("ladder_bg_cling");
+                        PlayIfNot(player, "ladder_bg_cling");
                         break;
                 }
             }
@@ -493,5 +493,23 @@ public class Ladder : Entity
             p.Sprite.Scale = Vector2.One;
         else
             orig(p);
+    }
+
+    private static void PlayIfNot(Player player, string anim)
+    {
+        if (player.Sprite.CurrentAnimationID != anim)
+            player.Sprite.Play(anim);
+    }
+
+    public static void Load()
+    {
+        On.Celeste.Player.JumpThruBoostBlockedCheck += HookJumpThruBoostCheck;
+        On.Celeste.Player.UpdateSprite += OnPlayerSpriteUpdate;
+    }
+
+    public static void Unload()
+    {
+        On.Celeste.Player.JumpThruBoostBlockedCheck -= HookJumpThruBoostCheck;
+        On.Celeste.Player.UpdateSprite -= OnPlayerSpriteUpdate;
     }
 }

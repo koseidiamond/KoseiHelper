@@ -74,7 +74,17 @@
 		<Justify x=".5" y="1" />
 		<Loop id="ladder_climb" path="badeline/ladder_climb" delay="0.1" />
 		<Loop id="ladder_cling" path="badeline/ladder_cling" delay="0.1" />
-		<Loop id="ladder_bg_climb" path="badeline/ladder_climb" delay="0.1" />
-		<Loop id="ladder_bg_cling" path="badeline/ladder_cling" delay="0.1" />
+		<Loop id="ladder_bg_climb" path="badeline/ladder_climbBack" delay="0.1" />
+		<Loop id="ladder_bg_cling" path="badeline/ladder_clingBack" delay="0.1" />
+		
+		<Loop id="ladder_climbBlue" path="badeline/ladder_climbBlue" delay="0.1" />
+		<Loop id="ladder_clingBlue" path="badeline/ladder_clingBlue" delay="0.1" />
+		<Loop id="ladder_bg_climbBlue" path="badeline/ladder_climbBackBlue" delay="0.1" />
+		<Loop id="ladder_bg_clingBlue" path="badeline/ladder_clingBackBlue" delay="0.1" />
+		
+		<Loop id="ladder_climbPink" path="badeline/ladder_climbPink" delay="0.1" />
+		<Loop id="ladder_clingPink" path="badeline/ladder_clingPink" delay="0.1" />
+		<Loop id="ladder_bg_climbPink" path="badeline/ladder_climbBackPink" delay="0.1" />
+		<Loop id="ladder_bg_clingPink" path="badeline/ladder_clingBackPink" delay="0.1" />
 	</badeline>
 </Sprites>

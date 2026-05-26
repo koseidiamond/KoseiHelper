@@ -105,7 +105,7 @@ public class Chest : Entity
             if (level.Session.GetFlag("CelesteTAS_TAS_Was_Run"))
             {
                 // TAS info
-                Logger.Log(LogLevel.Info, "CrossoverCollab", $"Chest RNG seed: Deaths: {level.Session.Deaths}, EntityID: {SourceId.ID}, PlayerPos: {player.Position}");
+                Logger.Log(LogLevel.Info, "KoseiHelper", $"Chest RNG seed: Deaths: {level.Session.Deaths}, EntityID: {SourceId.ID}, PlayerPos: {player.Position}");
             }
             Audio.Play(openSound);
             state = ChestState.opening;

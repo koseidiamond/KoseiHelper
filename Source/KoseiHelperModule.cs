@@ -4,6 +4,8 @@ using MonoMod.ModInterop;
 using System;
 using Microsoft.Xna.Framework;
 using Celeste.Mod.KoseiHelper.Entities.Crossover;
+using Monocle;
+using System.Collections;
 
 namespace Celeste.Mod.KoseiHelper;
 
@@ -54,6 +56,8 @@ public class KoseiHelperModule : EverestModule
     {
         typeof(ExtendedVariantImports).ModInterop();
         //TopDownViewController.Load();
+        On.Celeste.PlayerSprite.CreateFramesMetadata += PlayerSpriteOnCreateFramesMetadata;
+        //On.Celeste.LevelLoader.ctor += LevelLoaderOnctor;
         Everest.Events.Level.OnCreatePauseMenuButtons += OnCreatePauseMenuButtons;
         MoveBlockCrystal.Load();
         MapCutscene.Load();
@@ -70,7 +74,7 @@ public class KoseiHelperModule : EverestModule
         GameDataController.Load();
         TalkComponentCustomizator.Load();
         SetFlagPrefixOnSpawnController.Load();
-        On.Celeste.Player.JumpThruBoostBlockedCheck += Ladder.HookJumpThruBoostCheck;
+        Ladder.Load();
         Everest.Events.Player.OnRegisterStates += Ladder.RegisterLadderState;
         Everest.Events.Player.OnRegisterStates += MaryBlock.RegisterBaldState;
 
@@ -95,6 +99,8 @@ public class KoseiHelperModule : EverestModule
     public override void Unload()
     {
         //TopDownViewController.Unload();
+        On.Celeste.PlayerSprite.CreateFramesMetadata -= PlayerSpriteOnCreateFramesMetadata;
+        //On.Celeste.LevelLoader.ctor -= LevelLoaderOnctor;
         Everest.Events.Level.OnCreatePauseMenuButtons -= OnCreatePauseMenuButtons;
         MoveBlockCrystal.Unload();
         MapCutscene.Unload();
@@ -111,7 +117,7 @@ public class KoseiHelperModule : EverestModule
         GameDataController.Unload();
         TalkComponentCustomizator.Unload();
         SetFlagPrefixOnSpawnController.Unload();
-        On.Celeste.Player.JumpThruBoostBlockedCheck -= Ladder.HookJumpThruBoostCheck;
+        Ladder.Unload();
         Everest.Events.Player.OnRegisterStates -= Ladder.RegisterLadderState;
         Everest.Events.Player.OnRegisterStates -= MaryBlock.RegisterBaldState;
 
@@ -174,4 +180,56 @@ public class KoseiHelperModule : EverestModule
             }
         }
     }
+
+    private static void PlayerSpriteOnCreateFramesMetadata(On.Celeste.PlayerSprite.orig_CreateFramesMetadata orig, string sprite)
+    {   // This hook can be used to add animations specifically to player sprites.
+        orig(sprite);
+        // Maybe load and store this SpriteBank on game startup instead of creating it every time.
+        SpriteBank modBank = new SpriteBank(GFX.Game, "Graphics/KoseiHelperXML/CustomPlayerSprites.xml");
+        if (!modBank.SpriteData.ContainsKey(sprite))
+            return;
+
+        SpriteData modSpriteData = modBank.SpriteData[sprite];
+        SpriteData origSpriteData = GFX.SpriteBank.SpriteData[sprite];
+
+        IDictionary animsOrig = origSpriteData.Sprite.Animations;
+        IDictionary animsCustom = modSpriteData.Sprite.Animations;
+
+        Logger.Log(LogLevel.Info, "KoseiHelper", $"Adding missing custom animations to sprite '{sprite}'.");
+        foreach (DictionaryEntry kvpNewAnim in animsCustom)
+        {
+            if (!animsOrig.Contains(kvpNewAnim.Key))
+                animsOrig[kvpNewAnim.Key] = kvpNewAnim.Value;
+        }
+    }
+
+    /*private static void LevelLoaderOnctor(On.Celeste.LevelLoader.orig_ctor orig, LevelLoader self, Session session, Vector2? startPosition)
+    {   // This hook can be used to add missing animations to any sprite.
+        orig(self, session, startPosition);
+
+        // Maybe load and store this SpriteBank on game startup instead of creating it every time.
+        SpriteBank modBank = new SpriteBank(GFX.Game, "Graphics/KoseiHelperXML/CustomSprites.xml");
+        SpriteBank origBank = GFX.SpriteBank;
+
+        foreach ((string spriteName, SpriteData modSpriteData) in modBank.SpriteData)
+        {
+            if (origBank.SpriteData.TryGetValue(spriteName, out SpriteData origSpriteData))
+            {
+                IDictionary animsOrig = origSpriteData.Sprite.Animations;
+                IDictionary animsCustom = modSpriteData.Sprite.Animations;
+
+                Logger.Log(LogLevel.Info, "KoseiHelper", $"Adding missing custom animations to sprite '{spriteName}'.");
+                foreach (DictionaryEntry kvpNewAnim in animsCustom)
+                {
+                    if (!animsOrig.Contains(kvpNewAnim.Key))
+                        animsOrig[kvpNewAnim.Key] = kvpNewAnim.Value;
+                }
+            }
+            else
+            {
+                throw new Exception($"Tried to add a new sprite '{spriteName}' using the merging spritebank.\n" +
+                    "Use \"Graphics/Sprites.xml\" instead to make the sprite reskinnable in maps.");
+            }
+        }
+    }*/
 }
