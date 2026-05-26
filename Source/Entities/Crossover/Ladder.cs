@@ -291,18 +291,18 @@ public class Ladder : Entity
                 {
                     case 0:
                         if (player.Inventory.Dashes == 0)
-                            PlayIfNot(player, "ladder_climb");
+                            KoseiHelperUtils.PlayIfNot(player, "ladder_climb");
                         else
-                            PlayIfNot(player, "ladder_climbBlue");
+                            KoseiHelperUtils.PlayIfNot(player, "ladder_climbBlue");
                         break;
                     case 1:
-                        PlayIfNot(player, "ladder_climb");
+                        KoseiHelperUtils.PlayIfNot(player, "ladder_climb");
                         break;
                     case 2:
-                        PlayIfNot(player, "ladder_climbPink");
+                        KoseiHelperUtils.PlayIfNot(player, "ladder_climbPink");
                         break;
                     default:
-                        PlayIfNot(player, "ladder_climb");
+                        KoseiHelperUtils.PlayIfNot(player, "ladder_climb");
                         break;
                 }
             }
@@ -312,18 +312,18 @@ public class Ladder : Entity
                 {
                     case 0:
                         if (player.Inventory.Dashes == 0)
-                            PlayIfNot(player, "ladder_bg_climb");
+                            KoseiHelperUtils.PlayIfNot(player, "ladder_bg_climb");
                         else
-                            PlayIfNot(player, "ladder_bg_climbBlue");
+                            KoseiHelperUtils.PlayIfNot(player, "ladder_bg_climbBlue");
                         break;
                     case 1:
-                        PlayIfNot(player, "ladder_bg_climb");
+                        KoseiHelperUtils.PlayIfNot(player, "ladder_bg_climb");
                         break;
                     case 2:
-                        PlayIfNot(player, "ladder_bg_climbPink");
+                        KoseiHelperUtils.PlayIfNot(player, "ladder_bg_climbPink");
                         break;
                     default:
-                        PlayIfNot(player, "ladder_bg_climb");
+                        KoseiHelperUtils.PlayIfNot(player, "ladder_bg_climb");
                         break;
                 }
             }
@@ -336,18 +336,18 @@ public class Ladder : Entity
                 {
                     case 0:
                         if (player.Inventory.Dashes == 0)
-                            PlayIfNot(player, "ladder_cling");
+                            KoseiHelperUtils.PlayIfNot(player, "ladder_cling");
                         else
-                            PlayIfNot(player, "ladder_clingBlue");
+                            KoseiHelperUtils.PlayIfNot(player, "ladder_clingBlue");
                         break;
                     case 1:
-                        PlayIfNot(player, "ladder_cling");
+                        KoseiHelperUtils.PlayIfNot(player, "ladder_cling");
                         break;
                     case 2:
-                        PlayIfNot(player, "ladder_clingPink");
+                        KoseiHelperUtils.PlayIfNot(player, "ladder_clingPink");
                         break;
                     default:
-                        PlayIfNot(player, "ladder_cling");
+                        KoseiHelperUtils.PlayIfNot(player, "ladder_cling");
                         break;
                 }
             }
@@ -357,18 +357,18 @@ public class Ladder : Entity
                 {
                     case 0:
                         if (player.Inventory.Dashes == 0)
-                            PlayIfNot(player, "ladder_bg_cling");
+                            KoseiHelperUtils.PlayIfNot(player, "ladder_bg_cling");
                         else
-                            PlayIfNot(player, "ladder_bg_clingBlue");
+                            KoseiHelperUtils.PlayIfNot(player, "ladder_bg_clingBlue");
                         break;
                     case 1:
-                        PlayIfNot(player, "ladder_bg_cling");
+                        KoseiHelperUtils.PlayIfNot(player, "ladder_bg_cling");
                         break;
                     case 2:
-                        PlayIfNot(player, "ladder_bg_clingPink");
+                        KoseiHelperUtils.PlayIfNot(player, "ladder_bg_clingPink");
                         break;
                     default:
-                        PlayIfNot(player, "ladder_bg_cling");
+                        KoseiHelperUtils.PlayIfNot(player, "ladder_bg_cling");
                         break;
                 }
             }
@@ -493,12 +493,6 @@ public class Ladder : Entity
             p.Sprite.Scale = Vector2.One;
         else
             orig(p);
-    }
-
-    private static void PlayIfNot(Player player, string anim)
-    {
-        if (player.Sprite.CurrentAnimationID != anim)
-            player.Sprite.Play(anim);
     }
 
     public static void Load()

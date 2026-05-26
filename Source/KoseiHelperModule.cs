@@ -1,11 +1,12 @@
 ﻿using Celeste.Mod.KoseiHelper.DecalRegistry;
 using Celeste.Mod.KoseiHelper.Entities;
+using Celeste.Mod.KoseiHelper.Entities.Crossover;
+using Microsoft.Xna.Framework;
+using Monocle;
 using MonoMod.ModInterop;
 using System;
-using Microsoft.Xna.Framework;
-using Celeste.Mod.KoseiHelper.Entities.Crossover;
-using Monocle;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace Celeste.Mod.KoseiHelper;
 
@@ -195,11 +196,20 @@ public class KoseiHelperModule : EverestModule
         IDictionary animsOrig = origSpriteData.Sprite.Animations;
         IDictionary animsCustom = modSpriteData.Sprite.Animations;
 
-        Logger.Log(LogLevel.Info, "KoseiHelper", $"Adding missing custom animations to sprite '{sprite}'.");
+        List<string> addedAnimations = new();
+
         foreach (DictionaryEntry kvpNewAnim in animsCustom)
         {
             if (!animsOrig.Contains(kvpNewAnim.Key))
+            {
                 animsOrig[kvpNewAnim.Key] = kvpNewAnim.Value;
+                addedAnimations.Add(kvpNewAnim.Key.ToString());
+            }
+        }
+        if (addedAnimations.Count > 0)
+        {
+            Logger.Log(LogLevel.Info, "KoseiHelper", $"Added custom animations to sprite '{sprite}': {string.Join(", ", addedAnimations)}");
+            Logger.Verbose("KoseiHelper", $"The animations added to sprite '{sprite}' are: {string.Join(", ", addedAnimations)}");
         }
     }
 

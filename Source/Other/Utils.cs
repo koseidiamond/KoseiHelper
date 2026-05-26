@@ -193,4 +193,9 @@ public static class KoseiHelperUtils
             _ => 0f
         };
     }
+
+    public static void PlayIfNot(Player player, string anim)
+    {
+        player.Sprite.Play(anim);
+    }
 }

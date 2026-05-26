@@ -7,15 +7,15 @@ using System.Collections;
 namespace Celeste.Mod.KoseiHelper.Entities;
 
 [CustomEntity("KoseiHelper/SleepyController")]
+[Tracked]
 public class SleepyController : Entity
 {
     private float minTime, maxTime, sleepTimer, napTime;
     public Random sleepRandom;
-    private Sprite sleepSprite;
     private bool adjustHairColor;
-    private bool cassetteSleep, canSleep;
+    private bool cassetteSleep, sleeping;
     private CassetteBlockManager cassetteManager;
-    private int currentCassetteIndex, previousCassetteIndex;
+    private int cassetteIndex;
     public SleepyController(EntityData data, Vector2 offset) : base(data.Position + offset)
     {
         minTime = data.Float("minTime", 1.2f);
@@ -23,8 +23,6 @@ public class SleepyController : Entity
         napTime = data.Float("napTime", 0.15f);
         cassetteSleep = data.Bool("cassetteSleep", false);
         adjustHairColor = data.Bool("adjustHairColor", true);
-        Add(sleepSprite = GFX.SpriteBank.Create("koseiHelper_player"));
-        sleepSprite.Visible = true;
     }
 
     public override void Awake(Scene scene)
@@ -37,10 +35,6 @@ public class SleepyController : Entity
     {
         base.Added(scene);
         Level level = SceneAs<Level>();
-        foreach (Entity entity in level)
-        {
-            entity.Depth = -entity.Depth;
-        }
     }
 
     public override void Update()
@@ -51,7 +45,6 @@ public class SleepyController : Entity
         if (player != null)
         {
             Position = player.Position;
-            sleepSprite.FlipX = player.Facing == Facings.Left ? true : false;
             if (!cassetteSleep)
             {
                 if (sleepRandom == null)
@@ -64,17 +57,14 @@ public class SleepyController : Entity
             }
             else
             {
-                if (currentCassetteIndex != cassetteManager.currentIndex)
+                if (cassetteIndex != cassetteManager.currentIndex)
                 {
-                    previousCassetteIndex = currentCassetteIndex;
-                    currentCassetteIndex = cassetteManager.currentIndex;
-                    canSleep = true;
+                    cassetteIndex = cassetteManager.currentIndex;
+                    sleeping = true;
                 }
-                if (canSleep)
+                if (sleeping)
                     Add(new Coroutine(Sleep(player)));
             }
-            previousCassetteIndex = currentCassetteIndex;
-            canSleep = false;
         }
     }
 
@@ -82,43 +72,42 @@ public class SleepyController : Entity
     {
 
         int previousState = player.StateMachine.State;
-        player.StateMachine.State = 15;
+        player.StateMachine.State = 11;
         player.ForceCameraUpdate = true;
-        if (adjustHairColor)
+        player.DummyAutoAnimate = false;
+        if (!player.JustRespawned)
         {
-            sleepSprite.Visible = true;
-            player.Visible = false;
-            switch (player.Dashes)
+            if (adjustHairColor)
             {
-                case 0:
-                    sleepSprite.Play("sleepy_zeroDashes");
-                    break;
-                case 2:
-                    sleepSprite.Play("sleepy_twoDashes");
-                    break;
-                case 3:
-                    sleepSprite.Play("sleepy_threeDashes");
-                    break;
-                case 4:
-                    sleepSprite.Play("sleepy_fourDashes");
-                    break;
-                case 5:
-                    sleepSprite.Play("sleepy_fiveDashes");
-                    break;
-                default:
-                    sleepSprite.Visible = false;
-                    player.Visible = true;
-                    break;
+                switch (player.Dashes)
+                {
+                    case 0:
+                        KoseiHelperUtils.PlayIfNot(player, "sleepy_zeroDashes");
+                        break;
+                    case 2:
+                        KoseiHelperUtils.PlayIfNot(player, "sleepy_twoDashes");
+                        break;
+                    case 3:
+                        KoseiHelperUtils.PlayIfNot(player, "sleepy_threeDashes");
+                        break;
+                    case 4:
+                        KoseiHelperUtils.PlayIfNot(player, "sleepy_fourDashes");
+                        break;
+                    case 5:
+                        KoseiHelperUtils.PlayIfNot(player, "sleepy_fiveDashes");
+                        break;
+                    default:
+                        KoseiHelperUtils.PlayIfNot(player, "asleep");
+                        break;
+                }
             }
+            else
+                KoseiHelperUtils.PlayIfNot(player, "asleep");
         }
         yield return napTime;
         player.StateMachine.State = 0;
-        if (adjustHairColor)
-        {
-            player.Visible = true;
-            sleepSprite.Visible = false;
-        }
         player.ForceCameraUpdate = false;
+        sleeping = false;
         yield return null;
     }
 }
