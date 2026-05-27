@@ -43,6 +43,8 @@ public class Ladder : Entity
     private MTexture textureSide;
     private MTexture textureMiddle;
     private MTexture textureThin;
+    private MTexture textureTop;
+    private MTexture textureBottom;
     private string ladderTexture;
 
     private string debrisTexture;
@@ -121,6 +123,10 @@ public class Ladder : Entity
             textureSide = GFX.Game[data.Attr("texture") + "_side"];
             textureMiddle = GFX.Game[data.Attr("texture") + "_middle"];
             textureThin = GFX.Game[data.Attr("texture") + "_thin"];
+            if (GFX.Game.Has(data.Attr("texture") + "_top"))
+                textureTop = GFX.Game[data.Attr("texture") + "_top"];
+            if (GFX.Game.Has(data.Attr("texture") + "_bottom"))
+                textureBottom = GFX.Game[data.Attr("texture") + "_bottom"];
             ladderTexture = data.Attr("texture", "");
             verticalOffset = data.Int("verticalOffset", 0);
         }
@@ -316,8 +322,37 @@ public class Ladder : Entity
 
         if (climbingVertical || climbingHorizontal)
         {
-            if (Scene.OnInterval(0.35f))
-                Audio.Play(sound); // Plays sounds when climbing
+            if (Scene.OnInterval(0.35f)) // Plays sounds while climbing
+            {
+
+                if (sound != "event:/char/madeline/handhold")
+                {
+                    Audio.Play(sound);
+                }
+                else
+                { // Play the vanilla climbing sound and try to guess if the ladder looks similar to some tileset
+                    (string Key, float Value)[] SurfaceMap = {
+                    ("_dirt", 3.25f), ("_snow", 4.25f), ("_metal", 7.25f), ("_girder", 7.25f), ("_kevin", 8.25f),
+                    ("_brick", 8.25f), ("_zipmover", 9.25f), ("_dreamblockinactive", 11.25f), ("_dreamblockactive", 12.25f),
+                    ("_wood", 13.25f), ("_roof", 14.25f), ("_linens", 17.25f), ("_boxes", 18.25f),
+                    ("_books", 19.25f), ("_clutterdoor", 20.25f), ("_clutterswitch", 21.25f), ("_elevator", 22.25f),
+                    ("_grass", 25.25f), ("_aurora", 32.25f), ("_cassette", 35.25f), ("_ice", 36.25f),
+                    ("_moltenrock", 37.25f), ("_glitch", 40.25f), ("_scifi", 40.25f), ("_cafe", 42.25f), ("_moon", 44.25f)
+                    };
+
+                    float vanillaSoundParameter = 13.25f;
+
+                    foreach (var (key, value) in SurfaceMap)
+                    {
+                        if (ladderTexture.Contains(key, StringComparison.OrdinalIgnoreCase))
+                        {
+                            vanillaSoundParameter = value;
+                            break;
+                        }
+                    }
+                    Audio.Play(sound, "surface_index", vanillaSoundParameter);
+                }
+            }
 
             if (Depth < 0)
             { // Plays animation depending on bg/fg and number of dashes
@@ -426,22 +461,51 @@ public class Ladder : Entity
         if (!invisible)
         {
             if (Width <= 15)
-                for (float i = Position.Y; i <= Position.Y + Collider.Height; i += 16)
-                    textureThin.GetSubtexture(0, 0, (int)Collider.Width, (int)Collider.Height + 8)
-                        .Draw(new Vector2(Position.X, i) - Vector2.UnitY * verticalOffset, Vector2.Zero, color);
-            else
             {
-                for (float i = Position.Y; i <= Position.Y + Collider.Height - 8; i += 16)
-                { //Texture is 16 pixels tall so the counter increases by its height
-                    textureSide.GetSubtexture(0, 0, (int)Collider.Width, (int)Collider.Height + 8)
-                        .Draw(new Vector2(Position.X, i) - Vector2.UnitY * verticalOffset, Vector2.Zero, color); //Left side
-                    textureSide.GetSubtexture(0, 0, (int)Collider.Width, (int)Collider.Height + 8)
-                        .Draw(new Vector2(Position.X, i) + Vector2.UnitX * Collider.Width - Vector2.UnitY * verticalOffset, Vector2.Zero, color, new Vector2(-1, 1)); //Right side
-                    for (float j = 0; j <= Collider.Width - 24; j += 8) //Texture is 8 pixels wide so the counter increases by its width
-                        textureMiddle.GetSubtexture(0, 0, (int)Collider.Width - 8, (int)Collider.Height + 8)
-                            .Draw(new Vector2(Position.X + 8 + j, i) - Vector2.UnitY * verticalOffset, Vector2.Zero, color);
+                float bottom = Position.Y + Collider.Height;
+                for (float i = Position.Y; i < bottom; i += textureThin.Height)
+                {
+                    textureThin.GetSubtexture(0, 0, (int)Collider.Width, (int)Calc.Min(16, (int)(bottom - i)))
+                        .Draw(new Vector2(Position.X, i) - Vector2.UnitY * verticalOffset, Vector2.Zero, color);
                 }
             }
+            else
+            {
+                float bottom = Position.Y + Collider.Height;
+                for (float i = Position.Y; i < bottom; i += textureSide.Height) // Texture is 16 pixels tall so the counter increases by its height
+                {
+                    int drawHeight = (int)Calc.Min(16, (int)(bottom - i));
+                    textureSide.GetSubtexture(0, 0, (int)Collider.Width, drawHeight)
+                        .Draw(new Vector2(Position.X, i) - Vector2.UnitY * verticalOffset, Vector2.Zero, color); // Left side
+                    textureSide.GetSubtexture(0, 0, (int)Collider.Width, drawHeight)
+                        .Draw(new Vector2(Position.X, i) + Vector2.UnitX * Collider.Width - Vector2.UnitY * verticalOffset, Vector2.Zero, color, new Vector2(-1, 1)); // Right side
+                }
+
+                for (float i = Position.Y; i < bottom; i += textureMiddle.Height) // Texture is 16 pixels tall so the counter increases by its height
+                {
+                    int drawHeight = (int)Calc.Min(16, (int)(bottom - i));
+                    for (float j = 0; j <= Collider.Width - 24; j += textureMiddle.Width) // Texture is 8 pixels wide so the counter increases by its width
+                    { // But tbh Idk why - 24
+                        textureMiddle.GetSubtexture(0, 0, (int)Collider.Width - 8, drawHeight).Draw(new Vector2(Position.X + 8 + j, i) - Vector2.UnitY * verticalOffset, Vector2.Zero, color);
+                    }
+                }
+            }
+            // Optional textures
+            if (textureTop != null)
+            {
+                for (float x = Position.X; x <= Position.X + Collider.Width - textureTop.Width; x += textureTop.Width)
+                {
+                    textureTop.Draw(new Vector2(x, Position.Y - 8) - Vector2.UnitY * verticalOffset, Vector2.Zero, color);
+                }
+            }
+            if (textureBottom != null)
+            {
+                for (float x = Position.X; x <= Position.X + Collider.Width - textureBottom.Width; x += textureBottom.Width)
+                {
+                    textureBottom.Draw(new Vector2(x, Position.Y + Collider.Height) - Vector2.UnitY * verticalOffset, Vector2.Zero, color);
+                }
+            }
+
             base.Render();
         }
     }
@@ -522,16 +586,16 @@ public class Ladder : Entity
     {
         switch (ladderTexture)
         {
-            case string s when s.Contains("wood"):
+            case string s when s.Contains("_wood", StringComparison.OrdinalIgnoreCase):
                 Audio.Play("event:/game/general/wall_break_wood", Center);
                 break;
-            case string s when s.Contains("dirt"):
+            case string s when s.Contains("_dirt", StringComparison.OrdinalIgnoreCase):
                 Audio.Play("event:/game/general/wall_break_dirt", Center);
                 break;
-            case string s when s.Contains("stone"):
+            case string s when s.Contains("_stone", StringComparison.OrdinalIgnoreCase):
                 Audio.Play("event:/game/general/wall_break_stone", Center);
                 break;
-            case string s when s.Contains("ice"):
+            case string s when s.Contains("_ice", StringComparison.OrdinalIgnoreCase):
                 Audio.Play("event:/game/general/wall_break_ice", Center);
                 break;
             default:
@@ -539,39 +603,39 @@ public class Ladder : Entity
                 break;
         }
         char defaultDebrisBasedOnTexture;
-        switch (ladderTexture)
+        switch (ladderTexture) // Tries to guess default debris
         {
-            case string s when s.Contains("dirt", StringComparison.OrdinalIgnoreCase):
+            case string s when s.Contains("_dirt", StringComparison.OrdinalIgnoreCase):
                 defaultDebrisBasedOnTexture = '1';
                 break;
-            case string s when s.Contains("snow", StringComparison.OrdinalIgnoreCase):
+            case string s when s.Contains("_snow", StringComparison.OrdinalIgnoreCase):
                 defaultDebrisBasedOnTexture = '3';
                 break;
-            case string s when s.Contains("girder", StringComparison.OrdinalIgnoreCase):
+            case string s when s.Contains("_girder", StringComparison.OrdinalIgnoreCase) || s.Contains("_net", StringComparison.OrdinalIgnoreCase):
                 defaultDebrisBasedOnTexture = '4';
                 break;
-            case string s when s.Contains("tower", StringComparison.OrdinalIgnoreCase):
+            case string s when s.Contains("_tower", StringComparison.OrdinalIgnoreCase):
                 defaultDebrisBasedOnTexture = '5';
                 break;
-            case string s when s.Contains("stone", StringComparison.OrdinalIgnoreCase):
+            case string s when s.Contains("_stone", StringComparison.OrdinalIgnoreCase):
                 defaultDebrisBasedOnTexture = '6';
                 break;
-            case string s when s.Contains("cement", StringComparison.OrdinalIgnoreCase) || s.Contains("metal", StringComparison.OrdinalIgnoreCase):
+            case string s when s.Contains("_cement", StringComparison.OrdinalIgnoreCase) || s.Contains("_metal", StringComparison.OrdinalIgnoreCase):
                 defaultDebrisBasedOnTexture = '7'; 
                 break;
-            case string s when s.Contains("rock", StringComparison.OrdinalIgnoreCase):
+            case string s when s.Contains("_rock", StringComparison.OrdinalIgnoreCase):
                 defaultDebrisBasedOnTexture = '8';
                 break;
-            case string s when s.Contains("wood", StringComparison.OrdinalIgnoreCase):
+            case string s when s.Contains("_wood", StringComparison.OrdinalIgnoreCase):
                 defaultDebrisBasedOnTexture = '9';
                 break;
-            case string s when s.Contains("cliffside", StringComparison.OrdinalIgnoreCase):
+            case string s when s.Contains("_cliffside", StringComparison.OrdinalIgnoreCase):
                 defaultDebrisBasedOnTexture = 'b'; // f is skipped since cliffsideAlt's debris looks visually the same as b
                 break;
-            case string s when s.Contains("reflection", StringComparison.OrdinalIgnoreCase):
+            case string s when s.Contains("_reflection", StringComparison.OrdinalIgnoreCase):
                 defaultDebrisBasedOnTexture = 'g';
                 break;
-            case string s when s.Contains("lostlevels", StringComparison.OrdinalIgnoreCase):
+            case string s when s.Contains("_lostlevels", StringComparison.OrdinalIgnoreCase):
                 defaultDebrisBasedOnTexture = 'm';
                 break;
             default:

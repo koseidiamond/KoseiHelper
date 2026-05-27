@@ -195,17 +195,28 @@ ladder.fieldInformation = {
         editable = true
     },
 	texture = {
-	options = {
+		options = {
 			"objects/KoseiHelper/Crossover/Ladder/ladder_dirt",
 			"objects/KoseiHelper/Crossover/Ladder/ladder_cement",
+			"objects/KoseiHelper/Crossover/Ladder/ladder_girder",
             "objects/KoseiHelper/Crossover/Ladder/ladder_wood",
 			"objects/KoseiHelper/Crossover/Ladder/ladder_temple",
             "objects/KoseiHelper/Crossover/Ladder/ladder_metal",
 			"objects/KoseiHelper/Crossover/Ladder/ladder_scifi",
 			"objects/KoseiHelper/Crossover/Ladder/ladder_grayscale",
+			"objects/KoseiHelper/Crossover/Ladder/ladder_kevin",
+			"objects/KoseiHelper/Crossover/Ladder/ladder_net",
 			"objects/KoseiHelper/Crossover/Ladder/ladder_template"
         },
         editable = true
+	},
+	sound = {
+		options = {
+			"event:/KoseiHelper/Crossover/Ladder",
+			"event:/char/madeline/handhold",
+			"event:/none"
+		},
+		editable = true
 	},
 	verticalOffset = {
 		fieldType = "integer"
