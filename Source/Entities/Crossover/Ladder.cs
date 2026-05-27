@@ -43,6 +43,9 @@ public class Ladder : Entity
     private MTexture textureSide;
     private MTexture textureMiddle;
     private MTexture textureThin;
+    private string ladderTexture;
+
+    private string debrisTexture;
 
     public bool InLadderState
     {
@@ -87,6 +90,12 @@ public class Ladder : Entity
         player.ForceCameraUpdate = false;
         player.IgnoreJumpThrus = false;
         player.Sprite.Y = 0;
+        if (singleUse && !hasBeenUsed)
+        {
+            hasBeenUsed = true;
+            Break(player.Center, player.BottomCenter);
+            return;
+        }
         hasBeenUsed = true;
     }
 
@@ -112,11 +121,12 @@ public class Ladder : Entity
             textureSide = GFX.Game[data.Attr("texture") + "_side"];
             textureMiddle = GFX.Game[data.Attr("texture") + "_middle"];
             textureThin = GFX.Game[data.Attr("texture") + "_thin"];
+            ladderTexture = data.Attr("texture", "");
             verticalOffset = data.Int("verticalOffset", 0);
         }
         else invisible = true;
-        // TODO read color with my Utils thingie
-        // If the ladders are not tinted, the bg ones will be slightly darker
+        debrisTexture = data.Attr("debrisTexture", "");
+        // If the ladders are not tinted, the bg ones will be slightly darker by default
         if (Depth < 0)
         {
             if (data.HexColor("color") == Color.White)
@@ -182,8 +192,6 @@ public class Ladder : Entity
                             if (player.Get<LadderStateComponent>() != null)
                                 player.Get<LadderStateComponent>().CurrentLadder = this;
                             InLadderState = true;
-                            if (singleUse && hasBeenUsed)
-                                Break(player.Center, player.BottomCenter);
                         }
                     }
                 }
@@ -512,16 +520,89 @@ public class Ladder : Entity
 
     public void Break(Vector2 from, Vector2 direction, bool playSound = true, bool playDebrisSound = true)
     {
-        Audio.Play("event:/game/general/wall_break_wood", Position);
-        for (int i = 0; i < Width / 8f; i++)
+        switch (ladderTexture)
         {
-            for (int j = 0; j < Height / 8f; j++)
+            case string s when s.Contains("wood"):
+                Audio.Play("event:/game/general/wall_break_wood", Center);
+                break;
+            case string s when s.Contains("dirt"):
+                Audio.Play("event:/game/general/wall_break_dirt", Center);
+                break;
+            case string s when s.Contains("stone"):
+                Audio.Play("event:/game/general/wall_break_stone", Center);
+                break;
+            case string s when s.Contains("ice"):
+                Audio.Play("event:/game/general/wall_break_ice", Center);
+                break;
+            default:
+                Audio.Play("event:/game/general/wall_break_wood", Center);
+                break;
+        }
+        char defaultDebrisBasedOnTexture;
+        switch (ladderTexture)
+        {
+            case string s when s.Contains("dirt", StringComparison.OrdinalIgnoreCase):
+                defaultDebrisBasedOnTexture = '1';
+                break;
+            case string s when s.Contains("snow", StringComparison.OrdinalIgnoreCase):
+                defaultDebrisBasedOnTexture = '3';
+                break;
+            case string s when s.Contains("girder", StringComparison.OrdinalIgnoreCase):
+                defaultDebrisBasedOnTexture = '4';
+                break;
+            case string s when s.Contains("tower", StringComparison.OrdinalIgnoreCase):
+                defaultDebrisBasedOnTexture = '5';
+                break;
+            case string s when s.Contains("stone", StringComparison.OrdinalIgnoreCase):
+                defaultDebrisBasedOnTexture = '6';
+                break;
+            case string s when s.Contains("cement", StringComparison.OrdinalIgnoreCase) || s.Contains("metal", StringComparison.OrdinalIgnoreCase):
+                defaultDebrisBasedOnTexture = '7'; 
+                break;
+            case string s when s.Contains("rock", StringComparison.OrdinalIgnoreCase):
+                defaultDebrisBasedOnTexture = '8';
+                break;
+            case string s when s.Contains("wood", StringComparison.OrdinalIgnoreCase):
+                defaultDebrisBasedOnTexture = '9';
+                break;
+            case string s when s.Contains("cliffside", StringComparison.OrdinalIgnoreCase):
+                defaultDebrisBasedOnTexture = 'b'; // f is skipped since cliffsideAlt's debris looks visually the same as b
+                break;
+            case string s when s.Contains("reflection", StringComparison.OrdinalIgnoreCase):
+                defaultDebrisBasedOnTexture = 'g';
+                break;
+            case string s when s.Contains("lostlevels", StringComparison.OrdinalIgnoreCase):
+                defaultDebrisBasedOnTexture = 'm';
+                break;
+            default:
+                defaultDebrisBasedOnTexture = '9';
+                break;
+        }
+        if (string.IsNullOrEmpty(debrisTexture))
+        {
+            for (int i = 0; i < Width / 8f; i++)
             {
-                Scene.Add(Engine.Pooler.Create<Debris>().Init(Position + new Vector2(4 + i * 8, 4 + j * 8), '9', playDebrisSound).BlastFrom(from));
+                for (int j = 0; j < Height / 8f; j++)
+                {
+                    Scene.Add(Engine.Pooler.Create<Debris>().Init(Position + new Vector2(4 + i * 8, 4 + j * 8), defaultDebrisBasedOnTexture, playDebrisSound).BlastFrom(from));
+                }
+            }
+        }
+        else
+        {
+
+            for (int i = 0; i < Width / 8f; i++)
+            {
+                for (int j = 0; j < Height / 8f; j++)
+                {
+                    CustomDebris debris = Engine.Pooler.Create<CustomDebris>()
+                        .Init(Position + new Vector2(4 + i * 8, 4 + j * 8), defaultDebrisBasedOnTexture, true).BlastFrom(from).SetTint(color);
+                    debris.SetTexture(debrisTexture);
+                    Scene.Add(debris);
+                }
             }
         }
         Collidable = false;
-        outOfLadders();
         RemoveSelf();
     }
 

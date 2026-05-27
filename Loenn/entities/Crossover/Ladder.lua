@@ -37,7 +37,8 @@ ladder.placements = {
 			dummyMode = false,
 			verticalOffset = 0,
 			decelerationValues = 1,
-			singleUse = false
+			singleUse = false,
+			debrisTexture = "debris/KoseiHelper/tintableDebris"
 		}
 	},
 	{
@@ -65,7 +66,8 @@ ladder.placements = {
 			dummyMode = false,
 			verticalOffset = 0,
 			decelerationValues = 1,
-			singleUse = false
+			singleUse = false,
+			debrisTexture = "debris/KoseiHelper/tintableDebris"
 		}
 	}
 	
@@ -86,6 +88,7 @@ ladder.fieldOrder = {
 		"regrabCooldown",
 		"horizontalSpeedLimit",
 		"decelerationValues",
+		"debrisTexture",
         "isInvisible",
         "canClimbHorizontally",
         "drainsStamina",
@@ -112,6 +115,7 @@ function ladder.ignoredFields(entity)
         "verticalOffset",
         "regrabCooldown",
 		"decelerationValues",
+		"debrisTexture",
 		"advancedMode"
     }
     local function doNotIgnore(value)
@@ -122,6 +126,9 @@ function ladder.ignoredFields(entity)
             end
         end
     end
+	if entity.singleUse == true then
+		doNotIgnore("debrisTexture")
+	end
     if entity.isInvisible == false then
         doNotIgnore("texture")
         doNotIgnore("color")
@@ -189,9 +196,13 @@ ladder.fieldInformation = {
     },
 	texture = {
 	options = {
+			"objects/KoseiHelper/Crossover/Ladder/ladder_dirt",
+			"objects/KoseiHelper/Crossover/Ladder/ladder_cement",
             "objects/KoseiHelper/Crossover/Ladder/ladder_wood",
-            "objects/KoseiHelper/Crossover/Ladder/ladder_metal",
 			"objects/KoseiHelper/Crossover/Ladder/ladder_temple",
+            "objects/KoseiHelper/Crossover/Ladder/ladder_metal",
+			"objects/KoseiHelper/Crossover/Ladder/ladder_scifi",
+			"objects/KoseiHelper/Crossover/Ladder/ladder_grayscale",
 			"objects/KoseiHelper/Crossover/Ladder/ladder_template"
         },
         editable = true

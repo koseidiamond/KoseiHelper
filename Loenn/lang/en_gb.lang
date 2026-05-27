@@ -35,7 +35,7 @@ entities.KoseiHelper/Ladder.attributes.description.customTexture=The directory o
 entities.KoseiHelper/Ladder.attributes.description.horizontalSpeedLimit=The player should be moving at a lower speed than the specified to be able to grab the ladders.
 entities.KoseiHelper/Ladder.attributes.description.coyoteTime=If the ladders should give coyote time after dashing away from them, allowing tech like ladder hypers/supers.
 entities.KoseiHelper/Ladder.attributes.description.requiresGrabButton=If the grab button needs to be held to climb the ladders, allowing tech like fastfalling.\nRecommended to disable for ladders that you can't climb horizontally or interactions with holdables.
-entities.KoseiHelper/Ladder.attributes.description.texture=The directory to the textures the ladders will use, relative to Graphics/Atlases/Gameplay/.\nThere should be three textures there, with the suffixes: "_side", "_middle" and "_thin", for example: \n"objects/ladder" will use the textures "objects/ladder_side", "objects/ladder_middle" and "objects/ladder_thin".
+entities.KoseiHelper/Ladder.attributes.description.texture=The directory to the textures the ladders will use, relative to Graphics/Atlases/Gameplay/.\nThere should be three textures there, with the suffixes: "_side", "_middle" and "_thin", for example: \n"objects/ladder" will use the textures "objects/ladder_side", "objects/ladder_middle" and "objects/ladder_thin".\n\nPro tip: the texture also determines the break sound if the ladder is set to single use.\nThis depends on whether the texture contains the word "wood", "dirt", "stone" or "ice".
 entities.KoseiHelper/Ladder.attributes.name.isAttached=Attached
 entities.KoseiHelper/Ladder.attributes.description.isAttached=If the ladder can be attached to other moving entities (like a switch gate).
 entities.KoseiHelper/Ladder.attributes.description.regrabCooldown=Cooldown time constant until the player can regrab the ladders again.\n0.5 will be half the time, 2 double amount of time, and so on.
@@ -45,6 +45,7 @@ entities.KoseiHelper/Ladder.attributes.description.dummyMode=This will put the p
 entities.KoseiHelper/Ladder.attributes.description.verticalOffset=The vertical offset of the custom texture.
 entities.KoseiHelper/Ladder.attributes.description.decelerationValues= The deceleration when you enter ladders (not compatible with Dummy Mode).\nIt works as some kind of "ladder friction".\nThis value is exponential!
 entities.KoseiHelper/Ladder.attributes.description.singleUse=Whether the ladders should break after being used once.
+entities.KoseiHelper/Ladder.attributes.description.debrisTexture=The path to your custom debris texture, relative to Gameplay/.\nThe debris will be tinted with the same color as the ladder.\nIf you leave this field empty, the default debris will be picked based on the texture name\n(it will check whether the path contains any tileset names, such as "lostlevels" or "reflection").
 
 #Flute Controller
 entities.KoseiHelper/FluteController.placements.name.FluteController=Flute Controller (Crossover)
