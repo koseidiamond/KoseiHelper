@@ -3,7 +3,6 @@ using Microsoft.Xna.Framework;
 using Monocle;
 using System;
 using System.Collections;
-using static Celeste.Mod.KoseiHelper.Entities.Brick;
 
 namespace Celeste.Mod.KoseiHelper.Entities;
 
@@ -51,7 +50,8 @@ public class PregnantFlutterbird : Actor
     public float laserFrequency, laserChargeTimer; // unused because it broke some map for no reason, apparently
     public bool killOnContact;
     public bool bouncy;
-    public enum FlutterbirdBounceType {
+    public enum FlutterbirdBounceType
+    {
         NotBouncy,
         Bouncy,
         SuperBouncy,

@@ -28,7 +28,8 @@ public class FluteController : Entity
             img.CenterOrigin();
             img.Position = offset;
             sine.Active = true;
-            sine.OnUpdate = (s) => {
+            sine.OnUpdate = (s) =>
+            {
                 img.Color *= 0.995F;
                 img.Position.Y -= 0.1f;
                 img.Position.X = offset.X + s * 8f;

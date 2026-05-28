@@ -170,6 +170,16 @@ entities.KoseiHelper/CustomBubble.attributes.name.coyote=Coyote Frames
 
 #KOSEI HELPER ENTITIES
 
+# Light Reactive Blocks
+entities.KoseiHelper/LightReactiveBlock.placements.name.LightReactiveBlock=Light Reactive Block
+entities.KoseiHelper/LightReactiveBlock.placements.description.PregnantFlutterbird=Blocks that appear or disappear depending on the light level.
+entities.KoseiHelper/LightReactiveBlock.attributes.description.tiletype=The tileset id that the block should use.
+entities.KoseiHelper/LightReactiveBlock.attributes.description.blendin=Whether the block should try to blend with other tiles.
+entities.KoseiHelper/LightReactiveBlock.attributes.description.tint=Whether the block should have a different color (supports transparency).
+entities.KoseiHelper/LightReactiveBlock.attributes.description.depth=The depth at which the block will be rendered.
+entities.KoseiHelper/LightReactiveBlock.attributes.description.lightLevelForCollidable=The block will be collidable when the light level is higher than this\n(in other words, when the darkness level is lower than 1 - this).
+entities.KoseiHelper/LightReactiveBlock.attributes.description.cutoutEffect=Whether the block should have the effect that stops the player's spotlight.\nEntering the block with this
+
 
 # Pregnant Flutterbird
 entities.KoseiHelper/SpecialFlutterbird.placements.name.PregnantFlutterbird="Special" Flutterbird
@@ -661,6 +671,7 @@ entities.KoseiHelper/ShatterDashBlock.attributes.description.destroyStaticMovers
 entities.KoseiHelper/ShatterDashBlock.attributes.description.verticalSpeed=Whether the shatter block should use the vertical speed as a requirement instead of the horizontal speed.
 entities.KoseiHelper/ShatterDashBlock.attributes.description.tint=Whether the block should have a different color (supports transparency).
 entities.KoseiHelper/ShatterDashBlock.attributes.description.shatterAxis=Whether the shatter block should use the vertical speed as a requirement instead of the horizontal speed, or either of them.
+entities.KoseiHelper/ShatterDashBlock.attributes.description.depth=The depth at which the block will be rendered.
 
 #Oshiro Doors
 entities.KoseiHelper/CustomOshiroDoor.placements.name.CustomOshiroDoorSprite= Custom Oshiro Door (Sprite)

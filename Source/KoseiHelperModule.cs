@@ -154,7 +154,8 @@ public class KoseiHelperModule : EverestModule
                 ReturnToGDMenu = menu;
                 menu.Insert(index + controller.menuIndex, new TextMenu.Button(Dialog.Clean(controller.dialogID))
                 {
-                    OnPressed = delegate {
+                    OnPressed = delegate
+                    {
                         if (!string.IsNullOrEmpty(controller.flagsToUnset))
                         {
                             string[] flags = controller.flagsToUnset.Split(',');
@@ -171,7 +172,8 @@ public class KoseiHelperModule : EverestModule
                         {
                             player.Leader.LoseFollowers();
                         }
-                        level.OnEndOfFrame += () => {
+                        level.OnEndOfFrame += () =>
+                        {
                             level.TeleportTo(player, controller.roomName, controller.introType,
                                 new Vector2(controller.closestSpawnX, controller.closestSpawnY));
                         };

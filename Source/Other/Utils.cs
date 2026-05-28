@@ -1,4 +1,3 @@
-using ExtendedVariants.Variants;
 using Microsoft.Xna.Framework;
 using Monocle;
 using System;

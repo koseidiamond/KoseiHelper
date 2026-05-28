@@ -58,13 +58,13 @@ public class FlagCounterSliderTranslator : Entity
         {
             case FCS.FlagToCounter:
                 if (flagSuffix)
-                    session.SetCounter(counterName,(int)((reverseValue ? -1 : 1) * session.Flags.Count(f => f.StartsWith(flagName)) * multiplierFactor));
+                    session.SetCounter(counterName, (int)((reverseValue ? -1 : 1) * session.Flags.Count(f => f.StartsWith(flagName)) * multiplierFactor));
                 else
                     session.SetCounter(counterName, (int)((reverseValue ? -1 : 1) * (session.GetFlag(flagName) ? valueWhileTrue : valueWhileFalse) * multiplierFactor));
                 break;
             case FCS.FlagToSlider:
                 if (flagSuffix)
-                    session.SetSlider(sliderName, (reverseValue ? -1 : 1) * session.Flags.Count(f=> f.StartsWith(flagName)) * multiplierFactor);
+                    session.SetSlider(sliderName, (reverseValue ? -1 : 1) * session.Flags.Count(f => f.StartsWith(flagName)) * multiplierFactor);
                 else
                     session.SetSlider(sliderName, (reverseValue ? -1 : 1) * (session.GetFlag(flagName) ? valueWhileTrue : valueWhileFalse) * multiplierFactor);
                 break;

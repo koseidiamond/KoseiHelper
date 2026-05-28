@@ -81,7 +81,7 @@ class MoveBlockCrystal : Entity
                 break;
 
         }
-        
+
         refillDash = data.Bool("refillDash", true);
         base.Add(new PlayerCollider(new Action<Player>(OnPlayer), null, null));
         base.Add(outline = new Image(GFX.Game[spritePrefix + "outline"]));
@@ -93,7 +93,8 @@ class MoveBlockCrystal : Entity
         sprite.CenterOrigin();
         base.Add(flash = new Sprite(GFX.Game, spritePrefix + "flash"));
         flash.Add("flash", "", 0.05f);
-        flash.OnFinish = delegate (string anim) {
+        flash.OnFinish = delegate (string anim)
+        {
             flash.Visible = false;
         };
         flash.CenterOrigin();
@@ -122,7 +123,8 @@ class MoveBlockCrystal : Entity
             Color = color1,
             Color2 = color2
         };
-        base.Add(wiggler = Wiggler.Create(1f, 4f, delegate (float v) {
+        base.Add(wiggler = Wiggler.Create(1f, 4f, delegate (float v)
+        {
             sprite.Scale = (flash.Scale = Vector2.One * (1f + v * 0.2f));
         }, false, false));
 
@@ -136,7 +138,8 @@ class MoveBlockCrystal : Entity
 
         base.Add(new DashListener
         {
-            OnDash = (Vector2 dir) => {
+            OnDash = (Vector2 dir) =>
+            {
             }
         });
         Tracker.AddTypeToTracker(typeof(MoveBlock));

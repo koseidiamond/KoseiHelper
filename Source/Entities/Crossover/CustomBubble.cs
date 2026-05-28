@@ -47,14 +47,15 @@ public class CustomBubble : Entity
 
     public CustomBubble(EntityData data, Vector2 offset) : this(data.Position + offset)
     {
-        radius =  data.Int("radius", 10);
+        radius = data.Int("radius", 10);
         Collider = new Circle(radius);
         Add(new PlayerCollider(OnPlayer));
         color = KoseiHelperUtils.ParseHexColor(data.Values.TryGetValue("color", out object c1) ? c1.ToString() : null, Color.White);
         spriteID = data.Attr("spriteID", "flyFeather");
         Add(sprite = GFX.SpriteBank.Create(spriteID));
         sprite.Color = color;
-        Add(Wiggler.Create(1f, 4f, delegate (float v) {
+        Add(Wiggler.Create(1f, 4f, delegate (float v)
+        {
             sprite.Scale = Vector2.One * (float)(1.0 + (double)v * 0.2);
         }));
         Add(bloom = new BloomPoint(0.5f, 20f));

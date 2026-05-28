@@ -2,8 +2,8 @@ using Celeste.Mod.Entities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Monocle;
-using System.Collections.Generic;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace Celeste.Mod.KoseiHelper.Entities.Crossover;
 
@@ -203,7 +203,7 @@ public class MapCutscene(Player player) : CutsceneEntity
         {
             Level level = Scene as Level;
             if (level?.RetryPlayerCorpse == null && target != null) // Idk why I substracted -2 to the X's origin but it works
-                Draw.SpriteBatch.Draw(target, Position, target.Bounds, Color.White * alpha, 0, new Vector2(target.Width -2f, 0f) / 2f, 1f, SpriteEffects.None, 0f);
+                Draw.SpriteBatch.Draw(target, Position, target.Bounds, Color.White * alpha, 0, new Vector2(target.Width - 2f, 0f) / 2f, 1f, SpriteEffects.None, 0f);
         }
     }
 

@@ -293,7 +293,7 @@ public class SpawnController : Entity
         base.Tag = TagsExt.SubHUD;
         if (!data.Bool("noCollider", false))
             Collider = new Hitbox(8, 8, -4, -4);
-        
+
         // General attributes
         offsetX = data.Int("offsetX", 0);
         offsetY = data.Int("offsetY", 8);

@@ -37,7 +37,7 @@ public class BalloonTripCollectable : Entity
         balloonParticle.Color = balloonParticle.Color2 = KoseiHelperUtils.ParseHexColor(data.Values.TryGetValue("particleColor", out object c1) ? c1.ToString() : null,
             Color.FromNonPremultiplied(231, 0, 91, 255));
         sprite.Play("balloon");
-        base.Collider = new Hitbox(data.Float("hitboxWidth",12f), data.Float("hitboxHeight",12f), data.Float("hitboxXOffset",-6f), data.Float("hitboxYOffset",-8f));
+        base.Collider = new Hitbox(data.Float("hitboxWidth", 12f), data.Float("hitboxHeight", 12f), data.Float("hitboxXOffset", -6f), data.Float("hitboxYOffset", -8f));
         Add(new PlayerCollider(OnPlayer));
     }
 

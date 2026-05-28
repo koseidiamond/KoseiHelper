@@ -2,7 +2,6 @@ using Celeste.Mod.Entities;
 using Microsoft.Xna.Framework;
 using Monocle;
 using System;
-using System.Collections;
 
 namespace Celeste.Mod.KoseiHelper.Entities.Crossover;
 
@@ -621,7 +620,7 @@ public class Ladder : Entity
                 defaultDebrisBasedOnTexture = '6';
                 break;
             case string s when s.Contains("_cement", StringComparison.OrdinalIgnoreCase) || s.Contains("_metal", StringComparison.OrdinalIgnoreCase):
-                defaultDebrisBasedOnTexture = '7'; 
+                defaultDebrisBasedOnTexture = '7';
                 break;
             case string s when s.Contains("_rock", StringComparison.OrdinalIgnoreCase):
                 defaultDebrisBasedOnTexture = '8';

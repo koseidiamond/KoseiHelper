@@ -37,7 +37,7 @@ public class ShadowCloakController : Entity
 
     public ShadowCloakController(EntityData data, Vector2 levelOffset)
     {
-        flag = data.Attr("flagRequired","");
+        flag = data.Attr("flagRequired", "");
         cooldown = data.Float("cooldown", 1.5f);
         recoverShadowDashSfx = data.Attr("recoverShadowDashSfx", "event:/none");
         useShadowDashSfx = data.Attr("useShadowDashSfx", "event:/KoseiHelper/Crossover/ShadowCloak");
@@ -76,7 +76,7 @@ public class ShadowCloakController : Entity
             float angle = Calc.Random.NextAngle();
             Vector2 offset = Calc.AngleToVector(angle, 18f);
             Vector2 velocityOffset = player.Speed * 0.04f;
-            level.ParticlesBG.Emit(ShadowParticles, player, 1, offset + new Vector2(0f,-9f), Vector2.Zero, angle + MathHelper.Pi);
+            level.ParticlesBG.Emit(ShadowParticles, player, 1, offset + new Vector2(0f, -9f), Vector2.Zero, angle + MathHelper.Pi);
         }
     }
 
@@ -96,7 +96,7 @@ public class ShadowCloakController : Entity
         {
             ShadowCloakController controller = Engine.Scene?.Tracker?.GetEntity<ShadowCloakController>();
 
-            float maxCooldown = controller?.cooldown/15 ?? 0.1f;
+            float maxCooldown = controller?.cooldown / 15 ?? 0.1f;
             float t = Calc.ClampedMap(cooldownTimer, 0f, maxCooldown, 0f, 1f);
             return Color.Lerp(new Color(20, 23, 29), original, t);
         }
