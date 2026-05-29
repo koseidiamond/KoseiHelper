@@ -202,10 +202,13 @@ ladder.fieldInformation = {
             "objects/KoseiHelper/Crossover/Ladder/ladder_wood",
 			"objects/KoseiHelper/Crossover/Ladder/ladder_temple",
             "objects/KoseiHelper/Crossover/Ladder/ladder_metal",
+			"objects/KoseiHelper/Crossover/Ladder/ladder_ice",
 			"objects/KoseiHelper/Crossover/Ladder/ladder_scifi",
 			"objects/KoseiHelper/Crossover/Ladder/ladder_grayscale",
 			"objects/KoseiHelper/Crossover/Ladder/ladder_kevin",
 			"objects/KoseiHelper/Crossover/Ladder/ladder_net",
+			"objects/KoseiHelper/Crossover/Ladder/ladder_cobweb",
+			"objects/KoseiHelper/Crossover/Ladder/ladder_railing",
 			"objects/KoseiHelper/Crossover/Ladder/ladder_template"
         },
         editable = true

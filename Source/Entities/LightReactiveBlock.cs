@@ -87,7 +87,7 @@ public class LightReactiveBlock : Solid
         }
         else
             Collidable = false;
-        float alpha = Calc.ClampedMap(visibility, 0f, lightLevelForCollidable, 0f, 0.65f); // tweak the final number for max transparency when lit
+        float alpha = Calc.ClampedMap(visibility, 0f, lightLevelForCollidable, 0f, 0.75f); // tweak the final number for max transparency when lit
         tiles.Color = tint * alpha;
     }
 }

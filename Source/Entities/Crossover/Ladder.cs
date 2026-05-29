@@ -39,11 +39,7 @@ public class Ladder : Entity
     public bool singleUse;
     private bool hasBeenUsed;
 
-    private MTexture textureSide;
-    private MTexture textureMiddle;
-    private MTexture textureThin;
-    private MTexture textureTop;
-    private MTexture textureBottom;
+    private MTexture textureSide, textureMiddle, textureThin, textureTop, textureBottom, textureTopRight, textureBottomRight, textureRight, textureTopThin, textureBottomThin;
     private string ladderTexture;
 
     private string debrisTexture;
@@ -119,13 +115,27 @@ public class Ladder : Entity
         singleUse = data.Bool("singleUse", false);
         if (!data.Bool("isInvisible"))
         { // Gets the textures if the ladders are not invisible
-            textureSide = GFX.Game[data.Attr("texture") + "_side"];
+            if (GFX.Game.Has(data.Attr("texture") + "_left"))
+                textureSide = GFX.Game[data.Attr("texture") + "_left"]; // just another file naming, it has no use
+            else
+                textureSide = GFX.Game[data.Attr("texture") + "_side"];
+            if (GFX.Game.Has(data.Attr("texture") + "_right"))
+                textureRight = GFX.Game[data.Attr("texture") + "_right"]; // side will be flipped on the right if no right texture is provided
             textureMiddle = GFX.Game[data.Attr("texture") + "_middle"];
             textureThin = GFX.Game[data.Attr("texture") + "_thin"];
             if (GFX.Game.Has(data.Attr("texture") + "_top"))
                 textureTop = GFX.Game[data.Attr("texture") + "_top"];
+            if (GFX.Game.Has(data.Attr("texture") + "_topThin"))
+                textureTopThin = GFX.Game[data.Attr("texture") + "_topThin"];
+            if (GFX.Game.Has(data.Attr("texture") + "_bottomThin"))
+                textureBottomThin = GFX.Game[data.Attr("texture") + "_bottomThin"];
             if (GFX.Game.Has(data.Attr("texture") + "_bottom"))
                 textureBottom = GFX.Game[data.Attr("texture") + "_bottom"];
+            if (GFX.Game.Has(data.Attr("texture") + "_topRight"))
+                textureTopRight = GFX.Game[data.Attr("texture") + "_topRight"];
+            if (GFX.Game.Has(data.Attr("texture") + "_bottomRight"))
+                textureBottomRight = GFX.Game[data.Attr("texture") + "_bottomRight"];
+
             ladderTexture = data.Attr("texture", "");
             verticalOffset = data.Int("verticalOffset", 0);
         }
@@ -457,56 +467,84 @@ public class Ladder : Entity
 
     public override void Render()
     {
-        if (!invisible)
+        if (invisible)
+            return;
+        float bottom = Position.Y + Collider.Height;
+        if (Width <= textureThin.Width)
         {
-            if (Width <= 15)
+            for (float y = Position.Y; y < bottom; y += textureThin.Height)
             {
-                float bottom = Position.Y + Collider.Height;
-                for (float i = Position.Y; i < bottom; i += textureThin.Height)
-                {
-                    textureThin.GetSubtexture(0, 0, (int)Collider.Width, (int)Calc.Min(16, (int)(bottom - i)))
-                        .Draw(new Vector2(Position.X, i) - Vector2.UnitY * verticalOffset, Vector2.Zero, color);
-                }
+                int drawHeight = (int)Calc.Min(textureThin.Height, bottom - y);
+                int drawWidth = (int)Calc.Min(textureThin.Width, Collider.Width);
+                textureThin.GetSubtexture(0, 0, drawWidth, drawHeight)
+                    .Draw(new Vector2(Position.X, y) - Vector2.UnitY * verticalOffset, Vector2.Zero, color);
             }
-            else
-            {
-                float bottom = Position.Y + Collider.Height;
-                for (float i = Position.Y; i < bottom; i += textureSide.Height) // Texture is 16 pixels tall so the counter increases by its height
-                {
-                    int drawHeight = (int)Calc.Min(16, (int)(bottom - i));
-                    textureSide.GetSubtexture(0, 0, (int)Collider.Width, drawHeight)
-                        .Draw(new Vector2(Position.X, i) - Vector2.UnitY * verticalOffset, Vector2.Zero, color); // Left side
-                    textureSide.GetSubtexture(0, 0, (int)Collider.Width, drawHeight)
-                        .Draw(new Vector2(Position.X, i) + Vector2.UnitX * Collider.Width - Vector2.UnitY * verticalOffset, Vector2.Zero, color, new Vector2(-1, 1)); // Right side
-                }
-
-                for (float i = Position.Y; i < bottom; i += textureMiddle.Height) // Texture is 16 pixels tall so the counter increases by its height
-                {
-                    int drawHeight = (int)Calc.Min(16, (int)(bottom - i));
-                    for (float j = 0; j <= Collider.Width - 24; j += textureMiddle.Width) // Texture is 8 pixels wide so the counter increases by its width
-                    { // But tbh Idk why - 24
-                        textureMiddle.GetSubtexture(0, 0, (int)Collider.Width - 8, drawHeight).Draw(new Vector2(Position.X + 8 + j, i) - Vector2.UnitY * verticalOffset, Vector2.Zero, color);
-                    }
-                }
-            }
-            // Optional textures
-            if (textureTop != null)
-            {
-                for (float x = Position.X; x <= Position.X + Collider.Width - textureTop.Width; x += textureTop.Width)
-                {
-                    textureTop.Draw(new Vector2(x, Position.Y - 8) - Vector2.UnitY * verticalOffset, Vector2.Zero, color);
-                }
-            }
-            if (textureBottom != null)
-            {
-                for (float x = Position.X; x <= Position.X + Collider.Width - textureBottom.Width; x += textureBottom.Width)
-                {
-                    textureBottom.Draw(new Vector2(x, Position.Y + Collider.Height) - Vector2.UnitY * verticalOffset, Vector2.Zero, color);
-                }
-            }
-
-            base.Render();
         }
+        else
+        {
+            int sideWidth = textureSide.Width;
+            int sideHeight = textureSide.Height;
+            int middleWidth = textureMiddle.Width;
+            int middleHeight = textureMiddle.Height;
+
+            float innerWidth = Collider.Width - sideWidth * 2;
+            for (float y = Position.Y; y < bottom; y += sideHeight)
+            {
+                int drawHeight = (int)Calc.Min(sideHeight, bottom - y);
+                // Left side
+                textureSide.GetSubtexture(0, 0, sideWidth, drawHeight)
+                    .Draw(new Vector2(Position.X, y) - Vector2.UnitY * verticalOffset, Vector2.Zero, color);
+                // Right side (uses a flipped _side, or _right if that texture is provided
+                if (textureRight != null)
+                {
+                    textureRight.GetSubtexture(0, 0, textureRight.Width, drawHeight)
+                        .Draw(new Vector2(Position.X + Collider.Width - textureRight.Width, y) - Vector2.UnitY * verticalOffset, Vector2.Zero, color);
+                }
+                else
+                {
+                    textureSide.GetSubtexture(0, 0, sideWidth, drawHeight)
+                        .Draw(new Vector2(Position.X + Collider.Width, y) - Vector2.UnitY * verticalOffset, Vector2.Zero, color, new Vector2(-1, 1));
+                }
+            }
+
+            for (float y = Position.Y; y < bottom; y += middleHeight)
+            {
+                int drawHeight = (int)Calc.Min(middleHeight, bottom - y);
+                for (float x = 0; x < innerWidth; x += middleWidth)
+                {
+                    int drawWidth = (int)Calc.Min(middleWidth, innerWidth - x);
+                    textureMiddle.GetSubtexture(0, 0, drawWidth, drawHeight)
+                        .Draw(new Vector2(Position.X + sideWidth + x, y) - Vector2.UnitY * verticalOffset, Vector2.Zero, color);
+                }
+            }
+        }
+
+        MTexture topTexture = Width <= textureThin.Width && textureTopThin != null ? textureTopThin : textureTop;
+        if (topTexture != null)
+        {
+            for (float x = 0; x < Collider.Width; x += topTexture.Width)
+            {
+                bool isLast = x + topTexture.Width >= Collider.Width;
+                MTexture textureOnTop = isLast && textureTopRight != null && topTexture == textureTop ? textureTopRight : topTexture;
+                int drawWidth = (int)Calc.Min(textureOnTop.Width, Collider.Width - x);
+                textureOnTop.GetSubtexture(0, 0, drawWidth, textureOnTop.Height)
+                    .Draw(new Vector2(Position.X + x, Position.Y - textureOnTop.Height) - Vector2.UnitY * verticalOffset, Vector2.Zero, color);
+            }
+        }
+        MTexture bottomTexture = Width <= textureThin.Width && textureBottomThin != null ? textureBottomThin : textureBottom;
+
+        if (bottomTexture != null)
+        {
+            for (float x = 0; x < Collider.Width; x += bottomTexture.Width)
+            {
+                bool isLast = x + bottomTexture.Width >= Collider.Width;
+                MTexture textureOnBottom = isLast && textureBottomRight != null && bottomTexture == textureBottom ? textureBottomRight : bottomTexture;
+                int drawWidth = (int)Calc.Min(textureOnBottom.Width, Collider.Width - x);
+                textureOnBottom.GetSubtexture(0, 0, drawWidth, textureOnBottom.Height)
+                    .Draw(new Vector2(Position.X + x, Position.Y + Collider.Height) - Vector2.UnitY * verticalOffset, Vector2.Zero, color);
+            }
+        }
+        base.Render();
     }
 
 
@@ -607,7 +645,7 @@ public class Ladder : Entity
             case string s when s.Contains("_dirt", StringComparison.OrdinalIgnoreCase):
                 defaultDebrisBasedOnTexture = '1';
                 break;
-            case string s when s.Contains("_snow", StringComparison.OrdinalIgnoreCase):
+            case string s when s.Contains("_snow", StringComparison.OrdinalIgnoreCase) || s.Contains("_ice", StringComparison.OrdinalIgnoreCase):
                 defaultDebrisBasedOnTexture = '3';
                 break;
             case string s when s.Contains("_girder", StringComparison.OrdinalIgnoreCase) || s.Contains("_net", StringComparison.OrdinalIgnoreCase):
@@ -653,7 +691,6 @@ public class Ladder : Entity
         }
         else
         {
-
             for (int i = 0; i < Width / 8f; i++)
             {
                 for (int j = 0; j < Height / 8f; j++)
