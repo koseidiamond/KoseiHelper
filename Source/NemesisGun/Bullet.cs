@@ -17,7 +17,8 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
     {
 
         public Rectangle Hitbox => new Rectangle((int)Position.X + Extensions.bulletXOffset, (int)Position.Y + Extensions.bulletYOffset, Extensions.bulletWidth, Extensions.bulletHeight);
-        private Vector2 velocity, startVelocity;
+        public Vector2 velocity;
+        private Vector2 startVelocity;
         private readonly Actor owner;
         private int lifetime;
         private float lifetimeUpdate;
@@ -1294,7 +1295,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
         }
 
         // Removes bullets
-        private void DestroyBullet()
+        public void DestroyBullet()
         {
             if (CanDoShit(owner) && Extensions.bulletExplosion)
             {

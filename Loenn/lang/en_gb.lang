@@ -789,21 +789,21 @@ entities.KoseiHelper/PufferBall.attributes.description.flag=The flag that needs 
 entities.KoseiHelper/PufferRefill.placements.name.PufferRefill=Puffer Refill
 entities.KoseiHelper/PufferRefill.placements.description.PufferRefill=The player will be launched in the same direction they dash towards.
 entities.KoseiHelper/PufferRefill.attributes.description.sprite=The path to your custom sprite.\nIt needs flash and idle animations, an an outline image.
-entities.KoseiHelper/PufferRefill.attributes.description.oneUse=If the refill should be consumed upon use or respawn after a while.
+entities.KoseiHelper/PufferRefill.attributes.description.oneUse=If the refill should disappear upon use or respawn after a while.
 entities.KoseiHelper/PufferRefill.attributes.description.respawnTime=The time that the refill takes to reappear after being consumed.
 
 #Flag Refill
 entities.KoseiHelper/FlagRefill.placements.name.FlagRefill=Flag Refill
 entities.KoseiHelper/FlagRefill.placements.description.FlagRefill=A flag will be enabled when the player collects the refill.\nThis flag will be reset if the player dashes or dies, as some sort of "temporary powerup".
 entities.KoseiHelper/FlagRefill.attributes.description.sprite=The path to your custom sprite.\nIt needs flash and idle animations, an an outline image.
-entities.KoseiHelper/FlagRefill.attributes.description.oneUse=If the refill should be consumed upon use or respawn after a while.
+entities.KoseiHelper/FlagRefill.attributes.description.oneUse=If the refill should disappear upon use or respawn after a while.
 entities.KoseiHelper/FlagRefill.attributes.description.respawnTime=The time that the refill takes to reappear after being consumed.
 
 #Counter Refill
 entities.KoseiHelper/CounterRefill.placements.name.CounterRefill=Counter Refill
 entities.KoseiHelper/CounterRefill.placements.description.CounterRefill=The counter KoseiHelper_CounterRefill will increase/decrease when the refill is collected/used.
 entities.KoseiHelper/CounterRefill.attributes.description.sprite=The path to your custom sprite.\nIt needs flash and idle animations, an an outline image.
-entities.KoseiHelper/CounterRefill.attributes.description.oneUse=If the refill should be consumed upon use or respawn after a while.
+entities.KoseiHelper/CounterRefill.attributes.description.oneUse=If the refill should disappear upon use or respawn after a while.
 entities.KoseiHelper/CounterRefill.attributes.description.decrease=If the counter should be decreased instead of increased.
 entities.KoseiHelper/CounterRefill.attributes.description.respawnTime=The time that the refill takes to reappear after being consumed.
 
@@ -1048,6 +1048,14 @@ entities.KoseiHelper/SpawnController.attributes.name.dictValues=Attribute values
 entities.KoseiHelper/EntitySpawnArea.placements.name.EntitySpawnArea=Entity Spawn Area
 entities.KoseiHelper/EntitySpawnArea.placements.description.EntitySpawnArea=If a Spawn Controller (Entity Spawner) is set to Random Location, the entities will spawn inside this area.
 entities.KoseiHelper/EntitySpawnArea.attributes.description.color=Spawn Controllers that have the same color assigned will be able to choose this as a valid area.
+
+# Nemesis Gun Entities
+entities.KoseiHelper/NemesisRefill.placements.name.NemesisRefill=Nemesis Refill
+entities.KoseiHelper/NemesisRefill.placements.description.NemesisRefill=When shot by a Nemesis Gun bullet, it will force the player to dash.
+entities.KoseiHelper/NemesisRefill.attributes.description.oneUse=If the refill should disappear upon use or respawn after a while.
+entities.KoseiHelper/NemesisRefill.attributes.description.sprite=The path to your custom sprite.\nIt needs flash and idle animations, an an outline image.
+entities.KoseiHelper/NemesisRefill.attributes.description.respawnTime=The time that the refill takes to reappear after being consumed.
+
 
 #TRIGGERS
 
