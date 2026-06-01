@@ -214,7 +214,7 @@ entities.KoseiHelper/SpecialFlutterbird.attributes.description.partnerID=The ent
 entities.KoseiHelper/SpecialFlutterbird.attributes.description.hoppingDistance=How much the birds should hop horizontally, on average.
 entities.KoseiHelper/SpecialFlutterbird.attributes.description.scaredDistance=The horizontal distance at which the bird will be scared and fly away.
 entities.KoseiHelper/SpecialFlutterbird.attributes.description.explodes=Whether the flutterbird will explode upon touch.
-entities.KoseiHelper/SpecialFlutterbird.attributes.description.stealBerries=Whether the flutterbird can force the berries to be lost upon being touched.
+entities.KoseiHelper/SpecialFlutterbird.attributes.description.stealBerries=Whether the flutterbird can force the berries to be lost upon being touched.\nThey are even able to steal golden berries! How cute!
 entities.KoseiHelper/SpecialFlutterbird.attributes.description.giveUltra=Whether touching the flutterbird should multiply the player's horizontal speed by x1.2.\nNOTE: The ultras are not vanilla. The x1.2 is given once for every frame that the player is touching the bird (like an acceleration field).\nMake a bird pregnant or stack multiple birds for a crazy speed build!
 
 # Debug Renderer
