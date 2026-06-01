@@ -157,7 +157,7 @@ public class PregnantFlutterbird : Actor
         }
         Add(laserSfx = new SoundSource());
         pushRadius = new Circle(6f);
-        stealBerries = data.Bool("stealBerries", true);
+        stealBerries = data.Bool("stealBerries", false);
     }
 
     // this constructor is used when a baby bird is born.
