@@ -227,9 +227,9 @@ public class TalkComponentCustomizator : Entity
         Vector2 vector = level.Camera.Position.Floor();
         Vector2 vector2 = Handler.Entity.Position + Handler.DrawAt - vector;
         if (SaveData.Instance != null && SaveData.Instance.Assists.MirrorMode)
-            vector2.X = 320f - vector2.X;
-        vector2.X *= 6f;
-        vector2.Y *= 6f;
+            vector2.X = level.Camera.Viewport.Width - vector2.X; // zoomout compatibility
+        vector2.X *= 6f * level?.Zoom ?? 1f;
+        vector2.Y *= 6f * level?.Zoom ?? 1f;
 
         float timer = (float)typeof(TalkComponent.TalkComponentUI).GetField("timer", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).GetValue(self);
         float alpha = (float)typeof(TalkComponent.TalkComponentUI).GetField("alpha", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).GetValue(self);
@@ -287,7 +287,7 @@ public class TalkComponentCustomizator : Entity
 
         if (self.Highlighted)
         {
-            Vector2 inputPos = vector2 + Handler.HoverUI.InputPosition * scale;
+            Vector2 inputPos = vector2 + Handler.HoverUI.InputPosition * scale * new Vector2(custom.IconScaleX, custom.IconScaleY);
 
             if (custom.Text == "Default")
             { // Use original TalkComponent behavior
