@@ -76,6 +76,7 @@ public class KoseiHelperModule : EverestModule
         TalkComponentCustomizator.Load();
         SetFlagPrefixOnSpawnController.Load();
         Ladder.Load();
+        Conveyor.Load();
         Everest.Events.Player.OnRegisterStates += Ladder.RegisterLadderState;
         Everest.Events.Player.OnRegisterStates += MaryBlock.RegisterBaldState;
 
@@ -119,6 +120,7 @@ public class KoseiHelperModule : EverestModule
         TalkComponentCustomizator.Unload();
         SetFlagPrefixOnSpawnController.Unload();
         Ladder.Unload();
+        Conveyor.Unload();
         Everest.Events.Player.OnRegisterStates -= Ladder.RegisterLadderState;
         Everest.Events.Player.OnRegisterStates -= MaryBlock.RegisterBaldState;
 

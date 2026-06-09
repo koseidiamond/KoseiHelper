@@ -92,8 +92,6 @@ public class PregnantFlutterbird : Actor
     private int health = 1;
     private float blinkTimer = 0f;
 
-    private Leader leader;
-
     public PregnantFlutterbird(EntityData data, Vector2 offset, EntityID eid) : base(data.Position + offset)
     {
         entityID = eid;
