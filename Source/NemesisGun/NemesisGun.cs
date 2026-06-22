@@ -38,7 +38,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
         private static Vector2 CursorPos => GunInput.CursorPosition;
         private bool GunWasShot => GunInput.GunShot;
         private MTexture gunTexture;
-        private int shotCooldown, recoilCooldown;
+        public int shotCooldown, recoilCooldown; // todo: make it static + registerstaticfield speedruntool iop to prevent savestate bug
         public Level level;
         private static Vector2 lastHeldDirection = Vector2.Zero;
         private static bool isPlayerUnderwater = false;

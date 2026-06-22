@@ -27,7 +27,7 @@ public class ConveyorMover : Component
         bool foundConveyor = false;
         foreach (Conveyor conveyor in Scene.Tracker.GetEntities<Conveyor>())
         {
-            if (!conveyor.isBrokenDown && Collide.Check(conveyor, Entity, conveyor.Position - Vector2.UnitY)) // test, maybe it's +vector2.unity
+            if (!conveyor.isBrokenDown && Collide.Check(conveyor, Entity, conveyor.Position - Vector2.UnitY)) // todo gravity helper compatibility
             {
                 foundConveyor = true;
                 Move(conveyor.IsMovingLeft ? -conveyor.moveSpeed : conveyor.moveSpeed);
