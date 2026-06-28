@@ -1,3 +1,5 @@
+local state = require("loaded_state")
+
 local CustomPlayerSeeker = {}
 
 CustomPlayerSeeker.name = "KoseiHelper/CustomPlayerSeeker"
@@ -23,6 +25,17 @@ CustomPlayerSeeker.placements = {
 		}
 	}
 }
+
+local function getRoomOptions()
+    local rooms = {}
+    if state.map and state.map.rooms then
+        for _, room in ipairs(state.map.rooms) do
+            table.insert(rooms, room.name)
+        end
+    end
+    table.sort(rooms)
+    return rooms
+end
 
 function CustomPlayerSeeker.ignoredFields(entity)
 	local ignored = {
@@ -51,6 +64,28 @@ end
 CustomPlayerSeeker.fieldInformation = {
 	freezeFramesWhenDashing = {
 		minimumValue = 0
+	},
+	nextRoom = {
+        options = getRoomOptions,
+        editable = true
+    },
+	colorgrade = {
+        options = {
+			"none",
+			"oldsite",
+			"panicattack",
+			"templevoid",
+			"reflection",
+			"credits",
+			"cold",
+			"hot",
+			"feelingdown",
+			"golden"
+		},
+        editable = true
+    },
+	freezeFramesWhenDashing = {
+		fieldType = "integer"
 	}
 }
 

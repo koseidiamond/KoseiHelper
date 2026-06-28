@@ -27,14 +27,12 @@ conveyor.fieldInformation = {
 			"objects/KoseiHelper/Conveyor/green",
 			"objects/KoseiHelper/Conveyor/pink",
 			"objects/KoseiHelper/Conveyor/red",
-			"objects/KoseiHelper/Conveyor/yellow"
+			"objects/KoseiHelper/Conveyor/yellow",
+			"objects/KoseiHelper/Conveyor/special"
 		},
 		editable = true
 	}
 }
-
-
--- todo unhardcode textures
 
 function conveyor.sprite(room, entity)
     local sprites = {}
@@ -43,30 +41,26 @@ function conveyor.sprite(room, entity)
 	local bodyMidTexture = entity.spriteRoot .. "_middle00"
 
     local width = entity.width or 16
+	local hasEdges = drawableSprite.fromTexture(bodyEdgeTexture, entity) ~= nil
 	
-	if width <= 8 then
-		local mid = drawableSprite.fromTexture(bodyMidTexture, entity)
-		mid:setJustification(0, 0)
-		table.insert(sprites, mid)
-	end
-	
-    local leftEdge = drawableSprite.fromTexture(bodyEdgeTexture, entity)
-    leftEdge:setJustification(0.0, 0.0)
-    table.insert(sprites, leftEdge)
+	local middleCount = math.max(1, math.floor(width / 8))
+    for i = 0, middleCount - 1 do
+        local mid = drawableSprite.fromTexture(bodyMidTexture, entity)
+        mid:addPosition(i * 8, 0)
+        mid:setJustification(0, 0)
+        table.insert(sprites, mid)
+    end
+    if hasEdges then
+        local leftEdge = drawableSprite.fromTexture(bodyEdgeTexture, entity)
+        leftEdge:setJustification(0, 0)
+        table.insert(sprites, leftEdge)
 
-    local rightEdge = drawableSprite.fromTexture(bodyEdgeTexture, entity)
-    rightEdge:addPosition(width, 0)
-	rightEdge:setScale(-1, 1)
-    rightEdge:setJustification(0.0, 0.0)
-    table.insert(sprites, rightEdge)
-
-	local middleCount = math.max(0, math.floor(width / 8) - 2)
-	for i = 0, middleCount - 1 do
-		local mid = drawableSprite.fromTexture(bodyMidTexture, entity)
-		mid:addPosition(8 + i * 8, 0)
-		mid:setJustification(0, 0)
-		table.insert(sprites, mid)
-	end
+        local rightEdge = drawableSprite.fromTexture(bodyEdgeTexture, entity)
+        rightEdge:addPosition(width, 0)
+        rightEdge:setScale(-1, 1)
+        rightEdge:setJustification(0, 0)
+        table.insert(sprites, rightEdge)
+    end
 
     return sprites
 end

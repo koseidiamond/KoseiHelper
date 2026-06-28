@@ -18,7 +18,7 @@ public class Conveyor : Solid
     private string spriteRoot = "objects/KoseiHelper/Conveyor/blue";
     private float animationFrequency = 0.025f;
 
-    private ParticleType particleRight = new()
+    private static ParticleType CreateParticle(float direction) => new()
     {
         Size = 1f,
         Color = Calc.HexToColor("6b675d"),
@@ -28,26 +28,14 @@ public class Conveyor : Solid
         SpeedMin = 12f,
         SpeedMax = 15f,
         Acceleration = Vector2.UnitY * 2f,
-        DirectionRange = (float)Math.PI / 2f,
-        Direction = 0,
+        DirectionRange = MathF.PI / 2f,
+        Direction = direction,
         LifeMin = 0.75f,
         LifeMax = 1.5f
     };
-    private ParticleType particleLeft = new()
-    {
-        Size = 1f,
-        Color = Calc.HexToColor("6b675d"),
-        Color2 = Calc.HexToColor("db8d2e"),
-        ColorMode = ParticleType.ColorModes.Blink,
-        FadeMode = ParticleType.FadeModes.Late,
-        SpeedMin = 12f,
-        SpeedMax = 15f,
-        Acceleration = Vector2.UnitY * 2f,
-        DirectionRange = (float)Math.PI / 2f,
-        Direction = (float)Math.PI,
-        LifeMin = 0.75f,
-        LifeMax = 1.5f
-    };
+
+    private readonly ParticleType particleRight = CreateParticle(0f);
+    private readonly ParticleType particleLeft = CreateParticle(MathF.PI);
 
     private readonly Sprite[] edgeSprites = new Sprite[2];
     private SoundSource sfx;
@@ -106,79 +94,67 @@ public class Conveyor : Solid
 
     public bool IsMovingLeft => movingLeft;
 
-    private bool GetDesiredDirection()
+    private bool GetDirection()
     {
         bool direction = true;
-
-        if (GetFlagState())
+        if (!string.IsNullOrEmpty(reverseFlag) && SceneAs<Level>().Session.GetFlag(reverseFlag))
             direction = !direction;
-
         return direction;
     }
 
-
     private void SetupSprites()
     {
-        bool hasEdge = GFX.Game.Has(spriteRoot + "_edge");
-
-        for (int i = 0; i < 2; i++)
-        {
-            Add(edgeSprites[i] = new Sprite(GFX.Game, spriteRoot));
-
-            string anim = hasEdge ? "_edge" : "_middle";
-            edgeSprites[i].Add("left", anim, animationFrequency, "left");
-
-            edgeSprites[i].Position = new Vector2((Width - 8) * i, 0);
-        }
-
-        if (hasEdge) // flip second edge sprite
-        {
-            edgeSprites[1].Rotation = (float)Math.PI;
-            edgeSprites[1].Position += new Vector2(8, 8);
-        }
-
-        int middleCount = Math.Max(0, (int)(Width / 8) - 2);
+        int middleCount = Math.Max(1, (int)(Width / 8));
         midSprites = new Sprite[middleCount];
 
-        for (int i = 0; i < midSprites.Length; i++)
+        for (int i = 0; i < middleCount; i++)
         {
             Add(midSprites[i] = new Sprite(GFX.Game, spriteRoot));
-            midSprites[i].Add("left", "_middle", animationFrequency, "left");
-            midSprites[i].Position = new Vector2(8 + (8 * i), 0);
+            midSprites[i].Add("edge", "_middle", animationFrequency, "edge");
+            midSprites[i].Position = new Vector2(i * 8, 0);
+        }
+
+        bool hasEdgeSprites = GFX.Game.Has(spriteRoot + "_edge00");
+        if (hasEdgeSprites)
+        {
+            for (int i = 0; i < 2; i++)
+            {
+                Add(edgeSprites[i] = new Sprite(GFX.Game, spriteRoot));
+                edgeSprites[i].Add("edge", "_edge", animationFrequency, "edge");
+                edgeSprites[i].Position = new Vector2((Width - 8) * i, 0);
+            }
+            edgeSprites[1].FlipX = true;
         }
     }
 
     public override void Update()
     {
         base.Update();
-
-        bool desiredState = GetDesiredDirection();
+        bool desiredState = GetDirection();
 
         if (desiredState != movingLeft)
         {
             movingLeft = desiredState;
             Add(new Coroutine(Sparks()));
-            ReverseConveyorDirection();
+            ReverseConveyor(midSprites);
+            ReverseConveyor(edgeSprites);
         }
 
         if (!string.IsNullOrEmpty(conveyorSfx) && !sfx.Playing)
-        {
             sfx.Play(conveyorSfx);
-        }
     }
 
     public override void Added(Scene scene)
     {
         base.Added(scene);
-        movingLeft = GetDesiredDirection();
+        movingLeft = GetDirection();
         StartAnimation();
-        if (!movingLeft)
-            ReverseConveyorDirection();
-    }
 
-    private bool GetFlagState()
-    {
-        return string.IsNullOrEmpty(reverseFlag) ? false : SceneAs<Level>().Session.GetFlag(reverseFlag);
+        if (!movingLeft)
+        {
+            ReverseConveyor(midSprites);
+            ReverseConveyor(edgeSprites);
+        }
     }
 
     private IEnumerator Sparks()
@@ -194,21 +170,19 @@ public class Conveyor : Solid
     private void StartAnimation()
     {
         PlayAnimationInArray(midSprites);
-        PlayAnimationInArray(edgeSprites);
-        //edgeSprites[1].SetAnimationFrame(4);
+        if (GFX.Game.Has(spriteRoot + "_edge00"))
+            PlayAnimationInArray(edgeSprites);
     }
 
-    private void ReverseConveyorDirection()
-    {
-        ReverseAnimationInArray(midSprites);
-        ReverseAnimationInArray(edgeSprites);
-    }
-
-    private void ReverseAnimationInArray(Sprite[] array)
+    private void ReverseConveyor(Sprite[] array)
     {
         foreach (Sprite sprite in array)
         {
-            sprite.Rate = -sprite.Rate;
+            if (sprite != null)
+            {
+                sprite.Rate = -sprite.Rate;
+                sprite.FlipX = !sprite.FlipX;
+            }
         }
     }
 
@@ -216,7 +190,9 @@ public class Conveyor : Solid
     {
         foreach (Sprite sprite in array)
         {
-            sprite.Play("left");
+            if (sprite == null)
+                continue;
+            sprite.Play("edge");
             sprite.Rate = Math.Sign(sprite.Rate) * moveSpeed / 240f;
         }
     }
@@ -226,7 +202,8 @@ public class Conveyor : Solid
         orig(self, position, spriteMode);
         ConveyorMover conveyorMover = new()
         {
-            OnMove = (amount) => {
+            OnMove = (amount) =>
+            {
                 if (self.StateMachine.State != Player.StClimb)
                 {
                     self.MoveH(amount * Engine.DeltaTime);
@@ -235,8 +212,6 @@ public class Conveyor : Solid
         };
         self.Add(conveyorMover);
     }
-
-
 
     public static void Load()
     {
