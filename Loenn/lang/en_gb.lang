@@ -170,9 +170,19 @@ entities.KoseiHelper/CustomBubble.attributes.name.coyote=Coyote Frames
 
 #KOSEI HELPER ENTITIES
 
+# Conveyor
+entities.KoseiHelper/Conveyor.placements.name.conveyor=Conveyor
+entities.KoseiHelper/Conveyor.placements.description.conveyor=1-tile conveyor that can move the player or other entities.\nCompatible with Gravity Helper.
+entities.KoseiHelper/Conveyor.attributes.description.moveSpeed=The speed at which the entities should be moved.
+entities.KoseiHelper/Conveyor.attributes.description.spriteRoot=The path to your sprites, without the suffix "_middle".\nOptionally, you can have "_edge" sprites that will be rendered on the sides above the "_middle" ones.
+entities.KoseiHelper/Conveyor.attributes.description.reverseFlag=The flag that should flip this conveyor.
+entities.KoseiHelper/Conveyor.attributes.description.conveyorSfx=The idle sound that the conveyor should play.
+entities.KoseiHelper/Conveyor.attributes.description.reverseSfx=The sound that the conveyor should play when the direction is toggled.
+entities.KoseiHelper/Conveyor.attributes.description.affectedEntities=A list of entity ids that should be moved.\nThe player is always affected.
+
 # Light Reactive Blocks
 entities.KoseiHelper/LightReactiveBlock.placements.name.LightReactiveBlock=Light Reactive Block
-entities.KoseiHelper/LightReactiveBlock.placements.description.PregnantFlutterbird=Blocks that appear or disappear depending on the light level.
+entities.KoseiHelper/LightReactiveBlock.placements.description.LightReactiveBlock=Blocks that appear or disappear depending on the light level.
 entities.KoseiHelper/LightReactiveBlock.attributes.description.tiletype=The tileset id that the block should use.
 entities.KoseiHelper/LightReactiveBlock.attributes.description.blendin=Whether the block should try to blend with other tiles.
 entities.KoseiHelper/LightReactiveBlock.attributes.description.tint=Whether the block should have a different color (supports transparency).

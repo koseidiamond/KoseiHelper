@@ -15,7 +15,9 @@ conveyor.placements = {
 			moveSpeed = 40,
 			reverseFlag = "KoseiHelper_conveyor_right",
 			spriteRoot = "objects/KoseiHelper/Conveyor/blue",
-			conveyorSfx = "event:/env/local/09_core/conveyor_idle"
+			conveyorSfx = "event:/env/local/09_core/conveyor_idle",
+			reverseSfx = "event:/none",
+			affectedEntities = "Celeste.TheoCrystal,Celeste.Glider"
         }
     }
 }
@@ -32,6 +34,18 @@ conveyor.fieldInformation = {
 		},
 		editable = true
 	}
+}
+
+conveyor.fieldOrder = {
+	"x",
+	"y",
+	"width",
+	"moveSpeed",
+	"spriteRoot",
+	"affectedEntities",
+	"reverseFlag",
+	"conveyorSfx",
+	"reverseSfx"
 }
 
 function conveyor.sprite(room, entity)

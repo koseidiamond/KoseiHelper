@@ -25,9 +25,10 @@ public class ConveyorMover : Component
     {
         base.Update();
         bool foundConveyor = false;
+        bool invertedGravity = SceneAs<Level>()?.Session.GetFlag("GravityHelper_PlayerInverted") ?? false;
         foreach (Conveyor conveyor in Scene.Tracker.GetEntities<Conveyor>())
         {
-            if (!conveyor.isBrokenDown && Collide.Check(conveyor, Entity, conveyor.Position - Vector2.UnitY)) // todo gravity helper compatibility
+            if (!conveyor.isBrokenDown && Collide.Check(conveyor, Entity, conveyor.Position + (invertedGravity ? Vector2.UnitY : -Vector2.UnitY)))
             {
                 foundConveyor = true;
                 Move(conveyor.IsMovingLeft ? -conveyor.moveSpeed : conveyor.moveSpeed);

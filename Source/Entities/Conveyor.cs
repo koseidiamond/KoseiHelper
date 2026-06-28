@@ -1,9 +1,12 @@
 using Celeste.Mod.Entities;
+using Celeste.Mod.Helpers;
 using Celeste.Mod.KoseiHelper.Components;
 using Microsoft.Xna.Framework;
 using Monocle;
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Celeste.Mod.KoseiHelper.Entities;
 
@@ -13,10 +16,12 @@ namespace Celeste.Mod.KoseiHelper.Entities;
 public class Conveyor : Solid
 {
     public float moveSpeed = 40.0f;
-    public bool isBrokenDown;
+    public bool isBrokenDown; // TODO
 
     private string spriteRoot = "objects/KoseiHelper/Conveyor/blue";
     private float animationFrequency = 0.025f;
+
+    private readonly List<Type> affectedTypes = new();
 
     private static ParticleType CreateParticle(float direction) => new()
     {
@@ -43,7 +48,7 @@ public class Conveyor : Solid
 
     public string reverseFlag;
     public bool movingLeft;
-    public string conveyorSfx;
+    public string conveyorSfx, reverseSfx;
 
     public Conveyor(Vector2 position, float width, string flag, string spriteRoot, string conveyorSfx)
         : base(position, width, 8, false)
@@ -60,6 +65,16 @@ public class Conveyor : Solid
         reverseFlag = data.Attr("reverseFlag", "KoseiHelper_conveyor_right");
         spriteRoot = data.Attr("spriteRoot", "objects/KoseiHelper/Conveyor/blue");
         conveyorSfx = data.Attr("conveyorSfx", "event:/env/local/09_core/conveyor_idle");
+        reverseSfx = data.Attr("reverseSfx", "event:/none");
+        foreach (string path in data.Attr("affectedEntities", "Celeste.TheoCrystal,Celeste.Glider")
+             .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
+        {
+            Type type = FakeAssembly.GetFakeEntryAssembly().GetType(path);
+            if (type != null)
+                affectedTypes.Add(type);
+            else
+                Logger.Log(LogLevel.Warn, "KoseiHelper", $"Couldn't find type '{path}'.");
+        }
         CreateConveyor();
     }
 
@@ -142,6 +157,24 @@ public class Conveyor : Solid
 
         if (!string.IsNullOrEmpty(conveyorSfx) && !sfx.Playing)
             sfx.Play(conveyorSfx);
+
+        foreach (Entity entity in Scene.Entities)
+        {
+            if (!affectedTypes.Any(t => t.IsInstanceOfType(entity)))
+                continue;
+
+            if (entity.Get<ConveyorMover>() == null)
+            {
+                entity.Add(new ConveyorMover
+                {
+                    OnMove = amount =>
+                    {
+                        if (entity is Actor actor)
+                            actor.MoveH(amount * Engine.DeltaTime);
+                    }
+                });
+            }
+        }
     }
 
     public override void Added(Scene scene)
@@ -181,9 +214,10 @@ public class Conveyor : Solid
             if (sprite != null)
             {
                 sprite.Rate = -sprite.Rate;
-                sprite.FlipX = !sprite.FlipX;
             }
         }
+        if (!string.IsNullOrEmpty(reverseSfx))
+            sfx.Play(reverseSfx);
     }
 
     private void PlayAnimationInArray(Sprite[] array)
