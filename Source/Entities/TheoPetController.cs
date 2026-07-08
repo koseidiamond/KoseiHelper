@@ -12,14 +12,17 @@ public class TheoPetController : Entity
     public float speed;
     public float jumpStrength;
     public bool affectAllTheos;
+    public float minDistanceX, minDistanceY;
 
     public TheoPetController(EntityData data, Vector2 offset) : base(data.Position + offset)
     {
-        if (data.Bool("persistent", true))
-            base.Tag = Tags.Persistent; // unused
+        if (data.Bool("global", false))
+            base.Tag = Tags.Global;
         speed = data.Float("speed", 8f);
         jumpStrength = data.Float("jumpStrength", 1f);
         affectAllTheos = data.Bool("affectAllTheos", false);
+        minDistanceX = data.Float("minDistanceX", 14f);
+        minDistanceY = data.Float("minDistanceY", 150f);
     }
 
     public override void Update()
@@ -52,10 +55,10 @@ public class TheoPetController : Entity
 
     private void UpdateTheo(TheoCrystal theo, Player player)
     {
-        if (player.Position.Y <= theo.Position.Y - 150 || player.Position.Y >= theo.Position.Y + 300)
+        if (player.Position.Y <= theo.Position.Y - minDistanceY || player.Position.Y >= theo.Position.Y + minDistanceY*2f)
             return;
 
-        if (theo.OnGround() && Math.Abs(theo.CenterX - player.CenterX) > 14f)
+        if (theo.OnGround() && Math.Abs(theo.CenterX - player.CenterX) > minDistanceX)
         {
             theo.ExplodeLaunch(theo.BottomCenter);
             theo.noGravityTimer = jumpStrength / 20f;
