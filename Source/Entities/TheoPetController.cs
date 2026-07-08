@@ -9,16 +9,17 @@ namespace Celeste.Mod.KoseiHelper.Entities;
 public class TheoPetController : Entity
 {
     public float angleIncrement;
-    TheoCrystal theo;
     public float speed;
     public float jumpStrength;
+    public bool affectAllTheos;
 
     public TheoPetController(EntityData data, Vector2 offset) : base(data.Position + offset)
     {
         if (data.Bool("persistent", true))
-            base.Tag = Tags.Persistent;
+            base.Tag = Tags.Persistent; // unused
         speed = data.Float("speed", 8f);
         jumpStrength = data.Float("jumpStrength", 1f);
+        affectAllTheos = data.Bool("affectAllTheos", false);
     }
 
     public override void Update()
@@ -29,20 +30,38 @@ public class TheoPetController : Entity
         Player player = level.Tracker.GetEntity<Player>();
         if (player != null)
         {
-            theo = SceneAs<Level>().Tracker.GetNearestEntity<TheoCrystal>(player.Center);
-            if (theo != null && !player.JustRespawned && !player.IsIntroState)
+            if (player.JustRespawned || player.IsIntroState)
+                return;
+
+            if (affectAllTheos)
             {
-                if (player.Position.Y > theo.Position.Y - 150 && player.Position.Y < theo.Position.Y + 300)
+                foreach (TheoCrystal theo in level.Tracker.GetEntities<TheoCrystal>())
                 {
-                    if (theo.OnGround() && Math.Abs(theo.CenterX - player.CenterX) > 14f)
-                    {
-                        theo.ExplodeLaunch(theo.BottomCenter);
-                        theo.noGravityTimer = jumpStrength / 20;
-                    }
-                    if (!theo.OnGround())
-                        theo.MoveTowardsX(player.CenterX, 0.5f + Math.Abs(speed) / 10 * Math.Abs(player.Speed.X) / 100 + Math.Abs(speed) / 10);
+                    if (theo != null)
+                        UpdateTheo(theo, player);
                 }
             }
+            else
+            {
+                TheoCrystal theo = level.Tracker.GetNearestEntity<TheoCrystal>(player.Center);
+                if (theo != null)
+                    UpdateTheo(theo, player);
+            }
         }
+    }
+
+    private void UpdateTheo(TheoCrystal theo, Player player)
+    {
+        if (player.Position.Y <= theo.Position.Y - 150 || player.Position.Y >= theo.Position.Y + 300)
+            return;
+
+        if (theo.OnGround() && Math.Abs(theo.CenterX - player.CenterX) > 14f)
+        {
+            theo.ExplodeLaunch(theo.BottomCenter);
+            theo.noGravityTimer = jumpStrength / 20f;
+        }
+
+        if (!theo.OnGround())
+            theo.MoveTowardsX(player.CenterX, 0.5f + Math.Abs(speed) / 10f * Math.Abs(player.Speed.X) / 100f + Math.Abs(speed) / 10f);
     }
 }

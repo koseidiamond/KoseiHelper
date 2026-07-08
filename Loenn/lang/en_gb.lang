@@ -865,9 +865,10 @@ entities.KoseiHelper/IRLController.attributes.description.changesDarknessLevel=I
 
 # Theo Pet Controller
 entities.KoseiHelper/TheoPetController.placements.name.TheoPetController=Theo Pet Controller
-entities.KoseiHelper/TheoPetController.placements.description.TheoPetController=Theo Crystals will try to follow the player.\nIf there are multiple Theos, only the closest to the player will follow.
+entities.KoseiHelper/TheoPetController.placements.description.TheoPetController=Theo Crystals will try to follow the player.
 entities.KoseiHelper/TheoPetController.attributes.description.speed=A multiplier that affects the horizontal speed when Theo tries to follow the player.
 entities.KoseiHelper/TheoPetController.attributes.description.jumpStrength=How much Theo can jump when he is on the ground.\nThe minimum height (if set to 0) is 11 pixels.
+entities.KoseiHelper/TheoPetController.attributes.description.affectAllTheos=Whether all Theos in the room should be a following "pet" or only the closest to the player.
 
 # Top Down View Controller
 #entities.KoseiHelper/TopDownViewController.placements.name.TopDownViewController=Top Down View Controller

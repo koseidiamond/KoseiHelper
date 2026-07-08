@@ -7,7 +7,8 @@ TheoPetController.placements = {
 		name = "TheoPetController",
 		data = {
 		speed = 8,
-		jumpStrength = 1
+		jumpStrength = 1,
+		affectAllTheos = false
 		}
 	}
 }

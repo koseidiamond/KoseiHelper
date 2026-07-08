@@ -288,7 +288,7 @@ public class TalkComponentCustomizator : Entity
         else
             textureToDraw = self.Highlighted ? custom.HighlightTexture : custom.IdleTexture;
         if (!string.IsNullOrEmpty(custom.IdleBaseName)) // todo
-        textureToDraw.DrawJustified(vector2, new Vector2(0.5f, 1f), drawColor, new Vector2(scale * custom.IconScaleX, scale * custom.IconScaleY));
+            textureToDraw.DrawJustified(vector2, new Vector2(0.5f, 1f), drawColor, new Vector2(scale * custom.IconScaleX, scale * custom.IconScaleY));
 
         if (self.Highlighted)
         {
