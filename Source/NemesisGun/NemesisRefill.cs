@@ -1,6 +1,7 @@
 using Celeste.Mod.Entities;
 using Microsoft.Xna.Framework;
 using Monocle;
+using System;
 using System.Collections;
 
 namespace Celeste.Mod.KoseiHelper.NemesisGun;
@@ -23,11 +24,34 @@ public class NemesisRefill : Entity
     private float respawnTimer;
     private string str;
     public float respawnTime = 2.5f;
-    public NemesisRefill(Vector2 position, bool oneUse, float respawnTime) : base(position)
+    public enum NemesisRefillAction
+    {
+        RefillDash,
+        RefillStamina,
+        ForceDash,
+        ForceJump,
+        WallJump,
+        SuperJump,
+        SuperBounce,
+        PointBounce,
+        ReflectBounce,
+        SideBounce,
+        CassetteBubble,
+        Rebound,
+        Launch,
+        ExplodeLaunch,
+        GreenBoost,
+        RedBoost,
+        Die
+    };
+    private NemesisRefillAction refillAction;
+
+    public NemesisRefill(Vector2 position, bool oneUse, float respawnTime, NemesisRefillAction refillAction) : base(position)
     {
         base.Collider = new Hitbox(16f, 16f, -8f, -8f);
         this.oneUse = oneUse;
         this.respawnTime = respawnTime;
+        this.refillAction = refillAction;
         str = "objects/KoseiHelper/Refills/NemesisRefill/";
         base.Add(this.outline = new Image(GFX.Game[str + "outline"]));
         this.outline.CenterOrigin();
@@ -59,7 +83,8 @@ public class NemesisRefill : Entity
     public NemesisRefill(EntityData data, Vector2 offset) : this(
         data.Position + offset,
         data.Bool("oneUse", false),
-        data.Float("respawnTime", 2.5f))
+        data.Float("respawnTime", 2.5f),
+        data.Enum("refillAction", NemesisRefillAction.ForceDash))
     {
         base.Collider = new Hitbox(16f, 16f, -8f, -8f);
         this.oneUse = data.Bool("oneUse", false);
@@ -181,10 +206,66 @@ public class NemesisRefill : Entity
         if (player == null)
             return;
         bullet.DestroyBullet();
-
+        int playerDir = Math.Sign(player.Position.X - Position.X); // relative to the refill, for certain actions
         // force dash
-        player.StateMachine.State = Player.StNormal;
-        player.StateMachine.State = Player.StDash;
+        switch (refillAction)
+        {
+            case NemesisRefillAction.ForceDash:
+                player.StateMachine.State = Player.StNormal;
+                player.StateMachine.State = Player.StDash;
+                break;
+            case NemesisRefillAction.RefillDash:
+                player.UseRefill(false);
+                break;
+            case NemesisRefillAction.RefillStamina:
+                player.RefillStamina();
+                break;
+            case NemesisRefillAction.ForceJump:
+                player.Jump();
+                break;
+            case NemesisRefillAction.WallJump:
+                player.WallJump(playerDir);
+                break;
+            case NemesisRefillAction.SuperJump:
+                player.SuperJump();
+                break;
+            case NemesisRefillAction.SuperBounce:
+                player.SuperBounce(player.Center.Y);
+                break;
+            case NemesisRefillAction.PointBounce:
+                player.PointBounce(Center);
+                break;
+            case NemesisRefillAction.SideBounce:
+                player.SideBounce((int)player.Facing, player.Center.X, player.Center.Y);
+                break;
+            case NemesisRefillAction.CassetteBubble:
+                player.StartCassetteFly(Center + Vector2.UnitY * 6f, Center + Vector2.UnitY * 6f);
+                break;
+            case NemesisRefillAction.Rebound:
+                player.Rebound();
+                break;
+            case NemesisRefillAction.Launch:
+                player.BadelineBoostLaunch(player.Position.Y - 40f);
+                break;
+            case NemesisRefillAction.ExplodeLaunch:
+                player.ExplodeLaunch(Center, true);
+                break;
+            case NemesisRefillAction.GreenBoost:
+                Entities.BoosterNoOutline greenBooster = new Entities.BoosterNoOutline(player.Center, false, true);
+                player.level.Add(greenBooster);
+                player.Boost(greenBooster);
+                break;
+            case NemesisRefillAction.RedBoost:
+                Entities.BoosterNoOutline redBooster = new Entities.BoosterNoOutline(player.Center, true, true);
+                player.level.Add(redBooster);
+                player.Boost(redBooster);
+                break;
+            case NemesisRefillAction.Die:
+                player.Die((player.Center - Center).SafeNormalize());
+                break;
+            default:
+                break;
+        }
 
         Audio.Play("event:/game/general/diamond_touch", Position);
         Input.Rumble(RumbleStrength.Medium, RumbleLength.Medium);
