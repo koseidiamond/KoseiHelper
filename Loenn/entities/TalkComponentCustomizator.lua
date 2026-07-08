@@ -22,6 +22,8 @@ TalkComponentCustomizator.placements = {
 		text = "Default",
 		textScaleX = 1,
 		textScaleY = 1,
+		textOffsetX = 0,
+		textOffsetY = 0,
 		iconScaleX = 1,
 		iconScaleY = 1,
 		allEntities = false,
@@ -49,7 +51,9 @@ TalkComponentCustomizator.fieldInformation = {
 	},
 	idleTexture = {
 		options = {
-			"hover/idle"
+			"hover/idle",
+			"KoseiHelper/hover/idleNoDots",
+			"lookout/cursor"
 		},
 		editable = true
 	},
@@ -103,6 +107,8 @@ TalkComponentCustomizator.fieldOrder = {
 	"textStroke",
 	"textScaleX",
 	"textScaleY",
+	"textOffsetX",
+	"textOffsetY",
 	"talkTextColor",
 	--other
 	"sfxIn",

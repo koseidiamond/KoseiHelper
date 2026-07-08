@@ -836,6 +836,8 @@ entities.KoseiHelper/TalkComponentCustomizator.attributes.description.idleAnimat
 entities.KoseiHelper/TalkComponentCustomizator.attributes.description.highlightAnimationSpeed=How many seconds each highlight frame lasts.\n0.1 equals 10fps.
 entities.KoseiHelper/TalkComponentCustomizator.attributes.description.textScaleX=How wide the text should be.
 entities.KoseiHelper/TalkComponentCustomizator.attributes.description.textScaleY=How tall the text should be.
+entities.KoseiHelper/TalkComponentCustomizator.attributes.description.textOffsetX=The horizontal offset of the text drawn.
+entities.KoseiHelper/TalkComponentCustomizator.attributes.description.textOffsetY=The vertical offset of the text drawn.
 entities.KoseiHelper/TalkComponentCustomizator.attributes.description.iconScaleX=How wide the icon (texture) should be.
 entities.KoseiHelper/TalkComponentCustomizator.attributes.description.iconScaleY=How tall the icon (texture) should be.
 entities.KoseiHelper/TalkComponentCustomizator.attributes.description.text=The custom text/button icons to display in the icon, separated by commas. Each part can be:\n- a path to a texture in the Gui atlas (for example "tinyarrow")\n- a direction: Down, DownRight, Right, UpRight, Up, UpLeft, Left, DownLeft\n- a button: Jump, Dash, CrouchDash, Grab, Talk, ESC, Pause, MenuLeft, MenuRight, MenuUp, MenuDown, MenuConfirm, MenuCancel, MenuJournal, QuickRestart\n- a dialog ID, if you prefix it with dialog: (for example, dialog:TUTORIAL_DREAMJUMP)\n- plain text\n\nLeave as Default if you don't want custom text.

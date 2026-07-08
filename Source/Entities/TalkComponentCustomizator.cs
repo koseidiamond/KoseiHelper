@@ -19,7 +19,7 @@ public class TalkComponentCustomization : Entity
     public float TextStroke = 2f;
     public int IdleAnimationFrames = 0, HighlightAnimationFrames = 0;
     public string Text = "Talk";
-    public float TextScaleX = 1f, TextScaleY = 1f, IconScaleX = 1f, IconScaleY = 1f;
+    public float TextScaleX = 1f, TextScaleY = 1f, IconScaleX = 1f, IconScaleY = 1f, TextOffsetX = 0f, TextOffsetY = 0f;
 
     //Animation variables
     public float IdleAnimationTimer = 0f, HighlightAnimationTimer = 0f;
@@ -49,6 +49,7 @@ public class TalkComponentCustomizator : Entity
     private readonly bool allEntities;
     private readonly string flag;
     private bool flagAlreadyApplied = false;
+    private readonly float textOffsetX, textOffsetY;
 
 
     public TalkComponentCustomizator(EntityData data, Vector2 offset) : base(data.Position + offset)
@@ -68,6 +69,8 @@ public class TalkComponentCustomizator : Entity
         textScaleY = data.Float("textScaleY", 1f);
         iconScaleX = data.Float("iconScaleX", 1f);
         iconScaleY = data.Float("iconScaleY", 1f);
+        textOffsetX = data.Float("textOffsetX", 0f);
+        textOffsetY = data.Float("textOffsetY", 0f);
         tint = KoseiHelperUtils.ParseHexColor(data.Values.TryGetValue("tint", out object tintColor) ? tintColor.ToString() : null, Calc.HexToColor("FFFFFF"));
         talkTextColor = KoseiHelperUtils.ParseHexColor(data.Values.TryGetValue("talkTextColor", out object talkTextC) ? talkTextC.ToString() : null, Calc.HexToColor("FFFFFF"));
         allEntities = data.Bool("allEntities", false);
@@ -164,6 +167,8 @@ public class TalkComponentCustomizator : Entity
             Text = text,
             TextScaleX = textScaleX,
             TextScaleY = textScaleY,
+            TextOffsetX = textOffsetX,
+            TextOffsetY = textOffsetY,
             IconScaleX = iconScaleX,
             IconScaleY = iconScaleY
         };
@@ -282,7 +287,7 @@ public class TalkComponentCustomizator : Entity
         }
         else
             textureToDraw = self.Highlighted ? custom.HighlightTexture : custom.IdleTexture;
-
+        if (!string.IsNullOrEmpty(custom.IdleBaseName)) // todo
         textureToDraw.DrawJustified(vector2, new Vector2(0.5f, 1f), drawColor, new Vector2(scale * custom.IconScaleX, scale * custom.IconScaleY));
 
         if (self.Highlighted)
@@ -299,7 +304,7 @@ public class TalkComponentCustomizator : Entity
                 }
                 else
                 {
-                    ActiveFont.DrawOutline(Input.FirstKey(Input.Talk).ToString().ToUpper(), inputPos,
+                    ActiveFont.DrawOutline(Input.FirstKey(Input.Talk).ToString().ToUpper(), inputPos + new Vector2(custom.TextOffsetX, custom.TextOffsetY),
                         new Vector2(0.5f), new Vector2(scale * custom.TextScaleX, scale * custom.TextScaleY),
                         custom.TalkTextColor * visibility, custom.TextStroke, Color.Black);
                 }
@@ -332,14 +337,14 @@ public class TalkComponentCustomizator : Entity
                 {
                     if (chunk is MTexture tex)
                     {
-                        tex.DrawJustified(drawPos, new Vector2(0f, 0.5f), custom.TalkTextColor * visibility,
+                        tex.DrawJustified(drawPos + new Vector2(custom.TextOffsetX, custom.TextOffsetY), new Vector2(0f, 0.5f), custom.TalkTextColor * visibility,
                             new Vector2(scale * custom.TextScaleX, scale * custom.TextScaleY));
                         drawPos.X += tex.Width * scale * custom.TextScaleX + spacing;
                     }
                     else if (chunk is string textChunk)
                     {
                         Vector2 size = ActiveFont.Measure(textChunk) * scale * new Vector2(custom.TextScaleX, custom.TextScaleY);
-                        ActiveFont.DrawOutline(textChunk, drawPos + new Vector2(1f, 2f), new Vector2(0f, 0.5f),
+                        ActiveFont.DrawOutline(textChunk, drawPos + new Vector2(1f, 2f) + new Vector2(custom.TextOffsetX, custom.TextOffsetY), new Vector2(0f, 0.5f),
                             new Vector2(scale * custom.TextScaleX, scale * custom.TextScaleY), custom.TalkTextColor * visibility, custom.TextStroke, Color.Black);
                         drawPos.X += size.X + spacing;
                     }
