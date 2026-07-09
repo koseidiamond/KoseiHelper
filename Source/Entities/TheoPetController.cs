@@ -55,7 +55,7 @@ public class TheoPetController : Entity
 
     private void UpdateTheo(TheoCrystal theo, Player player)
     {
-        if (player.Position.Y <= theo.Position.Y - minDistanceY || player.Position.Y >= theo.Position.Y + minDistanceY*2f)
+        if (player.Position.Y <= theo.Position.Y - minDistanceY || player.Position.Y >= theo.Position.Y + minDistanceY * 2f)
             return;
 
         if (theo.OnGround() && Math.Abs(theo.CenterX - player.CenterX) > minDistanceX)
