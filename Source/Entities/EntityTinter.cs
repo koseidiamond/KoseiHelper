@@ -14,7 +14,7 @@ public class EntityTinter : Entity
 {
     private readonly List<Type> affectedTypes = new();
     private readonly HashSet<int> affectedIDs = new();
-    private Color tint;
+    private Color tint, maxColor;
     private bool allEntities;
     private bool everyFrame;
     private bool red, green, blue, alpha;
@@ -22,6 +22,12 @@ public class EntityTinter : Entity
     private readonly List<string> animationIDs = new();
     private readonly Dictionary<Sprite, Color> originalSpriteColors = new();
     private bool untintIfAnimChanged;
+    private bool counter;
+    private bool sliderMode;
+    private bool absoluteValue;
+    private string sliderCounterName;
+    private float sliderCounterMinValue, sliderCounterMaxValue;
+
     public EntityTinter(EntityData data, Vector2 offset) : base(data.Position + offset)
     {
         everyFrame = data.Bool("everyFrame", true);
@@ -33,6 +39,22 @@ public class EntityTinter : Entity
         affectSprite = data.Bool("sprite", true);
         affectImage = data.Bool("image", true);
         untintIfAnimChanged = data.Bool("untintIfAnimChanged", true);
+        tint = KoseiHelperUtils.ParseHexColor(data.Values.TryGetValue("tint", out object tintColor) ? tintColor.ToString() : null, Calc.HexToColor("FFFFFF"));
+        if (data.Bool("TransitionUpdate"))
+            base.Tag = Tags.TransitionUpdate;
+        if (data.Bool("Global"))
+            base.Tag = Tags.Global;
+
+        // data for the slider placement
+        counter = data.Bool("counter", false);
+        absoluteValue = data.Bool("absoluteValue", false);
+        sliderMode = data.Bool("sliderMode", false);
+        sliderCounterName = data.Attr("sliderCounterName", "");
+        sliderCounterMinValue = data.Float("sliderCounterMinValue", 0f);
+        sliderCounterMaxValue = data.Float("sliderCounterMaxValue", 10f);
+        maxColor = KoseiHelperUtils.ParseHexColor(data.Values.TryGetValue("maxColor", out object tintColor2) ? tintColor2.ToString() : null, Calc.HexToColor("FF0000"));
+
+        // parsing lists
         foreach (string path in data.Attr("affectedEntities", "Celeste.Glider")
              .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
         {
@@ -55,12 +77,6 @@ public class EntityTinter : Entity
         {
             animationIDs.Add(anim);
         }
-        tint = KoseiHelperUtils.ParseHexColor(data.Values.TryGetValue("tint", out object tintColor) ? tintColor.ToString() : null, Calc.HexToColor("FFFFFF"));
-        if (data.Bool("TransitionUpdate"))
-            base.Tag = Tags.TransitionUpdate;
-        if (data.Bool("Global"))
-            base.Tag = Tags.Global;
-
     }
 
     public override void Awake(Scene scene)
@@ -89,6 +105,7 @@ public class EntityTinter : Entity
         if (level == null)
             return;
 
+        Color currentTint = GetCurrentTint(level);
         Entity closestEntity = null;
         float closestDistanceSq = float.MaxValue;
 
@@ -101,7 +118,7 @@ public class EntityTinter : Entity
                 continue; // filters by entity id
 
             if (allEntities || affectedIDs.Count > 1)
-                TintEntity(entity); // tints entities if multiple IDs are specified regardless of allEntities
+                TintEntity(entity, currentTint); // tints entities if multiple IDs are specified regardless of allEntities
             else
             {
                 float dist = Vector2.DistanceSquared(Position, entity.Position);
@@ -115,10 +132,10 @@ public class EntityTinter : Entity
         }
 
         if (!allEntities && closestEntity != null)
-            TintEntity(closestEntity);
+            TintEntity(closestEntity, currentTint);
     }
 
-    private void TintEntity(Entity entity)
+    private void TintEntity(Entity entity, Color tintColor)
     {
         foreach (Component component in entity.Components)
         {
@@ -136,13 +153,13 @@ public class EntityTinter : Entity
                         Color color = sprite.Color;
 
                         if (red)
-                            color.R = tint.R;
+                            color.R = tintColor.R;
                         if (green)
-                            color.G = tint.G;
+                            color.G = tintColor.G;
                         if (blue)
-                            color.B = tint.B;
+                            color.B = tintColor.B;
                         if (alpha)
-                            color.A = tint.A;
+                            color.A = tintColor.A;
 
                         sprite.Color = color;
                     }
@@ -157,16 +174,29 @@ public class EntityTinter : Entity
                     if (affectImage)
                     {
                         if (red)
-                            image.Color.R = tint.R;
+                            image.Color.R = tintColor.R;
                         if (green)
-                            image.Color.G = tint.G;
+                            image.Color.G = tintColor.G;
                         if (blue)
-                            image.Color.B = tint.B;
+                            image.Color.B = tintColor.B;
                         if (alpha)
-                            image.Color.A = tint.A;
+                            image.Color.A = tintColor.A;
                     }
                     break;
             }
         }
+    }
+
+    private Color GetCurrentTint(Level level)
+    {
+        if (!sliderMode)
+            return tint;
+        float value = counter ? level.Session.GetCounter(sliderCounterName) : level.Session.GetSlider(sliderCounterName);
+        if (sliderCounterMaxValue - sliderCounterMinValue == 0f) // don't divide by 0
+            return maxColor;
+        if (absoluteValue)
+            value = Math.Abs(value);
+        float normalized = MathHelper.Clamp((value - sliderCounterMinValue) / (sliderCounterMaxValue - sliderCounterMinValue), 0f, 1f);
+        return Color.Lerp(tint, maxColor, normalized);
     }
 }

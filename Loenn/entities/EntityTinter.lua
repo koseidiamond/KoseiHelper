@@ -7,23 +7,57 @@ EntityTinter.name = "KoseiHelper/EntityTinter"
 EntityTinter.depth = -15001
 
 EntityTinter.placements = {
-    name = "EntityTinter",
-	data = {
-		affectedEntities = "Celeste.Glider",
-		entityIDs = "",
-		tint = "FFFFFF",
-		allEntities = true,
-		everyFrame = true,
-		transitionUpdate = false,
-		global = false,
-		red = true,
-		green = true,
-		blue = true,
-		alpha = true,
-		sprite = true,
-		image = true,
-		animationIDs = "",
-		untintIfAnimChanged = true
+	{
+		name = "EntityTinter",
+		data = {
+			affectedEntities = "Celeste.Glider",
+			entityIDs = "",
+			tint = "FFFFFF",
+			allEntities = true,
+			everyFrame = true,
+			transitionUpdate = false,
+			global = false,
+			red = true,
+			green = true,
+			blue = true,
+			alpha = true,
+			sprite = true,
+			image = true,
+			animationIDs = "",
+			untintIfAnimChanged = true,
+			counter = false,
+			sliderMode = false,
+			sliderCounterName = "KoseiHelper_tinterNumbers",
+			sliderCounterMinValue = 0,
+			sliderCounterMaxValue = 10,
+			maxColor = "FF0000"
+		}
+	},
+	{
+		name = "EntityTinterSlider",
+		data = {
+			affectedEntities = "Celeste.Glider",
+			entityIDs = "",
+			tint = "FFFFFF",
+			allEntities = true,
+			everyFrame = true,
+			transitionUpdate = false,
+			global = false,
+			red = true,
+			green = true,
+			blue = true,
+			alpha = true,
+			sprite = true,
+			image = true,
+			animationIDs = "",
+			untintIfAnimChanged = true,
+			counter = false,
+			sliderMode = true,
+			sliderCounterName = "KoseiHelper_tinterNumbers",
+			sliderCounterMinValue = 0,
+			sliderCounterMaxValue = 10,
+			maxColor = "FF0000"
+		}
 	}
 }
 
@@ -44,7 +78,11 @@ EntityTinter.fieldInformation = {
 		elementOptions = {
 			fieldType = "string"
 		}
-	}
+	},
+	maxColor = {
+        fieldType = "color",
+		useAlpha = true
+    }
 }
 
 EntityTinter.fieldOrder = {
@@ -53,11 +91,16 @@ EntityTinter.fieldOrder = {
 	"affectedEntities",
 	"entityIDs",
 	"animationIDs",
+	"sliderCounterName",
 	"tint",
+	"maxColor",
+	"sliderCounterMinValue",
+	"sliderCounterMaxValue",
 	"allEntities",
 	"everyFrame",
 	"global",
 	"transitionUpdate",
+	"counter",
 	"red",
 	"green",
 	"blue",
@@ -71,8 +114,15 @@ function EntityTinter.ignoredFields(entity)
 	local ignored = {
 	"_name",
     "_id",
+	"everyFrame",
 	"spriteAnimations",
-	"untintIfAnimChanged"
+	"untintIfAnimChanged",
+	"sliderMode",
+	"counter",
+	"sliderCounterName",
+	"sliderCounterMinValue",
+	"sliderCounterMaxValue",
+	"maxColor"
 	}
     local function doNotIgnore(value)
         for i = #ignored, 1, -1 do
@@ -82,6 +132,15 @@ function EntityTinter.ignoredFields(entity)
             end
         end
     end
+	if entity.sliderMode == false then
+		doNotIgnore("everyFrame")
+	else
+		doNotIgnore("counter")
+		doNotIgnore("sliderCounterName")
+		doNotIgnore("sliderCounterMinValue")
+		doNotIgnore("sliderCounterMaxValue")
+		doNotIgnore("maxColor")
+	end
 	if entity.sprite == true then
 		doNotIgnore("spriteAnimations")
 		if entity.animationIDs ~= "" then
@@ -147,6 +206,14 @@ function EntityTinter.draw(room, entity, viewport)
 	love.graphics.setColor(1, 1, 1, 1)
 	if entity.alpha == true then
 		love.graphics.polygon("fill", {entity.x + 10, entity.y - 5, entity.x + 8, entity.y - 3, entity.x + 10, entity.y - 1})
+	end
+	
+	if entity.sliderMode then
+		if entity.counter then
+			love.graphics.print("(counter)", entity.x + 6, entity.y)
+		else
+			love.graphics.print("(slider)", entity.x + 6, entity.y)
+		end
 	end
 	
     local tinterSprite = drawableSprite.fromTexture("objects/KoseiHelper/EntityTinter/Tinter", entity)
