@@ -20,6 +20,7 @@ public class DebugRenderer : Entity
     public int ellipseSegments;
     public float fontSize;
     public float alpha;
+    private bool gui;
     public enum Shape
     {
         HollowRectangle,
@@ -53,10 +54,15 @@ public class DebugRenderer : Entity
         font = data.Enum("font", Font.Consolas12);
         imagePath = data.Attr("imagePath", "");
         scaled = data.Bool("scaled", true);
-        nonDebug = data.Bool("nonDebug", false);
+        nonDebug = data.Bool("nonDebug", true);
         fontSize = data.Float("fontSize", 1f);
         ellipseSegments = data.Int("ellipseSegments", 99);
         Depth = data.Int("depth", -999999);
+        gui = data.Bool("gui", false);
+        if (gui)
+        {
+            base.Tag = TagsExt.SubHUD;
+        }
     }
 
     public override void Update()
@@ -81,14 +87,24 @@ public class DebugRenderer : Entity
 
     public void Rendering()
     {
+        Level level = SceneAs<Level>();
+        Vector2 guiPosition;
+
         if (flagValue || string.IsNullOrEmpty(flagName))
         {
             switch (shape)
             {
                 case Shape.HollowRectangle:
-                    Draw.HollowRect(X, Y, width, height, color * alpha);
+                    if (gui)
+                    {
+                        guiPosition = 6f * (this.Position - level.Camera.Position) + Vector2.One;
+                        Draw.HollowRect(guiPosition.X, guiPosition.Y, 6f * width, 6f * height, color * alpha);
+                    }
+                    else
+                        Draw.HollowRect(X, Y, width, height, color * alpha);
                     break;
                 case Shape.DottedRectangle: // Taken from Cherry Helper (Assist Rectangle) and tweaked for alphas so corners don't overlap
+                    // todo gui
                     int num = (int)Left;
                     int num2 = (int)(Left + width);
                     int num3 = (int)Top;
@@ -111,43 +127,86 @@ public class DebugRenderer : Entity
                     }
                     break;
                 case Shape.FilledRectangle:
-                    Draw.Rect(X, Y, width, height, color * alpha);
+                    if (gui)
+                    {
+                        guiPosition = 6f * (this.Position - level.Camera.Position) + Vector2.One;
+                        Draw.Rect(guiPosition.X, guiPosition.Y, 6f * width, 6f * height, color * alpha);
+                    }
+                    else
+                        Draw.Rect(X, Y, width, height, color * alpha);
                     break;
                 case Shape.Circle:
-                    Draw.Circle(new Vector2(X + width / 2, Y + height / 2), width / 2, color * alpha, 1);
+                    if (gui)
+                    {
+                        guiPosition = 6f * (this.Position - level.Camera.Position) + 6f * new Vector2(12f, 12f);
+                        Draw.Circle(guiPosition, 6 * width / 2, color * alpha, 10);
+                    }
+                    else
+                        Draw.Circle(new Vector2(X + width / 2, Y + height / 2), width / 2, color * alpha, 1);
                     break;
                 case Shape.Ellipse:
-                    DrawEllipse(X + width / 2, Y + height / 2, width / 2, height / 2, color * alpha);
+                    if (gui)
+                    {
+                        guiPosition = 6f * (this.Position - level.Camera.Position) + 6f * new Vector2(12f, 12f);
+                        DrawEllipse(guiPosition.X, guiPosition.Y, 6f * width / 2, 6f * height / 2, color * alpha);
+                    }
+                    else
+                        DrawEllipse(X + width / 2, Y + height / 2, width / 2, height / 2, color * alpha);
                     break;
                 case Shape.Point:
-                    Draw.Point(this.Position, color * alpha);
+                    if (gui)
+                    {
+                        guiPosition = 6f * (this.Position - level.Camera.Position) + Vector2.One;
+                        Draw.Point(guiPosition, color * alpha);
+                    }
+                    else
+                        Draw.Point(this.Position, color * alpha);
                     break;
                 case Shape.Line:
-                    Draw.Line(new Vector2(X, Y), node, color * alpha);
+                    if (gui)
+                    {
+                        guiPosition = 6f * (this.Position - level.Camera.Position) + Vector2.One;
+                        Draw.Line(guiPosition, 6f * (node - level.Camera.Position) + Vector2.One, color * alpha);
+                    }
+                    else
+                        Draw.Line(new Vector2(X, Y), node, color * alpha);
                     break;
                 case Shape.Text:
-                    switch (font)
+                    if (gui)
                     {
-                        case Font.Consolas12:
-                            Draw.Text(Draw.DefaultFont, message, new Vector2(X, Y), color * alpha, Vector2.Zero, Vector2.One * fontSize, 0);
-                            break;
-                        case Font.Renogare:
-                            ActiveFont.Draw(message, new Vector2(X, Y), Vector2.Zero, Vector2.One * fontSize / 2, color * alpha);
-                            break;
+                        guiPosition = 6f * (this.Position - level.Camera.Position) + Vector2.One;
+                        switch (font)
+                        {
+                            case Font.Consolas12:
+                                Draw.Text(Draw.DefaultFont, message, guiPosition - new Vector2(0, 16f), color * alpha, Vector2.Zero, Vector2.One * fontSize, 0);
+                                break;
+                            case Font.Renogare:
+                                ActiveFont.Draw(message, guiPosition - new Vector2(0, 16f), Vector2.Zero, Vector2.One * fontSize / 2, color * alpha);
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        switch (font)
+                        {
+                            case Font.Consolas12:
+                                Draw.Text(Draw.DefaultFont, message, new Vector2(X, Y), color * alpha, Vector2.Zero, Vector2.One * fontSize, 0);
+                                break;
+                            case Font.Renogare:
+                                ActiveFont.Draw(message, new Vector2(X, Y), Vector2.Zero, Vector2.One * fontSize / 2, color * alpha);
+                                break;
+                        }
                     }
                     break;
                 case Shape.Image:
                     if (!string.IsNullOrEmpty(imagePath))
                     {
-                        Image image = new Image(GFX.Game[imagePath]);
+                        Vector2 imagePos = gui ? 6f * (Position - level.Camera.Position) + Vector2.One : Position;
+                        Image image = new Image(gui ? GFX.Gui[imagePath] : GFX.Game[imagePath]);
+                        image.Position = imagePos;
                         if (scaled)
                         {
-                            image.Position = Position;
-                            image.Scale = new Vector2(width / image.Width, height / image.Height);
-                        }
-                        else
-                        {
-                            image.Position = Position - new Vector2(image.Width / 2f, image.Height / 2f);
+                            image.Scale = gui ? new Vector2(6f * width / image.Width, 6f * height / image.Height) : new Vector2(width / image.Width, height / image.Height);
                         }
                         image.Color = color * alpha;
                         image.Render();

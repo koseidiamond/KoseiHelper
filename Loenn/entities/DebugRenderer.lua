@@ -17,7 +17,8 @@ DebugRenderer.nodeLimits = {0,1}
 DebugRenderer.nodeVisibility= "always"
 
 DebugRenderer.placements = {
-    name = "DebugRenderer",
+    name = "ShapeRenderer",
+	alternativeName = "DebugRenderer",
     data = {
         width = 8,
         height = 8,
@@ -31,8 +32,9 @@ DebugRenderer.placements = {
 		ellipseSegments = 99,
 		imagePath = "characters/bird/Recover03",
 		scaled = true,
-		nonDebug = false,
-		depth = -999999
+		nonDebug = true,
+		depth = -999999,
+		gui = false
     }
 }
 
@@ -193,7 +195,7 @@ function DebugRenderer.draw(room, entity)
 				debugImage:setJustification(0.5, 0.5)
 			end
 			debugImage:draw(a)
-		else
+		else -- todo: improve this
 			love.graphics.print("?", entity.x , entity.y, 0, 4, 4)
 		end
 	end

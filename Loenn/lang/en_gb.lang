@@ -223,7 +223,7 @@ entities.KoseiHelper/LightReactiveBlock.attributes.description.cutoutEffect=Whet
 
 # Pregnant Flutterbird
 entities.KoseiHelper/SpecialFlutterbird.placements.name.PregnantFlutterbird="Special" Flutterbird
-entities.KoseiHelper/SpecialFlutterbird.placements.name.SpecialFlutterbird=Pregnant Flutterbird
+entities.KoseiHelper/SpecialFlutterbird.placements.name.SpecialFlutterbird="Special" Flutterbird
 entities.KoseiHelper/SpecialFlutterbird.placements.description.PregnantFlutterbird=Flutterbirds that can spawn babies when the conditions are met.\nThey can also be used for gameplay.
 entities.KoseiHelper/SpecialFlutterbird.placements.description.SpecialFlutterbird=Flutterbirds that can spawn babies when the conditions are met.\nThey can also be used for gameplay.
 entities.KoseiHelper/SpecialFlutterbird.attributes.description.birthSfx=The sound when a baby is spawned.
@@ -258,8 +258,9 @@ entities.KoseiHelper/SpecialFlutterbird.attributes.description.stealBerries=Whet
 entities.KoseiHelper/SpecialFlutterbird.attributes.description.giveUltra=Whether touching the flutterbird should multiply the player's horizontal speed by x1.2.\nNOTE: The ultras are not vanilla. The x1.2 is given once for every frame that the player is touching the bird (like an acceleration field).\nMake a bird pregnant or stack multiple birds for a crazy speed build!
 
 # Debug Renderer
+entities.KoseiHelper/DebugRenderer.placements.name.ShapeRenderer=Shape Renderer
 entities.KoseiHelper/DebugRenderer.placements.name.DebugRenderer=Debug Renderer
-entities.KoseiHelper/DebugRenderer.placements.description.DebugRenderer=Displays colored shapes on debug (when hitboxes are enabled).
+entities.KoseiHelper/DebugRenderer.placements.description.ShapeRenderer=Displays colored shapes, images or texts, pixelated or hi-res.\nIt can work normally or exclusively on debug mode (when hitboxes are enabled).
 entities.KoseiHelper/DebugRenderer.attributes.description.color=The color of the shape.
 entities.KoseiHelper/DebugRenderer.attributes.description.shape=HollowRectangle: Outline of a rectangle (like normal hitboxes).\nDottedRectangle: Draws a hollow dotted rectangle with little squared corners.\nFilledRectangle: Draws a rectangle that is completely filled (useful for hiding things like fake walls).\nCircle: Draws a circle.\nEllipse: Draws an ellipse (or a polygon with certain amount of sides).\nPoint: A single pixel is drawn at the position of the entity.\nLine: A line that goes from the position towards the node (press N).\nText: A message will appear with the chosen font.\nImage: Draws a texture from a custom path.
 entities.KoseiHelper/DebugRenderer.attributes.description.flag=The flag that needs to be set for the debug shape to appear.\nLeave empty for no flag required.
@@ -267,11 +268,12 @@ entities.KoseiHelper/DebugRenderer.attributes.description.message=If the shape i
 entities.KoseiHelper/DebugRenderer.attributes.description.font=If the shape is Text, this is the font chosen for the given string.
 entities.KoseiHelper/DebugRenderer.attributes.description.fontSize=If the shape is Text, this is a size multiplier for the font.\nKeep in mind that Debug is not HD, so low sizes may look pixelated and blurry.
 entities.KoseiHelper/DebugRenderer.attributes.description.ellipseSegments=If the shape is an Ellipse, the number of "sides" of the ellipse.\nWrite a low number for a polygon.\nWARNING: Writing values higher than a few thousands can cause tons of lag.
-entities.KoseiHelper/DebugRenderer.attributes.description.imagePath=The path to your custom texture, relative to Atlases/Gameplay/.
+entities.KoseiHelper/DebugRenderer.attributes.description.imagePath=The path to your custom texture, relative to Atlases/Gameplay/\n(or, if Gui, relative to Atlases/Gui/).
 entities.KoseiHelper/DebugRenderer.attributes.description.scaled=If the custom image should be scaled to fill the entire rectangle.\nOtherwise, the sprite will be rendered at the topleft corner.
-entities.KoseiHelper/DebugRenderer.attributes.description.nonDebug=If the shape should also be displayed while not using debug.\nWARNING: Circles display as a rhombus in this mode.
+entities.KoseiHelper/DebugRenderer.attributes.description.nonDebug=If the shape should also be displayed while not using debug.\nWarning: Circles display as a rhombus in this mode.
 entities.KoseiHelper/DebugRenderer.attributes.description.depth=The depth at which the Renderer appears in Lönn. Debug always appears above everything else in-game.
 entities.KoseiHelper/DebugRenderer.attributes.description.alpha=The transparency of the shape, from 0 (invisible) to 1 (opaque).
+entities.KoseiHelper/DebugRenderer.attributes.description.gui=Whether the shape/text/image should be Hi-Res.
 
 # Debug Map Shapes
 entities.KoseiHelper/DebugMapTile.placements.name.DebugMapTile=Debug Map Shape [Obsolete]

@@ -170,11 +170,27 @@ local function hexToRGBA(hex)
 end
 
 function EntityTinter.draw(room, entity, viewport)
+	local r, g, b, a
 	
-	local r, g, b, a = hexToRGBA(entity.tint or "FFFFFF")
-	love.graphics.setColor(r, g, b, a)
+	if entity.sliderMode then -- draws outer rectangle
+		r, g, b, a = hexToRGBA(entity.maxColor or "FF0000")
+		if entity.alpha then
+			love.graphics.setColor(r, g, b, a)
+		else
+			love.graphics.setColor(r, g, b, 1)
+		end
+		love.graphics.rectangle("fill", entity.x - 6, entity.y - 6, 12, 12)
+	end
+	
+	r, g, b, a = hexToRGBA(entity.tint or "FFFFFF") -- draws inner rectangle
+	if entity.alpha then
+		love.graphics.setColor(r, g, b, a)
+	else
+		love.graphics.setColor(r, g, b, 1)
+	end
 	love.graphics.rectangle("fill", entity.x - 5, entity.y - 5, 10, 10)
-	love.graphics.setColor(1, 1, 1, 1)
+	
+	love.graphics.setColor(1, 1, 1, 1) -- reset colors
 	
 	-- print entity list
 	local text = (entity.affectedEntities or "?"):gsub("%s*,%s*", ",\n")

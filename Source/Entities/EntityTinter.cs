@@ -89,7 +89,7 @@ public class EntityTinter : Entity
     {
         base.Awake(scene);
         Level level = scene as Level;
-        if (KoseiHelperUtils.CheckFlag(level,flag))
+        if (KoseiHelperUtils.CheckFlag(level, flag))
             TryApplyCustomization();
         else if (!string.IsNullOrEmpty(flag))
             RestoreCustomization();
@@ -179,8 +179,6 @@ public class EntityTinter : Entity
                         if (alpha)
                             spriteColor.A = tintColor.A;
                         sprite.Color = spriteColor;
-                        // todo sprite effects
-                        // todo fix colors being assigned incorrectly
                     }
                     else if (untintIfAnimChanged && originalSpriteColors.TryGetValue(sprite, out Color original))
                     {
