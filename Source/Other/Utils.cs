@@ -114,6 +114,13 @@ public static class KoseiHelperUtils
         return defaultValue;
     }
 
+    public static bool CheckFlag(Level level, string flag)
+    {
+        string flagName;
+        flagName = flag.StartsWith("!") ? flag.Substring(1) : flagName = flag;
+        return string.IsNullOrEmpty(flag) || flag.StartsWith("!") ? !level.Session.GetFlag(flagName) : level.Session.GetFlag(flagName);
+    }
+
     public static void PointBounce(Vector2 from, Player player, bool refillDash = true, bool refillStamina = true, bool releaseBooster = true,
         bool coyote = false)
     {

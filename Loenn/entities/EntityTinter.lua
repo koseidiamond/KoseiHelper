@@ -17,9 +17,6 @@ EntityTinter.placements = {
 			everyFrame = true,
 			transitionUpdate = false,
 			global = false,
-			red = true,
-			green = true,
-			blue = true,
 			alpha = true,
 			sprite = true,
 			image = true,
@@ -46,9 +43,6 @@ EntityTinter.placements = {
 			everyFrame = true,
 			transitionUpdate = false,
 			global = false,
-			red = true,
-			green = true,
-			blue = true,
 			alpha = true,
 			sprite = true,
 			image = true,
@@ -108,9 +102,6 @@ EntityTinter.fieldOrder = {
 	"global",
 	"transitionUpdate",
 	"counter",
-	"red",
-	"green",
-	"blue",
 	"alpha",
 	"sprite",
 	"image",
@@ -199,24 +190,6 @@ function EntityTinter.draw(room, entity, viewport)
 	for i, line in ipairs(split) do
 		local w = font:getWidth(line)
 		love.graphics.print(line, entity.x - w / 2, y + (i - 1) * lineSpacing)
-	end
-	
-	-- silly triangles
-	if entity.red == true then
-		love.graphics.setColor(1, 0, 0, 1)
-		love.graphics.polygon("fill", {entity.x + 6, entity.y - 5, entity.x + 6, entity.y - 1, entity.x + 8, entity.y - 3})
-	end
-	if entity.green == true then
-		love.graphics.setColor(0, 1, 0, 1)
-		love.graphics.polygon("fill", {entity.x + 6, entity.y - 5, entity.x + 8, entity.y - 3, entity.x + 10, entity.y - 5})
-	end
-	if entity.blue == true then
-		love.graphics.setColor(0, 0, 1, 1)
-		love.graphics.polygon("fill", {entity.x + 10, entity.y - 1, entity.x + 6, entity.y - 1, entity.x + 8, entity.y - 3})
-	end
-	love.graphics.setColor(1, 1, 1, 1)
-	if entity.alpha == true then
-		love.graphics.polygon("fill", {entity.x + 10, entity.y - 5, entity.x + 8, entity.y - 3, entity.x + 10, entity.y - 1})
 	end
 	
 	if entity.sliderMode then

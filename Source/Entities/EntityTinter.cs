@@ -17,7 +17,7 @@ public class EntityTinter : Entity
     private Color tint, maxColor;
     private bool allEntities;
     private bool everyFrame;
-    private bool red, green, blue, alpha;
+    private bool alpha;
     private bool affectSprite, affectImage, affectTiles;
     private readonly List<string> animationIDs = new();
     private readonly Dictionary<Sprite, Color> originalSpriteColors = new();
@@ -37,9 +37,6 @@ public class EntityTinter : Entity
     {
         everyFrame = data.Bool("everyFrame", true);
         allEntities = data.Bool("allEntities", true);
-        red = data.Bool("red", true);
-        green = data.Bool("green", true);
-        blue = data.Bool("blue", true);
         alpha = data.Bool("alpha", true);
         affectSprite = data.Bool("sprite", true);
         affectImage = data.Bool("image", true);
@@ -92,7 +89,7 @@ public class EntityTinter : Entity
     {
         base.Awake(scene);
         Level level = scene as Level;
-        if (CheckFlag(level))
+        if (KoseiHelperUtils.CheckFlag(level,flag))
             TryApplyCustomization();
         else if (!string.IsNullOrEmpty(flag))
             RestoreCustomization();
@@ -110,7 +107,7 @@ public class EntityTinter : Entity
         Level level = SceneAs<Level>();
         if (everyFrame && level != null)
         {
-            if (CheckFlag(level))
+            if (KoseiHelperUtils.CheckFlag(level, flag))
             {
                 TryApplyCustomization();
                 tintApplied = true;
@@ -176,15 +173,11 @@ public class EntityTinter : Entity
 
                         Color spriteColor = sprite.Color;
 
-                        if (red)
-                            spriteColor.R = tintColor.R;
-                        if (green)
-                            spriteColor.G = tintColor.G;
-                        if (blue)
-                            spriteColor.B = tintColor.B;
+                        spriteColor.R = tintColor.R;
+                        spriteColor.G = tintColor.G;
+                        spriteColor.B = tintColor.B;
                         if (alpha)
                             spriteColor.A = tintColor.A;
-
                         sprite.Color = spriteColor;
                         // todo sprite effects
                         // todo fix colors being assigned incorrectly
@@ -202,13 +195,9 @@ public class EntityTinter : Entity
                         if (!originalImageColors.ContainsKey(image))
                             originalImageColors[image] = image.Color;
                         Color imageColor = image.Color;
-
-                        if (red)
-                            imageColor.R = tintColor.R;
-                        if (green)
-                            imageColor.G = tintColor.G;
-                        if (blue)
-                            imageColor.B = tintColor.B;
+                        imageColor.R = tintColor.R;
+                        imageColor.G = tintColor.G;
+                        imageColor.B = tintColor.B;
                         if (alpha)
                             imageColor.A = tintColor.A;
                         image.Color = imageColor;
@@ -222,12 +211,9 @@ public class EntityTinter : Entity
                             originalTilegridColors[tg] = tg.Color;
                         Color tgColor = tg.Color;
 
-                        if (red)
-                            tgColor.R = tintColor.R;
-                        if (green)
-                            tgColor.G = tintColor.G;
-                        if (blue)
-                            tgColor.B = tintColor.B;
+                        tgColor.R = tintColor.R;
+                        tgColor.G = tintColor.G;
+                        tgColor.B = tintColor.B;
                         if (alpha)
                             tgColor.A = tintColor.A;
                         tg.Color = tgColor;
@@ -269,14 +255,5 @@ public class EntityTinter : Entity
         }
 
         originalImageColors.Clear();
-    }
-
-    public bool CheckFlag(Level level)
-    {
-        string flagName;
-        flagName = flag.StartsWith("!") ? flag.Substring(1) : flagName = flag;
-        return string.IsNullOrEmpty(flag) || flag.StartsWith("!") ? !level.Session.GetFlag(flagName) : level.Session.GetFlag(flagName);
-        // TODO move to Utils
-        // And todo rework all "flagValue" classes (5?)
     }
 }
