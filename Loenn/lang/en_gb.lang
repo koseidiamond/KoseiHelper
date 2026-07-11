@@ -179,7 +179,7 @@ entities.KoseiHelper/EntityTinter.attributes.description.affectedEntities=Comma-
 entities.KoseiHelper/EntityTinter.attributes.name.tint=Color
 entities.KoseiHelper/EntityTinter.attributes.description.tint=The tint of the entity.\nNote that this color is applied over the original color.\nNote that entities that have a black outline drawn with code will have a black base,\ntherefore the tint is applied differently and they can't become transparent.
 entities.KoseiHelper/EntityTinter.attributes.description.allEntities=Whether the Tinter should affect all entities of the given type in the room, or just the closest one.
-entities.KoseiHelper/EntityTinter.attributes.description.everyFrame=Whether the Tinter should try to affect the entity every frame.\nTurn this off if not needed, it can impact performance!
+entities.KoseiHelper/EntityTinter.attributes.description.everyFrame=Whether the Tinter should try to affect the entity every frame.\nTurn this off if you don't need it for better performance.
 entities.KoseiHelper/EntityTinter.attributes.description.transitionUpdate=Whether the Tinter should work even while the player is transitioning between rooms.
 entities.KoseiHelper/EntityTinter.attributes.description.global=Whether the Tinter should have the global tag (and stay loaded even after leaving the room).
 entities.KoseiHelper/EntityTinter.attributes.description.entityIDs=Comma-separated list of entity IDs.\nUseful if you only want to affect specific entities.
@@ -189,7 +189,8 @@ entities.KoseiHelper/EntityTinter.attributes.description.blue=Whether the blue p
 entities.KoseiHelper/EntityTinter.attributes.description.alpha=Whether the alpha part of the tint (characters 7-8 of the hex code) should affect the Alpha (transparency) channel.
 entities.KoseiHelper/EntityTinter.attributes.description.sprite=Whether the tint should affect the sprites.\nSome entities, like Core Blocks, use sprites and images, so you can choose which parts to tint.
 entities.KoseiHelper/EntityTinter.attributes.description.image=Whether the tint should affect the images.\nSome entities, like Core Blocks, use sprites and images, so you can choose which parts to tint.
-entities.KoseiHelper/EntityTinter.attributes.description.animationIDs=Comma-separated list of animations that should be recolored.\nLeave empty if the sprite should always be tinted.
+entities.KoseiHelper/EntityTinter.attributes.description.tiles=Whether the tint should affect the tiles of the entities.\nSome entities, like Dash Blocks or Floaty Space Blocks, use a tileset.
+entities.KoseiHelper/EntityTinter.attributes.description.animationIDs=Comma-separated list of animations that should be recolored.\nLeave empty if the sprite should always be tinted.\nIf you're using this field, save and reopen for a new option to appear.
 entities.KoseiHelper/EntityTinter.attributes.description.untintIfAnimChanged=Whether the entity should go back to its original colors if the current sprite animation is not on the animation ID list.\nUncheck this option to allow "marking" entities (like "held" Celeste.Gliders, or fragile clouds that respawned) with a color.
 entities.KoseiHelper/EntityTinter.attributes.description.counter=Whether the tinter should be linked to a session counter (integers) instead of a session slider (floats).
 entities.KoseiHelper/EntityTinter.attributes.name.sliderCounterName=Slider/Counter Name
@@ -199,6 +200,8 @@ entities.KoseiHelper/EntityTinter.attributes.description.sliderCounterMinValue=T
 entities.KoseiHelper/EntityTinter.attributes.name.sliderCounterMaxValue=Slider/Counter Max Value
 entities.KoseiHelper/EntityTinter.attributes.description.sliderCounterMaxValue=The maximum value that will match the Max Color.
 entities.KoseiHelper/EntityTinter.attributes.description.maxColor=The other color, used when the slider/counter has reached the maximum value.\nThe entity will lerp between Color and Max Color as the value changes.
+entities.KoseiHelper/EntityTinter.attributes.description.flag=Whether the tinter should wait for a certain flag to be true before applying the colors.\nIf the flag starts with "!", the tinter will wait for the flag to be false.\nNote that the tinter will only react to the Flag value on room enter/respawn unless Every Frame is checked!
+entities.KoseiHelper/EntityTinter.attributes.description.onlyOnce=Whether the tinter should remove itself after successfully recoloring the entities.\nUseful for improving performance.
 
 # Conveyor
 entities.KoseiHelper/Conveyor.placements.name.conveyor=Conveyor

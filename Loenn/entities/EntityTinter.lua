@@ -23,6 +23,7 @@ EntityTinter.placements = {
 			alpha = true,
 			sprite = true,
 			image = true,
+			tiles = true,
 			animationIDs = "",
 			untintIfAnimChanged = true,
 			counter = false,
@@ -30,7 +31,9 @@ EntityTinter.placements = {
 			sliderCounterName = "KoseiHelper_tinterNumbers",
 			sliderCounterMinValue = 0,
 			sliderCounterMaxValue = 10,
-			maxColor = "FF0000"
+			maxColor = "FF0000",
+			flag = "",
+			onlyOnce = false
 		}
 	},
 	{
@@ -49,6 +52,7 @@ EntityTinter.placements = {
 			alpha = true,
 			sprite = true,
 			image = true,
+			tiles = true,
 			animationIDs = "",
 			untintIfAnimChanged = true,
 			counter = false,
@@ -56,7 +60,9 @@ EntityTinter.placements = {
 			sliderCounterName = "KoseiHelper_tinterNumbers",
 			sliderCounterMinValue = 0,
 			sliderCounterMaxValue = 10,
-			maxColor = "FF0000"
+			maxColor = "FF0000",
+			flag = "",
+			onlyOnce = false
 		}
 	}
 }
@@ -96,6 +102,7 @@ EntityTinter.fieldOrder = {
 	"maxColor",
 	"sliderCounterMinValue",
 	"sliderCounterMaxValue",
+	"flag",
 	"allEntities",
 	"everyFrame",
 	"global",
@@ -107,6 +114,8 @@ EntityTinter.fieldOrder = {
 	"alpha",
 	"sprite",
 	"image",
+	"tiles",
+	"onlyOnce",
 	"untintIfAnimChanged"
 }
 
@@ -122,7 +131,8 @@ function EntityTinter.ignoredFields(entity)
 	"sliderCounterName",
 	"sliderCounterMinValue",
 	"sliderCounterMaxValue",
-	"maxColor"
+	"maxColor",
+	"onlyOnce"
 	}
     local function doNotIgnore(value)
         for i = #ignored, 1, -1 do
@@ -134,6 +144,7 @@ function EntityTinter.ignoredFields(entity)
     end
 	if entity.sliderMode == false then
 		doNotIgnore("everyFrame")
+		doNotIgnore("onlyOnce")
 	else
 		doNotIgnore("counter")
 		doNotIgnore("sliderCounterName")
@@ -210,9 +221,17 @@ function EntityTinter.draw(room, entity, viewport)
 	
 	if entity.sliderMode then
 		if entity.counter then
-			love.graphics.print("(counter)", entity.x + 6, entity.y)
+			love.graphics.print("(Counter: "..entity.sliderCounterName..")", entity.x + 6, entity.y)
 		else
-			love.graphics.print("(slider)", entity.x + 6, entity.y)
+			love.graphics.print("(Slider: "..entity.sliderCounterName..")", entity.x + 6, entity.y)
+		end
+	end
+	
+	if entity.flag ~= "" then
+		if entity.sliderMode then
+			love.graphics.print("(Flag: "..entity.flag..")", entity.x + 6, entity.y + 8)
+		else
+			love.graphics.print("(Flag: "..entity.flag..")", entity.x + 6, entity.y)
 		end
 	end
 	

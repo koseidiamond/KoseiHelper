@@ -18,15 +18,20 @@ public class EntityTinter : Entity
     private bool allEntities;
     private bool everyFrame;
     private bool red, green, blue, alpha;
-    private bool affectSprite, affectImage;
+    private bool affectSprite, affectImage, affectTiles;
     private readonly List<string> animationIDs = new();
     private readonly Dictionary<Sprite, Color> originalSpriteColors = new();
+    private readonly Dictionary<Image, Color> originalImageColors = new();
+    private readonly Dictionary<TileGrid, Color> originalTilegridColors = new();
     private bool untintIfAnimChanged;
     private bool counter;
     private bool sliderMode;
     private bool absoluteValue;
     private string sliderCounterName;
     private float sliderCounterMinValue, sliderCounterMaxValue;
+    private string flag;
+    private bool onlyOnce;
+    private bool tintApplied;
 
     public EntityTinter(EntityData data, Vector2 offset) : base(data.Position + offset)
     {
@@ -38,13 +43,16 @@ public class EntityTinter : Entity
         alpha = data.Bool("alpha", true);
         affectSprite = data.Bool("sprite", true);
         affectImage = data.Bool("image", true);
+        affectTiles = data.Bool("tiles", true);
         untintIfAnimChanged = data.Bool("untintIfAnimChanged", true);
-        tint = KoseiHelperUtils.ParseHexColor(data.Values.TryGetValue("tint", out object tintColor) ? tintColor.ToString() : null, Calc.HexToColor("FFFFFF"));
+        flag = data.Attr("flag", "");
+        tint = KoseiHelperUtils.ParseHexColor(
+            data.Values.TryGetValue("tint", out object tintColor) ? tintColor.ToString() : null, Calc.HexToColor("FFFFFF"));
         if (data.Bool("TransitionUpdate"))
             base.Tag = Tags.TransitionUpdate;
         if (data.Bool("Global"))
             base.Tag = Tags.Global;
-
+        onlyOnce = data.Bool("onlyOnce", false);
         // data for the slider placement
         counter = data.Bool("counter", false);
         absoluteValue = data.Bool("absoluteValue", false);
@@ -52,7 +60,8 @@ public class EntityTinter : Entity
         sliderCounterName = data.Attr("sliderCounterName", "");
         sliderCounterMinValue = data.Float("sliderCounterMinValue", 0f);
         sliderCounterMaxValue = data.Float("sliderCounterMaxValue", 10f);
-        maxColor = KoseiHelperUtils.ParseHexColor(data.Values.TryGetValue("maxColor", out object tintColor2) ? tintColor2.ToString() : null, Calc.HexToColor("FF0000"));
+        maxColor = KoseiHelperUtils.ParseHexColor(
+            data.Values.TryGetValue("maxColor", out object tintColor2) ? tintColor2.ToString() : null, Calc.HexToColor("FF0000"));
 
         // parsing lists
         foreach (string path in data.Attr("affectedEntities", "Celeste.Glider")
@@ -82,7 +91,11 @@ public class EntityTinter : Entity
     public override void Awake(Scene scene)
     {
         base.Awake(scene);
-        TryApplyCustomization();
+        Level level = scene as Level;
+        if (CheckFlag(level))
+            TryApplyCustomization();
+        else if (!string.IsNullOrEmpty(flag))
+            RestoreCustomization();
     }
 
     public override void Added(Scene scene)
@@ -95,8 +108,19 @@ public class EntityTinter : Entity
     {
         base.Update();
         Level level = SceneAs<Level>();
-        if (everyFrame)
-            TryApplyCustomization();
+        if (everyFrame && level != null)
+        {
+            if (CheckFlag(level))
+            {
+                TryApplyCustomization();
+                tintApplied = true;
+            }
+            else if (!string.IsNullOrEmpty(flag) && tintApplied)
+            {
+                RestoreCustomization(); // restores original colors when the flag unmatches again
+                tintApplied = false; // to ensure that it doesn't remove the tint on every frame unnecessarily
+            }
+        }
     }
 
     private void TryApplyCustomization()
@@ -150,18 +174,20 @@ public class EntityTinter : Entity
                         if (!originalSpriteColors.ContainsKey(sprite))
                             originalSpriteColors[sprite] = sprite.Color;
 
-                        Color color = sprite.Color;
+                        Color spriteColor = sprite.Color;
 
                         if (red)
-                            color.R = tintColor.R;
+                            spriteColor.R = tintColor.R;
                         if (green)
-                            color.G = tintColor.G;
+                            spriteColor.G = tintColor.G;
                         if (blue)
-                            color.B = tintColor.B;
+                            spriteColor.B = tintColor.B;
                         if (alpha)
-                            color.A = tintColor.A;
+                            spriteColor.A = tintColor.A;
 
-                        sprite.Color = color;
+                        sprite.Color = spriteColor;
+                        // todo sprite effects
+                        // todo fix colors being assigned incorrectly
                     }
                     else if (untintIfAnimChanged && originalSpriteColors.TryGetValue(sprite, out Color original))
                     {
@@ -173,18 +199,44 @@ public class EntityTinter : Entity
                 case Image image:
                     if (affectImage)
                     {
+                        if (!originalImageColors.ContainsKey(image))
+                            originalImageColors[image] = image.Color;
+                        Color imageColor = image.Color;
+
                         if (red)
-                            image.Color.R = tintColor.R;
+                            imageColor.R = tintColor.R;
                         if (green)
-                            image.Color.G = tintColor.G;
+                            imageColor.G = tintColor.G;
                         if (blue)
-                            image.Color.B = tintColor.B;
+                            imageColor.B = tintColor.B;
                         if (alpha)
-                            image.Color.A = tintColor.A;
+                            imageColor.A = tintColor.A;
+                        image.Color = imageColor;
+                    }
+                    break;
+
+                case TileGrid tg:
+                    if (affectTiles)
+                    {
+                        if (!originalTilegridColors.ContainsKey(tg))
+                            originalTilegridColors[tg] = tg.Color;
+                        Color tgColor = tg.Color;
+
+                        if (red)
+                            tgColor.R = tintColor.R;
+                        if (green)
+                            tgColor.G = tintColor.G;
+                        if (blue)
+                            tgColor.B = tintColor.B;
+                        if (alpha)
+                            tgColor.A = tintColor.A;
+                        tg.Color = tgColor;
                     }
                     break;
             }
         }
+        if (onlyOnce)
+            RemoveSelf();
     }
 
     private Color GetCurrentTint(Level level)
@@ -198,5 +250,33 @@ public class EntityTinter : Entity
             value = Math.Abs(value);
         float normalized = MathHelper.Clamp((value - sliderCounterMinValue) / (sliderCounterMaxValue - sliderCounterMinValue), 0f, 1f);
         return Color.Lerp(tint, maxColor, normalized);
+    }
+
+    private void RestoreCustomization()
+    {
+        foreach (var pair in originalSpriteColors)
+        {
+            if (pair.Key.Entity != null)
+                pair.Key.Color = pair.Value;
+        }
+
+        originalSpriteColors.Clear();
+
+        foreach (var pair in originalImageColors)
+        {
+            if (pair.Key.Entity != null)
+                pair.Key.Color = pair.Value;
+        }
+
+        originalImageColors.Clear();
+    }
+
+    public bool CheckFlag(Level level)
+    {
+        string flagName;
+        flagName = flag.StartsWith("!") ? flag.Substring(1) : flagName = flag;
+        return string.IsNullOrEmpty(flag) || flag.StartsWith("!") ? !level.Session.GetFlag(flagName) : level.Session.GetFlag(flagName);
+        // TODO move to Utils
+        // And todo rework all "flagValue" classes (5?)
     }
 }
