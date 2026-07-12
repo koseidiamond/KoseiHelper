@@ -102,7 +102,7 @@ public class Ladder : Entity
         drainsStamina = data.Bool("drainsStamina", false);
         leaveLadders = data.Bool("leaveLaddersToRegrab", false);
         horizontalSpeedLimit = data.Float("horizontalSpeedLimit", 330f);
-        regrabCooldown = data.Float("regrabCooldown", 1);
+        regrabCooldown = data.Float("regrabCooldown", 0.4f);
         coyoteTime = data.Bool("coyoteTime", false);
         staminaDrainage = data.Float("staminaDrainage", 1);
         requiresGrabButton = data.Bool("requiresGrabButton", false);
@@ -198,7 +198,7 @@ public class Ladder : Entity
                     (requiresGrabButton && ((!player.wasOnGround || (player.onGround && Input.MoveY.Value == -1)) && Input.Grab))) &&
                     Math.Abs(player.Speed.X) < horizontalSpeedLimit)
                 { // ...press up/down (or grab in grab mode)
-                    if (!state.DisableUntilLeave && Math.Abs(player.Speed.X) < horizontalSpeedLimit && state.RegrabTimer <= 0)
+                    if (!state.disableUntilLeave && Math.Abs(player.Speed.X) < horizontalSpeedLimit && state.regrabTimer <= 0f && state.jumpTimer <= 0f && !state.waitingForNewJumpPress)
                     { // ...player is not moving too fast horizontally, and the LadderJump cooldown is finished
                         if (drainsStamina && player.Stamina > 20 || !drainsStamina)
                         {// Requires 20 stamina to grab on stamina mode
@@ -210,8 +210,8 @@ public class Ladder : Entity
             }
             if (requiresGrabButton && (Input.Grab.Released || !Input.Grab))
                 InLadderState = false;
-            if (player.StateMachine.State == Player.StDash && leaveLadders && state.RegrabTimer <= 0)
-                state.DisableUntilLeave = true;
+            if (player.StateMachine.State == Player.StDash && leaveLadders && state.regrabTimer <= 0f)
+                state.disableUntilLeave = true;
         }
     }
 
@@ -225,7 +225,7 @@ public class Ladder : Entity
                 return;
             var state = player.Get<LadderStateComponent>();
             if (!player.CollideCheck<Ladder>() || player.OnGround())
-                state.DisableUntilLeave = false;
+                state.disableUntilLeave = false;
             if (InLadderState)
             {
                 
@@ -247,11 +247,11 @@ public class Ladder : Entity
                     if (Input.Dash.Pressed || Input.CrouchDash.Pressed)
                     {
                         InLadderState = false;
-                        state.RegrabTimer = 0.85f * regrabCooldown; // resets a timer so you have to wait a bit until Dashing again
+                        state.regrabTimer = 0.85f * regrabCooldown; // resets a timer so you have to wait a bit until Dashing again
                         if (coyoteTime)
                             player.StartJumpGraceTime();
                         if (leaveLadders)
-                            state.DisableUntilLeave = true;
+                            state.disableUntilLeave = true;
                         else
                             player.OnGround(0);
                         if (player.Dashes > 0)
@@ -268,8 +268,10 @@ public class Ladder : Entity
                     }
                     InLadderState = false;
                     if (leaveLadders)
-                        state.DisableUntilLeave = true;
-                    state.RegrabTimer = 0.75f * regrabCooldown; // Resets a timer so you have to wait a bit until Jumping again
+                        state.disableUntilLeave = true;
+                    state.regrabTimer = 0.75f * regrabCooldown; // Resets a timer so you have to wait a bit until Jumping again
+                    state.jumpTimer = 0.1f;
+                    state.waitingForNewJumpPress = true;
                     player.Jump();
                 }
                 if (player.CollideCheckOutside<JumpThru>(player.Position + Vector2.UnitY))
@@ -558,15 +560,22 @@ public class Ladder : Entity
         public LadderStateComponent() : base(true, false) { }
 
         public Ladder CurrentLadder;
-        public float RegrabTimer;
-        public bool DisableUntilLeave;
+        public float regrabTimer, jumpTimer;
+        public bool disableUntilLeave;
+        public bool waitingForNewJumpPress; // so you can spam jump and quickly climb
 
         public override void Update() // decrease the timer here so not all ladders do that on update at the same time
         {
-            if (RegrabTimer > 0)
-                RegrabTimer -= 2.5f * Engine.DeltaTime;
-            if (RegrabTimer < 0)
-                RegrabTimer = 0;
+            if (regrabTimer > 0)
+                regrabTimer -= 2.5f * Engine.DeltaTime;
+            if (regrabTimer < 0)
+                regrabTimer = 0;
+            if (jumpTimer > 0)
+                jumpTimer -= Engine.DeltaTime;
+            if (jumpTimer < 0)
+                jumpTimer = 0;
+            if (waitingForNewJumpPress && !Input.Jump)
+                waitingForNewJumpPress = false;
         }
     }
 

@@ -30,7 +30,7 @@ ladder.placements = {
 			-- All below require advancedMode
 			staminaDrainage = 1, -- Requires drainsStamina
 			horizontalSpeedLimit = 330,
-			regrabCooldown = 1,
+			regrabCooldown = 0.4,
 			leaveLaddersToRegrab = false,
 			coyoteTime = false,
 			isAttached = false,
@@ -59,7 +59,7 @@ ladder.placements = {
 			-- All below require advancedMode
 			staminaDrainage = 1, -- Requires drainsStamina
 			horizontalSpeedLimit = 330,
-			regrabCooldown = 1,
+			regrabCooldown = 0.4,
 			leaveLaddersToRegrab = false,
 			coyoteTime = false,
 			isAttached = false,
