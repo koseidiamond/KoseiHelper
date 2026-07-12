@@ -102,7 +102,7 @@ public class Ladder : Entity
         drainsStamina = data.Bool("drainsStamina", false);
         leaveLadders = data.Bool("leaveLaddersToRegrab", false);
         horizontalSpeedLimit = data.Float("horizontalSpeedLimit", 330f);
-        regrabCooldown = data.Float("regrabCooldown", 0.4f);
+        regrabCooldown = data.Float("regrabCooldown", 0.05f);
         coyoteTime = data.Bool("coyoteTime", false);
         staminaDrainage = data.Float("staminaDrainage", 1);
         requiresGrabButton = data.Bool("requiresGrabButton", false);
@@ -198,7 +198,8 @@ public class Ladder : Entity
                     (requiresGrabButton && ((!player.wasOnGround || (player.onGround && Input.MoveY.Value == -1)) && Input.Grab))) &&
                     Math.Abs(player.Speed.X) < horizontalSpeedLimit)
                 { // ...press up/down (or grab in grab mode)
-                    if (!state.disableUntilLeave && Math.Abs(player.Speed.X) < horizontalSpeedLimit && state.regrabTimer <= 0f && state.jumpTimer <= 0f && !state.waitingForNewJumpPress)
+                    if (!state.disableUntilLeave && Math.Abs(player.Speed.X) < horizontalSpeedLimit
+                        && state.regrabTimer <= 0f && player.Speed.Y >= 0f && state.jumpTimer <= 0f)
                     { // ...player is not moving too fast horizontally, and the LadderJump cooldown is finished
                         if (drainsStamina && player.Stamina > 20 || !drainsStamina)
                         {// Requires 20 stamina to grab on stamina mode
@@ -270,7 +271,7 @@ public class Ladder : Entity
                     if (leaveLadders)
                         state.disableUntilLeave = true;
                     state.regrabTimer = 0.75f * regrabCooldown; // Resets a timer so you have to wait a bit until Jumping again
-                    state.jumpTimer = 0.1f;
+                    state.jumpTimer = 0.05f;
                     state.waitingForNewJumpPress = true;
                     player.Jump();
                 }

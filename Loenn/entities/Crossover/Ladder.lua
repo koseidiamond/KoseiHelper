@@ -30,7 +30,7 @@ ladder.placements = {
 			-- All below require advancedMode
 			staminaDrainage = 1, -- Requires drainsStamina
 			horizontalSpeedLimit = 330,
-			regrabCooldown = 0.4,
+			regrabCooldown = 0.05,
 			leaveLaddersToRegrab = false,
 			coyoteTime = false,
 			isAttached = false,
@@ -59,7 +59,7 @@ ladder.placements = {
 			-- All below require advancedMode
 			staminaDrainage = 1, -- Requires drainsStamina
 			horizontalSpeedLimit = 330,
-			regrabCooldown = 0.4,
+			regrabCooldown = 0.05,
 			leaveLaddersToRegrab = false,
 			coyoteTime = false,
 			isAttached = false,
@@ -133,9 +133,6 @@ function ladder.ignoredFields(entity)
         doNotIgnore("texture")
         doNotIgnore("color")
     end
-    if entity.leaveLaddersToRegrab == false then
-        doNotIgnore("regrabCooldown")
-    end
     if entity.advancedMode == true then
         doNotIgnore("staminaDrainage")
         doNotIgnore("regrabCooldown")
@@ -144,7 +141,7 @@ function ladder.ignoredFields(entity)
         doNotIgnore("coyoteTime")
         doNotIgnore("isAttached")
         doNotIgnore("dummyMode")
-        doNotIgnore("regrabCooldown")
+        --doNotIgnore("regrabCooldown")
 		doNotIgnore("canClimbHorizontally")
         if entity.isInvisible == false then
             doNotIgnore("verticalOffset")
