@@ -22,8 +22,8 @@ public class CustomWire : Entity
     public CustomWire(EntityData data, Vector2 offset) : base(data.Position + offset)
     {
         Depth = data.Int("depth");
-        color = data.HexColor("color", Color.Olive);
-        alpha = data.Float("alpha", 1f);
+        color = KoseiHelperUtils.ParseHexColor(data.Values.TryGetValue("color", out object c2) ? c2.ToString() : null, Color.Olive);
+        alpha = data.Float("alpha", 1f); // obsolete
         flag = data.Attr("flag", "");
         affectedByWind = data.Bool("affectedByWind", true);
         thickness = data.Int("thickness", 1);

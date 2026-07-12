@@ -218,7 +218,7 @@ entities.KoseiHelper/LightReactiveBlock.attributes.description.blendin=Whether t
 entities.KoseiHelper/LightReactiveBlock.attributes.description.tint=Whether the block should have a different color (supports transparency).
 entities.KoseiHelper/LightReactiveBlock.attributes.description.depth=The depth at which the block will be rendered.
 entities.KoseiHelper/LightReactiveBlock.attributes.description.lightLevelForCollidable=The block will be collidable when the light level is higher than this\n(in other words, when the darkness level is lower than 1 - this).
-entities.KoseiHelper/LightReactiveBlock.attributes.description.cutoutEffect=Whether the block should have the effect that cuts out the light and bloom points.\nNote that the Cutout Effect doesn't cast shadows like a LightOccluder.
+entities.KoseiHelper/LightReactiveBlock.attributes.description.cutoutEffect=Whether the block should cut out the light and bloom points.\nNote that the Cutout Effect doesn't cast shadows like a LightOccluder.
 
 
 # Pregnant Flutterbird
@@ -269,9 +269,9 @@ entities.KoseiHelper/DebugRenderer.attributes.description.font=If the shape is T
 entities.KoseiHelper/DebugRenderer.attributes.description.fontSize=If the shape is Text, this is a size multiplier for the font.\nKeep in mind that Debug is not HD, so low sizes may look pixelated and blurry.
 entities.KoseiHelper/DebugRenderer.attributes.description.ellipseSegments=If the shape is an Ellipse, the number of "sides" of the ellipse.\nWrite a low number for a polygon.\nWARNING: Writing values higher than a few thousands can cause tons of lag.
 entities.KoseiHelper/DebugRenderer.attributes.description.imagePath=The path to your custom texture, relative to Atlases/Gameplay/\n(or, if Gui, relative to Atlases/Gui/).
-entities.KoseiHelper/DebugRenderer.attributes.description.scaled=If the custom image should be scaled to fill the entire rectangle.\nOtherwise, the sprite will be rendered at the topleft corner.
+entities.KoseiHelper/DebugRenderer.attributes.description.scaled=If the custom image should be scaled to fill the entire selection.\nOtherwise, the sprite will be rendered at normal size at the topleft corner.
 entities.KoseiHelper/DebugRenderer.attributes.description.nonDebug=If the shape should also be displayed while not using debug.\nWarning: Circles display as a rhombus in this mode.
-entities.KoseiHelper/DebugRenderer.attributes.description.depth=The depth at which the Renderer appears in Lönn. Debug always appears above everything else in-game.
+entities.KoseiHelper/DebugRenderer.attributes.description.depth=The depth at which the Renderer appears in Lönn. Debug and Gui always appear above everything else in-game.
 entities.KoseiHelper/DebugRenderer.attributes.description.alpha=The transparency of the shape, from 0 (invisible) to 1 (opaque).
 entities.KoseiHelper/DebugRenderer.attributes.description.gui=Whether the shape/text/image should be Hi-Res.
 

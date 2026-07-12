@@ -14,7 +14,7 @@ public class LightReactiveBlock : Solid
     private float height;
     private bool blendIn;
     private Color tint;
-    private bool cutoutEffect; // TODO see whats going on with this
+    private bool cutoutEffect;
 
     private float lightLevelForCollidable;
 

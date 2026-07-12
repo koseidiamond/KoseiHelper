@@ -43,8 +43,8 @@ public class DebugRenderer : Entity
 
     public DebugRenderer(EntityData data, Vector2 offset) : base(data.Position + offset)
     {
-        color = data.HexColor("color", Calc.HexToColor("ffffff"));
-        alpha = data.Float("alpha", 1f);
+        color = KoseiHelperUtils.ParseHexColor(data.Values.TryGetValue("color", out object c2) ? c2.ToString() : null, Color.White);
+        alpha = data.Float("alpha", 1f); // obsolete
         width = data.Width;
         height = data.Height;
         shape = data.Enum("shape", Shape.HollowRectangle);
@@ -104,26 +104,44 @@ public class DebugRenderer : Entity
                         Draw.HollowRect(X, Y, width, height, color * alpha);
                     break;
                 case Shape.DottedRectangle: // Taken from Cherry Helper (Assist Rectangle) and tweaked for alphas so corners don't overlap
-                    // todo gui
-                    int num = (int)Left;
-                    int num2 = (int)(Left + width);
-                    int num3 = (int)Top;
-                    int num4 = (int)(Top + height);
-                    // Corners
-                    Draw.Rect(num, num3, 2f, 2f, color * alpha);
-                    Draw.Rect(num2 - 2, num3, 2f, 2f, color * alpha);
-                    Draw.Rect(num, num4 - 2, 2f, 2f, color * alpha);
-                    Draw.Rect(num2 - 2, num4 - 2, 2f, 2f, color * alpha);
-                    // Dotted lines
-                    for (float num5 = num + 3; num5 < (float)(num2 - 3); num5 += 3f)
+                    guiPosition = 6f * (Position - level.Camera.Position) + Vector2.One;
+                    float left, right, top, bottom;
+                    if (gui)
                     {
-                        Draw.Line(num5, num3, num5 + 2f, num3, color * alpha);
-                        Draw.Line(num5, num4 - 1, num5 + 2f, num4 - 1, color * alpha);
+                        guiPosition = 6f * (Position - level.Camera.Position) + Vector2.One;
+
+                        left = guiPosition.X;
+                        top = guiPosition.Y;
+                        right = left + 6f * width;
+                        bottom = top + 6f * height;
                     }
-                    for (float num6 = num3 + 3; num6 < (float)(num4 - 3); num6 += 3f)
+                    else
                     {
-                        Draw.Line(num + 1, num6, num + 1, num6 + 2f, color * alpha);
-                        Draw.Line(num2, num6, num2, num6 + 2f, color * alpha);
+                        left = Left;
+                        top = Top;
+                        right = Left + width;
+                        bottom = Top + height;
+                    }
+                    // Corners
+                    Draw.Rect(left, top, 2f, 2f, color * alpha);
+                    Draw.Rect(right - 2f, top, 2f, 2f, color * alpha);
+                    Draw.Rect(left, bottom - 2f, 2f, 2f, color * alpha);
+                    Draw.Rect(right - 2f, bottom - 2f, 2f, 2f, color * alpha);
+
+                    float step = gui ? 18f : 3f;
+                    float dash = gui ? 12f : 2f;
+                    // Horizontal dotted lines
+                    for (float x = left + 2f + ((right - left - 4f) % step) * 0.5f; x + dash <= right - 2f; x += step)
+                    {
+                        Draw.Line(x, top, x + dash, top, color * alpha);
+                        Draw.Line(x, bottom - 1f, x + dash, bottom - 1f, color * alpha);
+                    }
+
+                    // Vertical dotted lines
+                    for (float y = top + 2f + ((bottom - top - 4f) % step) * 0.5f; y + dash <= bottom - 2f; y += step)
+                    {
+                        Draw.Line(left + 1f, y, left + 1f, y + dash, color * alpha);
+                        Draw.Line(right, y, right, y + dash, color * alpha);
                     }
                     break;
                 case Shape.FilledRectangle:

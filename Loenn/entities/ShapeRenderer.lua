@@ -22,8 +22,7 @@ DebugRenderer.placements = {
     data = {
         width = 8,
         height = 8,
-        color = "000000",
-		alpha = 1,
+        color = "ffffffff",
 		shape = "HollowRectangle",
 		flag = "",
 		message = "text",
@@ -79,7 +78,14 @@ DebugRenderer.fieldInformation = {
 		},
 		editable = false
 	},
-	color = { fieldType = "color" },
+	color = {
+		fieldType = "color",
+		useAlpha = true
+		},
+	alpha = {
+		minimumValue = 0,
+		maximumValue = 1
+	},
 	depth = {
         fieldType = "integer",
         options = depths.addDepths(depths.getDepths(), {}),
@@ -88,10 +94,6 @@ DebugRenderer.fieldInformation = {
 	ellipseSegments = {
 		fieldType = "integer",
 		minimumValue = 3
-	},
-	alpha = {
-		minimumValue = 0,
-		maximumValue = 1
 	}
 }
 
@@ -129,19 +131,20 @@ function DebugRenderer.ignoredFields(entity)
 	return ignored
 end
 
-local function hexToRGB(hex)
+local function hexToRGBA(hex)
     local r = tonumber(hex:sub(1, 2), 16) / 255
     local g = tonumber(hex:sub(3, 4), 16) / 255
     local b = tonumber(hex:sub(5, 6), 16) / 255
-    return r, g, b
+	local a = (tonumber(hex:sub(7, 8), 16) or 255) / 255
+    return r, g, b, a
 end
 
 function DebugRenderer.color(room, entity)
-    local color = {0, 0, 0}
+    local color = {0, 0, 0, 1}
     if entity.color then
-        local success, r, g, b = utils.parseHexColor(entity.color)
+        local success, r, g, b, a = utils.parseHexColor(entity.color)
         if success then
-            color = {r, g, b}
+            color = {r, g, b, a}
         end
     end
     return color
@@ -150,11 +153,10 @@ end
 function DebugRenderer.draw(room, entity)
     -- Set color from entity
     local colorHex = entity.color or DebugRenderer.color
-    local r, g, b = hexToRGB(colorHex)
+    local r, g, b, a = hexToRGBA(colorHex)
 	local nodes = entity.nodes or {{x = 0, y = 0}}
 	local debugImage
 	
-	local a = entity.alpha
 	love.graphics.setColor(r, g, b, a)
     -- Draw shape based on entity's shape type
     if entity.shape == "HollowRectangle" then
@@ -174,30 +176,40 @@ function DebugRenderer.draw(room, entity)
     elseif entity.shape == "Point" then
         love.graphics.rectangle("fill", entity.x, entity.y, 1, 1)
     elseif entity.shape == "Line" then
-			love.graphics.rectangle("fill", entity.x, entity.y, 4, 4)
+			love.graphics.rectangle("fill", entity.x - 1.5, entity.y - 1.5, 3, 3) -- todo offset
 			if nodes and nodes[1] then
-				love.graphics.rectangle("fill", nodes[1].x, nodes[1].y, 4, 4)
-				love.graphics.line(entity.x + 2, entity.y + 2, nodes[1].x + 2, nodes[1].y + 2)
+				love.graphics.rectangle("fill", nodes[1].x - 1.5, nodes[1].y - 1.5, 3, 3)
+				love.graphics.line(entity.x, entity.y, nodes[1].x, nodes[1].y)
 			end
     elseif entity.shape == "Text" then
         love.graphics.print(entity.message or "Text", entity.x, entity.y)
     elseif entity.shape == "Image" then
-		debugImage = drawableSprite.fromTexture(entity.imagePath, entity)
-		if debugImage ~= nil then
-			if entity.scaled then
-				local scaleX = entity.width / debugImage.meta.width or 1
-				local scaleY = entity.height / debugImage.meta.height or 1
-				debugImage:setScale(scaleX, scaleY)
-				debugImage:setJustification(0, 0)
-				
+		local extraData = utils.deepcopy(entity)
+		extraData["atlas"] = "Gui"
+		if entity.gui then
+			debugImage = drawableSprite.fromTexture(entity.imagePath, extraData)
+		else
+			debugImage = drawableSprite.fromTexture(entity.imagePath, entity)
+		end
+		if debugImage == nil then -- todo: test
+			debugImage = drawableSprite.fromTexture("objects/KoseiHelper/Other/__fallback", entity)
+		end
+		if entity.scaled then
+			local scaleX = entity.width / debugImage.meta.width or 1
+			local scaleY = entity.height / debugImage.meta.height or 1
+			debugImage:setScale(scaleX, scaleY)
+			debugImage:setJustification(0, 0)
+		else
+			if entity.gui then
+				debugImage:setScale(0.1666667, 0.1666667)
+				debugImage:setJustification(0,0)
 			else
 				debugImage:setScale(1, 1)
 				debugImage:setJustification(0.5, 0.5)
 			end
-			debugImage:draw(a)
-		else -- todo: improve this
-			love.graphics.print("?", entity.x , entity.y, 0, 4, 4)
 		end
+		
+		debugImage:draw(a)
 	end
 	 love.graphics.setColor(1, 1, 1, 1)
 end
