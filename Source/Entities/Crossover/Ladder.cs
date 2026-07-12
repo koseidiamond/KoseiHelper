@@ -29,11 +29,8 @@ public class Ladder : Entity
     public float staminaDrainage = 1;
     public bool dummyMode = false;
     public int verticalOffset = 6;
-
-    private bool disableUntilLeave = false;
     private float fallThruJumpThruTimer;
     private bool inLadderState = false;
-    private float timeSinceLadderTech;
     private StaticMover staticMover;
     public static float decelerationValues = 1f;
     public bool singleUse;
@@ -58,7 +55,7 @@ public class Ladder : Entity
                 if (!dummyMode)
                     player.StateMachine.State = KoseiHelper_StLadder;
                 else
-                    player.StateMachine.State = 11; // StDummy == 11
+                    player.StateMachine.State = Player.StDummy;
                 player.StateMachine.Locked = true;
                 player.ForceCameraUpdate = true;
                 player.DummyGravity = false;
@@ -82,7 +79,7 @@ public class Ladder : Entity
     {
         player.DummyGravity = true;
         player.StateMachine.Locked = false;
-        if (player.StateMachine.State == KoseiHelper_StLadder || player.StateMachine.State == 11)
+        if (player.StateMachine.State == KoseiHelper_StLadder || player.StateMachine.State == Player.StDummy)
             player.StateMachine.State = Player.StNormal;
         player.ForceCameraUpdate = false;
         player.IgnoreJumpThrus = false;
@@ -178,6 +175,7 @@ public class Ladder : Entity
     {
         if (player.Scene != null)
         {
+            var state = player.Get<LadderStateComponent>();
             bool verticalMoveCheck = Input.MoveY == 1 && !player.CollideCheck<Solid>(player.Position + Vector2.UnitY);
             if (verticalMoveCheck && player.CollideCheckOutside<JumpThru>(player.Position + Vector2.UnitY))
             {
@@ -194,18 +192,17 @@ public class Ladder : Entity
                 fallThruJumpThruTimer = FallThruJumpThruTime;
                 player.IgnoreJumpThrus = false;
             }
-            if (player.CollideCheck<Ladder>() && player.StateMachine.State.Equals(0))
+            if (player.CollideCheck<Ladder>() && player.StateMachine.State == Player.StNormal)
             { //Conditions for ladder state: collide with player, player is in StNormal...
                 if (((!requiresGrabButton && (Input.MoveY.Value == -1 || verticalMoveCheck && !player.wasOnGround)) ||
                     (requiresGrabButton && ((!player.wasOnGround || (player.onGround && Input.MoveY.Value == -1)) && Input.Grab))) &&
                     Math.Abs(player.Speed.X) < horizontalSpeedLimit)
                 { // ...press up/down (or grab in grab mode)
-                    if (!disableUntilLeave && Math.Abs(player.Speed.X) < horizontalSpeedLimit && timeSinceLadderTech <= 0)
+                    if (!state.DisableUntilLeave && Math.Abs(player.Speed.X) < horizontalSpeedLimit && state.RegrabTimer <= 0)
                     { // ...player is not moving too fast horizontally, and the LadderJump cooldown is finished
                         if (drainsStamina && player.Stamina > 20 || !drainsStamina)
                         {// Requires 20 stamina to grab on stamina mode
-                            if (player.Get<LadderStateComponent>() != null)
-                                player.Get<LadderStateComponent>().CurrentLadder = this;
+                            state.CurrentLadder = this;
                             InLadderState = true;
                         }
                     }
@@ -213,8 +210,8 @@ public class Ladder : Entity
             }
             if (requiresGrabButton && (Input.Grab.Released || !Input.Grab))
                 InLadderState = false;
-            if (player.StateMachine.State == Player.StDash && leaveLadders && timeSinceLadderTech <= 0)
-                disableUntilLeave = true;
+            if (player.StateMachine.State == Player.StDash && leaveLadders && state.RegrabTimer <= 0)
+                state.DisableUntilLeave = true;
         }
     }
 
@@ -224,12 +221,14 @@ public class Ladder : Entity
         if (level != null)
         {
             player = level.Tracker.GetEntity<Player>();
-            if (timeSinceLadderTech >= 0)
-                timeSinceLadderTech -= 2.5f * Engine.DeltaTime;
-            if (player != null && (!player.CollideCheck(this) || player.OnGround()))
-                disableUntilLeave = false;
-            if (InLadderState && player != null)
+            if (player == null)
+                return;
+            var state = player.Get<LadderStateComponent>();
+            if (!player.CollideCheck<Ladder>() || player.OnGround())
+                state.DisableUntilLeave = false;
+            if (InLadderState)
             {
+                
                 if (drainsStamina)
                 {
                     player.Stamina -= 12 * Engine.DeltaTime * staminaDrainage;//Progressively drains stamina
@@ -248,11 +247,11 @@ public class Ladder : Entity
                     if (Input.Dash.Pressed || Input.CrouchDash.Pressed)
                     {
                         InLadderState = false;
-                        timeSinceLadderTech = 0.85f * regrabCooldown; // resets a timer so you have to wait a bit until Dashing again
+                        state.RegrabTimer = 0.85f * regrabCooldown; // resets a timer so you have to wait a bit until Dashing again
                         if (coyoteTime)
                             player.StartJumpGraceTime();
                         if (leaveLadders)
-                            disableUntilLeave = true;
+                            state.DisableUntilLeave = true;
                         else
                             player.OnGround(0);
                         if (player.Dashes > 0)
@@ -269,8 +268,8 @@ public class Ladder : Entity
                     }
                     InLadderState = false;
                     if (leaveLadders)
-                        disableUntilLeave = true;
-                    timeSinceLadderTech = 0.75f * regrabCooldown; // Resets a timer so you have to wait a bit until Jumping again
+                        state.DisableUntilLeave = true;
+                    state.RegrabTimer = 0.75f * regrabCooldown; // Resets a timer so you have to wait a bit until Jumping again
                     player.Jump();
                 }
                 if (player.CollideCheckOutside<JumpThru>(player.Position + Vector2.UnitY))
@@ -556,8 +555,19 @@ public class Ladder : Entity
 
     private class LadderStateComponent : Component
     {
-        public LadderStateComponent() : base(false, false) { }
+        public LadderStateComponent() : base(true, false) { }
+
         public Ladder CurrentLadder;
+        public float RegrabTimer;
+        public bool DisableUntilLeave;
+
+        public override void Update() // decrease the timer here so not all ladders do that on update at the same time
+        {
+            if (RegrabTimer > 0)
+                RegrabTimer -= 2.5f * Engine.DeltaTime;
+            if (RegrabTimer < 0)
+                RegrabTimer = 0;
+        }
     }
 
     public static int KoseiHelper_StLadder;
