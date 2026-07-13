@@ -8,6 +8,7 @@ The software is provided "as is", without warranty of any kind, express or impli
 In no event shall the authors or copyright holders be liable for any claim, damages or other liability, whether in an action of contract, tort or otherwise, arising from, out of or in connection with the software or the use or other dealings in the software.
 
 
-# **DISCLAIMER:**
+# **PLEASE NOTE:**
 You are free to copy or modify my code freely without permission, as the license states above. But I ask you to please let me know beforehand if you are going to make something very similar or based on what I've made. I accept PRs and I think it's better to not have duplicated entities/mechanics as a community. So let's try to cooperate first and have the best versions of our entities/mechanics together! You will be credited if you make a PR, of course.
+
 If you're copying something to make a private feature for a WIP project or something, I would appreciate that you let me know as a polite gesture (we might even be able to cooperate, like adding a hidden feature and sending you a private plugin), but you're free to do whatever you want.
