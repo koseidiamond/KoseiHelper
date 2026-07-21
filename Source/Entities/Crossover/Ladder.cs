@@ -229,7 +229,7 @@ public class Ladder : Entity
                 state.disableUntilLeave = false;
             if (InLadderState)
             {
-                
+
                 if (drainsStamina)
                 {
                     player.Stamina -= 12 * Engine.DeltaTime * staminaDrainage;//Progressively drains stamina

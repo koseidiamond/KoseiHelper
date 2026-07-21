@@ -83,10 +83,7 @@ CustomPlayerSeeker.fieldInformation = {
 			"golden"
 		},
         editable = true
-    },
-	freezeFramesWhenDashing = {
-		fieldType = "integer"
-	}
+    }
 }
 
 CustomPlayerSeeker.texture = "decals/5-temple/statue_e"
