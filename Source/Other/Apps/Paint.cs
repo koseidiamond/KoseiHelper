@@ -1,11 +1,9 @@
-﻿using FrostHelper.Helpers;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Monocle;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.CompilerServices;
 namespace Celeste.Mod.KoseiHelper.Other.Apps;
 
 public class BerryPaint : App
@@ -68,8 +66,9 @@ public class BerryPaint : App
     private void InitializeButtons()
     {
         // General buttons
-        buttonClearDrawing = new Button(Rectangle.Empty, "Clear", () => {
-        drawnLines.Clear();
+        buttonClearDrawing = new Button(Rectangle.Empty, "Clear", () =>
+        {
+            drawnLines.Clear();
             Audio.Play("event:/ui/main/savefile_delete");
         });
         buttonSaveDrawing = new Button(Rectangle.Empty, "Save", ExportCanvasAsPng);
@@ -365,7 +364,7 @@ public class BerryPaint : App
 
     private void LayoutButtons()
     {
-        
+
         const int paletteColumns = 11;
         const int paletteRows = 2;
         const int paletteSpacing = 2;
@@ -401,7 +400,7 @@ public class BerryPaint : App
             buttons[toolStart + i].Bounds = new Rectangle(buttonOffset + i * (buttonWidth + buttonOffset), buttonOffset + buttonHeight * 3 + paletteSpacing * paletteRows, buttonWidth, buttonHeight);
         }
         buttonMinSize.Bounds = new Rectangle(window.Width - smallButtonSize * 4 - (smallButtonSize / 4), -18, smallButtonSize, smallButtonSize);
-        buttonMaxSize.Bounds = new Rectangle(window.Width - smallButtonSize * 2 -12, -18, smallButtonSize, smallButtonSize);
+        buttonMaxSize.Bounds = new Rectangle(window.Width - smallButtonSize * 2 - 12, -18, smallButtonSize, smallButtonSize);
         buttonClose.Bounds = new Rectangle(window.Width - smallButtonSize - (smallButtonSize / 4), -18, smallButtonSize, smallButtonSize);
     }
 

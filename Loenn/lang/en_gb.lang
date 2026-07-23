@@ -200,6 +200,14 @@ entities.KoseiHelper/EntityTinter.attributes.description.maxColor=The other colo
 entities.KoseiHelper/EntityTinter.attributes.description.flag=Whether the tinter should wait for a certain flag to be true before applying the colors.\nIf the flag starts with "!", the tinter will wait for the flag to be false.\nNote that the tinter will only react to the Flag value on room enter/respawn unless Every Frame is checked!
 entities.KoseiHelper/EntityTinter.attributes.description.onlyOnce=Whether the tinter should remove itself after successfully recoloring the entities.\nUseful for improving performance.
 
+# Kill Theo On Touch Controller and Safe Theo Area
+entities.KoseiHelper/KillTheoOnTouchController.placements.name.KillTheoOnTouchController=Kill Theo On Touch Controller
+entities.KoseiHelper/KillTheoOnTouchController.placements.description.KillTheoOnTouchController=Kills Theo whenever he touches solids or specific entities.
+entities.KoseiHelper/KillTheoOnTouchController.attributes.description.dangerousEntities=Comma-separated list of entity types that can kill Theo when he touches them.
+entities.KoseiHelper/KillTheoOnTouchController.attributes.description.dieOnSolids=Whether Theo should die upon touching a solid/tile.
+entities.KoseiHelper/SafeTheoArea.placements.name.SafeTheoArea=Safe Theo Area
+entities.KoseiHelper/SafeTheoArea.placements.description.SafeTheoArea=If you have a Kill Theo On Touch Controller, this area will be excluded from the danger.
+
 # Conveyor
 entities.KoseiHelper/Conveyor.placements.name.conveyor=Conveyor
 entities.KoseiHelper/Conveyor.placements.description.conveyor=1-tile conveyor that can move the player or other entities.\nCompatible with Gravity Helper.
