@@ -1,14 +1,15 @@
+﻿using FrostHelper.Helpers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Monocle;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.CompilerServices;
 namespace Celeste.Mod.KoseiHelper.Other.Apps;
 
-public class BerryPaint : Entity
+public class BerryPaint : App
 {
-    private Rectangle window;
     private Rectangle canvas;
     private List<(Vector2 from, Vector2 to, Color color, int thickness)> drawnLines;
 
@@ -27,30 +28,8 @@ public class BerryPaint : Entity
     private Button buttonThickness;
     private Button buttonTransparency;
 
-    private readonly List<Button> buttons = new();
 
-    private static Color Black => Calc.HexToColor(0x0c0c0c);
-    private static Color White => Calc.HexToColor(0xfbfbf7);
-    private static Color DarkGray => Calc.HexToColor(0x87888f);
-    private static Color LightGray => Calc.HexToColor(0xc0c7c8);
-    private static Color DarkCream => Calc.HexToColor(0xd5cda3);
-    private static Color Cream => Calc.HexToColor(0xe8e3ce);
-    private static Color DarkRed => Calc.HexToColor(0xab0e03);
-    private static Color Red => Calc.HexToColor(0xf63527);
-    private static Color DarkOrange => Calc.HexToColor(0xa96814);
-    private static Color Orange => Calc.HexToColor(0xf99c23);
-    private static Color DarkYellow => Calc.HexToColor(0xaaa759);
-    private static Color Yellow => Calc.HexToColor(0xf1ec58);
-    private static Color DarkGreen => Calc.HexToColor(0x0ab20a);
-    private static Color Green => Calc.HexToColor(0x2bf72b);
-    private static Color DarkCyan => Calc.HexToColor(0x5aa6ab);
-    private static Color Cyan => Calc.HexToColor(0x27effb);
-    private static Color DarkBlue => Calc.HexToColor(0x0b188f);
-    private static Color Blue => Calc.HexToColor(0x1f34f6);
-    private static Color DarkMagenta => Calc.HexToColor(0xa958a2);
-    private static Color Magenta => Calc.HexToColor(0xf940ea);
-    private static Color DarkBrown => Calc.HexToColor(0x896642);
-    private static Color Brown => Calc.HexToColor(0xe8ae73);
+    private readonly List<Button> buttons = new();
 
     private enum DrawMode
     {
@@ -62,15 +41,20 @@ public class BerryPaint : Entity
     private DrawMode currentMode;
     private bool noCanvas;
 
-    public BerryPaint(EntityData data, Vector2 offset) : base(data.Position + offset)
+    public BerryPaint(EntityData data, Vector2 offset) : base(data, data.Position + offset)
     {
-        // TODO: button for closing. polish saving files. order buttons. resizing. and maybe more tools like ellipses or text
+        // TODO: polish saving files. and maybe more tools like ellipses or text. clipboard too maybe??
+        // TODO: darken button color while holding click
+        // TODO: fix minimize/maximize (it tries to drag which breaks stuff)
         Tag = TagsExt.SubHUD;
         AddTag(Tags.Persistent);
         AddTag(Tags.Global);
-        window = new Rectangle(50, 50, 600, 400);
-        noCanvas = data.Bool("noCanvas", false); // todo
-        canvas = new Rectangle(window.X, window.Y + 120, window.Width, window.Height - 120);
+        AddTag(Tags.FrozenUpdate);
+        AddTag(Tags.TransitionUpdate);
+
+        window = new Rectangle((int)MInput.Mouse.Position.X - 4, (int)MInput.Mouse.Position.Y - 4, minWidth, minHeight);
+        noCanvas = data.Bool("noCanvas", false);
+
         drawnLines = new List<(Vector2, Vector2, Color, int)>();
 
         currentColor = Black;
@@ -78,52 +62,59 @@ public class BerryPaint : Entity
         lineThickness = 2;
         currentMode = DrawMode.Free;
 
-        const int buttonOffset = 5; // margin between buttons and the border
-        const int buttonSpacing = 65; // space between the position of each button
-        const int buttonWidth = 65;
-        const int buttonHeight = 20;
+        InitializeButtons();
+    }
 
-        buttonClearDrawing = new Button(new Rectangle(buttonOffset, buttonOffset, buttonWidth, buttonHeight), "Clear", () =>
-            drawnLines.Clear());
-
-        buttonSaveDrawing = new Button(new Rectangle(buttonOffset + buttonSpacing, buttonOffset, buttonWidth, buttonHeight), "Save", SaveCanvasAsPng);
-
-        buttonThickness = new Button(new Rectangle(buttonOffset + buttonSpacing * 2, buttonOffset, buttonWidth, buttonHeight), "Size: 2", () =>
-        {
-            lineThickness = lineThickness % 8 + 1; buttonThickness.Text = $"Size {lineThickness}";
+    private void InitializeButtons()
+    {
+        // General buttons
+        buttonClearDrawing = new Button(Rectangle.Empty, "Clear", () => {
+        drawnLines.Clear();
+            Audio.Play("event:/ui/main/savefile_delete");
         });
-
-        buttonTransparency = new Button(new Rectangle(buttonOffset + buttonSpacing * 3, buttonOffset, buttonWidth, buttonHeight), "100%", () =>
+        buttonSaveDrawing = new Button(Rectangle.Empty, "Save", ExportCanvasAsPng);
+        buttonThickness = new Button(Rectangle.Empty, "Size: 2", () =>
         {
-            currentAlpha += 0.1f;
-            if (currentAlpha > 1f)
+            lineThickness = lineThickness % 8 + 1; buttonThickness.Text = $"Size: {lineThickness}";
+        });
+        buttonTransparency = new Button(Rectangle.Empty, "100%", () =>
+        {
+            if (currentAlpha >= 1f)
                 currentAlpha = 0.1f;
+            else
+                currentAlpha += 0.1f;
             buttonTransparency.Text = $"{(int)(currentAlpha * 100)}%";
         });
-
         buttons.Add(buttonClearDrawing);
         buttons.Add(buttonSaveDrawing);
         buttons.Add(buttonThickness);
         buttons.Add(buttonTransparency);
 
-        Color[] palette = {
-            Black, DarkGray, DarkCream, DarkRed, DarkOrange, DarkYellow, DarkGreen, DarkCyan, DarkBlue, DarkMagenta, DarkBrown,
-            White, LightGray, Cream, Red, Orange, Yellow, Green, Cyan, Blue, Magenta, Brown };
-
-        // Add color buttons
-        for (int i = 0; i < palette.Length; i++)
+        // Color buttons
+        Color[] palette = { Black, DarkGray, DarkCream, DarkRed, DarkOrange, DarkYellow, DarkGreen, DarkCyan, DarkBlue, DarkMagenta, DarkBrown,
+        White, LightGray, Cream, Red, Orange, Yellow, Green, Cyan, Blue, Magenta, Brown };
+        foreach (Color color in palette)
         {
-            Color c = palette[i];
-            Button button = new Button(new Rectangle(), "", () => currentColor = c);
-            button.FillColor = c;
+            Button button = new Button(Rectangle.Empty, "", () => currentColor = color) { FillColor = color };
             buttons.Add(button);
         }
 
-        // Add tool buttons
-        buttons.Add(new Button(new Rectangle(), "Pencil", () => currentMode = DrawMode.Free));
-        buttons.Add(new Button(new Rectangle(), "Line", () => currentMode = DrawMode.Line));
-        buttons.Add(new Button(new Rectangle(), "Circle", () => currentMode = DrawMode.Circle));
-        buttons.Add(new Button(new Rectangle(), "Rect", () => currentMode = DrawMode.Rectangle));
+        // Tool buttons
+        buttons.Add(new Button(Rectangle.Empty, "Pencil", () => currentMode = DrawMode.Free));
+        buttons.Add(new Button(Rectangle.Empty, "Line", () => currentMode = DrawMode.Line));
+        buttons.Add(new Button(Rectangle.Empty, "Circle", () => currentMode = DrawMode.Circle));
+        buttons.Add(new Button(Rectangle.Empty, "Rect", () => currentMode = DrawMode.Rectangle));
+
+        // Bar buttons
+        buttons.Add(buttonMinSize);
+        buttons.Add(buttonMaxSize);
+        buttons.Add(buttonClose);
+    }
+
+    public override void Added(Scene scene)
+    {
+        base.Added(scene);
+        UpdateCanvas();
     }
 
     public override void Update()
@@ -145,11 +136,49 @@ public class BerryPaint : Entity
         DrawButtons();
     }
 
+    public override void Maximize()
+    {
+        base.Maximize();
+        UpdateCanvas();
+    }
+
+    public override void Minimize()
+    {
+        base.Minimize();
+        UpdateCanvas();
+    }
+
     private void Dragging()
     {
         Vector2 mouse = MInput.Mouse.Position;
         Rectangle titleBar = new(window.X, window.Y, window.Width, 20);
-        if (MInput.Mouse.PressedLeftButton && titleBar.Contains((int)mouse.X, (int)mouse.Y))
+
+        bool overButton = false;
+        Vector2 buttonOffset = new(window.X, window.Y + 20);
+
+        foreach (Button button in buttons)
+        {
+            Rectangle rect = new(button.Bounds.X + (int)buttonOffset.X, button.Bounds.Y + (int)buttonOffset.Y, button.Bounds.Width, button.Bounds.Height);
+
+            if (button.IsCircle) // TODO test this
+            {
+                Vector2 center = new(rect.Center.X, rect.Center.Y);
+                float radius = rect.Width / 2f;
+                if (Vector2.DistanceSquared(mouse, center) <= radius * radius)
+                {
+                    overButton = true;
+                    break;
+                }
+            }
+            else if (rect.Contains((int)mouse.X, (int)mouse.Y))
+            {
+                overButton = true;
+                break;
+            }
+        }
+
+
+        if (MInput.Mouse.PressedLeftButton && titleBar.Contains((int)mouse.X, (int)mouse.Y) && !overButton && !maximized)
         {
             dragging = true;
             dragOffset = mouse - new Vector2(window.X, window.Y);
@@ -285,7 +314,7 @@ public class BerryPaint : Entity
         Vector2 start = lineStart.Value + new Vector2(canvas.X, canvas.Y);
         Vector2 end = MInput.Mouse.Position;
 
-        Color previewColor = currentColor * currentAlpha;
+        Color previewColor = currentColor * currentAlpha * 0.4f;
 
         switch (currentMode)
         {
@@ -326,51 +355,54 @@ public class BerryPaint : Entity
 
     private void DrawButtons()
     {
+        LayoutButtons();
         Vector2 offset = new(window.X, window.Y + 20);
-        int x = 5;
-        int y = 5;
-        buttonClearDrawing.Bounds = new Rectangle(x, y, 60, 20);
-        x += 65;
-        buttonSaveDrawing.Bounds = new Rectangle(x, y, 60, 20);
-        x += 65;
-        buttonThickness.Bounds = new Rectangle(x, y, 70, 20);
-        x += 75;
-        buttonTransparency.Bounds = new Rectangle(x, y, 70, 20);
 
         foreach (Button button in buttons)
             button.Render(offset);
+    }
 
-        const int paletteStart = 4;
-        const int paletteSize = 16;
-        const int spacing = 2;
-        x = 5;
-        y = 30;
 
-        for (int i = paletteStart; i < paletteStart + 22; i++)
+    private void LayoutButtons()
+    {
+        
+        const int paletteColumns = 11;
+        const int paletteRows = 2;
+        const int paletteSpacing = 2;
+        int x = 5;
+
+        // General buttons
+        buttonClearDrawing.Bounds = new Rectangle(x, buttonOffset, buttonWidth, buttonHeight);
+        x += buttonWidth + buttonOffset;
+        buttonSaveDrawing.Bounds = new Rectangle(x, buttonOffset, buttonWidth, buttonHeight);
+        x += buttonWidth + buttonOffset;
+        buttonThickness.Bounds = new Rectangle(x, buttonOffset, buttonWidth, buttonHeight);
+        x += buttonWidth + buttonOffset;
+        buttonTransparency.Bounds = new Rectangle(x, buttonOffset, buttonWidth, buttonHeight);
+        x = buttonOffset;
+
+        // Palette
+        int y = buttonHeight + buttonOffset * 2;
+        for (int i = 0; i < paletteRows * paletteColumns; i++)
         {
-            buttons[i].Bounds = new Rectangle(x, y, paletteSize, paletteSize);
-
-            x += paletteSize + spacing;
-
-            if ((i - paletteStart + 1) % 11 == 0)
+            buttons[4 + i].Bounds = new Rectangle(x, y, smallButtonSize, smallButtonSize);
+            x += smallButtonSize + paletteSpacing;
+            if ((i + 1) % paletteColumns == 0)
             {
-                x = 5;
-                y += paletteSize + spacing;
+                x = buttonOffset;
+                y += smallButtonSize + paletteSpacing;
             }
         }
 
-        int toolStart = paletteStart + 22;
-
-        x = 210;
-        y = 30;
-
-        buttons[toolStart + 0].Bounds = new Rectangle(x, y, 70, 18);
-        buttons[toolStart + 1].Bounds = new Rectangle(x, y + 20, 70, 18);
-        buttons[toolStart + 2].Bounds = new Rectangle(x, y + 40, 70, 18);
-        buttons[toolStart + 3].Bounds = new Rectangle(x, y + 60, 70, 18);
-
-        for (int i = toolStart; i < buttons.Count; i++)
-            buttons[i].Render(offset);
+        // Tools
+        int toolStart = 4 + paletteRows * paletteColumns;
+        for (int i = 0; i < 4; i++)
+        {
+            buttons[toolStart + i].Bounds = new Rectangle(buttonOffset + i * (buttonWidth + buttonOffset), buttonOffset + buttonHeight * 3 + paletteSpacing * paletteRows, buttonWidth, buttonHeight);
+        }
+        buttonMinSize.Bounds = new Rectangle(window.Width - smallButtonSize * 4 - (smallButtonSize / 4), -18, smallButtonSize, smallButtonSize);
+        buttonMaxSize.Bounds = new Rectangle(window.Width - smallButtonSize * 2 -12, -18, smallButtonSize, smallButtonSize);
+        buttonClose.Bounds = new Rectangle(window.Width - smallButtonSize - (smallButtonSize / 4), -18, smallButtonSize, smallButtonSize);
     }
 
 
@@ -402,7 +434,12 @@ public class BerryPaint : Entity
         drawnLines.Add((bottomLeft, topLeft, color, lineThickness));
     }
 
-    private void SaveCanvasAsPng()
+    public void UpdateCanvas()
+    { // uhhh, it just works
+        canvas = new Rectangle(window.X, window.Y + 120, window.Width, window.Height - 120);
+    }
+
+    private void ExportCanvasAsPng()
     {
         if (canvas.Width <= 0 || canvas.Height <= 0)
             return;
@@ -424,12 +461,14 @@ public class BerryPaint : Entity
 
             Draw.SpriteBatch.End();
             device.SetRenderTargets(previousTargets);
-            Directory.CreateDirectory("KoseiHelper");
-            string file = Path.Combine("Saves/KoseiHelper", $"berryPaint_{DateTime.Now:yyyy-MM-dd_HH-mm-ss}.png");
+            string directory = Path.Combine("Saves", "KoseiHelper");
+            Directory.CreateDirectory(directory);
+            string file = Path.Combine(directory, $"berryPaint_{DateTime.Now:yyyy-MM-dd_HH-mm-ss}.png");
             using FileStream stream = File.Create(file);
             renderTarget.SaveAsPng(stream, canvas.Width, canvas.Height);
-            Logger.Log("KoseiHelper", $"Drawing saved to: {file}");
+            Logger.Log(LogLevel.Info, "KoseiHelper", $"Drawing saved to: Celeste\\{file}");
             Audio.Play("event:/ui/main/savefile_rename_start");
+
         }
         catch (Exception e)
         {
