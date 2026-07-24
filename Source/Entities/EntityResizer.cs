@@ -39,9 +39,9 @@ public class EntityResizer : Entity
         everyFrame = data.Bool("everyFrame", false);
         flag = data.Attr("flag", "");
         if (data.Bool("TransitionUpdate"))
-            base.Tag = Tags.TransitionUpdate;
+            base.AddTag(Tags.TransitionUpdate);
         if (data.Bool("Global"))
-            base.Tag = Tags.Global;
+            base.AddTag(Tags.Global);
         onlyOnce = data.Bool("onlyOnce", false);
         // data for the slider placement
         counter = data.Bool("counter", false);

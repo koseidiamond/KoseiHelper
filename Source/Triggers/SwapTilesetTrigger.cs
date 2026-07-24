@@ -33,9 +33,9 @@ public class SwapTilesetTrigger : Trigger
         sound = data.Attr("sound", "event:/none");
         flashColor = data.HexColor("flashColor", Color.White);
         if (data.Bool("persistent", false))
-            base.Tag = Tags.Persistent;
+            base.AddTag(Tags.Persistent);
         if (data.Bool("global", false))
-            base.Tag = Tags.Global;
+            base.AddTag(Tags.Global);
     }
 
     public override void OnStay(Player player)

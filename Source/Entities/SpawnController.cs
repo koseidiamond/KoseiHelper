@@ -290,7 +290,7 @@ public class SpawnController : Entity
     public SpawnController(EntityData data, Vector2 offset) : base(data.Position + offset)
     {
         Add(new PostUpdateHook(() => { }));
-        base.Tag = TagsExt.SubHUD;
+        base.AddTag(TagsExt.SubHUD);
         if (!data.Bool("noCollider", false))
             Collider = new Hitbox(8, 8, -4, -4);
 
@@ -333,9 +333,9 @@ public class SpawnController : Entity
         oppositeDragButton = data.Bool("oppositeDragButton", true);
         dashCount = 0;
         if (persistency)
-            base.Tag = Tags.Persistent;
+            base.AddTag(Tags.Persistent);
         if (data.Bool("transitionUpdate", false) || entityToSpawn == EntityType.Player)
-            base.Tag = Tags.TransitionUpdate;
+            base.AddTag(Tags.TransitionUpdate);
         globalEntity = data.Bool("globalEntity", false);
         onlyOnBgTiles = data.Bool("onlyOnBgTiles", false);
         gridAligned = data.Bool("gridAligned", false);

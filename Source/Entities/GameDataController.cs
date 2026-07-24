@@ -80,8 +80,8 @@ public class GameDataController : Entity
         usingWatchtower = data.Attr("usingWatchtower", "KoseiHelper_usingWatchtower");
         playerSpriteScaleX = data.Attr("playerSpriteScaleX", "KoseiHelper_playerSpriteScaleXSlider");
         playerSpriteScaleY = data.Attr("playerSpriteScaleY", "KoseiHelper_playerSpriteScaleYSlider");
-        base.Tag = Tags.PauseUpdate;
-        base.Tag = Tags.TransitionUpdate;
+        base.AddTag(Tags.PauseUpdate);
+        base.AddTag(Tags.TransitionUpdate);
     }
 
     public override void Update()
