@@ -1,6 +1,9 @@
+using Celeste.Mod.Helpers;
 using Microsoft.Xna.Framework;
 using Monocle;
 using System;
+using System.Linq;
+using System.Reflection;
 using System.Xml;
 
 namespace Celeste.Mod.KoseiHelper;
@@ -112,6 +115,19 @@ public static class KoseiHelperUtils
         }
         Logger.Log(LogLevel.Warn, "KoseiHelper", $"Ease.Easer {easer} cannot be interpreted, using {defaultValue} instead");
         return defaultValue;
+    }
+
+    public static Type GetTypeFromString(string name)
+    {
+        Assembly assembly = FakeAssembly.GetFakeEntryAssembly();
+        // Full name
+        Type type = assembly.GetType(name);
+        if (type != null)
+            return type;
+
+        // Short name
+        Type[] matches = assembly.GetTypes().Where(t => t.Name.Equals(name, StringComparison.Ordinal)).ToArray();
+        return matches.Length == 1 ? matches[0] : null;
     }
 
     public static bool CheckFlag(Level level, string flag)

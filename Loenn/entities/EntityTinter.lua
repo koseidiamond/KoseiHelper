@@ -10,7 +10,7 @@ EntityTinter.placements = {
 	{
 		name = "EntityTinter",
 		data = {
-			affectedEntities = "Celeste.Glider",
+			affectedEntities = "Glider",
 			entityIDs = "",
 			tint = "FFFFFF",
 			allEntities = true,
@@ -36,7 +36,7 @@ EntityTinter.placements = {
 	{
 		name = "EntityTinterSlider",
 		data = {
-			affectedEntities = "Celeste.Glider",
+			affectedEntities = "Glider",
 			entityIDs = "",
 			tint = "FFFFFF",
 			allEntities = true,

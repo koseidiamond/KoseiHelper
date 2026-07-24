@@ -46,9 +46,9 @@ public class EntityTinter : Entity
         tint = KoseiHelperUtils.ParseHexColor(
             data.Values.TryGetValue("tint", out object tintColor) ? tintColor.ToString() : null, Calc.HexToColor("FFFFFF"));
         if (data.Bool("TransitionUpdate"))
-            base.Tag = Tags.TransitionUpdate;
+            base.AddTag(Tags.TransitionUpdate);
         if (data.Bool("Global"))
-            base.Tag = Tags.Global;
+            base.AddTag(Tags.Global);
         onlyOnce = data.Bool("onlyOnce", false);
         // data for the slider placement
         counter = data.Bool("counter", false);
@@ -61,17 +61,15 @@ public class EntityTinter : Entity
             data.Values.TryGetValue("maxColor", out object tintColor2) ? tintColor2.ToString() : null, Calc.HexToColor("FF0000"));
 
         // parsing lists
-        foreach (string path in data.Attr("affectedEntities", "Celeste.Glider")
-             .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
+        foreach (string path in data.Attr("affectedEntities", "Celeste.Glider").Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
         {
-            Type type = FakeAssembly.GetFakeEntryAssembly().GetType(path);
+            Type type = KoseiHelperUtils.GetTypeFromString(path);
             if (type != null)
                 affectedTypes.Add(type);
             else
                 Logger.Log(LogLevel.Warn, "KoseiHelper", $"Couldn't find type '{path}'.");
         }
-        foreach (string id in data.Attr("entityIDs", "")
-            .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
+        foreach (string id in data.Attr("entityIDs", "").Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
         {
             if (int.TryParse(id, out int parsed))
                 affectedIDs.Add(parsed);

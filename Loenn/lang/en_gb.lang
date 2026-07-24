@@ -175,7 +175,7 @@ entities.KoseiHelper/EntityTinter.placements.name.EntityTinter=Entity Tinter
 entities.KoseiHelper/EntityTinter.placements.description.EntityTinter=Tints entities with the specified color.\nOnly entities that use sprites or images work.\nVisuals drawn by code (like Dream Blocks) are not compatible!
 entities.KoseiHelper/EntityTinter.placements.name.EntityTinterSlider=Entity Tinter (Slider/Counter)
 entities.KoseiHelper/EntityTinter.placements.description.EntityTinterSlider=Tints entities with the specified colors, lerping between both, linked to a slider/counter.\nOnly entities that use sprites or images work.\nVisuals drawn by code (like Dream Blocks) are not compatible!
-entities.KoseiHelper/EntityTinter.attributes.description.affectedEntities=Comma-separated list of entity types.
+entities.KoseiHelper/EntityTinter.attributes.description.affectedEntities=Comma-separated list of entity types.\nYou can type the full name (e.g. Celeste.Glider) or just the final part of it (e.g. Glider).\nIf you have CelesteTAS enabled, you can click on an entity in-game to see its name.
 entities.KoseiHelper/EntityTinter.attributes.name.tint=Color
 entities.KoseiHelper/EntityTinter.attributes.description.tint=The tint of the entity.\nNote that this color is applied over the original color.\nNote that entities that have a black outline drawn with code will have a black base,\ntherefore the tint is applied differently and they can't become transparent.
 entities.KoseiHelper/EntityTinter.attributes.description.allEntities=Whether the Tinter should affect all entities of the given type in the room, or just the closest one.
@@ -189,16 +189,41 @@ entities.KoseiHelper/EntityTinter.attributes.description.image=Whether the tint 
 entities.KoseiHelper/EntityTinter.attributes.description.tiles=Whether the tint should affect the tiles of the entities.\nSome entities, like Dash Blocks or Floaty Space Blocks, use a tileset.
 entities.KoseiHelper/EntityTinter.attributes.description.animationIDs=Comma-separated list of animations that should be recolored.\nLeave empty if the sprite should always be tinted.\nIf you're using this field, save and reopen for a new option to appear.
 entities.KoseiHelper/EntityTinter.attributes.description.untintIfAnimChanged=Whether the entity should go back to its original colors if the current sprite animation is not on the animation ID list.\nUncheck this option to allow "marking" entities (like "held" Celeste.Gliders, or fragile clouds that respawned) with a color.
-entities.KoseiHelper/EntityTinter.attributes.description.counter=Whether the tinter should be linked to a session counter (integers) instead of a session slider (floats).
+entities.KoseiHelper/EntityTinter.attributes.description.counter=Whether the Tinter should be linked to a session counter (integers) instead of a session slider (floats).
 entities.KoseiHelper/EntityTinter.attributes.name.sliderCounterName=Slider/Counter Name
-entities.KoseiHelper/EntityTinter.attributes.description.sliderCounterName=The name of the slider or counter that is linked to this tinter.
+entities.KoseiHelper/EntityTinter.attributes.description.sliderCounterName=The name of the slider or counter that is linked to this Tinter.
 entities.KoseiHelper/EntityTinter.attributes.name.sliderCounterMinValue=Slider/Counter Min Value
 entities.KoseiHelper/EntityTinter.attributes.description.sliderCounterMinValue=The minimum value that will match the Color.
 entities.KoseiHelper/EntityTinter.attributes.name.sliderCounterMaxValue=Slider/Counter Max Value
 entities.KoseiHelper/EntityTinter.attributes.description.sliderCounterMaxValue=The maximum value that will match the Max Color.
 entities.KoseiHelper/EntityTinter.attributes.description.maxColor=The other color, used when the slider/counter has reached the maximum value.\nThe entity will lerp between Color and Max Color as the value changes.
-entities.KoseiHelper/EntityTinter.attributes.description.flag=Whether the tinter should wait for a certain flag to be true before applying the colors.\nIf the flag starts with "!", the tinter will wait for the flag to be false.\nNote that the tinter will only react to the Flag value on room enter/respawn unless Every Frame is checked!
-entities.KoseiHelper/EntityTinter.attributes.description.onlyOnce=Whether the tinter should remove itself after successfully recoloring the entities.\nUseful for improving performance.
+entities.KoseiHelper/EntityTinter.attributes.description.flag=Whether the Tinter should wait for a certain flag to be true before applying the colors.\nIf the flag starts with "!", the Tinter will wait for the flag to be false.\nNote that the Tinter will only react to the Flag value on room enter/respawn unless Every Frame is checked!
+entities.KoseiHelper/EntityTinter.attributes.description.onlyOnce=Whether the Tinter should remove itself after successfully recoloring the entities.\nUseful for improving performance.
+
+# Entity Resizer
+entities.KoseiHelper/EntityResizer.placements.name.EntityResizer=Entity Resizer
+entities.KoseiHelper/EntityResizer.placements.description.EntityResizer=Resizes entities to the specified scale.\nOnly some entities will work. Most entities that use tiles are not compatible either.
+entities.KoseiHelper/EntityResizer.placements.name.EntityResizerSlider=Entity Resizer (Slider/Counter)
+entities.KoseiHelper/EntityResizer.placements.description.EntityResizerSlider=Resizes entities with the specified scales, lerping between both, linked to a slider/counter.\nOnly some entities will work. Most entities that use tiles are not compatible either.
+entities.KoseiHelper/EntityResizer.attributes.description.affectedEntities=Comma-separated list of entity types.\nYou can type something and then click on the dropdown menu for a list of all vanilla entities that are compatible with the Resizer.\nYou can type the full name (e.g. Celeste.Bumper) or just the final part of it (e.g. Bumper).\nIf you have CelesteTAS enabled, you can click on an entity in-game to see its name.
+entities.KoseiHelper/EntityResizer.attributes.description.scale=The scale of the entity.\nNote that some entities do not work well, and only the sprite or only the colliders will be properly resized.
+entities.KoseiHelper/EntityResizer.attributes.description.maxScale=The maximum scale, used when the slider/counter has reached the maximum value.\nThe entity will lerp between Scale and Max Scale as the value changes.
+entities.KoseiHelper/EntityResizer.attributes.description.allEntities=Whether the Resizer should affect all entities of the given type in the room, or just the closest one.
+entities.KoseiHelper/EntityResizer.attributes.description.everyFrame=Whether the Resizer should try to affect the entity every frame.\nTurn this off if you don't need it for better performance.\n\nSome entities need this to work correctly, the vanilla ones are:\n- AngryOshiro\n- Booster\n- FlyFeather\n- FlutterBird\n- Glider\n- HeartGem/FakeHeart\n- Key\n- LightningBreakerBox\n- MrOshiroDoor\n- Refill\n- Seeker\n- Strawberry
+entities.KoseiHelper/EntityResizer.attributes.description.transitionUpdate=Whether the Resizer should work even while the player is transitioning between rooms.
+entities.KoseiHelper/EntityResizer.attributes.description.global=Whether the Resizer should have the global tag (and stay loaded even after leaving the room).
+entities.KoseiHelper/EntityResizer.attributes.description.entityIDs=Comma-separated list of entity IDs.\nUseful if you only want to affect specific entities.
+entities.KoseiHelper/EntityResizer.attributes.description.counter=Whether the Resizer should be linked to a session counter (integers) instead of a session slider (floats).
+entities.KoseiHelper/EntityResizer.attributes.name.sliderCounterName=Slider/Counter Name
+entities.KoseiHelper/EntityResizer.attributes.description.sliderCounterName=The name of the slider or counter that is linked to this Resizer.
+entities.KoseiHelper/EntityResizer.attributes.name.sliderCounterMinValue=Slider/Counter Min Value
+entities.KoseiHelper/EntityResizer.attributes.description.sliderCounterMinValue=The minimum value that will match the Scale.
+entities.KoseiHelper/EntityResizer.attributes.name.sliderCounterMaxValue=Slider/Counter Max Value
+entities.KoseiHelper/EntityResizer.attributes.description.sliderCounterMaxValue=The maximum value that will match the Max Scale.
+entities.KoseiHelper/EntityResizer.attributes.description.flag=Whether the Resizer should wait for a certain flag to be true before applying the scales.\nIf the flag starts with "!", the Resizer will wait for the flag to be false.\nNote that the Resizer will only react to the Flag value on room enter/respawn unless Every Frame is checked!
+entities.KoseiHelper/EntityResizer.attributes.description.onlyOnce=Whether the Resizer should remove itself after successfully recoloring the entities.\nUseful for improving performance.\nSome entities need this to work correctly, like PlaybackBillboard and StarJumpBlock.
+
+
 
 # Kill Theo On Touch Controller and Safe Theo Area
 entities.KoseiHelper/KillTheoOnTouchController.placements.name.KillTheoOnTouchController=Kill Theo On Touch Controller
