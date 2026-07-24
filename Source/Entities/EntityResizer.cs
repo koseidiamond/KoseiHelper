@@ -257,14 +257,14 @@ public class EntityResizer : Entity
 
         foreach (var pair in originalHitboxes)
         {
-            Hitbox hb = pair.Key;
+            Hitbox hitbox = pair.Key;
 
-            if (hb.Entity != null)
+            if (hitbox.Entity != null)
             {
-                hb.Width = pair.Value.Width;
-                hb.Height = pair.Value.Height;
-                hb.Left = pair.Value.Left;
-                hb.Top = pair.Value.Top;
+                hitbox.Width = pair.Value.Width;
+                hitbox.Height = pair.Value.Height;
+                hitbox.Left = pair.Value.Left;
+                hitbox.Top = pair.Value.Top;
             }
         }
         foreach (var pair in originalCircles)

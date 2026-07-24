@@ -65,8 +65,8 @@ public class GameDataController : Entity
         featherTime = data.Attr("featherTime", "KoseiHelper_featherTimeSlider");
         launched = data.Attr("launched", "KoseiHelper_launchedFlag");
         transitioning = data.Attr("transitioning", "KoseiHelper_transitioningFlag");
-        WindLevelX = data.Attr("WindLevelX", "KoseiHelper_horizontalWindLevelSlider");
-        WindLevelY = data.Attr("WindLevelY", "KoseiHelper_verticalWindLevelSlider");
+        WindLevelX = data.Attr("windLevelX", "KoseiHelper_horizontalWindLevelSlider");
+        WindLevelY = data.Attr("windLevelY", "KoseiHelper_verticalWindLevelSlider");
         demoDashing = data.Attr("demoDashing", "KoseiHelper_demoDashingFlag");
         forceMoveX = data.Attr("forceMoveX", "KoseiHelper_forceMoveXSlider");
         wallSlide = data.Attr("wallSlide", "KoseiHelper_wallSlideSlider");
