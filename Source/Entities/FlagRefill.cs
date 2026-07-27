@@ -27,7 +27,9 @@ public class FlagRefill : Entity
     private float respawnTimer;
     private string str;
     public float respawnTime = 2.5f;
-    public FlagRefill(Vector2 position, bool oneUse, float respawnTime, bool twoDashes) : base(position)
+    public string touchSound, returnSound;
+    public int originalDepth;
+    public FlagRefill(Vector2 position, bool oneUse, float respawnTime, bool twoDashes, string touchSound, string returnSound) : base(position)
     {
         base.Collider = new Hitbox(16f, 16f, -8f, -8f);
         base.Add(new PlayerCollider(new Action<Player>(this.OnPlayer), null, null));
@@ -45,6 +47,8 @@ public class FlagRefill : Entity
         this.sprite.CenterOrigin();
         base.Add(this.flash = new Sprite(GFX.Game, str + "flash"));
         this.flash.Add("flash", "", 0.05f);
+        this.touchSound = touchSound;
+        this.returnSound = returnSound;
         this.flash.OnFinish = delegate (string anim)
         {
             this.flash.Visible = false;
@@ -60,9 +64,10 @@ public class FlagRefill : Entity
         base.Add(this.sine = new SineWave(0.6f, 0f));
         this.sine.Randomize();
         this.UpdateY();
-        base.Depth = -100;
+        base.Depth = originalDepth = -100;
     }
-    public FlagRefill(EntityData data, Vector2 offset) : this(data.Position + offset, data.Bool("oneUse", false), data.Float("respawnTime", 2.5f), data.Bool("twoDashes", false))
+    public FlagRefill(EntityData data, Vector2 offset) : this(data.Position + offset, data.Bool("oneUse", false), data.Float("respawnTime", 2.5f), data.Bool("twoDashes", false),
+        data.Attr("touchSound", ""), data.Attr("returnSound", ""))
     {
         base.Collider = new Hitbox(16f, 16f, -8f, -8f);
         base.Add(new PlayerCollider(new Action<Player>(this.OnPlayer), null, null));
@@ -94,7 +99,9 @@ public class FlagRefill : Entity
         base.Add(this.sine = new SineWave(0.6f, 0f));
         this.sine.Randomize();
         this.UpdateY();
-        base.Depth = -100;
+        base.Depth = originalDepth = data.Int("depth", -100);
+        touchSound = data.Attr("touchSound", "");
+        returnSound = data.Attr("returnSound", "");
     }
     public override void Added(Scene scene)
     {
@@ -153,9 +160,12 @@ public class FlagRefill : Entity
             this.Collidable = true;
             this.sprite.Visible = true;
             this.outline.Visible = false;
-            base.Depth = -100;
+            base.Depth = originalDepth;
             this.wiggler.Start();
-            Audio.Play(this.twoDashes ? "event:/new_content/game/10_farewell/pinkdiamond_return" : "event:/game/general/diamond_return", this.Position);
+            if (string.IsNullOrEmpty(returnSound))
+                Audio.Play(this.twoDashes ? "event:/new_content/game/10_farewell/pinkdiamond_return" : "event:/game/general/diamond_return", this.Position);
+            else
+                Audio.Play(returnSound, this.Position);
             SceneAs<Level>().ParticlesFG.Emit(P_Regen, 16, this.Position, Vector2.One * 2f);
         }
     }
@@ -178,7 +188,10 @@ public class FlagRefill : Entity
     {
         if (KoseiHelperModule.Session.HasFlagDash == false)
         {
-            Audio.Play(this.twoDashes ? "event:/new_content/game/10_farewell/pinkdiamond_touch" : "event:/game/general/diamond_touch", this.Position);
+            if (string.IsNullOrEmpty(touchSound))
+                Audio.Play(this.twoDashes ? "event:/new_content/game/10_farewell/pinkdiamond_touch" : "event:/game/general/diamond_touch", this.Position);
+            else
+                Audio.Play(touchSound, this.Position);
             Input.Rumble(RumbleStrength.Medium, RumbleLength.Medium);
             this.Collidable = false;
             base.Add(new Coroutine(this.RefillRoutine(player), true));

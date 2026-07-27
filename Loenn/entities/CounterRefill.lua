@@ -1,7 +1,13 @@
+local mods = require("mods")
+local depths = mods.requireFromPlugin("libraries.depths")
+
 local CounterRefill = {}
 
 CounterRefill.name = "KoseiHelper/CounterRefill"
-CounterRefill.depth = 8999
+
+function CounterRefill.depth(room,entity)
+	return entity.depth
+end
 
 CounterRefill.placements = {
 	{
@@ -10,9 +16,20 @@ CounterRefill.placements = {
 			oneUse = false,
 			sprite = "objects/KoseiHelper/Refills/CounterRefill/",
 			decrease = false,
-			respawnTime = 2.5
+			respawnTime = 2.5,
+			returnSound = "",
+			touchSound = "",
+			depth = -100
 		}
 	}
+}
+
+CounterRefill.fieldInformation = {
+	depth = {
+        fieldType = "integer",
+        options = depths.addDepths(depths.getDepths(), {}),
+        editable = true
+    }
 }
 
 

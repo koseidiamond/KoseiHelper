@@ -1,5 +1,4 @@
 using Celeste.Mod.Entities;
-using Celeste.Mod.Helpers;
 using Microsoft.Xna.Framework;
 using Monocle;
 using System;
@@ -123,7 +122,6 @@ public class EntityTinter : Entity
         Level level = SceneAs<Level>();
         if (level == null)
             return;
-
         Color currentTint = GetCurrentTint(level);
         Entity closestEntity = null;
         float closestDistanceSq = float.MaxValue;
@@ -132,7 +130,6 @@ public class EntityTinter : Entity
         {
             if (!affectedTypes.Any(t => t.IsInstanceOfType(entity)))
                 continue; // filters by entity type
-
             if (affectedIDs.Count > 0 && !affectedIDs.Contains(entity.SourceId.ID))
                 continue; // filters by entity id
 
@@ -141,7 +138,6 @@ public class EntityTinter : Entity
             else
             {
                 float dist = Vector2.DistanceSquared(Position, entity.Position);
-
                 if (dist < closestDistanceSq)
                 {
                     closestDistanceSq = dist;
@@ -149,7 +145,6 @@ public class EntityTinter : Entity
                 }
             }
         }
-
         if (!allEntities && closestEntity != null)
             TintEntity(closestEntity, currentTint);
     }

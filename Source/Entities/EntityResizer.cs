@@ -112,15 +112,16 @@ public class EntityResizer : Entity
         float currentScale = GetCurrentScale(level);
         Entity closestEntity = null;
         float closestDistanceSq = float.MaxValue;
+
         foreach (Entity entity in level.Entities)
         {
             if (!affectedTypes.Any(t => t.IsInstanceOfType(entity)))
-                continue;
+                continue; // filters by entity type
             if (affectedIDs.Count > 0 && !affectedIDs.Contains(entity.SourceId.ID))
-                continue;
+                continue; // filters by entity id
 
             if (allEntities || affectedIDs.Count > 1)
-                ResizeEntity(entity, currentScale);
+                ResizeEntity(entity, currentScale); // resizes entities if multiple IDs are specified regardless of allEntities
             else
             {
                 float dist = Vector2.DistanceSquared(Position, entity.Position);

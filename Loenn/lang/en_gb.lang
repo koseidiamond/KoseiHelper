@@ -873,6 +873,9 @@ entities.KoseiHelper/FlagRefill.placements.description.FlagRefill=A flag will be
 entities.KoseiHelper/FlagRefill.attributes.description.sprite=The path to your custom sprite.\nIt needs flash and idle animations, an an outline image.
 entities.KoseiHelper/FlagRefill.attributes.description.oneUse=If the refill should disappear upon use or respawn after a while.
 entities.KoseiHelper/FlagRefill.attributes.description.respawnTime=The time that the refill takes to reappear after being consumed.
+entities.KoseiHelper/FlagRefill.attributes.description.depth=The depth of the refill while it is collectable.
+entities.KoseiHelper/FlagRefill.attributes.description.returnSound=The sound that the refill produces upon respawning.\nLeave empty to use the vanilla sounds.
+entities.KoseiHelper/FlagRefill.attributes.description.touchSound=The sound that the refill produces upon collection.\nLeave empty to use the vanilla sounds.
 
 #Counter Refill
 entities.KoseiHelper/CounterRefill.placements.name.CounterRefill=Counter Refill
@@ -881,6 +884,10 @@ entities.KoseiHelper/CounterRefill.attributes.description.sprite=The path to you
 entities.KoseiHelper/CounterRefill.attributes.description.oneUse=If the refill should disappear upon use or respawn after a while.
 entities.KoseiHelper/CounterRefill.attributes.description.decrease=If the counter should be decreased instead of increased.
 entities.KoseiHelper/CounterRefill.attributes.description.respawnTime=The time that the refill takes to reappear after being consumed.
+entities.KoseiHelper/CounterRefill.attributes.description.depth=The depth of the refill while it is collectable.
+entities.KoseiHelper/CounterRefill.attributes.description.returnSound=The sound that the refill produces upon respawning.\nLeave empty to use the vanilla sounds.
+entities.KoseiHelper/CounterRefill.attributes.description.touchSound=The sound that the refill produces upon collection.\nLeave empty to use the vanilla sounds.
+
 
 #Talk Component Customizator
 entities.KoseiHelper/TalkComponentCustomizator.placements.name.TalkComponentCustomizator=Talk Component Customizator
