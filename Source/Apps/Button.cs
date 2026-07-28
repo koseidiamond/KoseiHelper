@@ -1,7 +1,7 @@
 using Microsoft.Xna.Framework;
 using Monocle;
 using System;
-namespace Celeste.Mod.KoseiHelper.Other.Apps;
+namespace Celeste.Mod.KoseiHelper.Apps;
 
 public class Button
 {
@@ -16,14 +16,6 @@ public class Button
     public float TextureScale;
     public Color TextureColor;
     public bool IsCircle;
-
-    public Button(Rectangle bounds, string text, Action onClick, MTexture texture)
-    {
-        Bounds = bounds;
-        Text = text;
-        OnClick = onClick;
-        Texture = texture;
-    }
 
     public Button(Rectangle bounds, string text, Action onClick, Color? fillColor = null, Color? borderColor = null, Color? textColor = null, MTexture texture = null,
         bool renderBg = true, float textureSize = 1f, Color? textureColor = null, bool isCircle = false)

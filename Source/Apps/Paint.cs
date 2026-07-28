@@ -1,11 +1,13 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Celeste.Mod.Entities;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Monocle;
 using System;
 using System.Collections.Generic;
 using System.IO;
-namespace Celeste.Mod.KoseiHelper.Other.Apps;
+namespace Celeste.Mod.KoseiHelper.Apps;
 
+[CustomEntity("KoseiHelper/BerryPaint")]
 public class BerryPaint : App
 {
     private Rectangle canvas;
@@ -37,21 +39,36 @@ public class BerryPaint : App
         Rectangle
     }
     private DrawMode currentMode;
-    private bool noCanvas;
+    private bool noCanvas = false;
 
     public BerryPaint(EntityData data, Vector2 offset) : base(data, data.Position + offset)
     {
         // TODO: polish saving files. and maybe more tools like ellipses or text. clipboard too maybe??
         // TODO: darken button color while holding click
-        // TODO: fix minimize/maximize (it tries to drag which breaks stuff)
-        Tag = TagsExt.SubHUD;
-        AddTag(Tags.Persistent);
-        AddTag(Tags.Global);
-        AddTag(Tags.FrozenUpdate);
-        AddTag(Tags.TransitionUpdate);
+        // TODO: ensure you can't drag out of bounds
 
         window = new Rectangle((int)MInput.Mouse.Position.X - 4, (int)MInput.Mouse.Position.Y - 4, minWidth, minHeight);
         noCanvas = data.Bool("noCanvas", false);
+
+        drawnLines = new List<(Vector2, Vector2, Color, int)>();
+
+        currentColor = Black;
+        currentAlpha = 1f;
+        lineThickness = 2;
+        currentMode = DrawMode.Free;
+
+        InitializeButtons();
+    }
+
+    public BerryPaint(Vector2 position) : base(position)
+    {
+
+    }
+
+    public override void CreateApp()
+    {
+        base.CreateApp();
+        window = new Rectangle((int)MInput.Mouse.Position.X - 4, (int)MInput.Mouse.Position.Y - 4, minWidth, minHeight);
 
         drawnLines = new List<(Vector2, Vector2, Color, int)>();
 
@@ -71,7 +88,13 @@ public class BerryPaint : App
             drawnLines.Clear();
             Audio.Play("event:/ui/main/savefile_delete");
         });
-        buttonSaveDrawing = new Button(Rectangle.Empty, "Save", ExportCanvasAsPng);
+        buttonSaveDrawing = new Button(Rectangle.Empty, "Save", () =>
+        {
+            if (!noCanvas)
+                ExportCanvasAsPng();
+            else
+                SaveCanvasInMap(-99999); // todo unhardcode
+        });
         buttonThickness = new Button(Rectangle.Empty, "Size: 2", () =>
         {
             lineThickness = lineThickness % 8 + 1; buttonThickness.Text = $"Size: {lineThickness}";
@@ -103,6 +126,7 @@ public class BerryPaint : App
         buttons.Add(new Button(Rectangle.Empty, "Line", () => currentMode = DrawMode.Line));
         buttons.Add(new Button(Rectangle.Empty, "Circle", () => currentMode = DrawMode.Circle));
         buttons.Add(new Button(Rectangle.Empty, "Rect", () => currentMode = DrawMode.Rectangle));
+        buttons.Add(new Button(Rectangle.Empty, "Canvas", () => noCanvas = !noCanvas));
 
         // Bar buttons
         buttons.Add(buttonMinSize);
@@ -268,8 +292,6 @@ public class BerryPaint : App
         ActiveFont.Draw("Berry Paint", new Vector2(window.X + 6f, window.Y - 1f), Vector2.Zero, Vector2.One * 0.35f, White);
     }
 
-
-
     private void DrawCanvas()
     {
         if (!noCanvas)
@@ -397,11 +419,15 @@ public class BerryPaint : App
         int toolStart = 4 + paletteRows * paletteColumns;
         for (int i = 0; i < 4; i++)
         {
-            buttons[toolStart + i].Bounds = new Rectangle(buttonOffset + i * (buttonWidth + buttonOffset), buttonOffset + buttonHeight * 3 + paletteSpacing * paletteRows, buttonWidth, buttonHeight);
+            buttons[toolStart + i].Bounds =
+                new Rectangle(buttonOffset + i * (buttonWidth + buttonOffset), buttonOffset + buttonHeight * 3 + paletteSpacing * paletteRows, buttonWidth, buttonHeight);
         }
-        buttonMinSize.Bounds = new Rectangle(window.Width - smallButtonSize * 4 - (smallButtonSize / 4), -18, smallButtonSize, smallButtonSize);
+        buttons[toolStart + 4].Bounds =
+            new Rectangle(buttonOffset + 3 * (buttonWidth + buttonOffset), buttonOffset + buttonHeight + paletteSpacing * paletteRows, buttonWidth, 35);
+
+        buttonMinSize.Bounds = new Rectangle(window.Width - smallButtonSize * 4 - smallButtonSize / 4, -18, smallButtonSize, smallButtonSize);
         buttonMaxSize.Bounds = new Rectangle(window.Width - smallButtonSize * 2 - 12, -18, smallButtonSize, smallButtonSize);
-        buttonClose.Bounds = new Rectangle(window.Width - smallButtonSize - (smallButtonSize / 4), -18, smallButtonSize, smallButtonSize);
+        buttonClose.Bounds = new Rectangle(window.Width - smallButtonSize - smallButtonSize / 4, -18, smallButtonSize, smallButtonSize);
     }
 
 
@@ -474,5 +500,23 @@ public class BerryPaint : App
             device.SetRenderTargets(previousTargets);
             Logger.Error("KoseiHelper", $"Failed to save Berry Paint:\n{e}");
         }
+    }
+
+    private void SaveCanvasInMap(int depth)
+    {
+        Level level = SceneAs<Level>();
+        GraphicsDevice device = Draw.SpriteBatch.GraphicsDevice;
+        float scaleX = 320f / device.PresentationParameters.BackBufferWidth;
+        float scaleY = 180f / device.PresentationParameters.BackBufferHeight;
+        Vector2 worldPos = level.Camera.Position + new Vector2(canvas.X * scaleX, canvas.Y * scaleY);
+
+        List<(Vector2 from, Vector2 to, Color color, int thickness)> lines = new();
+        foreach (var line in drawnLines)
+        {
+            lines.Add((line.from * new Vector2(scaleX, scaleY), line.to * new Vector2(scaleX, scaleY), line.color, Math.Max(1, (int)Math.Round(line.thickness * scaleX))));
+        }
+
+        level.Add(new PaintDecal(worldPos, lines, depth));
+        Audio.Play("event:/ui/main/savefile_rename_start");
     }
 }

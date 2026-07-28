@@ -1,7 +1,7 @@
 using Celeste.Mod.Entities;
 using Microsoft.Xna.Framework;
 using Monocle;
-namespace Celeste.Mod.KoseiHelper.Other.Apps;
+namespace Celeste.Mod.KoseiHelper.Apps;
 
 [CustomEntity("KoseiHelper/App")]
 [Tracked]
@@ -45,9 +45,25 @@ public abstract class App : Entity
     protected Rectangle window = new Rectangle(50, 50, 600, 400);
 
     protected bool maximized;
+    protected bool focused;
 
     public App(EntityData data, Vector2 offset) : base(data.Position + offset)
     {
+        CreateApp();
+    }
+
+    public App(Vector2 position) : base(position)
+    {
+        CreateApp();
+    }
+
+    public virtual void CreateApp()
+    {
+        AddTag(TagsExt.SubHUD);
+        AddTag(Tags.Persistent);
+        AddTag(Tags.Global);
+        AddTag(Tags.FrozenUpdate);
+        AddTag(Tags.TransitionUpdate);
         buttonClose = new Button(new Rectangle(0, 0, 16, 16), "", () => RemoveSelf(), Transparent, Transparent, Transparent,
             texture: GFX.Gui["x"], false, 0.5f, Red, true);
         buttonMinSize = new Button(new Rectangle(0, 0, 16, 16), "", () => Minimize(), Transparent, Transparent, Transparent,
@@ -66,9 +82,9 @@ public abstract class App : Entity
         base.Added(scene);
         // Ensure the window spawns inside the bounds of the screen
         if ((int)MInput.Mouse.Position.X <= 0f)
-            window.X = (int)(0f);
+            window.X = (int)0f;
         if ((int)MInput.Mouse.Position.Y <= 0f)
-            window.Y = (int)(0f);
+            window.Y = (int)0f;
         if ((int)MInput.Mouse.Position.X >= 1920f - window.Width)
             window.X = (int)(1921f - window.Width);
         if ((int)MInput.Mouse.Position.Y >= 1080f - window.Height)

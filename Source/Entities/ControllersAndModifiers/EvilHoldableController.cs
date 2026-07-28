@@ -45,7 +45,7 @@ namespace Celeste.Mod.KoseiHelper.Entities
             if (player == null)
                 return;
 
-            
+
 
             if (player.Holding != null && KoseiHelperUtils.CheckFlag(level, flag))
             {
