@@ -12,7 +12,8 @@ EvilHoldableController.placements = {
 		dropIfNoStamina = false,
 		drainsDash = false,
 		sound = "event:/game/05_mirror_temple/eyebro_eyemove",
-		staminaDrainRate = 1
+		staminaDrainRate = 1,
+		flag = ""
 		}
 	}
 }

@@ -16,7 +16,8 @@ namespace Celeste.Mod.KoseiHelper.Entities
         public string sound;
         public float staminaDrainRate;
 
-        private bool dashUsed, sounded;
+        private bool dashUsed, soundPlayed;
+        public string flag;
 
         public EvilHoldableController(EntityData data, Vector2 offset) : base(data.Position + offset)
         {
@@ -26,6 +27,7 @@ namespace Celeste.Mod.KoseiHelper.Entities
             dropIfNoStamina = data.Bool("dropIfNoStamina", false);
             sound = data.Attr("sound", "event:/game/05_mirror_temple/eyebro_eyemove");
             staminaDrainRate = data.Float("staminaDrainRate", 1f);
+            flag = data.Attr("flag", "");
         }
 
         public override void Added(Scene scene)
@@ -40,37 +42,40 @@ namespace Celeste.Mod.KoseiHelper.Entities
             base.Update();
             Level level = SceneAs<Level>();
             Player player = level.Tracker.GetEntity<Player>();
-            if (player != null)
+            if (player == null)
+                return;
+
+            
+
+            if (player.Holding != null && KoseiHelperUtils.CheckFlag(level, flag))
             {
-                if (player.Holding != null)
+                if (!soundPlayed)
                 {
-                    if (!sounded)
-                    {
-                        Audio.Play(sound, player.TopCenter);
-                        sounded = true;
-                    }
-                    if (timeToKill >= 0f)
-                        cooldown -= Engine.DeltaTime;
-                    if (drainsStamina)
-                        player.Stamina -= 45.4545441f * Engine.DeltaTime * staminaDrainRate;
-                    if (drainsDash && dashUsed == false)
-                    {
-                        player.Dashes = Math.Max(0, player.Dashes - 1);
-                        dashUsed = true;
-                    }
-                    if (dropIfNoStamina && player.Stamina <= 0f)
-                        player.Drop();
+                    Audio.Play(sound, player.TopCenter);
+                    soundPlayed = true;
                 }
-                else
+                if (timeToKill >= 0f)
+                    cooldown -= Engine.DeltaTime;
+                if (drainsStamina)
+                    player.Stamina -= 45.4545441f * Engine.DeltaTime * staminaDrainRate;
+                if (drainsDash && dashUsed == false)
                 {
-                    dashUsed = false;
-                    if (timeToKill >= 0f)
-                        cooldown = timeToKill;
-                    sounded = false;
+                    player.Dashes = Math.Max(0, player.Dashes - 1);
+                    dashUsed = true;
                 }
-                if (cooldown <= 0 && timeToKill >= 0f)
-                    player.Die(player.Center);
+                if (dropIfNoStamina && player.Stamina <= 0f)
+                    player.Drop();
             }
+            else
+            {
+                dashUsed = false;
+                if (timeToKill >= 0f)
+                    cooldown = timeToKill;
+                soundPlayed = false;
+            }
+
+            if (cooldown <= 0 && timeToKill >= 0f)
+                player.Die(player.Center);
         }
 
         public override void Render()

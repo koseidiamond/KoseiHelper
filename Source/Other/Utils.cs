@@ -10,6 +10,9 @@ namespace Celeste.Mod.KoseiHelper;
 
 public static class KoseiHelperUtils
 {
+    /// <summary>
+    /// Returns a color (with or without alpha).
+    /// </summary>
     public static Color ParseHexColor(string hex, Color defaultColor) // For entities
     {
         if (string.IsNullOrEmpty(hex))
@@ -35,17 +38,21 @@ public static class KoseiHelperUtils
             }
         }
         catch
-        { // Default
+        {
+            Logger.Log(LogLevel.Warn, "KoseiHelper", $"The color {hex} cannot be read properly!");
         }
         return defaultColor;
     }
+
+    /// <summary>
+    /// Returns the full color from an xml attribute.
+    /// </summary>
     public static Color ParseHexColorWithAlpha(XmlAttributeCollection xml, string attrName, Color defaultColor) // For xmls
     {
         string hex = xml[attrName]?.Value;
         return ParseHexColor(hex, defaultColor);
     }
 
-    private const StringComparison Case = StringComparison.OrdinalIgnoreCase;
     public static readonly Ease.Easer HexIn = (float t) => t * t * t * t * t * t;
     public static readonly Ease.Easer HexOut = Ease.Invert(HexIn);
     public static readonly Ease.Easer HexInOut = Ease.Follow(HexIn, HexOut);
@@ -63,6 +70,9 @@ public static class KoseiHelperUtils
     public static readonly Ease.Easer DecInOut = Ease.Follow(DecIn, DecOut);
     public static readonly Ease.Easer Round = (float t) => (float)Math.Round(t);
 
+    /// <summary>
+    /// List of the most common ease types and a few extended ones, included in this class.
+    /// </summary>
     public static Ease.Easer Easer(string easer, Ease.Easer defaultValue = null)
     {
         if (string.IsNullOrWhiteSpace(easer)) return defaultValue;
@@ -117,6 +127,9 @@ public static class KoseiHelperUtils
         return defaultValue;
     }
 
+    /// <summary>
+    /// Tries to get the full entity name and if it fails, it gets only the last name (e.g. Celeste.Bumper -> Bumper).
+    /// </summary>
     public static Type GetTypeFromString(string name)
     {
         Assembly assembly = FakeAssembly.GetFakeEntryAssembly();
@@ -130,6 +143,12 @@ public static class KoseiHelperUtils
         return matches.Length == 1 ? matches[0] : null;
     }
 
+    /// <summary>
+    /// Checks if a flag exists and is true and returns true.
+    /// </summary>
+    /// <param name="level">The current level.</param>
+    /// <param name="flag">The flag name. It can be preceeded by a "!" to will check whether the flag is false instead.</param>
+    /// <returns></returns>
     public static bool CheckFlag(Level level, string flag)
     {
         string flagName;
@@ -137,6 +156,9 @@ public static class KoseiHelperUtils
         return string.IsNullOrEmpty(flag) || flag.StartsWith("!") ? !level.Session.GetFlag(flagName) : level.Session.GetFlag(flagName);
     }
 
+    /// <summary>
+    /// The vanilla PointBounce method customized to produce different effects on the player (refill dash/stamina, release from a red booster, or give coyote frames).
+    /// </summary>
     public static void PointBounce(Vector2 from, Player player, bool refillDash = true, bool refillStamina = true, bool releaseBooster = true,
         bool coyote = false)
     {
@@ -166,6 +188,9 @@ public static class KoseiHelperUtils
             player.jumpGraceTimer = 0.15f;
     }
 
+    /// <summary>
+    /// The vanilla SideBounce method customized to produce different effects on the player (refill dash/stamina, give coyote frames, etc).
+    /// </summary>
     public static bool SideBounce(int dir, float fromX, float fromY, Player player, bool refillDash = true, bool refillStamina = true, bool alwaysBoost = false,
         bool coyote = false, bool oppositeDirection = false, float launchSpeed = 240f)
     {
@@ -216,8 +241,12 @@ public static class KoseiHelperUtils
         };
     }
 
+    /// <summary>
+    /// Play a certain player animation if it's not the current animation already.
+    /// </summary>
     public static void PlayIfNot(Player player, string anim)
     {
-        player.Sprite.Play(anim);
+        if (player.Sprite.CurrentAnimationID != anim)
+            player.Sprite.Play(anim);
     }
 }

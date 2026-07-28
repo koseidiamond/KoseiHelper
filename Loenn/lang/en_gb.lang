@@ -457,6 +457,7 @@ entities.KoseiHelper/EvilHoldableController.attributes.description.drainsDash=Ho
 entities.KoseiHelper/EvilHoldableController.attributes.description.dropIfNoStamina=If the player runs out of stamina, they will drop the holdable.
 entities.KoseiHelper/EvilHoldableController.attributes.description.sound=The sound that evil holdables do when grabbed.
 entities.KoseiHelper/EvilHoldableController.attributes.description.staminaDrainRate=The speed at which the stamina is drained is multiplied by this factor.
+entities.KoseiHelper/EvilHoldableController.attributes.description.flag=The controller will only work while the flag with this name is true.\nYou can write "!flagName" to check for a false flag value instead.\nLeave empty for no flag required.
 
 # Spawn To Flag Controller
 entities.KoseiHelper/SpawnToFlagController.placements.name.SpawnToFlagController=Spawn To Flag Controller
