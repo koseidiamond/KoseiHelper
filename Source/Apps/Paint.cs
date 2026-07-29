@@ -11,7 +11,7 @@ namespace Celeste.Mod.KoseiHelper.Apps;
 public class BerryPaint : App
 {
     private Rectangle canvas;
-    private List<(Vector2 from, Vector2 to, Color color, int thickness)> drawnLines;
+    private List<PaintStroke> drawnLines;
 
     private Vector2? lastMousePos;
     private Vector2? lineStart;
@@ -50,7 +50,7 @@ public class BerryPaint : App
         window = new Rectangle((int)MInput.Mouse.Position.X - 4, (int)MInput.Mouse.Position.Y - 4, minWidth, minHeight);
         noCanvas = data.Bool("noCanvas", false);
 
-        drawnLines = new List<(Vector2, Vector2, Color, int)>();
+        drawnLines = new List<PaintStroke>();
 
         currentColor = Black;
         currentAlpha = 1f;
@@ -70,7 +70,7 @@ public class BerryPaint : App
         base.CreateApp();
         window = new Rectangle((int)MInput.Mouse.Position.X - 4, (int)MInput.Mouse.Position.Y - 4, minWidth, minHeight);
 
-        drawnLines = new List<(Vector2, Vector2, Color, int)>();
+        drawnLines = new List<PaintStroke>();
 
         currentColor = Black;
         currentAlpha = 1f;
@@ -251,7 +251,7 @@ public class BerryPaint : App
             if (currentMode == DrawMode.Free)
             {
                 if (lastMousePos.HasValue)
-                    drawnLines.Add((lastMousePos.Value, canvasRelative, currentColor * currentAlpha, lineThickness));
+                    drawnLines.Add(new PaintStroke(lastMousePos.Value, canvasRelative, currentColor * currentAlpha, lineThickness));
                 lastMousePos = canvasRelative;
             }
         }
@@ -263,7 +263,7 @@ public class BerryPaint : App
                 switch (currentMode)
                 {
                     case DrawMode.Line:
-                        drawnLines.Add((lineStart.Value, canvasRelative, currentColor * currentAlpha, lineThickness));
+                        drawnLines.Add(new PaintStroke(lineStart.Value, canvasRelative, currentColor * currentAlpha, lineThickness));
                         break;
 
                     case DrawMode.Circle:
@@ -311,9 +311,9 @@ public class BerryPaint : App
 
         Vector2 offset = new(canvas.X, canvas.Y);
 
-        foreach (var line in drawnLines)
+        foreach (PaintStroke line in drawnLines)
         {
-            Draw.Line(line.from + offset, line.to + offset, line.color, line.thickness);
+            Draw.Line(line.From + offset, line.To + offset, line.Color, line.Thickness);
         }
 
         Draw.SpriteBatch.End();
@@ -373,16 +373,13 @@ public class BerryPaint : App
         Draw.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone);
     }
 
-
     private void DrawButtons()
     {
         LayoutButtons();
         Vector2 offset = new(window.X, window.Y + 20);
-
         foreach (Button button in buttons)
             button.Render(offset);
     }
-
 
     private void LayoutButtons()
     {
@@ -430,7 +427,6 @@ public class BerryPaint : App
         buttonClose.Bounds = new Rectangle(window.Width - smallButtonSize - smallButtonSize / 4, -18, smallButtonSize, smallButtonSize);
     }
 
-
     private void AddCircle(Vector2 center, Vector2 edge, Color color)
     {
         float radius = Vector2.Distance(center, edge);
@@ -442,7 +438,7 @@ public class BerryPaint : App
             float angle2 = MathHelper.TwoPi * (i + 1) / segments;
             Vector2 point1 = center + new Vector2((float)Math.Cos(angle1), (float)Math.Sin(angle1)) * radius;
             Vector2 point2 = center + new Vector2((float)Math.Cos(angle2), (float)Math.Sin(angle2)) * radius;
-            drawnLines.Add((point1, point2, color, lineThickness));
+            drawnLines.Add(new PaintStroke(point1, point2, color, lineThickness));
         }
     }
 
@@ -453,14 +449,14 @@ public class BerryPaint : App
         Vector2 topRight = new(bottomRight.X, topLeft.Y);
         Vector2 bottomLeft = new(topLeft.X, bottomRight.Y);
 
-        drawnLines.Add((topLeft, topRight, color, lineThickness));
-        drawnLines.Add((topRight, bottomRight, color, lineThickness));
-        drawnLines.Add((bottomRight, bottomLeft, color, lineThickness));
-        drawnLines.Add((bottomLeft, topLeft, color, lineThickness));
+        drawnLines.Add(new PaintStroke(topLeft, topRight, color, lineThickness));
+        drawnLines.Add(new PaintStroke(topRight, bottomRight, color, lineThickness));
+        drawnLines.Add(new PaintStroke(bottomRight, bottomLeft, color, lineThickness));
+        drawnLines.Add(new PaintStroke(bottomLeft, topLeft, color, lineThickness));
     }
 
     public void UpdateCanvas()
-    { // uhhh, it just works
+    {
         canvas = new Rectangle(window.X, window.Y + 120, window.Width, window.Height - 120);
     }
 
@@ -479,9 +475,9 @@ public class BerryPaint : App
             device.Clear(White);
             Draw.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone);
 
-            foreach (var line in drawnLines)
+            foreach (PaintStroke line in drawnLines)
             {
-                Draw.Line(line.from, line.to, line.color, line.thickness);
+                Draw.Line(line.From, line.To, line.Color, line.Thickness);
             }
 
             Draw.SpriteBatch.End();
@@ -510,13 +506,13 @@ public class BerryPaint : App
         float scaleY = 180f / device.PresentationParameters.BackBufferHeight;
         Vector2 worldPos = level.Camera.Position + new Vector2(canvas.X * scaleX, canvas.Y * scaleY);
 
-        List<(Vector2 from, Vector2 to, Color color, int thickness)> lines = new();
-        foreach (var line in drawnLines)
+        List<PaintStroke> lines = new();
+        foreach (PaintStroke line in drawnLines)
         {
-            lines.Add((line.from * new Vector2(scaleX, scaleY), line.to * new Vector2(scaleX, scaleY), line.color, Math.Max(1, (int)Math.Round(line.thickness * scaleX))));
+            lines.Add(new PaintStroke(line.From * new Vector2(scaleX, scaleY), line.To * new Vector2(scaleX, scaleY), line.Color, Math.Max(1, (int)Math.Round(line.Thickness * scaleX))));
         }
 
-        level.Add(new PaintDecal(worldPos, lines, depth));
+        level.Add(new PaintDecal(worldPos, lines, depth, -1f));
         Audio.Play("event:/ui/main/savefile_rename_start");
     }
 }
