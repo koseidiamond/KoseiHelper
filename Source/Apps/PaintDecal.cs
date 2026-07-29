@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Celeste.Mod.Entities;
+using Microsoft.Xna.Framework;
 using Monocle;
 using System.Collections.Generic;
 namespace Celeste.Mod.KoseiHelper.Apps;
@@ -11,6 +12,8 @@ public struct PaintStroke(Vector2 from, Vector2 to, Color color, int thickness)
     public int Thickness = thickness;
 }
 
+[CustomEntity("KoseiHelper/PaintDecal")]
+[Tracked]
 public class PaintDecal : Entity
 {
     private readonly List<PaintStroke> lines;
@@ -42,7 +45,7 @@ public class PaintDecal : Entity
     {
         float alpha = 1f;
         if (initialTimer > 0f)
-            alpha = Ease.ExpoOut(Calc.Clamp(timer / initialTimer, 0f, 1f));
+            alpha = Ease.QuintOut(Calc.Clamp(timer / initialTimer, 0f, 1f));
         foreach (PaintStroke line in lines)
         {
             Draw.Line(Position + line.From, Position + line.To, line.Color * alpha, line.Thickness);
@@ -50,6 +53,8 @@ public class PaintDecal : Entity
     }
 }
 
+[CustomEntity("KoseiHelper/PaintBarrier")]
+[Tracked]
 public class PaintBarrier : Solid
 {
     private float timer;

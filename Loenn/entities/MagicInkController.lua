@@ -7,7 +7,9 @@ MagicInkController.placements = {
 	{
 		name = "MagicInkController",
 		data = {
-		timeToLive = 3
+		timeToLive = 3,
+		maxInk = 300,
+		regenerationRate = 60
 		}
 	}
 }

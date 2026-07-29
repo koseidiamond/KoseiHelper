@@ -18,7 +18,7 @@ public class BalloonTripCollectable : Entity
     private EntityID id;
     private bool canReappear = true;
     private bool collectionEffects = false;
-    public static ParticleType balloonParticle = Player.P_Split;
+    public static readonly ParticleType balloonParticle = new(Player.P_Split);
     public bool multiplicative;
     public BalloonTripCollectable(EntityData data, Vector2 offset, EntityID id)
     {
