@@ -120,10 +120,10 @@
 	</koseiHelper_balloonTripCollectable_Blue>
 	
 	<koseiHelper_inkCollectable path="objects/KoseiHelper/Refills/MagicInkCollectable/">
-		<Loop id="ink" path="ink" delay="0.05" frames="00-10"/>
+		<Loop id="ink" path="ink" delay="0.2" frames="00-10"/>
 	</koseiHelper_inkCollectable>
 	<koseiHelper_inkBottleCollectable path="objects/KoseiHelper/Refills/MagicInkCollectable/">
-		<Loop id="ink" path="inkBottle" delay="0.1" frames="00"/>
+		<Loop id="ink" path="inkBottle" delay="0.2" frames="00"/>
 	</koseiHelper_inkBottleCollectable>
 	
 </Sprites>

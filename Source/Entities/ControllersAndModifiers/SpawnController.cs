@@ -135,7 +135,7 @@ public class SpawnController : Entity
     private int entityID = 7388544; // Very high value so it doesn't conflict with other ids (hopefully)
     private List<EntityWithTTL> spawnedEntitiesWithTTL = new List<EntityWithTTL>();
     private List<Solid> spawnedSolids = new List<Solid>(); // So lava/ice solids can be removed
-    public static ParticleType poofParticle = TouchSwitch.P_FireWhite;
+    public static ParticleType poofParticle = new ParticleType(TouchSwitch.P_FireWhite);
     public Entity spawnedEntity = null;
     public static bool playerIsJumping;
     public bool globalEntity;

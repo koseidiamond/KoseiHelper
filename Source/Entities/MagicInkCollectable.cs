@@ -17,6 +17,8 @@ public class MagicInkCollectable : Entity
     public bool canOverfill;
     public float inkGiven;
     private Wiggler wiggler;
+    private BloomPoint bloom;
+    private SineWave sine;
     public MagicInkCollectable(EntityData data, Vector2 offset, EntityID id)
     {
         Depth = data.Int("depth", -100);
@@ -30,10 +32,10 @@ public class MagicInkCollectable : Entity
         sprite.CenterOrigin();
         sprite.Play("ink");
         base.Collider = new Hitbox(data.Float("hitboxWidth", 12f), data.Float("hitboxHeight", 12f), data.Float("hitboxXOffset", -6f), data.Float("hitboxYOffset", -6f));
-        base.Add(this.wiggler = Wiggler.Create(1f, 4f, delegate (float v)
-        {
-            this.sprite.Scale  = Vector2.One * (1f + v * 0.2f);
-        }, false, false));
+        base.Add(this.wiggler = Wiggler.Create(1f, 4f, delegate (float v) { this.sprite.Scale = Vector2.One * (1f + v * 0.2f); }, false, false));
+        base.Add(new MirrorReflection());
+        base.Add(this.bloom = new BloomPoint(0.3f, 16f));
+        base.Add(this.sine = new SineWave(0.6f, 0f));
         Add(new PlayerCollider(OnPlayer));
     }
 
@@ -50,6 +52,7 @@ public class MagicInkCollectable : Entity
         base.Update();
         Color rainbow = Calc.HsvToColor((SceneAs<Level>().TimeActive * 0.2f) % 1f, 1f, 1f);
         inkParticle.Color = inkParticle.Color2 = rainbow;
+        sprite.Y = (bloom.Y = sine.Value * 1f);
     }
 
     public void OnPlayer(Player player)
@@ -57,8 +60,7 @@ public class MagicInkCollectable : Entity
         MagicInkController controller = Scene.Tracker.GetEntity<MagicInkController>();
         if (controller == null)
             return;
-
-        this.wiggler.Start();
+        
         if ((canOverfill && controller.currentInk > controller.maxInk) || (!canOverfill && controller.currentInk >= controller.maxInk))
             return;
 
@@ -66,7 +68,7 @@ public class MagicInkCollectable : Entity
             controller.currentInk += inkGiven;
         else
             controller.currentInk = Math.Min(controller.currentInk + inkGiven, controller.maxInk);
-
+        wiggler.Start();
         Audio.Play(sound, Center);
         Input.Rumble(RumbleStrength.Medium, RumbleLength.Medium);
         Celeste.Freeze(0.05f);

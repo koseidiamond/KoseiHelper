@@ -11,7 +11,7 @@ public class DefrostableBlock : Solid
 {
     public bool defrosting;
     public bool big;
-    public static ParticleType defrostParticle = Cloud.P_Cloud;
+    public static ParticleType defrostParticle = new ParticleType(Cloud.P_Cloud);
     public string sound;
     public Sprite sprite;
     public string spriteID;

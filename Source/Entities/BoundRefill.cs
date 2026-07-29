@@ -8,9 +8,9 @@ namespace Celeste.Mod.KoseiHelper.Entities;
 [CustomEntity("KoseiHelper/BoundRefill")]
 public class BoundRefill : Entity
 {
-    public static ParticleType P_Shatter = Refill.P_ShatterTwo;
-    public static ParticleType P_Regen = Refill.P_RegenTwo;
-    public static ParticleType P_Glow = Refill.P_GlowTwo;
+    public static ParticleType P_Shatter = new ParticleType(Refill.P_ShatterTwo);
+    public static ParticleType P_Regen = new ParticleType(Refill.P_RegenTwo);
+    public static ParticleType P_Glow = new ParticleType(Refill.P_GlowTwo);
     private readonly BloomPoint bloom;
     private readonly VertexLight light;
     private readonly SineWave sine;

@@ -47,10 +47,10 @@ public class CustomPlayerSeeker : Actor
     public bool canShatterSpinners;
     public float freezeFramesWhenDashing;
 
-    public static ParticleType boosterParticle = Booster.P_Burst;
-    public static ParticleType boosterRedParticle = Booster.P_BurstRed;
-    public static ParticleType featherParticle = FlyFeather.P_Collect;
-    public static ParticleType seekerParticle = Seeker.P_Stomp;
+    public static ParticleType boosterParticle = new ParticleType(Booster.P_Burst);
+    public static ParticleType boosterRedParticle = new ParticleType(Booster.P_BurstRed);
+    public static ParticleType featherParticle = new ParticleType(FlyFeather.P_Collect);
+    public static ParticleType seekerParticle = new ParticleType(Seeker.P_Stomp);
 
 
     HashSet<Type> hazardTypes = new HashSet<Type>
