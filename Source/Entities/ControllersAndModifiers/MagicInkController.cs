@@ -9,7 +9,7 @@ namespace Celeste.Mod.KoseiHelper.Entities;
 
 [CustomEntity("KoseiHelper/MagicInkController")]
 [Tracked]
-public class MagicInkController : Entity
+public class MagicInkController : Entity // TODO ADD DRAWING SOUND
 {
     public float timeToLive;
     private readonly List<PaintStroke> currentStroke = new();
@@ -123,8 +123,10 @@ public class MagicInkController : Entity
     {
         List<PaintStroke> lines = new(currentStroke);
         ColliderList collider = BuildCollider(lines);
-        level.Add(new PaintDecal(Vector2.Zero, lines, inkDepth, timeToLive));
-        level.Add(new PaintBarrier(Vector2.Zero, collider, timeToLive, surfaceSoundIndex));
+        PaintDecal decal = new PaintDecal(Vector2.Zero, lines, inkDepth, timeToLive);
+        PaintBarrier barrier = new PaintBarrier(Vector2.Zero, collider, decal, timeToLive, surfaceSoundIndex);
+        level.Add(decal);
+        level.Add(barrier);
     }
 
     public void AddInk(float amount, bool canOverfill = false)
@@ -205,9 +207,7 @@ public class InkDisplay : Entity
 
         for (int i = 0; i < filled; i++)
         {
-            Color c = Calc.HsvToColor(
-                ((i / (float)width) + SceneAs<Level>().TimeActive * 0.2f) % 1f,
-                1f, 1f);
+            Color c = Calc.HsvToColor(((i / (float)width) + SceneAs<Level>().TimeActive * 0.2f) % 1f, 1f, 1f);
 
             Draw.Rect(position + i, position, 1, height, c);
         }
@@ -220,13 +220,9 @@ public class InkDisplay : Entity
 
             for (int i = 0; i < overfillWidth; i++)
             {
-                Color c = Calc.HsvToColor(
-                    (((width + i) / (float)width) + SceneAs<Level>().TimeActive * 0.2f) % 1f,
-                    1f, 1f);
-
+                Color c = Calc.HsvToColor((((width + i) / (float)width) + SceneAs<Level>().TimeActive * 0.2f) % 1f, 1f, 1f);
                 Draw.Rect(position + width + i, position, 1, height, c);
             }
-
             Draw.HollowRect(position + width, position, overfillWidth, height, Color.White);
         }
     }
