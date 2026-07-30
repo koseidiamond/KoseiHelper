@@ -4,7 +4,6 @@ local depths = mods.requireFromPlugin("libraries.depths")
 local MagicInkCollectable = {}
 
 MagicInkCollectable.name = "KoseiHelper/MagicInkCollectable"
-
 MagicInkCollectable.texture = "objects/KoseiHelper/Refills/MagicInkCollectable/ink00"
 
 function MagicInkCollectable.texture(room, entity)

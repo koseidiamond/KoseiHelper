@@ -13,18 +13,25 @@ public class MagicInkController : Entity
 {
     public float timeToLive;
     private readonly List<PaintStroke> currentStroke = new();
-
     private Vector2? lastMouse;
-    private const int thickness = 8;
+    public int thickness;
     private Color CurrentColor;
     private bool clearNextFrame;
     public float currentInk, maxInk, regenerationRate;
+    private int surfaceSoundIndex;
+    public string flag;
+    public int inkDepth;
+
 
     public MagicInkController(EntityData data, Vector2 offset) : base(data.Position + offset)
     {
         timeToLive = data.Float("timeToLive", 3f);
         maxInk = data.Float("maxInk", 300f);
         regenerationRate = data.Float("regenerationRate", 60f);
+        thickness = data.Int("thickness", 8);
+        surfaceSoundIndex = data.Int("surfaceSoundIndex", 32);
+        flag = data.Attr("flag", "");
+        inkDepth = data.Int("depth", 1);
         currentInk = maxInk;
         base.AddTag(Tags.TransitionUpdate);
     }
@@ -32,8 +39,8 @@ public class MagicInkController : Entity
     public override void Added(Scene scene)
     {
         base.Added(scene);
-
-        scene.Add(new InkDisplay());
+        if (KoseiHelperUtils.CheckFlag(scene as Level, flag))
+            scene.Add(new InkDisplay());
     }
 
     public override void Update()
@@ -43,38 +50,48 @@ public class MagicInkController : Entity
         Level level = SceneAs<Level>();
         if (level == null) return;
 
+        // add display if it wasn't added yet because of the flag
+        if (!KoseiHelperUtils.CheckFlag(level, flag)) return;
+        if (level.Tracker.GetEntity<InkDisplay>() == null)
+            level.Add(new InkDisplay());
+
         if (!MInput.Mouse.CheckLeftButton && !(level.Tracker.CountEntities<PaintDecal>() > 0 || level.Tracker.CountEntities<PaintBarrier>() > 0) && currentInk < maxInk)
             currentInk = Math.Min(maxInk, currentInk + regenerationRate * Engine.DeltaTime);
 
-        CurrentColor = Calc.HsvToColor((level.TimeActive * 0.2f) % 1f, 1f, 1f);
+        CurrentColor = Calc.HsvToColor((level.TimeActive * 0.25f) % 1f, 1f, 1f);
         Vector2 mouse = MInput.Mouse.Position;
         float scaleX = 320f / Engine.Graphics.GraphicsDevice.PresentationParameters.BackBufferWidth;
         float scaleY = 180f / Engine.Graphics.GraphicsDevice.PresentationParameters.BackBufferHeight;
-        Vector2 worldMouse = level.Camera.Position + new Vector2(mouse.X * scaleX, mouse.Y * scaleY);
+        Vector2 screenMouse = level.Camera.Position + new Vector2(mouse.X * scaleX, mouse.Y * scaleY);
 
         if (MInput.Mouse.PressedLeftButton)
         {
             currentStroke.Clear();
-            lastMouse = worldMouse;
+            lastMouse = screenMouse;
         }
 
         if (MInput.Mouse.CheckLeftButton)
         {
             if (lastMouse.HasValue)
             {
-                float distance = Vector2.Distance(lastMouse.Value, worldMouse);
+                float distance = Vector2.Distance(lastMouse.Value, screenMouse);
                 if (distance > 0f && currentInk > 0f)
                 {
                     float usableDistance = Math.Min(distance, currentInk);
-                    Vector2 end = Vector2.Lerp(lastMouse.Value, worldMouse, usableDistance / distance);
-                    currentStroke.Add(new PaintStroke(lastMouse.Value, end, CurrentColor, thickness));
-                    currentInk -= usableDistance;
+                    Vector2 end = Vector2.Lerp(lastMouse.Value, screenMouse, usableDistance / distance);
+
+                    if (!IsInPreventionArea(lastMouse.Value) && !IsInPreventionArea(end))
+                    {
+                        currentStroke.Add(new PaintStroke(lastMouse.Value, end, CurrentColor, thickness));
+                        currentInk -= usableDistance;
+                    }
+
                     lastMouse = end;
                 }
 
             }
             else
-                lastMouse = worldMouse;
+                lastMouse = screenMouse;
         }
 
         if (clearNextFrame)
@@ -82,7 +99,6 @@ public class MagicInkController : Entity
             currentStroke.Clear();
             clearNextFrame = false;
         }
-
         if (MInput.Mouse.ReleasedLeftButton)
         {
             if (currentStroke.Count > 0)
@@ -107,8 +123,8 @@ public class MagicInkController : Entity
     {
         List<PaintStroke> lines = new(currentStroke);
         ColliderList collider = BuildCollider(lines);
-        level.Add(new PaintDecal(Vector2.Zero, lines, 1, timeToLive));
-        level.Add(new PaintBarrier(Vector2.Zero, collider, timeToLive));
+        level.Add(new PaintDecal(Vector2.Zero, lines, inkDepth, timeToLive));
+        level.Add(new PaintBarrier(Vector2.Zero, collider, timeToLive, surfaceSoundIndex));
     }
 
     public void AddInk(float amount, bool canOverfill = false)
@@ -129,29 +145,55 @@ public class MagicInkController : Entity
             for (int i = 0; i <= steps; i++)
             {
                 Vector2 p = Vector2.Lerp(line.From, line.To, i / (float)steps);
-
                 list.Add(new Hitbox(line.Thickness, line.Thickness, p.X - line.Thickness / 2f, p.Y - line.Thickness / 2f));
             }
         }
         return list;
     }
+
+    private bool IsInPreventionArea(Vector2 position)
+    {
+        foreach (MagicPreventionArea area in Scene.Tracker.GetEntities<MagicPreventionArea>())
+        {
+            if (area.Collider != null && area.Collider.Collide(position))
+                return true;
+        }
+
+        return false;
+    }
 }
 
+[CustomEntity("KoseiHelper/InkDisplay")]
+[Tracked]
 public class InkDisplay : Entity
 {
+    // The reason for this class to exist is to render it in the SubHUD, unlike the ink which is not HUD
     public InkDisplay()
     {
         base.AddTag(Tags.TransitionUpdate);
         base.AddTag(TagsExt.SubHUD);
     }
+
+    public override void Update()
+    {
+        base.Update();
+        Level level = SceneAs<Level>();
+        MagicInkController controller = level.Tracker.GetEntity<MagicInkController>();
+        if (controller == null)
+            return;
+
+        if (!KoseiHelperUtils.CheckFlag(level, controller.flag))
+            RemoveSelf();
+    }
+
     public override void Render()
     {
         base.Render();
         const int position = 20;
         const int width = 160;
         const int height = 12;
-
-        MagicInkController controller = Scene.Tracker.GetEntity<MagicInkController>();
+        Level level = SceneAs<Level>();
+        MagicInkController controller = level.Tracker.GetEntity<MagicInkController>();
         if (controller == null)
             return;
 
@@ -169,7 +211,6 @@ public class InkDisplay : Entity
 
             Draw.Rect(position + i, position, 1, height, c);
         }
-
         Draw.HollowRect(position, position, width, height, Color.White);
 
         // Overfill

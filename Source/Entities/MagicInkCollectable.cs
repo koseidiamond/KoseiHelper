@@ -50,7 +50,8 @@ public class MagicInkCollectable : Entity
     public override void Update()
     {
         base.Update();
-        Color rainbow = Calc.HsvToColor((SceneAs<Level>().TimeActive * 0.2f) % 1f, 1f, 1f);
+        Level level = SceneAs<Level>();
+        Color rainbow = Calc.HsvToColor((level.TimeActive * 0.25f) % 1f, 1f, 1f);
         inkParticle.Color = inkParticle.Color2 = rainbow;
         sprite.Y = (bloom.Y = sine.Value * 1f);
     }
@@ -60,7 +61,7 @@ public class MagicInkCollectable : Entity
         MagicInkController controller = Scene.Tracker.GetEntity<MagicInkController>();
         if (controller == null)
             return;
-        
+
         if ((canOverfill && controller.currentInk > controller.maxInk) || (!canOverfill && controller.currentInk >= controller.maxInk))
             return;
 

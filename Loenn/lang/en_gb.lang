@@ -223,7 +223,28 @@ entities.KoseiHelper/EntityResizer.attributes.description.sliderCounterMaxValue=
 entities.KoseiHelper/EntityResizer.attributes.description.flag=Whether the Resizer should wait for a certain flag to be true before applying the scales.\nIf the flag starts with "!", the Resizer will wait for the flag to be false.\nNote that the Resizer will only react to the Flag value on room enter/respawn unless Every Frame is checked!
 entities.KoseiHelper/EntityResizer.attributes.description.onlyOnce=Whether the Resizer should remove itself after successfully recoloring the entities.\nUseful for improving performance.\nSome entities need this to work correctly, like PlaybackBillboard and StarJumpBlock.
 
-
+# Magic Ink
+# Prevention Areas
+entities.KoseiHelper/MagicPreventionArea.placements.name.MagicPreventionArea=Magic Prevention Area
+entities.KoseiHelper/MagicPreventionArea.placements.description.MagicPreventionArea=Prevents the player from drawing with magic ink inside this area.
+#Collectables
+entities.KoseiHelper/MagicInkCollectable.placements.name.MagicInkCollectable=Magic Ink Collectable
+entities.KoseiHelper/MagicInkCollectable.placements.description.MagicInkCollectable=Restores a certain amount of magic ink.
+entities.KoseiHelper/MagicInkCollectable.attributes.description.depth=The depth at which the sprite is rendered.
+entities.KoseiHelper/MagicInkCollectable.attributes.description.inkGiven=How much magic ink the collectable should give.
+entities.KoseiHelper/MagicInkCollectable.attributes.description.canOverfill=Whether the collectable should be able to extend the ink beyond the maximum normal limit.\nIf you're already overfilled with ink, you can't overfill again.
+entities.KoseiHelper/MagicInkCollectable.attributes.description.spriteID=The id or tag of the sprite in your Sprites.xml.
+entities.KoseiHelper/MagicInkCollectable.attributes.description.sound=The sound played upon collection.
+entities.KoseiHelper/MagicInkCollectable.attributes.description.canReappear=Whether the collectable should stay collected.
+# Controller
+entities.KoseiHelper/MagicInkController.placements.name.MagicInkController=Magic Ink Controller
+entities.KoseiHelper/MagicInkController.placements.description.MagicInkController=Allows the player to draw solid magical paintstrokes with the mouse that disappear with time.
+entities.KoseiHelper/MagicInkController.attributes.description.timeToLive=The time before each paintstroke disappears.
+entities.KoseiHelper/MagicInkController.attributes.description.maxInk=The maximum amount of ink that the player can carry.
+entities.KoseiHelper/MagicInkController.attributes.description.regenerationRate=How much ink per second is regenerated.\nLeave at 0 if you don't want natural regen.
+entities.KoseiHelper/MagicInkController.attributes.description.thickness=The thickness of the paintstrokes.
+entities.KoseiHelper/MagicInkController.attributes.description.flag=The Magic Ink will only be available when this flag is true.\nYou can invert the flag with the preffix "!".\nLeave this field empty if you don't need any flags.
+entities.KoseiHelper/MagicInkController.attributes.description.depth=The depth at which paintstrokes (and magic prevention areas) are drawn.
 
 # Kill Theo On Touch Controller and Safe Theo Area
 entities.KoseiHelper/KillTheoOnTouchController.placements.name.KillTheoOnTouchController=Kill Theo On Touch Controller

@@ -58,7 +58,7 @@ public class PaintDecal : Entity
 public class PaintBarrier : Solid
 {
     private float timer;
-    public PaintBarrier(Vector2 position, Collider collider, float ttl) : base(position, 1, 1, safe: false)
+    public PaintBarrier(Vector2 position, Collider collider, float ttl, int surfaceSoundIndex = 8) : base(position, 1, 1, safe: false)
     {
         Collider = collider;
         timer = ttl;
@@ -68,7 +68,7 @@ public class PaintBarrier : Solid
             base.AddTag(Tags.Global);
         }
         base.AddTag(Tags.TransitionUpdate);
-        SurfaceSoundIndex = 8;
+        SurfaceSoundIndex = surfaceSoundIndex;
     }
 
     public override void Update()
