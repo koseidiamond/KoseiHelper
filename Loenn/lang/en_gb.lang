@@ -1510,7 +1510,7 @@ triggers.KoseiHelper/MultinodeCameraTrigger.attributes.description.maxSmoothingD
 # MagicInkTrigger
 triggers.KoseiHelper/MagicInkTrigger.placements.name.MagicInkTrigger=Magic Ink Trigger
 triggers.KoseiHelper/MagicInkTrigger.placements.description.MagicInkTrigger=Restores (or substracts) some amount of magic ink.\nUse with a Magic Ink Controller.
-triggers.KoseiHelper/MagicInkTrigger.attributes.description.onlyOnce=Whether the trigger should disappear upon exiting it.
+triggers.KoseiHelper/MagicInkTrigger.attributes.description.onlyOnce=Whether the trigger should disappear upon giving/substracting ink once.
 triggers.KoseiHelper/MagicInkTrigger.attributes.description.flag=The trigger will only add/substract ink while the flag is true.\nLeave empty for no flag required.
 triggers.KoseiHelper/MagicInkTrigger.attributes.description.triggerMode=Whether the ink should be given when the player enters the trigger (big amounts) or while the player is inside (small amounts).
 triggers.KoseiHelper/MagicInkTrigger.attributes.description.inkAmount=The amount of ink that should be given or substracted (negative number).
