@@ -24,10 +24,21 @@ MagicInkCollectable.placements = {
 		data = {
 			depth = -100,
 			inkGiven = 100,
-			canOverfill = true,
+			canOverfill = false,
 			spriteID = "koseiHelper_inkCollectable",
 			sound = "event:/game/general/diamond_touch",
 			canReappear = true
+		}
+	},
+	{
+		name = "MagicInkPotion",
+		data = {
+			depth = -100,
+			inkGiven = 200,
+			canOverfill = true,
+			spriteID = "koseiHelper_inkBottleCollectable",
+			sound = "event:/game/general/diamond_touch",
+			canReappear = false
 		}
 	}
 }

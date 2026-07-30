@@ -230,14 +230,16 @@ entities.KoseiHelper/EntityResizer.attributes.description.onlyOnce=Whether the R
 entities.KoseiHelper/MagicPreventionArea.placements.name.MagicPreventionArea=Magic Prevention Area
 entities.KoseiHelper/MagicPreventionArea.placements.description.MagicPreventionArea=Prevents the player from drawing with magic ink inside this area.
 #Collectables
-entities.KoseiHelper/MagicInkCollectable.placements.name.MagicInkCollectable=Magic Ink Collectable
+entities.KoseiHelper/MagicInkCollectable.placements.name.MagicInkCollectable=Magic Ink Collectable (Orb)
+entities.KoseiHelper/MagicInkCollectable.placements.name.MagicInkPotion=Magic Ink Collectable (Potion)
 entities.KoseiHelper/MagicInkCollectable.placements.description.MagicInkCollectable=Restores a certain amount of magic ink.
+entities.KoseiHelper/MagicInkCollectable.placements.description.MagicInkPotion=Restores a certain amount of magic ink.
 entities.KoseiHelper/MagicInkCollectable.attributes.description.depth=The depth at which the sprite is rendered.
 entities.KoseiHelper/MagicInkCollectable.attributes.description.inkGiven=How much magic ink the collectable should give.
 entities.KoseiHelper/MagicInkCollectable.attributes.description.canOverfill=Whether the collectable should be able to extend the ink beyond the maximum normal limit.\nIf you're already overfilled with ink, you can't overfill again.
 entities.KoseiHelper/MagicInkCollectable.attributes.description.spriteID=The id or tag of the sprite in your Sprites.xml.
 entities.KoseiHelper/MagicInkCollectable.attributes.description.sound=The sound played upon collection.
-entities.KoseiHelper/MagicInkCollectable.attributes.description.canReappear=Whether the collectable should stay collected.
+entities.KoseiHelper/MagicInkCollectable.attributes.description.canReappear=Whether the collectable should reappear after three seconds.
 # Controller
 entities.KoseiHelper/MagicInkController.placements.name.MagicInkController=Magic Ink Controller
 entities.KoseiHelper/MagicInkController.placements.description.MagicInkController=Allows the player to draw solid magical paintstrokes with the mouse that disappear with time.
