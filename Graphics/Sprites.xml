@@ -121,9 +121,11 @@
 	
 	<koseiHelper_inkCollectable path="objects/KoseiHelper/Refills/MagicInkCollectable/">
 		<Loop id="ink" path="ink" delay="0.2" frames="00-10"/>
+		<Loop id="outline" path="outline" delay="0.25" frames="00,01"/>
 	</koseiHelper_inkCollectable>
 	<koseiHelper_inkBottleCollectable path="objects/KoseiHelper/Refills/MagicInkCollectable/">
 		<Loop id="ink" path="inkBottle" delay="0.2" frames="00"/>
+		<Loop id="outline" path="outlineBottle" delay="0.25" frames="00,01"/>
 	</koseiHelper_inkBottleCollectable>
 	
 </Sprites>

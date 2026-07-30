@@ -1,7 +1,7 @@
 using Celeste.Mod.Entities;
 using Microsoft.Xna.Framework;
 using Monocle;
-using System;
+using System.Collections;
 
 namespace Celeste.Mod.KoseiHelper.Entities.Crossover;
 
@@ -19,6 +19,8 @@ public class MagicInkCollectable : Entity
     private Wiggler wiggler;
     private BloomPoint bloom;
     private SineWave sine;
+    private float respawnTime = 3f;
+    private bool collected;
     public MagicInkCollectable(EntityData data, Vector2 offset, EntityID id)
     {
         Depth = data.Int("depth", -100);
@@ -65,20 +67,39 @@ public class MagicInkCollectable : Entity
         if ((canOverfill && controller.currentInk > controller.maxInk) || (!canOverfill && controller.currentInk >= controller.maxInk))
             return;
 
-        if (canOverfill)
-            controller.currentInk += inkGiven;
-        else
-            controller.currentInk = Math.Min(controller.currentInk + inkGiven, controller.maxInk);
+        controller.AddInk(inkGiven, canOverfill);
+        //controller.investedInk -= inkGiven;
+
         wiggler.Start();
         Audio.Play(sound, Center);
         Input.Rumble(RumbleStrength.Medium, RumbleLength.Medium);
         Celeste.Freeze(0.05f);
         SceneAs<Level>().ParticlesBG.Emit(inkParticle, 6, Center, Vector2.One * 4f);
 
-        RemoveSelf();
+        if (canReappear)
+        {
+            collected = true;
+            sprite.Play("outline");
+            Collidable = false;
 
-        if (!canReappear)
-            SceneAs<Level>().Session.DoNotLoad.Add(id);
+            Add(new Coroutine(RespawnRoutine()));
+        }
+        else
+        {
+            RemoveSelf();
+        }
+    }
+
+    private IEnumerator RespawnRoutine()
+    {
+        yield return 3f;
+
+        collected = false;
+        sprite.Play("ink");
+        Collidable = true;
+
+        Audio.Play("event:/game/general/diamond_return", Center);
+        wiggler.Start();
     }
 
     /*public override void Render()

@@ -17,7 +17,8 @@ MagicInkController.placements = {
 		thickness = 8,
 		flag = "",
 		depth = 1,
-		surfaceSoundIndex = 32
+		surfaceSoundIndex = 32,
+		recoverInkUponShattering = true
 		}
 	}
 }

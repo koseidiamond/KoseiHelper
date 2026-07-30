@@ -1,9 +1,9 @@
 ﻿using Celeste.Mod.Entities;
+using Celeste.Mod.KoseiHelper.Entities;
 using Celeste.Mod.KoseiHelper.NemesisGun;
 using Microsoft.Xna.Framework;
 using Monocle;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 namespace Celeste.Mod.KoseiHelper.Apps;
 
@@ -59,7 +59,7 @@ public class PaintDecal : Entity
     {
         float alpha = 1f;
         if (initialTimer > 0f)
-            alpha = Ease.QuintOut(Calc.Clamp(timer / initialTimer, 0f, 1f));
+            alpha = KoseiHelperUtils.DecOut(Calc.Clamp(timer / initialTimer, 0f, 1f));
         foreach (PaintStroke line in lines)
         {
             Draw.Line(Position + line.From, Position + line.To, line.Color * alpha, line.Thickness);
@@ -97,11 +97,13 @@ public class PaintBarrier : Solid
 {
     private float timer;
     public PaintDecal Decal { get; set; }
-    public PaintBarrier(Vector2 position, Collider collider, PaintDecal decal, float ttl, int surfaceSoundIndex = 8) : base(position, 1, 1, safe: false)
+    public float InkCost { get; }
+    public PaintBarrier(Vector2 position, Collider collider, PaintDecal decal, float ttl, int surfaceSoundIndex = 8, float inkCost = 0) : base(position, 1, 1, safe: false)
     {
         Collider = collider;
         Decal = decal;
         timer = ttl;
+        InkCost = inkCost;
         if (timer == -1f)
         {
             base.AddTag(Tags.Persistent);
@@ -109,6 +111,7 @@ public class PaintBarrier : Solid
         }
         base.AddTag(Tags.TransitionUpdate);
         SurfaceSoundIndex = surfaceSoundIndex;
+        InkCost = inkCost;
     }
 
     public override void Update()
@@ -118,6 +121,11 @@ public class PaintBarrier : Solid
             timer -= Engine.DeltaTime;
         if (timer <= 0 && timer > -1f)
         {
+            if (Scene.Tracker.GetEntity<MagicInkController>() is MagicInkController controller)
+            {
+                controller.spentInk -= InkCost;
+                controller.spentInk = Math.Max(0f, controller.spentInk);
+            }
             RemoveSelf();
             return;
         }
@@ -169,6 +177,14 @@ public class PaintBarrier : Solid
 
     private void Break(Vector2 dir)
     {
+        if (Scene.Tracker.GetEntity<MagicInkController>() is MagicInkController controller)
+        {
+            controller.spentInk -= Math.Min(InkCost, controller.spentInk);
+            controller.spentInk = Math.Max(0f, controller.spentInk);
+
+            if (controller.recoverInkUponShattering)
+                controller.currentInk += Math.Min(InkCost, controller.spentInk);
+        }
         Decal?.Shatter(dir);
         RemoveSelf();
     }

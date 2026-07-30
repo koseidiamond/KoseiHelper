@@ -1,16 +1,16 @@
 using Celeste.Mod.Entities;
 using Celeste.Mod.KoseiHelper.Apps;
+using FMOD.Studio;
 using Microsoft.Xna.Framework;
 using Monocle;
 using System;
 using System.Collections.Generic;
-using FMOD.Studio;
 
 namespace Celeste.Mod.KoseiHelper.Entities;
 
 [CustomEntity("KoseiHelper/MagicInkController")]
 [Tracked]
-public class MagicInkController : Entity // TODO ADD DRAWING SOUND
+public class MagicInkController : Entity
 {
     public float timeToLive;
     private readonly List<PaintStroke> currentStroke = new();
@@ -18,11 +18,14 @@ public class MagicInkController : Entity // TODO ADD DRAWING SOUND
     public int thickness;
     private Color CurrentColor;
     private bool clearNextFrame;
-    public float currentInk, maxInk, regenerationRate;
+    public float currentInk, spentInk, maxInk, regenerationRate;
     private int surfaceSoundIndex;
     public string flag;
     public int inkDepth;
     private static EventInstance drawingSound;
+    public const float cooldown = 1f;
+    public float regenerationCooldown = cooldown;
+    public bool recoverInkUponShattering;
 
     public MagicInkController(EntityData data, Vector2 offset) : base(data.Position + offset)
     {
@@ -33,6 +36,7 @@ public class MagicInkController : Entity // TODO ADD DRAWING SOUND
         surfaceSoundIndex = data.Int("surfaceSoundIndex", 32);
         flag = data.Attr("flag", "");
         inkDepth = data.Int("depth", 1);
+        recoverInkUponShattering = data.Bool("recoverInkUponShattering", true);
         currentInk = maxInk;
         base.AddTag(Tags.TransitionUpdate);
     }
@@ -52,17 +56,26 @@ public class MagicInkController : Entity // TODO ADD DRAWING SOUND
         if (level == null) return;
 
         // add display if it wasn't added yet because of the flag
-        if (!KoseiHelperUtils.CheckFlag(level, flag)) return;
+        if (!KoseiHelperUtils.CheckFlag(level, flag))
+            return;
         if (level.Tracker.GetEntity<InkDisplay>() == null)
             level.Add(new InkDisplay());
 
-        if (!MInput.Mouse.CheckLeftButton && !(level.Tracker.CountEntities<PaintDecal>() > 0 || level.Tracker.CountEntities<PaintBarrier>() > 0) && currentInk < maxInk)
-            currentInk = Math.Min(maxInk, currentInk + regenerationRate * Engine.DeltaTime);
+        if (!MInput.Mouse.CheckLeftButton && regenerationCooldown == 0f)
+        {
+            float maxAvailable = Math.Max(0f, maxInk - spentInk);
+            currentInk = Math.Min(maxAvailable, currentInk + regenerationRate * Engine.DeltaTime);
+        }
+        if (regenerationCooldown > 0f)
+            regenerationCooldown -= Engine.DeltaTime;
+        if (regenerationCooldown < 0f)
+            regenerationCooldown = 0f;
 
         CurrentColor = Calc.HsvToColor((level.TimeActive * 0.25f) % 1f, 1f, 1f);
         Vector2 mouse = MInput.Mouse.Position;
-        float scaleX = 320f / Engine.Graphics.GraphicsDevice.PresentationParameters.BackBufferWidth;
-        float scaleY = 180f / Engine.Graphics.GraphicsDevice.PresentationParameters.BackBufferHeight;
+        // zoomout compatibility
+        float scaleX = (float)(level.Camera.Viewport.Width) / Engine.Graphics.GraphicsDevice.PresentationParameters.BackBufferWidth;
+        float scaleY = (float)(level.Camera.Viewport.Height) / Engine.Graphics.GraphicsDevice.PresentationParameters.BackBufferHeight;
         Vector2 screenMouse = level.Camera.Position + new Vector2(mouse.X * scaleX, mouse.Y * scaleY);
 
         if (MInput.Mouse.PressedLeftButton)
@@ -70,7 +83,7 @@ public class MagicInkController : Entity // TODO ADD DRAWING SOUND
             currentStroke.Clear();
             lastMouse = screenMouse;
         }
-        
+
         if (MInput.Mouse.CheckLeftButton)
         {
             if (lastMouse.HasValue)
@@ -80,21 +93,23 @@ public class MagicInkController : Entity // TODO ADD DRAWING SOUND
                 {
                     float usableDistance = Math.Min(distance, currentInk);
                     Vector2 end = Vector2.Lerp(lastMouse.Value, screenMouse, usableDistance / distance);
-
                     if (!IsInPreventionArea(lastMouse.Value) && !IsInPreventionArea(end))
                     {
                         if (!Audio.IsPlaying(drawingSound))
                             drawingSound = Audio.Play("event:/KoseiHelper/magicDrawing", end);
-                        currentStroke.Add(new PaintStroke(lastMouse.Value, end, CurrentColor, thickness));
+                        PaintStroke stroke = new(lastMouse.Value, end, CurrentColor, thickness);
+                        currentStroke.Add(stroke);
+                        SpawnInk(level, stroke);
                         currentInk -= usableDistance;
+                        spentInk += usableDistance;
                     }
-
                     lastMouse = end;
                 }
-
             }
             else
+            {
                 lastMouse = screenMouse;
+            }
         }
 
         if (clearNextFrame)
@@ -102,20 +117,20 @@ public class MagicInkController : Entity // TODO ADD DRAWING SOUND
             currentStroke.Clear();
             clearNextFrame = false;
         }
+
+
         if (MInput.Mouse.ReleasedLeftButton)
         {
-            if (currentStroke.Count > 0)
-            {
-                Audio.Stop(drawingSound);
-                SpawnInk(level);
-                clearNextFrame = true; // this is to prevent some stupid blinking inbetween frames
-            }
-            lastMouse = null;
-        }
-
-        if (!MInput.Mouse.CheckLeftButton && Audio.IsPlaying(drawingSound))
-        {
             Audio.Stop(drawingSound);
+            currentStroke.Clear();
+            lastMouse = null;
+            clearNextFrame = true;
+        }
+        if (Audio.IsPlaying(drawingSound))
+        {
+            Player player = level.Tracker.GetEntity<Player>();
+            if (!MInput.Mouse.CheckLeftButton || player == null || player.Dead)
+                Audio.Stop(drawingSound);
         }
     }
 
@@ -128,22 +143,35 @@ public class MagicInkController : Entity // TODO ADD DRAWING SOUND
         }
     }
 
-    private void SpawnInk(Level level)
+    private void SpawnInk(Level level, PaintStroke stroke)
     {
-        List<PaintStroke> lines = new(currentStroke);
+        List<PaintStroke> lines = new() { stroke };
         ColliderList collider = BuildCollider(lines);
         PaintDecal decal = new PaintDecal(Vector2.Zero, lines, inkDepth, timeToLive);
-        PaintBarrier barrier = new PaintBarrier(Vector2.Zero, collider, decal, timeToLive, surfaceSoundIndex);
+        PaintBarrier barrier = new PaintBarrier(Vector2.Zero, collider, decal, timeToLive, surfaceSoundIndex, Vector2.Distance(stroke.From, stroke.To));
         level.Add(decal);
         level.Add(barrier);
+        regenerationCooldown = cooldown;
     }
 
     public void AddInk(float amount, bool canOverfill = false)
     {
         if (canOverfill)
-            currentInk += amount;
+        {
+            float recovered = Math.Min(amount, spentInk);
+            spentInk -= recovered;
+            amount -= recovered;
+
+            currentInk += recovered + amount;
+        }
         else
-            currentInk = Math.Min(currentInk + amount, maxInk);
+        {
+            float recovered = Math.Min(amount, spentInk);
+            spentInk -= recovered;
+
+            float maxAvailable = maxInk - spentInk;
+            currentInk = Math.Min(currentInk + recovered + amount, maxAvailable);
+        }
     }
 
     private ColliderList BuildCollider(List<PaintStroke> lines)
@@ -200,13 +228,15 @@ public class InkDisplay : Entity
     public override void Render()
     {
         base.Render();
-        const int position = 20;
-        const int width = 160;
-        const int height = 12;
         Level level = SceneAs<Level>();
         MagicInkController controller = level.Tracker.GetEntity<MagicInkController>();
         if (controller == null)
             return;
+
+
+        const int position = 20;
+        int width = (int)(controller.maxInk / 2);
+        const int height = 12;
 
         float percent = controller.currentInk / controller.maxInk;
         float normalPercent = Math.Min(percent, 1f);
@@ -217,7 +247,6 @@ public class InkDisplay : Entity
         for (int i = 0; i < filled; i++)
         {
             Color c = Calc.HsvToColor(((i / (float)width) + SceneAs<Level>().TimeActive * 0.2f) % 1f, 1f, 1f);
-
             Draw.Rect(position + i, position, 1, height, c);
         }
         Draw.HollowRect(position, position, width, height, Color.White);

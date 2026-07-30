@@ -245,6 +245,7 @@ entities.KoseiHelper/MagicInkController.attributes.description.regenerationRate=
 entities.KoseiHelper/MagicInkController.attributes.description.thickness=The thickness of the paintstrokes.
 entities.KoseiHelper/MagicInkController.attributes.description.flag=The Magic Ink will only be available when this flag is true.\nYou can invert the flag with the preffix "!".\nLeave this field empty if you don't need any flags.
 entities.KoseiHelper/MagicInkController.attributes.description.depth=The depth at which paintstrokes (and magic prevention areas) are drawn.
+entities.KoseiHelper/MagicInkController.attributes.description.recoverInkUponShattering=Whether the shattered fragments of a paintstroke should be immediately added to the ink reserves.\nMagic paint can be shattered by Oshiro, Badeline Bosses or the Nemesis Gun.
 
 # Kill Theo On Touch Controller and Safe Theo Area
 entities.KoseiHelper/KillTheoOnTouchController.placements.name.KillTheoOnTouchController=Kill Theo On Touch Controller
