@@ -22,7 +22,8 @@ CustomBubble.placements = {
 		releaseFromBooster = true,
 		freezeFrames = false,
 		radius = 10,
-		coyote = false
+		coyote = false,
+		magical = false
 	}
 }
 
@@ -71,7 +72,8 @@ CustomBubble.fieldOrder = {
 	"refillStamina",
 	"releaseFromBooster",
 	"renderBubble",
-	"renderSprite"
+	"renderSprite",
+	"magical"
 }
 
 CustomBubble.fieldInformation = {

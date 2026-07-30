@@ -80,6 +80,7 @@ entities.KoseiHelper/WaterDropletSpawner.attributes.description.sound=The sound 
 entities.KoseiHelper/WaterDropletSpawner.attributes.description.maxSpeed=The maximum speed that the droplet will have after it accelerates.\nNegative values will make it fall upwards.
 entities.KoseiHelper/WaterDropletSpawner.attributes.description.ignoreSolids=Whether the droplet should keep moving even if it collides with a solid/water until it goes out of bounds or the lifetime is over.
 entities.KoseiHelper/WaterDropletSpawner.attributes.description.lifetime=The droplet will disappear when the lifetime is over.\nLower this value if you need to improve performance.
+entities.KoseiHelper/WaterDropletSpawner.attributes.description.magical=Whether the droplets should be rainbow.\nIf you're using a Magic Ink Controller, each droplet will also give +1 ink upon touch.
 
 #Shadow Cloak Controller
 entities.KoseiHelper/ShadowCloakController.placements.name.ShadowCloakController=Shadow Cloak Controller (Crossover)
@@ -164,8 +165,9 @@ entities.KoseiHelper/CustomBubble.attributes.description.refillStamina=Whether b
 entities.KoseiHelper/CustomBubble.attributes.description.releaseFromBooster=Whether breaking the bubble should force the player to exit the booster (i.e. red boosters).
 entities.KoseiHelper/CustomBubble.attributes.description.freezeFrames=Whether breaking the bubble should give 3 freeze frames.
 entities.KoseiHelper/CustomBubble.attributes.description.radius=The radius of the bubble.\nNote that the sprite will not be resized, only the outline.
-entities.KoseiHelper/CustomBubble.attributes.description.coyote=Whether the bubble should give the player coyote frames (grace jump timer).
 entities.KoseiHelper/CustomBubble.attributes.name.coyote=Coyote Frames
+entities.KoseiHelper/CustomBubble.attributes.description.coyote=Whether the bubble should give the player coyote frames (grace jump timer).
+entities.KoseiHelper/CustomBubble.attributes.description.magical=Whether the bubble should be rainbow.\nIf you're using a Magic Ink Controller, destroying the bubble will also give +50 ink.
 
 
 #KOSEI HELPER ENTITIES
@@ -1494,7 +1496,7 @@ triggers.KoseiHelper/NemesisGunInteractions.attributes.description.dashOnKevins=
 # triggers.KoseiHelper/ProceduralGeneratorTrigger.attributes.description.sizeY=Height of the area to apply the procedural generation.
 # triggers.KoseiHelper/ProceduralGeneratorTrigger.attributes.description.tileChars=string of tileset ids to randomly select from when placing new tiles.
 
-Multinode Camera Trigger
+# Multinode Camera Trigger
 triggers.KoseiHelper/MultinodeCameraTrigger.placements.name.MultinodeCameraTrigger=Multinode Camera Trigger
 triggers.KoseiHelper/MultinodeCameraTrigger.placements.description.MultinodeCameraTrigger=The camera will lerp smoothly between the nodes closest to the player.
 triggers.KoseiHelper/MultinodeCameraTrigger.attributes.description.onlyOnce=Whether the trigger should disappear upon exiting it.
@@ -1504,3 +1506,11 @@ triggers.KoseiHelper/MultinodeCameraTrigger.attributes.description.xOnly=Whether
 triggers.KoseiHelper/MultinodeCameraTrigger.attributes.description.yOnly=Whether the trigger should only smoothly lerp in the vertical axis.
 triggers.KoseiHelper/MultinodeCameraTrigger.attributes.description.smoothingStrength=The intensity of the smoothing effect.
 triggers.KoseiHelper/MultinodeCameraTrigger.attributes.description.maxSmoothingDistance=The nodes that are more than this distance away from the player will be ignored.
+
+# MagicInkTrigger
+triggers.KoseiHelper/MagicInkTrigger.placements.name.MagicInkTrigger=Magic Ink Trigger
+triggers.KoseiHelper/MagicInkTrigger.placements.description.MagicInkTrigger=Restores (or substracts) some amount of magic ink.\nUse with a Magic Ink Controller.
+triggers.KoseiHelper/MagicInkTrigger.attributes.description.onlyOnce=Whether the trigger should disappear upon exiting it.
+triggers.KoseiHelper/MagicInkTrigger.attributes.description.flag=The trigger will only add/substract ink while the flag is true.\nLeave empty for no flag required.
+triggers.KoseiHelper/MagicInkTrigger.attributes.description.triggerMode=Whether the ink should be given when the player enters the trigger (big amounts) or while the player is inside (small amounts).
+triggers.KoseiHelper/MagicInkTrigger.attributes.description.inkAmount=The amount of ink that should be given or substracted (negative number).

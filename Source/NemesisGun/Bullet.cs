@@ -1,5 +1,6 @@
 using Celeste.Mod.Entities;
 using Celeste.Mod.KoseiHelper.Entities;
+using Celeste.Mod.KoseiHelper.Entities.Crossover;
 using Microsoft.Xna.Framework;
 using Monocle;
 using MonoMod.Utils;
@@ -1013,6 +1014,16 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                         RecoilOnInteraction(pRecoil, goomba);
                     DestroyBullet();
                     return;
+                }
+
+                if (entity is CustomBubble cBubble && KoseiHelperModule.Settings.GunInteractions.UseFeathers && cBubble.Collider.Bounds.Intersects(Hitbox) && !dead && owner is Player pBubble)
+                {
+                    if (cBubble.Collidable)
+                    {
+                        cBubble.PopBubble(pBubble, true);
+                        DestroyBullet();
+                        return;
+                    }
                 }
 
                 if (entity is PregnantFlutterbird plutterbird && KoseiHelperModule.Settings.GunInteractions.HarmEnemies && plutterbird.Collider.Bounds.Intersects(Hitbox) &&

@@ -22,7 +22,7 @@ public class MagicInkController : Entity
     private int surfaceSoundIndex;
     public string flag;
     public int inkDepth;
-    private static EventInstance drawingSound;
+    private EventInstance drawingSound;
     public const float cooldown = 1f;
     public float regenerationCooldown = cooldown;
     public bool recoverInkUponShattering;
@@ -31,7 +31,7 @@ public class MagicInkController : Entity
     {
         timeToLive = data.Float("timeToLive", 3f);
         maxInk = data.Float("maxInk", 300f);
-        regenerationRate = data.Float("regenerationRate", 60f);
+        regenerationRate = data.Float("regenerationRate", 20f);
         thickness = data.Int("thickness", 8);
         surfaceSoundIndex = data.Int("surfaceSoundIndex", 32);
         flag = data.Attr("flag", "");
@@ -64,7 +64,8 @@ public class MagicInkController : Entity
         if (!MInput.Mouse.CheckLeftButton && regenerationCooldown == 0f)
         {
             float maxAvailable = Math.Max(0f, maxInk - spentInk);
-            currentInk = Math.Min(maxAvailable, currentInk + regenerationRate * Engine.DeltaTime);
+            if (currentInk < maxAvailable)
+                currentInk = Math.Min(maxAvailable, currentInk + regenerationRate * Engine.DeltaTime);
         }
         if (regenerationCooldown > 0f)
             regenerationCooldown -= Engine.DeltaTime;
@@ -86,6 +87,11 @@ public class MagicInkController : Entity
 
         if (MInput.Mouse.CheckLeftButton)
         {
+            if (currentInk <= 0f)
+            {
+                if (Audio.IsPlaying(drawingSound))
+                    Audio.Stop(drawingSound);
+            }
             if (lastMouse.HasValue)
             {
                 float distance = Vector2.Distance(lastMouse.Value, screenMouse);
@@ -97,6 +103,8 @@ public class MagicInkController : Entity
                     {
                         if (!Audio.IsPlaying(drawingSound))
                             drawingSound = Audio.Play("event:/KoseiHelper/magicDrawing", end);
+                        else
+                            Audio.Position(drawingSound, end);
                         PaintStroke stroke = new(lastMouse.Value, end, CurrentColor, thickness);
                         currentStroke.Add(stroke);
                         SpawnInk(level, stroke);

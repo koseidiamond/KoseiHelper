@@ -16,9 +16,10 @@ public class WaterDropletSpawner : Entity
         private Color dropletColor;
         private string sound;
         private bool ignoreSolids;
+        private bool magical;
 
         public Droplet(Vector2 position, Color dropletColor, string sound, int depth, float maxSpeed,
-            bool ignoreSolids, float lifetime)
+            bool ignoreSolids, float lifetime, bool magical)
         {
             Position = position;
             speed = 0;
@@ -28,11 +29,24 @@ public class WaterDropletSpawner : Entity
             this.maxSpeed = maxSpeed;
             this.ignoreSolids = ignoreSolids;
             Depth = depth;
+            this.magical = magical;
         }
 
         public override void Update()
         {
             base.Update();
+            if (magical)
+            {
+                dropletColor = Calc.HsvToColor((SceneAs<Level>().TimeActive * 0.25f) % 1f, 1f, 1f);
+                if (SceneAs<Level>().Tracker.Entities[typeof(Player)].Any(p => Collide.CheckPoint(p, Position)))
+                {
+                    Audio.Play("event:/char/madeline/water_in", Position).setVolume(0.2f);
+                    MagicInkController inkController = SceneAs<Level>().Tracker.GetEntity<MagicInkController>();
+                    if (inkController != null)
+                        inkController.AddInk(1);
+                    RemoveSelf();
+                }
+            }
             speed = Calc.Clamp(speed + Engine.DeltaTime * 3.7f, 0, maxSpeed); // Accelerate to terminal velocity
             Position.Y += speed; // Update position
             if (!ignoreSolids) // If in contact with a solid or water, play SFX and disappear
@@ -77,6 +91,7 @@ public class WaterDropletSpawner : Entity
     private new int depth;
     private bool ignoreSolids;
     private float lifetime;
+    private bool magical;
 
     public WaterDropletSpawner(EntityData data, Vector2 offset)
     {
@@ -85,12 +100,12 @@ public class WaterDropletSpawner : Entity
         spawnInterval = data.Float("interval", 1f);
         sound = data.Attr("sound", "");
         depth = data.Int("depth", Depths.FGParticles);
-        dropletColor = KoseiHelperUtils.ParseHexColor(data.Values.TryGetValue("dropletColor", out object c1) ? c1.ToString() : null,
-            Color.FromNonPremultiplied(28, 79, 161, 242));
+        dropletColor = KoseiHelperUtils.ParseHexColor(data.Values.TryGetValue("dropletColor", out object c1) ? c1.ToString() : null, Color.FromNonPremultiplied(28, 79, 161, 242));
         spawnTimer = Calc.Random.Range(0, spawnInterval);
         maxSpeed = data.Float("maxSpeed", 10f);
         ignoreSolids = data.Bool("ignoreSolids", false);
         lifetime = data.Float("lifetime", 5f);
+        magical = data.Bool("magical", false);
     }
 
     public override void Update()
@@ -100,9 +115,11 @@ public class WaterDropletSpawner : Entity
         if ((spawnTimer += Engine.DeltaTime) > spawnInterval)
         {
             spawnTimer = Calc.Random.Range(-spawnInterval / 5, spawnInterval / 5);
+            if (magical)
+                dropletColor = Calc.HsvToColor((SceneAs<Level>().TimeActive * 0.25f) % 1f, 1f, 1f);
             // Spawn new droplet
             Scene.Add(new Droplet(Position + new Vector2(Calc.Random.Range(0, size.X - 1),
-                Calc.Random.Range(0, size.Y - 1)), dropletColor, sound, depth, maxSpeed, ignoreSolids, lifetime));
+                Calc.Random.Range(0, size.Y - 1)), dropletColor, sound, depth, maxSpeed, ignoreSolids, lifetime, magical));
         }
     }
 }

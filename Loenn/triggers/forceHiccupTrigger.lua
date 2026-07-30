@@ -10,7 +10,7 @@ ForceHiccupTrigger.placements = {
 		onlyOnce = false,
 		triggerMode = "OnEnter",
 		interval = 0.5,
-		flag = "cold"
+		flag = ""
 		}
 	}
 }

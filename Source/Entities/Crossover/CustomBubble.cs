@@ -40,6 +40,7 @@ public class CustomBubble : Entity
     public bool refillDash, refillStamina, releaseFromBooster;
     public float radius;
     public bool coyote;
+    public bool magical;
 
     public CustomBubble(Vector2 position) : base(position)
     {
@@ -52,6 +53,7 @@ public class CustomBubble : Entity
         Add(new PlayerCollider(OnPlayer));
         color = KoseiHelperUtils.ParseHexColor(data.Values.TryGetValue("color", out object c1) ? c1.ToString() : null, Color.White);
         spriteID = data.Attr("spriteID", "flyFeather");
+        magical = data.Bool("magical", false);
         Add(sprite = GFX.SpriteBank.Create(spriteID));
         sprite.Color = color;
         Add(Wiggler.Create(1f, 4f, delegate (float v)
@@ -104,6 +106,8 @@ public class CustomBubble : Entity
                 Respawn();
             }
         }
+        if (magical)
+            FeatherCollect.Color = FeatherCollect.Color2 = FeatherRespawn.Color = FeatherRespawn.Color2 = color = Calc.HsvToColor((SceneAs<Level>().TimeActive * 0.25f) % 1f, 1f, 1f);
         UpdateY();
         light.Alpha = Calc.Approach(light.Alpha, sprite.Visible ? 1f : 0f, 4f * Engine.DeltaTime);
         bloom.Alpha = light.Alpha * 0.8f;
@@ -132,17 +136,30 @@ public class CustomBubble : Entity
         KoseiHelperUtils.PointBounce(Center, player, refillDash, refillStamina, releaseFromBooster, coyote);
         if (Input.MoveX.Value == Math.Sign(player.Speed.X))
             player.Speed.X *= speedMult;
+        PopBubble(player);
+    }
+
+    /// <summary>
+    /// This method is separate so they can be shot with the gun
+    /// </summary>
+    public void PopBubble(Player player, bool poppedFromShot = false)
+    {
         moveWiggle.Start();
         shieldRadiusWiggle.Start();
         moveWiggleDir = (Center - player.Center).SafeNormalize(Vector2.UnitY);
         Audio.Play(customSound, Position);
         Input.Rumble(RumbleStrength.Medium, RumbleLength.Medium);
         SceneAs<Level>().DirectionalShake((player.Center - Center).SafeNormalize(), 0.15f);
-        if (breakBehavior == BubbleBreakBehavior.AlwaysBreak || breakBehavior == BubbleBreakBehavior.BreakWithDash && player.DashAttacking)
+        if (breakBehavior == BubbleBreakBehavior.AlwaysBreak || (breakBehavior == BubbleBreakBehavior.BreakWithDash && (player.DashAttacking || poppedFromShot)))
         {
             if (freezeFrames)
                 Celeste.Freeze(0.05f);
             Collidable = false;
+            if (magical)
+            {
+                MagicInkController inkController = SceneAs<Level>().Tracker.GetEntity<MagicInkController>();
+                inkController?.AddInk(50);
+            }
             Add(new Coroutine(CollectRoutine(player, player.Speed, player.level)));
             if (!singleUse)
             {

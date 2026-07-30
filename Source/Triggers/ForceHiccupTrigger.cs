@@ -22,7 +22,7 @@ public class ForceHiccupTrigger : Trigger
         onlyOnce = data.Bool("onlyOnce", false);
         triggerMode = data.Enum("triggerMode", TriggerMode.OnEnter);
         interval = data.Float("interval", 0.5f);
-        flag = data.Attr("flag", "cold");
+        flag = data.Attr("flag", "");
     }
 
     public override void Awake(Scene scene)

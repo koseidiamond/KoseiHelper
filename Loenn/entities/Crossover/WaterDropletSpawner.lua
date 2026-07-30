@@ -16,7 +16,8 @@ droplets.placements = {
 		sound = "",
 		maxSpeed = 10,
 		ignoreSolids = false,
-		lifetime = 5
+		lifetime = 5,
+		magical = false
     }
 }
 

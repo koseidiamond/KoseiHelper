@@ -20,7 +20,6 @@ public class MagicInkCollectable : Entity
     private BloomPoint bloom;
     private SineWave sine;
     private float respawnTime = 3f;
-    private bool collected;
     public MagicInkCollectable(EntityData data, Vector2 offset, EntityID id)
     {
         Depth = data.Int("depth", -100);
@@ -78,7 +77,6 @@ public class MagicInkCollectable : Entity
 
         if (canReappear)
         {
-            collected = true;
             sprite.Play("outline");
             Collidable = false;
 
@@ -92,9 +90,7 @@ public class MagicInkCollectable : Entity
 
     private IEnumerator RespawnRoutine()
     {
-        yield return 3f;
-
-        collected = false;
+        yield return respawnTime;
         sprite.Play("ink");
         Collidable = true;
 
