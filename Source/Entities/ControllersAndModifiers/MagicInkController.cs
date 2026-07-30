@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Monocle;
 using System;
 using System.Collections.Generic;
+using FMOD.Studio;
 
 namespace Celeste.Mod.KoseiHelper.Entities;
 
@@ -21,7 +22,7 @@ public class MagicInkController : Entity // TODO ADD DRAWING SOUND
     private int surfaceSoundIndex;
     public string flag;
     public int inkDepth;
-
+    private static EventInstance drawingSound;
 
     public MagicInkController(EntityData data, Vector2 offset) : base(data.Position + offset)
     {
@@ -69,7 +70,7 @@ public class MagicInkController : Entity // TODO ADD DRAWING SOUND
             currentStroke.Clear();
             lastMouse = screenMouse;
         }
-
+        
         if (MInput.Mouse.CheckLeftButton)
         {
             if (lastMouse.HasValue)
@@ -82,6 +83,8 @@ public class MagicInkController : Entity // TODO ADD DRAWING SOUND
 
                     if (!IsInPreventionArea(lastMouse.Value) && !IsInPreventionArea(end))
                     {
+                        if (!Audio.IsPlaying(drawingSound))
+                            drawingSound = Audio.Play("event:/KoseiHelper/magicDrawing", end);
                         currentStroke.Add(new PaintStroke(lastMouse.Value, end, CurrentColor, thickness));
                         currentInk -= usableDistance;
                     }
@@ -103,10 +106,16 @@ public class MagicInkController : Entity // TODO ADD DRAWING SOUND
         {
             if (currentStroke.Count > 0)
             {
+                Audio.Stop(drawingSound);
                 SpawnInk(level);
                 clearNextFrame = true; // this is to prevent some stupid blinking inbetween frames
             }
             lastMouse = null;
+        }
+
+        if (!MInput.Mouse.CheckLeftButton && Audio.IsPlaying(drawingSound))
+        {
+            Audio.Stop(drawingSound);
         }
     }
 
