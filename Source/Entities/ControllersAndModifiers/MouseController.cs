@@ -135,8 +135,8 @@ public class MouseController : Entity
     {
         Level level = SceneAs<Level>();
         Image image = new Image(GFX.Gui[cursorTexture]);
-        image.Position = new Vector2(mouseX * 6f * (320f / level.Camera.Viewport.Width) - image.Width / 2f,
-            mouseY * 6f * (180f / level.Camera.Viewport.Height) - image.Height / 2f);
+        image.Position = new Vector2(mouseX * 6f * (320f / (float)level.Camera.Viewport.Width) - image.Width / 2f,
+            mouseY * 6f * (180f / (float)level.Camera.Viewport.Height) - image.Height / 2f);
         image.Render();
     }
 }

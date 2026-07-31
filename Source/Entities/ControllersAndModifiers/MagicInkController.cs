@@ -39,6 +39,9 @@ public class MagicInkController : Entity
         recoverInkUponShattering = data.Bool("recoverInkUponShattering", true);
         currentInk = maxInk;
         base.AddTag(Tags.TransitionUpdate);
+        base.AddTag(Tags.Persistent);
+        if (data.Bool("global", false))
+            base.AddTag(Tags.Global);
     }
 
     public override void Added(Scene scene)
@@ -75,8 +78,8 @@ public class MagicInkController : Entity
         CurrentColor = Calc.HsvToColor((level.TimeActive * 0.25f) % 1f, 1f, 1f);
         Vector2 mouse = MInput.Mouse.Position;
         // zoomout compatibility
-        float scaleX = (float)(level.Camera.Viewport.Width) / Engine.Graphics.GraphicsDevice.PresentationParameters.BackBufferWidth;
-        float scaleY = (float)(level.Camera.Viewport.Height) / Engine.Graphics.GraphicsDevice.PresentationParameters.BackBufferHeight;
+        float scaleX = (float)(level.Camera.Viewport.Width) / 1920f;
+        float scaleY = (float)(level.Camera.Viewport.Height) / 1080f;
         Vector2 screenMouse = level.Camera.Position + new Vector2(mouse.X * scaleX, mouse.Y * scaleY);
 
         if (MInput.Mouse.PressedLeftButton)
@@ -162,6 +165,9 @@ public class MagicInkController : Entity
         regenerationCooldown = cooldown;
     }
 
+    /// <summary>
+    /// Use this method to recover some of your ink. Negative values should go in DrainInk(amount) instead so the spentInk is untouched.
+    /// </summary>
     public void AddInk(float amount, bool canOverfill = false)
     {
         if (canOverfill)
@@ -169,17 +175,25 @@ public class MagicInkController : Entity
             float recovered = Math.Min(amount, spentInk);
             spentInk -= recovered;
             amount -= recovered;
-
             currentInk += recovered + amount;
         }
         else
         {
             float recovered = Math.Min(amount, spentInk);
             spentInk -= recovered;
-
             float maxAvailable = maxInk - spentInk;
             currentInk = Math.Min(currentInk + recovered + amount, maxAvailable);
         }
+    }
+
+    /// <summary>
+    /// Use this method for entities that absorb your ink.
+    /// </summary>
+    public void DrainInk(float amount)
+    {
+        amount = Math.Max(0f, amount);
+        currentInk -= Math.Min(currentInk, amount);
+        regenerationCooldown = cooldown;
     }
 
     private ColliderList BuildCollider(List<PaintStroke> lines)
@@ -241,7 +255,6 @@ public class InkDisplay : Entity
         if (controller == null)
             return;
 
-
         const int position = 20;
         int width = (int)(controller.maxInk / 2);
         const int height = 12;
@@ -271,5 +284,11 @@ public class InkDisplay : Entity
             }
             Draw.HollowRect(position + width, position, overfillWidth, height, Color.White);
         }
+
+        Image image = new Image(GFX.Gui["dot_outline"]);
+        image.Color = Calc.HsvToColor((level.TimeActive * 0.25f) % 1f, 1f, 1f);
+        image.Position = new Vector2(MInput.Mouse.Position.X * ((float)level.Camera.Viewport.Width / 1920f) * 6f * (320f / (float)level.Camera.Viewport.Width) - image.Width / 2f,
+            MInput.Mouse.Position.Y * ((float)level.Camera.Viewport.Height / 1080f) * 6f * (180f / (float)level.Camera.Viewport.Height) - image.Height / 2f);
+        image.Render();
     }
 }

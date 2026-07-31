@@ -24,24 +24,24 @@ public class MagicInkTrigger : Trigger
     {
         base.OnEnter(player);
         if (triggerMode == TriggerMode.OnEnter)
-            SomeMethod();
+            GiveInk();
     }
 
     public override void OnLeave(Player player)
     {
         base.OnLeave(player);
         if (triggerMode == TriggerMode.OnLeave)
-            SomeMethod();
+            GiveInk();
     }
 
     public override void OnStay(Player player)
     {
         base.OnStay(player);
         if (triggerMode == TriggerMode.OnStay && KoseiHelperUtils.CheckFlag(SceneAs<Level>(), flag))
-            SomeMethod();
+            GiveInk();
     }
 
-    public void SomeMethod()
+    public void GiveInk()
     {
         MagicInkController inkController = SceneAs<Level>().Tracker.GetEntity<MagicInkController>();
         inkController?.AddInk(inkAmount);

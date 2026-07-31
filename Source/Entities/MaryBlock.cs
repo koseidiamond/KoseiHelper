@@ -30,6 +30,8 @@ public class MaryBlock : Entity
     private float distortionAlpha;
     private Vector2 distortionVector;
     private float oscillationPhase = 0f;
+    private const float AntimagicRadius = 40f;
+    private Circle antimagicRadius = new Circle(AntimagicRadius);
 
     // bubblemary variables
     private Vector2 previousPlayerPos = Vector2.Zero;
@@ -54,7 +56,6 @@ public class MaryBlock : Entity
 
     public MaryBlock(EntityData data, Vector2 offset) : base(data.Position + offset)
     {
-        // 
         Depth = -9500;
         outline = data.Bool("outline", false);
         affectTheo = data.Bool("affectTheo", false);
@@ -94,6 +95,7 @@ public class MaryBlock : Entity
         {
             sprite.Play("dark");
             Collider = new Hitbox(8, 16, -4, 0);
+            antimagicRadius.Position = Position;
         }
         if (!oneUse)
         {
@@ -209,6 +211,15 @@ public class MaryBlock : Entity
             }
             else
                 distortionAlpha = 0f;
+            if (player != null)
+            {
+                antimagicRadius.Position = Center;
+                if (antimagicRadius.Collide(player))
+                {
+                    MagicInkController inkController = SceneAs<Level>().Tracker.GetEntity<MagicInkController>();
+                    inkController?.DrainInk(180f * Engine.DeltaTime);
+                }
+            }
         }
         light.Alpha = Calc.Approach(light.Alpha, sprite.Visible ? 1f : 0f, 4f * Engine.DeltaTime);
         bloom.Alpha = light.Alpha * 0.8f;
@@ -300,6 +311,15 @@ public class MaryBlock : Entity
         if (outline && sprite.Visible)
             sprite.DrawOutline();
         base.Render();
+    }
+
+    public override void DebugRender(Camera camera)
+    {
+        base.DebugRender(camera);
+        if (maryType == MaryType.Dark)
+        {
+            Draw.Circle(Center, AntimagicRadius, Color.Purple, 32);
+        }
     }
 
     private void Respawn()
