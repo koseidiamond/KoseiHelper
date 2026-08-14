@@ -82,15 +82,42 @@ public class MagicInkBox : Solid
                 }
             }
 
+            // Move boxes and ensure they stay inside the bounds of the room
             if (velocity.X != 0f)
             {
-                MoveHCollideSolids(velocity.X * Engine.DeltaTime, false);
+                //MoveHCollideSolids(velocity.X * Engine.DeltaTime, false);
+                float moveX = velocity.X * Engine.DeltaTime;
+                float newX = X + moveX;
+                if (newX < level.Bounds.Left)
+                {
+                    moveX = level.Bounds.Left - X;
+                    velocity.X = 0f;
+                }
+                else if (newX + Width > level.Bounds.Right)
+                {
+                    moveX = level.Bounds.Right - (X + Width);
+                    velocity.X = 0f;
+                }
+                MoveHCollideSolids(moveX, false);
                 velocity.X = Calc.Approach(velocity.X, 0f, 600f * Engine.DeltaTime);
             }
 
             if (velocity.Y != 0f)
             {
-                MoveVCollideSolids(velocity.Y * Engine.DeltaTime, false);
+                //MoveVCollideSolids(velocity.Y * Engine.DeltaTime, false);
+                float moveY = velocity.Y * Engine.DeltaTime;
+                float newY = Y + moveY;
+                if (newY < level.Bounds.Top)
+                {
+                    moveY = level.Bounds.Top - Y;
+                    velocity.Y = 0f;
+                }
+                else if (newY + Height > level.Bounds.Bottom)
+                {
+                    moveY = level.Bounds.Bottom - (Y + Height);
+                    velocity.Y = 0f;
+                }
+                MoveVCollideSolids(moveY, false);
                 velocity.Y = Calc.Approach(velocity.Y, 0f, 600f * Engine.DeltaTime);
             }
         }
@@ -161,12 +188,12 @@ public class MagicInkBox : Solid
                 level.ParticlesFG.Emit(BoxParticles, 1, pos, Vector2.One, color, Calc.Random.NextAngle());
             }
         }
-        Audio.Play(breakSfx, Center); // unhardcode maybe??
+        Audio.Play(breakSfx, Center);
         RemoveSelf();
     }
 
 
-    // Code partially based on GameHelper's push boxes
+    // Code partially based on GameHelper's push boxes (at least when the box is unbreakable)
     public override void Render()
     {
         base.Render();

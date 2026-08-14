@@ -26,11 +26,13 @@ public class MagicPreventionArea : Entity
         Size = 1.5f,
         SizeRange = 0.5f,
     };
+    public bool drainInkWhileInside;
 
     public MagicPreventionArea(EntityData data, Vector2 offset) : base(data.Position + offset)
     {
         Collider = new Hitbox(data.Width, data.Height);
         color = Calc.HexToColor("deb887");
+        drainInkWhileInside = data.Bool("drainInkWhileInside", false);
         Depth = 1;
     }
 
@@ -39,7 +41,7 @@ public class MagicPreventionArea : Entity
         base.Awake(scene);
         MagicInkController inkController = (scene as Level).Tracker.GetEntity<MagicInkController>();
         if (inkController != null)
-            Depth = inkController.inkDepth;
+            Depth = inkController.inkDepth - 2;
     }
 
     public override void Update()
@@ -55,6 +57,10 @@ public class MagicPreventionArea : Entity
             Vector2 burstPosition = new Vector2(X + 8f + Calc.Random.NextFloat(Math.Max(0, Width - 16f)), Y + 8f + Calc.Random.NextFloat(Math.Max(0, Height - 16f)));
             SceneAs<Level>().Displacement.AddBurst(burstPosition, 0.5f, 8f, 16f, 0.35f);
         }
+        Player player = level.Tracker.GetEntity<Player>();
+        MagicInkController inkController = level.Tracker.GetEntity<MagicInkController>();
+        if (player != null && CollideCheck(player) && inkController != null)
+            inkController.DrainInk(60f * Engine.DeltaTime);
     }
 
     public override void Render()

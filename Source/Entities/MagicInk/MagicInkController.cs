@@ -26,6 +26,7 @@ public class MagicInkController : Entity
     public float regenerationCooldown = cooldown;
     public bool recoverInkUponShattering;
     private bool renderCursor = true;
+    public bool killIfNoInk;
 
     public MagicInkController(EntityData data, Vector2 offset) : base(data.Position + offset)
     {
@@ -38,6 +39,7 @@ public class MagicInkController : Entity
         flag = data.Attr("flag", "");
         inkDepth = data.Int("depth", 1);
         recoverInkUponShattering = data.Bool("recoverInkUponShattering", true);
+        killIfNoInk = data.Bool("killIfNoInk", false);
         currentInk = maxInk;
         base.AddTag(Tags.TransitionUpdate);
         base.AddTag(Tags.Persistent);
@@ -58,6 +60,7 @@ public class MagicInkController : Entity
 
         Level level = SceneAs<Level>();
         if (level == null) return;
+        Player player = level.Tracker.GetEntity<Player>();
 
         // add display if it wasn't added yet because of the flag
         if (!KoseiHelperUtils.CheckFlag(level, flag))
@@ -138,10 +141,12 @@ public class MagicInkController : Entity
         }
         if (Audio.IsPlaying(drawingSound))
         {
-            Player player = level.Tracker.GetEntity<Player>();
             if (!MInput.Mouse.CheckLeftButton || player == null || player.Dead)
                 Audio.Stop(drawingSound);
         }
+
+        if (killIfNoInk && player != null && currentInk <= 1f)
+            player.Die(player.Center);
     }
 
     public override void Render()
