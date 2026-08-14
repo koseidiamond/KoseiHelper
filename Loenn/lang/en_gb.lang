@@ -229,7 +229,7 @@ entities.KoseiHelper/EntityResizer.attributes.description.onlyOnce=Whether the R
 # Prevention Areas
 entities.KoseiHelper/MagicPreventionArea.placements.name.MagicPreventionArea=Magic Prevention Area
 entities.KoseiHelper/MagicPreventionArea.placements.description.MagicPreventionArea=Prevents the player from drawing with magic ink inside this area.
-#Collectables
+# Collectables
 entities.KoseiHelper/MagicInkCollectable.placements.name.MagicInkCollectable=Magic Ink Collectable (Orb)
 entities.KoseiHelper/MagicInkCollectable.placements.name.MagicInkPotion=Magic Ink Collectable (Potion)
 entities.KoseiHelper/MagicInkCollectable.placements.description.MagicInkCollectable=Restores a certain amount of magic ink.
@@ -252,6 +252,15 @@ entities.KoseiHelper/MagicInkController.attributes.description.depth=The depth a
 entities.KoseiHelper/MagicInkController.attributes.description.recoverInkUponShattering=Whether the shattered fragments of a paintstroke should be immediately added to the ink reserves.\nMagic paint can be shattered by Oshiro, Badeline Bosses or the Nemesis Gun.
 entities.KoseiHelper/MagicInkController.attributes.description.global=Whether this controller should stay loaded for the entire map after it has been loaded once.\n\nWARNING: Global entities unload if you open the Debug Map, F5, restart game, or save & quit.\nIf you need a trully global controller, you can use bits&bolts and place it in a room called _bb_global.
 entities.KoseiHelper/MagicInkController.attributes.description.renderCursor=Whether the mouse cursor should be rendered.\nDisable if you're not using the cursor (for example, if you only need the controller for Magic Ink Boxes).
+# Magic Box
+entities.KoseiHelper/MagicInkBox.placements.name.MagicInkBox=Magic Ink Box
+entities.KoseiHelper/MagicInkBox.placements.description.MagicInkBox=Box that creates a trail of magic ink and moves away when the player dashes onto it.
+entities.KoseiHelper/MagicInkBox.attributes.description.depth=The depth at which the box is rendered.
+entities.KoseiHelper/MagicInkBox.attributes.description.pushSpeed=The speed at which the box will move after being dashed onto.
+entities.KoseiHelper/MagicInkBox.attributes.description.canBreak=Whether the box can disintegrate.\nNote that the sprite is different for breakable magic boxes.
+entities.KoseiHelper/MagicInkBox.attributes.description.health=How many dashes the box can stand before breaking.\nThe glyph inside indicates how much health is left.\nSizes where the height is > x2 the width (or vice versa) will not display a glyph.
+entities.KoseiHelper/MagicInkBox.attributes.description.bumpSfx=The sound that the box produces when dashed onto.
+entities.KoseiHelper/MagicInkBox.attributes.description.breakSfx=The sound that the box produces when broken.
 
 # Kill Theo On Touch Controller and Safe Theo Area
 entities.KoseiHelper/KillTheoOnTouchController.placements.name.KillTheoOnTouchController=Kill Theo On Touch Controller

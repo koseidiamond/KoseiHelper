@@ -212,8 +212,7 @@ public class KoseiHelperModule : EverestModule
         }
         if (addedAnimations.Count > 0)
         {
-            Logger.Log(LogLevel.Info, "KoseiHelper", $"Added custom animations to sprite '{sprite}'!");
-            Logger.Verbose("KoseiHelper", $"The animations added to sprite '{sprite}' are: {string.Join(", ", addedAnimations)}");
+            Logger.Verbose("KoseiHelper", $"Added custom animations added to sprite '{sprite}': {string.Join(", ", addedAnimations)}");
         }
     }
 

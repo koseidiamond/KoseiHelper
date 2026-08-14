@@ -21,8 +21,10 @@ MagicInkBox.placements = {
 		height = 16,
 			depth = -1000,
 			pushSpeed = 200,
-			singleUse = false,
-			bumpSound = "event:/game/03_resort/forcefield_bump"
+			canBreak = false,
+			health = 1,
+			bumpSfx = "event:/game/03_resort/forcefield_bump",
+			breakSfx = "event:/KoseiHelper/magicShatter"
 		}
 	}
 }
@@ -34,7 +36,11 @@ MagicInkBox.fieldInformation = {
 		{"MagicInkBox", -1000}
 		}),
         editable = true
-    }
+    },
+	health = {
+		fieldType = "integer",
+		minimumValue = 1
+	}
 }
 
 -- todo

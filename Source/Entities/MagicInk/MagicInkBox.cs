@@ -2,6 +2,7 @@ using Celeste.Mod.Entities;
 using Celeste.Mod.KoseiHelper.Apps;
 using Microsoft.Xna.Framework;
 using Monocle;
+using System;
 using System.Collections.Generic;
 
 namespace Celeste.Mod.KoseiHelper.Entities;
@@ -17,8 +18,10 @@ public class MagicInkBox : Solid
     private float pushSpeed = 200f;
     private float maxSpeed;
     private Vector2 velocity;
-    private bool singleUse;
+    private bool canBreak;
     private bool disintegrateWhenStopped;
+    public string breakSfx;
+    private int health, maxHealth;
 
 
     private static readonly ParticleType BoxParticles = new ParticleType
@@ -33,14 +36,17 @@ public class MagicInkBox : Solid
         ScaleOut = true
     };
 
-    public MagicInkBox(EntityData data, Vector2 offset) : base(data.Position + offset, 32, 32, true)
+    public MagicInkBox(EntityData data, Vector2 offset) : base(data.Position + offset, data.Width, data.Height, true)
     {
         Depth = data.Int("depth", -1000);
         pushSpeed = data.Float("pushSpeed", 200f);
-        singleUse = data.Bool("singleUse", false);
+        canBreak = data.Bool("canBreak", false);
         maxSpeed = pushSpeed * 1.5f;
-        bumpSound = data.Attr("bumpSound", "event:/game/03_resort/forcefield_bump");
+        bumpSound = data.Attr("bumpSfx", "event:/game/03_resort/forcefield_bump");
         OnDashCollide = OnDashed;
+        breakSfx = data.Attr("breakSfx", "event:/KoseiHelper/magicShatter");
+        health = maxHealth = data.Int("health", 1);
+
     }
 
     public override void Awake(Scene scene)
@@ -124,16 +130,21 @@ public class MagicInkBox : Solid
 
     public DashCollisionResults OnDashed(Player player, Vector2 direction)
     {
-        velocity += direction * pushSpeed;
-        velocity = velocity.Clamp(-maxSpeed, -maxSpeed, maxSpeed, maxSpeed);
-        Audio.Play(bumpSound, Center);
-        if (singleUse)
+        if (!canBreak || (canBreak && health > 0))
+        {
+            velocity += direction * pushSpeed;
+            velocity = velocity.Clamp(-maxSpeed, -maxSpeed, maxSpeed, maxSpeed);
+            Audio.Play(bumpSound, Center);
+        }
+
+        if (canBreak && health < 2)
             disintegrateWhenStopped = true;
 
         if (player != null)
         {
             KoseiHelperUtils.SideBounce((int)direction.X, player.Position.X, player.Position.Y, player);
         }
+        health--;
         return DashCollisionResults.Rebound;
     }
     private void Disintegrate()
@@ -150,7 +161,7 @@ public class MagicInkBox : Solid
                 level.ParticlesFG.Emit(BoxParticles, 1, pos, Vector2.One, color, Calc.Random.NextAngle());
             }
         }
-        Audio.Play("event:/KoseiHelper/magicShatter", Center); // unhardcode maybe??
+        Audio.Play(breakSfx, Center); // unhardcode maybe??
         RemoveSelf();
     }
 
@@ -167,15 +178,50 @@ public class MagicInkBox : Solid
         Vector2 h = Vector2.UnitY * (Height - 4);
         Vector2 p = Position + Vector2.One * 2;
 
-        Draw.Rect(X, Y, Width, Height, Color.Black);
         Draw.Rect(X + 1, Y + 1, Width - 2, Height - 2, fill);
+
+        if (canBreak && maxHealth > 1 && Math.Max(Width, Height) / Math.Min(Width, Height) <= 1.99f)
+        {
+            float radius = (Width + Height) / 6f;
+            Vector2[] points = new Vector2[maxHealth];
+
+            for (int i = 0; i < maxHealth; i++)
+            {
+                float angle = MathHelper.TwoPi * i / maxHealth - MathHelper.PiOver2;
+                points[i] = Center + new Vector2(0f,1f) + Calc.AngleToVector(angle, radius);
+            }
+
+            // faint glyph silhouette
+            for (int i = 0; i < maxHealth; i++)
+            {
+                for (int j = i + 1; j < maxHealth; j++)
+                {
+                    Draw.Line(points[i], points[j], Color.Lerp(border, fill, 0.85f), 1f);
+                }
+            }
+
+            // dot connections
+            for (int i = 0; i < health; i++)
+            {
+                for (int j = i + 1; j < health; j++)
+                {
+                    Draw.Line(points[i], points[j], border * 0.4f, 1.5f);
+                }
+            }
+        }
 
         Draw.Line(p, p + w, border, 2);
         Draw.Line(p + h, p + h + w, border, 2);
         Draw.Line(p, p + h, border, 2);
         Draw.Line(p + w, p + h + w, border, 2);
 
-        Draw.Line(p, p + h + w, border, 2);
-        Draw.Line(p + w, p + h, border, 2);
+        if (!canBreak)
+        {
+            Draw.Line(p - Vector2.One, p + h + w + Vector2.One, Color.Lerp(border, Calc.HexToColor("1a1038"), 0.4f), 2);
+            Draw.Line(p + w + new Vector2(1f, -1f), p + h + new Vector2(-1f, 1f), Color.Lerp(border, Calc.HexToColor("1a1038"), 0.4f), 2);
+        }
+
+
+        Draw.HollowRect(X, Y, Width, Height, Color.Black);
     }
 }
