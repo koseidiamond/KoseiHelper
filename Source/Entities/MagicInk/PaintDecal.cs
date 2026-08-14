@@ -98,7 +98,8 @@ public class PaintBarrier : Solid
     private float timer;
     public PaintDecal Decal { get; set; }
     public float InkCost { get; }
-    public PaintBarrier(Vector2 position, Collider collider, PaintDecal decal, float ttl, int surfaceSoundIndex = 8, float inkCost = 0) : base(position, 1, 1, safe: false)
+    public Entity PaintOwner { get; }
+    public PaintBarrier(Vector2 position, Collider collider, PaintDecal decal, float ttl, int surfaceSoundIndex = 8, float inkCost = 0, Entity paintOwner = null) : base(position, 1, 1, safe: false)
     {
         Collider = collider;
         Decal = decal;
@@ -112,6 +113,7 @@ public class PaintBarrier : Solid
         base.AddTag(Tags.TransitionUpdate);
         SurfaceSoundIndex = surfaceSoundIndex;
         InkCost = inkCost;
+        PaintOwner = paintOwner;
     }
 
     public override void Update()

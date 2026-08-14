@@ -30,7 +30,7 @@ public class MagicPreventionArea : Entity
     public MagicPreventionArea(EntityData data, Vector2 offset) : base(data.Position + offset)
     {
         Collider = new Hitbox(data.Width, data.Height);
-        color = data.HexColor("color", KoseiHelperUtils.ParseHexColor(data.Values.TryGetValue("color", out object c1) ? c1.ToString() : null, Calc.HexToColor("deb887")));
+        color = Calc.HexToColor("deb887");
         Depth = 1;
     }
 

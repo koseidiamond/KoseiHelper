@@ -19,7 +19,8 @@ MagicInkController.placements = {
 		depth = 1,
 		surfaceSoundIndex = 32,
 		recoverInkUponShattering = true,
-		global = false
+		global = false,
+		renderCursor = true
 		}
 	}
 }

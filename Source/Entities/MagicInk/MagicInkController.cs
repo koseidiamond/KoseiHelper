@@ -16,7 +16,6 @@ public class MagicInkController : Entity
     private readonly List<PaintStroke> currentStroke = new();
     private Vector2? lastMouse;
     public int thickness;
-    private Color CurrentColor;
     private bool clearNextFrame;
     public float currentInk, spentInk, maxInk, regenerationRate;
     private int surfaceSoundIndex;
@@ -26,6 +25,7 @@ public class MagicInkController : Entity
     public const float cooldown = 1f;
     public float regenerationCooldown = cooldown;
     public bool recoverInkUponShattering;
+    private bool renderCursor = true;
 
     public MagicInkController(EntityData data, Vector2 offset) : base(data.Position + offset)
     {
@@ -34,6 +34,7 @@ public class MagicInkController : Entity
         regenerationRate = data.Float("regenerationRate", 20f);
         thickness = data.Int("thickness", 8);
         surfaceSoundIndex = data.Int("surfaceSoundIndex", 32);
+        renderCursor = data.Bool("renderCursor", true);
         flag = data.Attr("flag", "");
         inkDepth = data.Int("depth", 1);
         recoverInkUponShattering = data.Bool("recoverInkUponShattering", true);
@@ -48,7 +49,7 @@ public class MagicInkController : Entity
     {
         base.Added(scene);
         if (KoseiHelperUtils.CheckFlag(scene as Level, flag))
-            scene.Add(new InkDisplay());
+            scene.Add(new InkDisplay(renderCursor));
     }
 
     public override void Update()
@@ -62,7 +63,7 @@ public class MagicInkController : Entity
         if (!KoseiHelperUtils.CheckFlag(level, flag))
             return;
         if (level.Tracker.GetEntity<InkDisplay>() == null)
-            level.Add(new InkDisplay());
+            level.Add(new InkDisplay(renderCursor));
 
         if (!MInput.Mouse.CheckLeftButton && regenerationCooldown == 0f)
         {
@@ -74,8 +75,6 @@ public class MagicInkController : Entity
             regenerationCooldown -= Engine.DeltaTime;
         if (regenerationCooldown < 0f)
             regenerationCooldown = 0f;
-
-        CurrentColor = Calc.HsvToColor((level.TimeActive * 0.25f) % 1f, 1f, 1f);
         Vector2 mouse = MInput.Mouse.Position;
         // zoomout compatibility
         float scaleX = (float)(level.Camera.Viewport.Width) / 1920f;
@@ -108,7 +107,7 @@ public class MagicInkController : Entity
                             drawingSound = Audio.Play("event:/KoseiHelper/magicDrawing", end);
                         else
                             Audio.Position(drawingSound, end);
-                        PaintStroke stroke = new(lastMouse.Value, end, CurrentColor, thickness);
+                        PaintStroke stroke = new(lastMouse.Value, end, Calc.HsvToColor((level.TimeActive * 0.25f) % 1f, 1f, 1f), thickness);
                         currentStroke.Add(stroke);
                         SpawnInk(level, stroke);
                         currentInk -= usableDistance;
@@ -154,12 +153,12 @@ public class MagicInkController : Entity
         }
     }
 
-    private void SpawnInk(Level level, PaintStroke stroke)
+    private void SpawnInk(Level level, PaintStroke stroke, Entity paintOwner = null)
     {
         List<PaintStroke> lines = new() { stroke };
-        ColliderList collider = BuildCollider(lines);
+        ColliderList collider = MagicUtils.BuildCollider(lines);
         PaintDecal decal = new PaintDecal(Vector2.Zero, lines, inkDepth, timeToLive);
-        PaintBarrier barrier = new PaintBarrier(Vector2.Zero, collider, decal, timeToLive, surfaceSoundIndex, Vector2.Distance(stroke.From, stroke.To));
+        PaintBarrier barrier = new PaintBarrier(Vector2.Zero, collider, decal, timeToLive, surfaceSoundIndex, Vector2.Distance(stroke.From, stroke.To), paintOwner);
         level.Add(decal);
         level.Add(barrier);
         regenerationCooldown = cooldown;
@@ -196,21 +195,27 @@ public class MagicInkController : Entity
         regenerationCooldown = cooldown;
     }
 
-    private ColliderList BuildCollider(List<PaintStroke> lines)
+    /// <summary>
+    /// Used for entities that spawn paint, like the Magic Ink Box.
+    /// It also keeps the rainbow in case the controller's flag becomes inactive.
+    /// </summary>
+    public bool TrySpawnPaint(Vector2 from, Vector2 to, Entity paintOwner = null)
     {
-        ColliderList list = new();
-        foreach (PaintStroke line in lines)
-        {
-            float length = Vector2.Distance(line.From, line.To);
-            int steps = Math.Max(1, (int)Math.Ceiling(length));
-            for (int i = 0; i <= steps; i++)
-            {
-                Vector2 p = Vector2.Lerp(line.From, line.To, i / (float)steps);
-                list.Add(new Hitbox(line.Thickness, line.Thickness, p.X - line.Thickness / 2f, p.Y - line.Thickness / 2f));
-            }
-        }
-        return list;
+        if (IsInPreventionArea(from) || IsInPreventionArea(to))
+            return false;
+        float cost = Vector2.Distance(from, to);
+        if (currentInk < cost)
+            return false;
+        currentInk -= cost;
+        spentInk += cost;
+        regenerationCooldown = cooldown;
+        Color color = Calc.HsvToColor((SceneAs<Level>().TimeActive * 0.25f) % 1f, 1f, 1f);
+        PaintStroke stroke = new(from, to, color, thickness);
+        SpawnInk(SceneAs<Level>(), stroke, paintOwner);
+        return true;
     }
+
+
 
     private bool IsInPreventionArea(Vector2 position)
     {
@@ -229,8 +234,10 @@ public class MagicInkController : Entity
 public class InkDisplay : Entity
 {
     // The reason for this class to exist is to render it in the SubHUD, unlike the ink which is not HUD
-    public InkDisplay()
+    private bool renderCursor;
+    public InkDisplay(bool renderCursor)
     {
+        this.renderCursor = renderCursor;
         base.AddTag(Tags.TransitionUpdate);
         base.AddTag(TagsExt.SubHUD);
     }
@@ -285,10 +292,13 @@ public class InkDisplay : Entity
             Draw.HollowRect(position + width, position, overfillWidth, height, Color.White);
         }
 
-        Image image = new Image(GFX.Gui["dot_outline"]);
-        image.Color = Calc.HsvToColor((level.TimeActive * 0.25f) % 1f, 1f, 1f);
-        image.Position = new Vector2(MInput.Mouse.Position.X * ((float)level.Camera.Viewport.Width / 1920f) * 6f * (320f / (float)level.Camera.Viewport.Width) - image.Width / 2f,
-            MInput.Mouse.Position.Y * ((float)level.Camera.Viewport.Height / 1080f) * 6f * (180f / (float)level.Camera.Viewport.Height) - image.Height / 2f);
-        image.Render();
+        if (renderCursor)
+        {
+            Image image = new Image(GFX.Gui["dot_outline"]);
+            image.Color = Calc.HsvToColor((level.TimeActive * 0.25f) % 1f, 1f, 1f);
+            image.Position = new Vector2(MInput.Mouse.Position.X * ((float)level.Camera.Viewport.Width / 1920f) * 6f * (320f / (float)level.Camera.Viewport.Width) - image.Width / 2f,
+                MInput.Mouse.Position.Y * ((float)level.Camera.Viewport.Height / 1080f) * 6f * (180f / (float)level.Camera.Viewport.Height) - image.Height / 2f);
+            image.Render();
+        }
     }
 }

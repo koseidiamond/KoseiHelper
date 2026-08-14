@@ -219,13 +219,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
         {
             On.Celeste.Player.Update += PlayerUpdated;
             On.Celeste.Player.Render += PlayerRendered;
-
-            Everest.Events.Level.OnLoadLevel += (level, playerIntro, isFromLoader) =>
-            {
-                this.level = level;
-
-                GunInput.CursorPosition = new Vector2(1920 / 2, 1080 / 2);
-            };
+            Everest.Events.Level.OnLoadLevel += OnLoadLevel;
         }
 
         public override void Unload()
@@ -251,6 +245,13 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
 
             On.Celeste.Player.Update -= PlayerUpdated;
             On.Celeste.Player.Render -= PlayerRendered;
+            Everest.Events.Level.OnLoadLevel -= OnLoadLevel;
+        }
+
+        private void OnLoadLevel(Level level, Player.IntroTypes playerIntro, bool isFromLoader)
+        {
+            this.level = level;
+            GunInput.CursorPosition = new Vector2(1920 / 2, 1080 / 2);
         }
 
 #pragma warning disable CL0004
