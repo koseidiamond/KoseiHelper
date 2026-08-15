@@ -95,7 +95,7 @@ public class KillIfNotGroundedTrigger : Trigger
                 }
             };
             player.Add(component);
-            player.Die(Vector2.Zero);
+            player.Die(player.Center.SafeNormalize());
             RemoveSelf();
         }
     }

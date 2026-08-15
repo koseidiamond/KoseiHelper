@@ -85,7 +85,6 @@ public class MagicInkBox : Solid
             // Move boxes and ensure they stay inside the bounds of the room
             if (velocity.X != 0f)
             {
-                //MoveHCollideSolids(velocity.X * Engine.DeltaTime, false);
                 float moveX = velocity.X * Engine.DeltaTime;
                 float newX = X + moveX;
                 if (newX < level.Bounds.Left)
@@ -104,7 +103,6 @@ public class MagicInkBox : Solid
 
             if (velocity.Y != 0f)
             {
-                //MoveVCollideSolids(velocity.Y * Engine.DeltaTime, false);
                 float moveY = velocity.Y * Engine.DeltaTime;
                 float newY = Y + moveY;
                 if (newY < level.Bounds.Top)
@@ -143,7 +141,7 @@ public class MagicInkBox : Solid
             float nextProgress = progress + spacing / distance;
             Vector2 from = Vector2.Lerp(previousPosition, current, MathHelper.Clamp(progress, 0f, 1f));
             Vector2 to = Vector2.Lerp(previousPosition, current, MathHelper.Clamp(nextProgress, 0f, 1f));
-            if (!controller.TrySpawnPaint(from, to, this))
+            if (!controller.TrySpawnPaint(from, to, this, controller.killIfNoInk))
                 break;
             leftoverDistance -= spacing;
         }
@@ -215,7 +213,7 @@ public class MagicInkBox : Solid
             for (int i = 0; i < maxHealth; i++)
             {
                 float angle = MathHelper.TwoPi * i / maxHealth - MathHelper.PiOver2;
-                points[i] = Center + new Vector2(0f,1f) + Calc.AngleToVector(angle, radius);
+                points[i] = Center + new Vector2(0f, 1f) + Calc.AngleToVector(angle, radius);
             }
 
             // faint glyph silhouette
@@ -247,7 +245,6 @@ public class MagicInkBox : Solid
             Draw.Line(p - Vector2.One, p + h + w + Vector2.One, Color.Lerp(border, Calc.HexToColor("1a1038"), 0.4f), 2);
             Draw.Line(p + w + new Vector2(1f, -1f), p + h + new Vector2(-1f, 1f), Color.Lerp(border, Calc.HexToColor("1a1038"), 0.4f), 2);
         }
-
 
         Draw.HollowRect(X, Y, Width, Height, Color.Black);
     }

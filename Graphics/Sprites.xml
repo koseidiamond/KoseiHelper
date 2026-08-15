@@ -128,4 +128,20 @@
 		<Loop id="outline" path="outlineBottle" delay="0.25" frames="00,01"/>
 	</koseiHelper_inkBottleCollectable>
 	
+	<koseiHelper_grayBooster path="objects/KoseiHelper/MagicBooster/grayBooster/" start="loop">
+		<Justify x="0.5" y="0.5"/>
+		<Loop id="loop" path="booster" delay="0.1" frames="0-4"/>
+		<Loop id="inside" path="booster" delay="0.1" frames="5-8"/>
+		<Loop id="spin" path="booster" delay="0.06" frames="18-25"/>
+		<Anim id="pop" path="booster" delay="0.08" frames="9-17"/>
+  </koseiHelper_grayBooster>
+  <koseiHelper_grayBoosterRed path="objects/KoseiHelper/MagicBooster/grayBoosterRed/" start="loop">
+		<Justify x="0.5" y="0.5"/>
+		<Anim id="appear" path="booster" delay="0.08" frames="26-34" goto="loop"/>
+		<Loop id="loop" path="booster" delay="0.1" frames="0-4"/>
+		<Loop id="inside" path="booster" delay="0.1" frames="5-8"/>
+		<Loop id="spin" path="booster" delay="0.06" frames="18-25"/>
+		<Anim id="pop" path="booster" delay="0.08" frames="9-17"/>
+  </koseiHelper_grayBoosterRed>
+	
 </Sprites>

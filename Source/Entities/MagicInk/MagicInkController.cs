@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Monocle;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Celeste.Mod.KoseiHelper.Entities;
 
@@ -27,6 +28,7 @@ public class MagicInkController : Entity
     public bool recoverInkUponShattering;
     private bool renderCursor = true;
     public bool killIfNoInk;
+    internal bool debug;
 
     public MagicInkController(EntityData data, Vector2 offset) : base(data.Position + offset)
     {
@@ -40,11 +42,34 @@ public class MagicInkController : Entity
         inkDepth = data.Int("depth", 1);
         recoverInkUponShattering = data.Bool("recoverInkUponShattering", true);
         killIfNoInk = data.Bool("killIfNoInk", false);
+        debug = data.Bool("debug", false);
         currentInk = maxInk;
         base.AddTag(Tags.TransitionUpdate);
         base.AddTag(Tags.Persistent);
         if (data.Bool("global", false))
             base.AddTag(Tags.Global);
+        Add(new PostUpdateHook(KillIfNoInk));
+    }
+
+    private void KillIfNoInk()
+    {
+        if (!killIfNoInk || currentInk >= 1f)
+            return;
+
+        Level level = SceneAs<Level>();
+        Player player = level?.Tracker.GetEntity<Player>();
+
+        if (player != null && !player.Dead)
+        {
+            
+            player.Die((player.Center).SafeNormalize());
+            List<PaintDecal> decals = level.Tracker.GetEntities<PaintDecal>().OfType<PaintDecal>().ToList();
+            foreach (PaintDecal decal in decals)
+            {
+                if (decal.Scene == level)
+                    decal.Shatter(Vector2.Zero);
+            }
+        }
     }
 
     public override void Added(Scene scene)
@@ -61,6 +86,10 @@ public class MagicInkController : Entity
         Level level = SceneAs<Level>();
         if (level == null) return;
         Player player = level.Tracker.GetEntity<Player>();
+
+
+        if (killIfNoInk && currentInk < 1f)
+            regenerationRate = -600f; // ensure the player is killed if we effectively have no ink
 
         // add display if it wasn't added yet because of the flag
         if (!KoseiHelperUtils.CheckFlag(level, flag))
@@ -144,9 +173,6 @@ public class MagicInkController : Entity
             if (!MInput.Mouse.CheckLeftButton || player == null || player.Dead)
                 Audio.Stop(drawingSound);
         }
-
-        if (killIfNoInk && player != null && currentInk <= 1f)
-            player.Die(player.Center);
     }
 
     public override void Render()
@@ -204,13 +230,18 @@ public class MagicInkController : Entity
     /// Used for entities that spawn paint, like the Magic Ink Box.
     /// It also keeps the rainbow in case the controller's flag becomes inactive.
     /// </summary>
-    public bool TrySpawnPaint(Vector2 from, Vector2 to, Entity paintOwner = null)
+    /// <param name="removeInkIfInsufficient">Whether the ink should be drained even if the spawn attempt fails. Useful for approaching 0 currentInk. This argument should have the same value as killIfNoInk.</param>
+    public bool TrySpawnPaint(Vector2 from, Vector2 to, Entity paintOwner = null, bool removeInkIfInsufficient = false)
     {
         if (IsInPreventionArea(from) || IsInPreventionArea(to))
             return false;
         float cost = Vector2.Distance(from, to);
         if (currentInk < cost)
+        {
+            if (removeInkIfInsufficient)
+                currentInk = 0f;
             return false;
+        }
         currentInk -= cost;
         spentInk += cost;
         regenerationCooldown = cooldown;
@@ -267,22 +298,34 @@ public class InkDisplay : Entity
         if (controller == null)
             return;
 
-        const int position = 20;
+        int positionX = 20, positionY = 20;
         int width = (int)(controller.maxInk / 2);
         const int height = 12;
+
+        if (KoseiHelperModule.Settings.InkBarAbovePlayer)
+        {
+            Player player = level.Tracker.GetEntity<Player>();
+
+            if (player != null)
+            {
+                positionX = (int)((level.Camera.CameraToScreen(player.Center) * 6f).X - width / 2f);
+                positionY = (int)((level.Camera.CameraToScreen(player.Center) * 6f).Y - 92f);
+            }
+        }
 
         float percent = controller.currentInk / controller.maxInk;
         float normalPercent = Math.Min(percent, 1f);
         float overfillPercent = Math.Max(percent - 1f, 0f);
-        Draw.Rect(position, position, width, height, Color.Black);
+
+        Draw.Rect(positionX, positionY, width, height, Color.Black);
         int filled = (int)(width * normalPercent);
 
         for (int i = 0; i < filled; i++)
         {
             Color c = Calc.HsvToColor(((i / (float)width) + SceneAs<Level>().TimeActive * 0.2f) % 1f, 1f, 1f);
-            Draw.Rect(position + i, position, 1, height, c);
+            Draw.Rect(positionX + i, positionY, 1, height, c);
         }
-        Draw.HollowRect(position, position, width, height, Color.White);
+        Draw.HollowRect(positionX, positionY, width, height, Color.White);
 
         // Overfill
         if (overfillPercent > 0f)
@@ -292,9 +335,22 @@ public class InkDisplay : Entity
             for (int i = 0; i < overfillWidth; i++)
             {
                 Color c = Calc.HsvToColor((((width + i) / (float)width) + SceneAs<Level>().TimeActive * 0.2f) % 1f, 1f, 1f);
-                Draw.Rect(position + width + i, position, 1, height, c);
+                Draw.Rect(positionX + width + i, positionY, 1, height, c);
             }
-            Draw.HollowRect(position + width, position, overfillWidth, height, Color.White);
+            Draw.HollowRect(positionX + width, positionY, overfillWidth, height, Color.White);
+        }
+
+        if (controller.debug)
+        {
+            Player player = level.Tracker.GetEntity<Player>();
+            if (player != null)
+            {
+                if (KoseiHelperModule.Settings.InkBarAbovePlayer)
+                    Draw.Text(Draw.DefaultFont, controller.currentInk.ToString("0"),
+                        level.Camera.CameraToScreen(player.Center) * 6f - new Vector2(Draw.DefaultFont.MeasureString(controller.currentInk.ToString("0")).X * 0.5f - 96f, 96f), Color.White);
+            }
+            if (!KoseiHelperModule.Settings.InkBarAbovePlayer)
+                Draw.Text(Draw.DefaultFont, controller.currentInk.ToString("0"), new Vector2(180f, 16f), Color.White);
         }
 
         if (renderCursor)

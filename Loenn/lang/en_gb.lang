@@ -229,7 +229,8 @@ entities.KoseiHelper/EntityResizer.attributes.description.onlyOnce=Whether the R
 # Prevention Areas
 entities.KoseiHelper/MagicPreventionArea.placements.name.MagicPreventionArea=Magic Prevention Area
 entities.KoseiHelper/MagicPreventionArea.placements.description.MagicPreventionArea=Prevents the player from drawing with magic ink inside this area.
-# Collectables
+entities.KoseiHelper/MagicPreventionArea.placements.description.drainInkWhileInside=Whether staying inside this area should drain your magic ink.
+# Ink Collectables
 entities.KoseiHelper/MagicInkCollectable.placements.name.MagicInkCollectable=Magic Ink Collectable (Orb)
 entities.KoseiHelper/MagicInkCollectable.placements.name.MagicInkPotion=Magic Ink Collectable (Potion)
 entities.KoseiHelper/MagicInkCollectable.placements.description.MagicInkCollectable=Restores a certain amount of magic ink.
@@ -242,7 +243,7 @@ entities.KoseiHelper/MagicInkCollectable.attributes.description.sound=The sound 
 entities.KoseiHelper/MagicInkCollectable.attributes.description.canReappear=Whether the collectable should reappear after three seconds.
 # Controller
 entities.KoseiHelper/MagicInkController.placements.name.MagicInkController=Magic Ink Controller
-entities.KoseiHelper/MagicInkController.placements.description.MagicInkController=Allows the player to draw solid magical paintstrokes with the mouse that disappear with time.
+entities.KoseiHelper/MagicInkController.placements.description.MagicInkController=Allows the player to draw solid magical paintstrokes with the mouse that disappear with time.\nAll magic-related entities need this controller so the magic ink system can work correctly.
 entities.KoseiHelper/MagicInkController.attributes.description.timeToLive=The time before each paintstroke disappears.
 entities.KoseiHelper/MagicInkController.attributes.description.maxInk=The maximum amount of ink that the player can carry.
 entities.KoseiHelper/MagicInkController.attributes.description.regenerationRate=How much ink per second is regenerated.\nLeave at 0 if you don't want natural regen.
@@ -261,6 +262,9 @@ entities.KoseiHelper/MagicInkBox.attributes.description.canBreak=Whether the box
 entities.KoseiHelper/MagicInkBox.attributes.description.health=How many dashes the box can stand before breaking.\nThe glyph inside indicates how much health is left.\nSizes where the height is > x2 the width (or vice versa) will not display a glyph.
 entities.KoseiHelper/MagicInkBox.attributes.description.bumpSfx=The sound that the box produces when dashed onto.
 entities.KoseiHelper/MagicInkBox.attributes.description.breakSfx=The sound that the box produces when broken.
+# Magic Booster
+entities.KoseiHelper/MagicBooster.placements.name.MagicBooster=Magic Booster
+entities.KoseiHelper/MagicBooster.placements.description.MagicBooster=A booster that leaves a trail of magic ink behind.
 
 # Kill Theo On Touch Controller and Safe Theo Area
 entities.KoseiHelper/KillTheoOnTouchController.placements.name.KillTheoOnTouchController=Kill Theo On Touch Controller
