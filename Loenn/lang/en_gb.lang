@@ -172,6 +172,28 @@ entities.KoseiHelper/CustomBubble.attributes.description.magical=Whether the bub
 
 #KOSEI HELPER ENTITIES
 
+# Tag Modifier
+entities.KoseiHelper/TagModifier.placements.name.TagModifier=Tag Modifier
+entities.KoseiHelper/TagModifier.placements.description.TagModifier=Modifies the tags of the specified entities (read tooltips to see what each of them do).
+entities.KoseiHelper/TagModifier.attributes.description.affectedEntities=Comma-separated list of entity types.\nYou can type the full name (e.g. Celeste.Glider) or just the final part of it (e.g. Glider).\nIf you have CelesteTAS enabled, you can click on an entity in-game to see its name.
+entities.KoseiHelper/TagModifier.attributes.description.allEntities=Whether the Tag Modifier should affect all entities of the given type in the room, or just the closest one.
+entities.KoseiHelper/TagModifier.attributes.description.entityIDs=Comma-separated list of entity IDs.\nUseful if you only want to affect specific entities.
+entities.KoseiHelper/TagModifier.attributes.description.flag=Whether the Tag Modifier should wait for a certain flag to be true before modifying the tag(s).\nIf the flag starts with "!", the Tag Modifier will wait for the flag to be false.
+entities.KoseiHelper/TagModifier.attributes.description.addFrozenUpdate=Adds this tag to the specified entity/entities.\nFrozen Update ensures the entity keeps doing things even while the game is frozen (e.g. after hitting a Bumper).
+entities.KoseiHelper/TagModifier.attributes.description.addGlobal=Adds this tag to the specified entity/entities.\nGlobal ensures the entity stays loaded even after leaving the room.\nNote that Global entities unload if you open the Debug Map, F5, restart game, or save & quit.
+entities.KoseiHelper/TagModifier.attributes.description.addHUD=Adds this tag to the specified entity/entities.\nHUD entities are rendered in HD, above the Pause Menu.\nThey use different coordinates that "normal" gameplay entities (320x180) because the resolution is higher.
+entities.KoseiHelper/TagModifier.attributes.description.addPauseUpdate=Adds this tag to the specified entity/entities.\nPause Update ensures the entity keeps doing things even while the game is paused.
+entities.KoseiHelper/TagModifier.attributes.description.addPersistent=Adds this tag to the specified entity/entities.\nPersistent ensures the entity does not unload after entering a different room.
+entities.KoseiHelper/TagModifier.attributes.description.addTransitionUpdate=Adds this tag to the specified entity/entities.\nTransition Update ensures the entity keeps doing things even while the player is transitioning to a different room.
+entities.KoseiHelper/TagModifier.attributes.description.addSubHUD=Adds this tag to the specified entity/entities.\nSubHUD entities are rendered in HD, below the Pause Menu.\nThey use different coordinates that "normal" gameplay entities (320x180) because the resolution is higher.
+entities.KoseiHelper/TagModifier.attributes.description.removeFrozenUpdate=Removes this tag from the specified entity/entities.\nFrozen Update ensures the entity keeps doing things even while the game is frozen (e.g. after hitting a Bumper).
+entities.KoseiHelper/TagModifier.attributes.description.removeGlobal=Removes this tag from the specified entity/entities.\nGlobal ensures the entity stays loaded even after leaving the room.\nNote that Global entities unload if you open the Debug Map, F5, restart game, or save & quit.
+entities.KoseiHelper/TagModifier.attributes.description.removeHUD=Removes this tag from the specified entity/entities.\nHUD entities are rendered in HD, above the Pause Menu.\nThey use different coordinates that "normal" gameplay entities (320x180) because the resolution is higher.
+entities.KoseiHelper/TagModifier.attributes.description.removePauseUpdate=Removes this tag from the specified entity/entities.\nPause Update ensures the entity keeps doing things even while the game is paused.
+entities.KoseiHelper/TagModifier.attributes.description.removePersistent=Removes this tag from the specified entity/entities.\nPersistent ensures the entity does not unload after entering a different room.
+entities.KoseiHelper/TagModifier.attributes.description.removeTransitionUpdate=Removes this tag from the specified entity/entities.\nTransition Update ensures the entity keeps doing things even while the player is transitioning to a different room.
+entities.KoseiHelper/TagModifier.attributes.description.removeSubHUD=Removes this tag from the specified entity/entities.\nSubHUD entities are rendered in HD, below the Pause Menu.\nThey use different coordinates that "normal" gameplay entities (320x180) because the resolution is higher.
+
 # Entity Tinter
 entities.KoseiHelper/EntityTinter.placements.name.EntityTinter=Entity Tinter
 entities.KoseiHelper/EntityTinter.placements.description.EntityTinter=Tints entities with the specified color.\nOnly entities that use sprites or images work.\nVisuals drawn by code (like Dream Blocks) are not compatible!

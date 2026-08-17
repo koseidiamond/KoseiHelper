@@ -204,7 +204,7 @@ function EntityResizer.draw(room, entity, viewport)
 		end
 	end
 	
-    local tinterSprite = drawableSprite.fromTexture("objects/KoseiHelper/EntityTinter/Resizer", entity)
+    local tinterSprite = drawableSprite.fromTexture("objects/KoseiHelper/EntityModifiers/Resizer", entity)
     tinterSprite:draw()
 end
 

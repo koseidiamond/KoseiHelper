@@ -61,7 +61,7 @@ public class MagicInkController : Entity
 
         if (player != null && !player.Dead)
         {
-            
+
             player.Die((player.Center).SafeNormalize());
             List<PaintDecal> decals = level.Tracker.GetEntities<PaintDecal>().OfType<PaintDecal>().ToList();
             foreach (PaintDecal decal in decals)
@@ -350,7 +350,10 @@ public class InkDisplay : Entity
                         level.Camera.CameraToScreen(player.Center) * 6f - new Vector2(Draw.DefaultFont.MeasureString(controller.currentInk.ToString("0")).X * 0.5f - 96f, 96f), Color.White);
             }
             if (!KoseiHelperModule.Settings.InkBarAbovePlayer)
-                Draw.Text(Draw.DefaultFont, controller.currentInk.ToString("0"), new Vector2(180f, 16f), Color.White);
+            {
+                //Draw.Text(Draw.DefaultFont, controller.currentInk.ToString("0"), new Vector2(180f, 16f), Color.White);
+                Draw.Text(Draw.DefaultFont, $"current: {controller.currentInk:0}\n" + $"spent: {controller.spentInk:0}", new Vector2(180f, 16f), Color.White);
+            }
         }
 
         if (renderCursor)

@@ -79,6 +79,12 @@ EntityTinter.fieldInformation = {
 			fieldType = "string"
 		}
 	},
+	affectedEntities = {
+		fieldType = "list",
+		elementOptions = {
+			fieldType = "string"
+		}
+	},
 	maxColor = {
         fieldType = "color",
 		useAlpha = true
@@ -224,7 +230,7 @@ function EntityTinter.draw(room, entity, viewport)
 		end
 	end
 	
-    local tinterSprite = drawableSprite.fromTexture("objects/KoseiHelper/EntityTinter/Tinter", entity)
+    local tinterSprite = drawableSprite.fromTexture("objects/KoseiHelper/EntityModifiers/Tinter", entity)
     tinterSprite:draw()
 end
 

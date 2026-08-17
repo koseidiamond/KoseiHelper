@@ -72,16 +72,10 @@ public class EntityResizer : Entity
     {
         base.Awake(scene);
         Level level = scene as Level;
-        if (KoseiHelperUtils.CheckFlag(level, flag))
+        if (level != null && KoseiHelperUtils.CheckFlag(level, flag))
             TryApplyCustomization();
-        else if (!string.IsNullOrEmpty(flag))
+        else if (level != null && !string.IsNullOrEmpty(flag))
             RestoreCustomization();
-    }
-
-    public override void Added(Scene scene)
-    {
-        base.Added(scene);
-        Level level = SceneAs<Level>();
     }
 
     public override void Update()

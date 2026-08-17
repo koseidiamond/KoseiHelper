@@ -13,7 +13,7 @@ MagicBooster.placements = {
 }
 
 function MagicBooster.texture(room, entity)
-    local red = entity.red
+    local red = entity.red or true
 
     if red then
         return "objects/KoseiHelper/MagicBooster/grayBoosterRed/loennBooster"
