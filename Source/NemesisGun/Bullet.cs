@@ -16,7 +16,6 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
     [Tracked]
     public class Bullet : Entity
     {
-
         public Rectangle Hitbox => new Rectangle((int)Position.X + Extensions.bulletXOffset, (int)Position.Y + Extensions.bulletYOffset, Extensions.bulletWidth, Extensions.bulletHeight);
         public Vector2 velocity;
         private Vector2 startVelocity;
@@ -1329,11 +1328,11 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                     break;
                 }
             }
-                if (!otherBulletExists)
-                    (Scene as Level).Session.SetFlag("KoseiHelper_playerIsShooting", false);
-                if (owner != null && this != null)
-                    RemoveSelf();
-            }
+            if (!otherBulletExists)
+                (Scene as Level).Session.SetFlag("KoseiHelper_playerIsShooting", false);
+            if (owner != null && this != null)
+                RemoveSelf();
+        }
 
         public override void DebugRender(Camera camera)
         {

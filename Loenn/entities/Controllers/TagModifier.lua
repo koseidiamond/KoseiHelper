@@ -84,7 +84,7 @@ function TagModifier.draw(room, entity, viewport)
 		table.insert(split, line)
 		maxWidth = math.max(maxWidth, font:getWidth(line))
 	end
-	local y = entity.y - #split * lineSpacing - 5
+	local y = entity.y - #split * lineSpacing - 6
 	for i, line in ipairs(split) do
 		local w = font:getWidth(line)
 		love.graphics.print(line, entity.x - w / 2, y + (i - 1) * lineSpacing)

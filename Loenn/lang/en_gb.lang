@@ -298,6 +298,34 @@ entities.KoseiHelper/KillTheoOnTouchController.attributes.description.dieOnSolid
 entities.KoseiHelper/SafeTheoArea.placements.name.SafeTheoArea=Safe Theo Area
 entities.KoseiHelper/SafeTheoArea.placements.description.SafeTheoArea=If you have a Kill Theo On Touch Controller, this area will be excluded from the danger.
 
+# Custom Bird Tutorial
+entities.KoseiHelper/CustomBirdTutorial.placements.name.CustomBirdTutorial=Custom Bird Tutorial
+entities.KoseiHelper/CustomBirdTutorial.placements.description.CustomBirdTutorial=A bird NPC that can display a tutorial in high resolution, with a sequence of buttons, text or images.\nThis version allows customizing the UI box (resized, recolored, etc) and other features.
+entities.KoseiHelper/CustomBirdTutorial.attributes.description.info=The UI tutorial title. Can either be a dialog ID or a path to a texture in the Gui atlas.
+entities.KoseiHelper/CustomBirdTutorial.attributes.description.controls=The controls to display in the UI tutorial, separated by commas. Each part can be:\n- a path to a texture in the Gui atlas (for example "tinyarrow")\n- a direction: Down, DownRight, Right, UpRight, Up, UpLeft, Left, DownLeft\n- a button: Jump, Dash, CrouchDash, Grab, Talk, ESC, Pause, MenuLeft, MenuRight, MenuUp, MenuDown, MenuConfirm, MenuCancel, MenuJournal, QuickRestart\n  or a custom button if you prefix it with "mod:", then ModName/ButtonName (e.g. "mod:KoseiHelper/SpawnButton" or "mod:KoseiHelper/NemesisShot")\n- a dialog ID, if you prefix it with "dialog:" (e.g. "dialog:TUTORIAL_DREAMJUMP")\n- plain text
+entities.KoseiHelper/CustomBirdTutorial.attributes.description.lineColor=The color of the outer part of the UI tutorial.
+entities.KoseiHelper/CustomBirdTutorial.attributes.description.bgColor=The background color of the inner part of the UI tutorial.
+entities.KoseiHelper/CustomBirdTutorial.attributes.description.titleColor=The color of the text in the top part of the UI tutorial.
+entities.KoseiHelper/CustomBirdTutorial.attributes.description.textColor=The color of the text in the bottom part of the UI tutorial.
+entities.KoseiHelper/CustomBirdTutorial.attributes.description.secondaryTextColor=The color of the shadow below the text in the bottom part of the UI tutorial.
+entities.KoseiHelper/CustomBirdTutorial.attributes.description.directionColor=The color of the arrows that indicate directions in the UI tutorial.
+entities.KoseiHelper/CustomBirdTutorial.attributes.description.buttonColor=The color of the button icons in the UI tutorial.
+entities.KoseiHelper/CustomBirdTutorial.attributes.description.imageColor=The color of the images from the Gui atlas that can be shown in the UI tutorial.
+entities.KoseiHelper/CustomBirdTutorial.attributes.description.buttonPadding=The distance between each element in the bottom part of the UI tutorial.
+entities.KoseiHelper/CustomBirdTutorial.attributes.description.sizeMultiplier=A multiplier that affects the size of all elements in the UI tutorial.
+entities.KoseiHelper/CustomBirdTutorial.attributes.description.birdId=The unique id of the bird when used in combination with Custom Tutorial Bird triggers. Useful for extra control over multiple birds in one room.
+entities.KoseiHelper/CustomBirdTutorial.attributes.description.verticalOffset=The vertical offset of the UI tutorial.
+entities.KoseiHelper/CustomBirdTutorial.attributes.description.flag=Whether the bird should wait for a certain flag to be true before cawing and displaying the tutorial.\nIf the flag starts with "!", the bird will wait for the flag to be false.
+entities.KoseiHelper/CustomBirdTutorial.attributes.description.faceLeft=Whether the bird should face left or right.
+entities.KoseiHelper/CustomBirdTutorial.attributes.description.caw=Whether the bird should caw upon displaying the UI tutorial.
+entities.KoseiHelper/CustomBirdTutorial.attributes.description.rectangleShape=Whether the UI tutorial should be a box or an ellipse.
+entities.KoseiHelper/CustomBirdTutorial.attributes.description.renderTriangleBelow=Whether the UI tutorial should have a little "arrow" below the box.
+entities.KoseiHelper/CustomBirdTutorial.attributes.description.noBird=Whether the bird sprite should be invisible.
+entities.KoseiHelper/CustomBirdTutorial.attributes.description.onlyOnce=Whether the bird should respawn after displaying the UI tutorial and flying away.
+
+
+
+
 # Conveyor
 entities.KoseiHelper/Conveyor.placements.name.conveyor=Conveyor
 entities.KoseiHelper/Conveyor.placements.description.conveyor=1-tile conveyor that can move the player or other entities.\nCompatible with Gravity Helper.
