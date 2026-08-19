@@ -131,7 +131,6 @@ public class TagModifier : Entity
                 Logger.Log(LogLevel.Warn, "KoseiHelper", $"The Tag Modifier tried to add the tag FrozenUpdate to {entity.GetType()}, but the tag already exists!");
             }
         }
-
         if (addGlobal)
         {
             if (removeGlobal)
@@ -147,7 +146,6 @@ public class TagModifier : Entity
                 Logger.Log(LogLevel.Warn, "KoseiHelper", $"The Tag Modifier tried to add the tag Global to {entity.GetType()}, but the tag already exists!");
             }
         }
-
         if (addHUD)
         {
             if (removeHUD)
@@ -163,7 +161,6 @@ public class TagModifier : Entity
                 Logger.Log(LogLevel.Warn, "KoseiHelper", $"The Tag Modifier tried to add the tag HUD to {entity.GetType()}, but the tag already exists!");
             }
         }
-
         if (addPauseUpdate)
         {
             if (removePauseUpdate)
@@ -179,7 +176,6 @@ public class TagModifier : Entity
                 Logger.Log(LogLevel.Warn, "KoseiHelper", $"The Tag Modifier tried to add the tag PauseUpdate to {entity.GetType()}, but the tag already exists!");
             }
         }
-
         if (addPersistent)
         {
             if (removePersistent)
@@ -195,7 +191,6 @@ public class TagModifier : Entity
                 Logger.Log(LogLevel.Warn, "KoseiHelper", $"The Tag Modifier tried to add the tag Persistent to {entity.GetType()}, but the tag already exists!");
             }
         }
-
         if (addTransitionUpdate)
         {
             if (removeTransitionUpdate)
@@ -215,7 +210,6 @@ public class TagModifier : Entity
                 Logger.Log(LogLevel.Warn, "KoseiHelper", $"The Tag Modifier tried to add the tag TransitionUpdate to {entity.GetType()}, but the tag already exists!");
             }
         }
-
         if (addSubHUD)
         {
             if (removeSubHUD)
@@ -239,7 +233,6 @@ public class TagModifier : Entity
             else
                 Logger.Log(LogLevel.Warn, "KoseiHelper", $"The Tag Modifier tried to remove the tag FrozenUpdate from {entity.GetType()}, but the tag does not exist!");
         }
-
         if (removeGlobal && !addGlobal)
         {
             if (entity.TagCheck(Tags.Global))
@@ -247,7 +240,6 @@ public class TagModifier : Entity
             else
                 Logger.Log(LogLevel.Warn, "KoseiHelper", $"The Tag Modifier tried to remove the tag Global from {entity.GetType()}, but the tag does not exist!");
         }
-
         if (removeHUD && !addHUD)
         {
             if (entity.TagCheck(Tags.HUD))
@@ -255,7 +247,6 @@ public class TagModifier : Entity
             else
                 Logger.Log(LogLevel.Warn, "KoseiHelper", $"The Tag Modifier tried to remove the tag HUD from {entity.GetType()}, but the tag does not exist!");
         }
-
         if (removePauseUpdate && !addPauseUpdate)
         {
             if (entity.TagCheck(Tags.PauseUpdate))
@@ -263,7 +254,6 @@ public class TagModifier : Entity
             else
                 Logger.Log(LogLevel.Warn, "KoseiHelper", $"The Tag Modifier tried to remove the tag PauseUpdate from {entity.GetType()}, but the tag does not exist!");
         }
-
         if (removePersistent && !addPersistent)
         {
             if (entity.TagCheck(Tags.Persistent))
@@ -271,7 +261,6 @@ public class TagModifier : Entity
             else
                 Logger.Log(LogLevel.Warn, "KoseiHelper", $"The Tag Modifier tried to remove the tag Persistent from {entity.GetType()}, but the tag does not exist!");
         }
-
         if (removeTransitionUpdate && !addTransitionUpdate)
         {
             if (entity.TagCheck(Tags.TransitionUpdate))
@@ -279,7 +268,6 @@ public class TagModifier : Entity
             else
                 Logger.Log(LogLevel.Warn, "KoseiHelper", $"The Tag Modifier tried to remove the tag TransitionUpdate from {entity.GetType()}, but the tag does not exist!");
         }
-
         if (removeSubHUD && !addSubHUD)
         {
             if (entity.TagCheck(TagsExt.SubHUD))

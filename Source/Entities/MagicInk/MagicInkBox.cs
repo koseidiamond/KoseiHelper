@@ -22,6 +22,7 @@ public class MagicInkBox : Solid
     private bool disintegrateWhenStopped;
     public string breakSfx;
     private int health, maxHealth;
+    private bool noInkConsumption;
 
 
     private static readonly ParticleType BoxParticles = new ParticleType
@@ -46,6 +47,7 @@ public class MagicInkBox : Solid
         OnDashCollide = OnDashed;
         breakSfx = data.Attr("breakSfx", "event:/KoseiHelper/magicShatter");
         health = maxHealth = data.Int("health", 1);
+        noInkConsumption = data.Bool("noInkConsumption", false);
 
     }
 
@@ -141,8 +143,8 @@ public class MagicInkBox : Solid
             float nextProgress = progress + spacing / distance;
             Vector2 from = Vector2.Lerp(previousPosition, current, MathHelper.Clamp(progress, 0f, 1f));
             Vector2 to = Vector2.Lerp(previousPosition, current, MathHelper.Clamp(nextProgress, 0f, 1f));
-            if (!controller.TrySpawnPaint(from, to, this, controller.killIfNoInk))
-                break;
+            if (!controller.TrySpawnPaint(from, to, this, controller.killIfNoInk, noInkConsumption))
+                break; // we pass the killIfNoInk to ensure it effectively reaches 0 
             leftoverDistance -= spacing;
         }
         if (disintegrateWhenStopped && velocity == Vector2.Zero)

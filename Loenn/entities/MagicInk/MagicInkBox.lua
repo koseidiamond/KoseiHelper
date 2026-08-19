@@ -129,7 +129,8 @@ MagicInkBox.placements = {
 			canBreak = false,
 			health = 1,
 			bumpSfx = "event:/game/03_resort/forcefield_bump",
-			breakSfx = "event:/KoseiHelper/magicShatter"
+			breakSfx = "event:/KoseiHelper/magicShatter",
+			noInkConsumption = false
 		}
 	}
 }

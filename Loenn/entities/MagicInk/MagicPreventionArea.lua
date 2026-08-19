@@ -11,10 +11,32 @@ MagicPreventionArea.placements = {
 		name = "MagicPreventionArea",
 		data = {
 		width = 16,
-		height = 16
+		height = 16,
+		drainInkWhileInside = false,
+		drainRate = 1
 		}
 	}
 }
+
+function MagicPreventionArea.ignoredFields(entity)
+	local ignored = {
+	"_name",
+    "_id",
+	"drainRate",
+	}
+    local function doNotIgnore(value)
+        for i = #ignored, 1, -1 do
+            if ignored[i] == value then
+                table.remove(ignored, i)
+                return
+            end
+        end
+    end
+	if entity.drainInkWhileInside == true then
+		doNotIgnore("drainRate")
+	end
+	return ignored
+end
 
 function MagicPreventionArea.selection(room, entity)
     return utils.rectangle(entity.x, entity.y, entity.width, entity.height)

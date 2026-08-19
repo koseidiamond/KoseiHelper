@@ -252,6 +252,7 @@ entities.KoseiHelper/EntityResizer.attributes.description.onlyOnce=Whether the R
 entities.KoseiHelper/MagicPreventionArea.placements.name.MagicPreventionArea=Magic Prevention Area
 entities.KoseiHelper/MagicPreventionArea.placements.description.MagicPreventionArea=Prevents the player from drawing with magic ink inside this area.
 entities.KoseiHelper/MagicPreventionArea.placements.description.drainInkWhileInside=Whether staying inside this area should drain your magic ink.
+entities.KoseiHelper/MagicPreventionArea.placements.description.drainRate=The rate at which the ink will be drained.\nThis value is a multiplier, so 0.5 will drain at half the speed, etc.
 # Ink Collectables
 entities.KoseiHelper/MagicInkCollectable.placements.name.MagicInkCollectable=Magic Ink Collectable (Orb)
 entities.KoseiHelper/MagicInkCollectable.placements.name.MagicInkPotion=Magic Ink Collectable (Potion)
@@ -284,6 +285,7 @@ entities.KoseiHelper/MagicInkBox.attributes.description.canBreak=Whether the box
 entities.KoseiHelper/MagicInkBox.attributes.description.health=How many dashes the box can stand before breaking.\nThe glyph inside indicates how much health is left.\nSizes where the height is > x2 the width (or vice versa) will not display a glyph.
 entities.KoseiHelper/MagicInkBox.attributes.description.bumpSfx=The sound that the box produces when dashed onto.
 entities.KoseiHelper/MagicInkBox.attributes.description.breakSfx=The sound that the box produces when broken.
+entities.KoseiHelper/MagicInkBox.attributes.description.noInkConsumption=Whether the magic paint that is spawned should consume no ink.
 # Magic Booster
 entities.KoseiHelper/MagicBooster.placements.name.MagicBooster=Magic Booster
 entities.KoseiHelper/MagicBooster.placements.description.MagicBooster=A booster that leaves a trail of magic ink behind.
@@ -1191,7 +1193,7 @@ entities.KoseiHelper/SpawnController.attributes.description.transitionUpdate=Whe
 
 #Spawn Controller - custom entity attributes
 entities.KoseiHelper/SpawnController.attributes.description.entityPath=The full path to the entity class to be spawned.\nSpawning will only work for entities that accept an EntityData and Vector2 parameterized constructor.\n For example, Celeste.Strawberry.
-entities.KoseiHelper/SpawnController.attributes.description.dictKeys=The names of the keys the Values dictionary of the EntityData used to spawn the entity will use.\nMust match the ones expected by the entity in its constructor for the Entity to find them.\nIn simple words, the parameters separated by commas. For example: winged,speed,dialog.
+entities.KoseiHelper/SpawnController.attributes.description.dictKeys=The names of the keys the Values dictionary of the EntityData used to spawn the entity will use.\nMust match the ones expected by the entity in its constructor for the Entity to find them.\nIn simple words, the parameters separated by commas. For example: winged,speed,dialog.\nThey are generally the same name that you can see in the Lönn plugins but in camelCase (e.g. Can Change Music -> canChangeMusic).
 entities.KoseiHelper/SpawnController.attributes.description.dictValues=The Values of the dictionary of the EntityData used to spawn the entity.\nEach value will be associated with the corresponding key as the values are organized, first key with first value and so forth.\nAny values that exceed the amount of keys will be ignored, and any keys with no corresponding value will have no value.\nIn simple words, the values of the parameters/attributes (in the same order, separated by commas).\nFor example, true,[25,110],hello (Vector2 is inside brackets, hello is a string, doesn't need quotation marks).
 entities.KoseiHelper/SpawnController.attributes.description.noNode=Whether the entity shouldn't have a node.\nCan cause issues for certain entities, but it's useful for other entities (like berries).
 entities.KoseiHelper/SpawnController.attributes.name.dictKeys=Attributes
@@ -1403,9 +1405,9 @@ triggers.KoseiHelper/CreateSpawnPointTrigger.attributes.description.room=The nam
 triggers.KoseiHelper/ReplaceEntitiesTrigger.placements.name.ReplaceEntitiesTrigger=Replace Entities Trigger
 triggers.KoseiHelper/ReplaceEntitiesTrigger.placements.description.ReplaceEntitiesTrigger=Converts all entities of one type into a different type of entities.
 triggers.KoseiHelper/ReplaceEntitiesTrigger.attributes.description.onlyOnce=Whether the trigger should remove itself once used.
-triggers.KoseiHelper/ReplaceEntitiesTrigger.attributes.description.fromEntity=The full path to the entity class that will be replaced.
+triggers.KoseiHelper/ReplaceEntitiesTrigger.attributes.description.fromEntity=The full path to the entity class that will be replaced.\nThe short path / last name (e.g only "Booster" instead of "Celeste.Booster") is also accepted.
 triggers.KoseiHelper/ReplaceEntitiesTrigger.attributes.description.toEntity=The full path to the entity class that will replace the other one.\nSpawning will only work for entities that accept an EntityData and Vector2 parameterized constructor.\n For example, Celeste.Mod.KoseiHelper.Entities.PregnantFlutterbird.
-triggers.KoseiHelper/ReplaceEntitiesTrigger.attributes.description.attributes=The names of the keys the Values dictionary of the EntityData used to spawn the entity will use.\nMust match the ones expected by the entity in its constructor for the Entity to find them.\nIn simple words, the parameters separated by commas. For example: winged,moon,width,height...
+triggers.KoseiHelper/ReplaceEntitiesTrigger.attributes.description.attributes=The names of the keys the Values dictionary of the EntityData used to spawn the entity will use.\nMust match the ones expected by the entity in its constructor for the Entity to find them.\nIn simple words, the parameters separated by commas. For example: winged,moon,width,height...\nThey are generally the same name that you can see in the Lönn plugins but in camelCase (e.g. Can Change Music -> canChangeMusic).
 triggers.KoseiHelper/ReplaceEntitiesTrigger.attributes.description.attributeValues=The Values of the dictionary of the EntityData used to spawn the entity.\nEach value will be associated with the corresponding key as the values are organized, first key with first value and so forth.\nAny values that exceed the amount of keys will be ignored, and any keys with no corresponding value will have no value.\nIn simple words, the values of the parameters/attributes (in the same order, separated by commas). For example, true,false.
 triggers.KoseiHelper/ReplaceEntitiesTrigger.attributes.description.flag=The trigger will only activate once this flag is true.\nLeave empty for no flag required.
 triggers.KoseiHelper/ReplaceEntitiesTrigger.attributes.description.triggerMode=Whether the entities will be replaced when the player enters or exits the trigger, or on every frame (for use with flags).

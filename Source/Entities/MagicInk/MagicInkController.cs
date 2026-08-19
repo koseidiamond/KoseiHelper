@@ -230,8 +230,10 @@ public class MagicInkController : Entity
     /// Used for entities that spawn paint, like the Magic Ink Box.
     /// It also keeps the rainbow in case the controller's flag becomes inactive.
     /// </summary>
+    /// <param name="paintOwner">Used to determine which entity spawned this paint.</param>
     /// <param name="removeInkIfInsufficient">Whether the ink should be drained even if the spawn attempt fails. Useful for approaching 0 currentInk. This argument should have the same value as killIfNoInk.</param>
-    public bool TrySpawnPaint(Vector2 from, Vector2 to, Entity paintOwner = null, bool removeInkIfInsufficient = false)
+    /// <param name="freeInk">Whether spawning paint should not consume any ink.</param>
+    public bool TrySpawnPaint(Vector2 from, Vector2 to, Entity paintOwner = null, bool removeInkIfInsufficient = false, bool freeInk = false)
     {
         if (IsInPreventionArea(from) || IsInPreventionArea(to))
             return false;
@@ -242,9 +244,12 @@ public class MagicInkController : Entity
                 currentInk = 0f;
             return false;
         }
-        currentInk -= cost;
-        spentInk += cost;
-        regenerationCooldown = cooldown;
+        if (!freeInk)
+        {
+            currentInk -= cost;
+            spentInk += cost;
+            regenerationCooldown = cooldown;
+        }
         Color color = Calc.HsvToColor((SceneAs<Level>().TimeActive * 0.25f) % 1f, 1f, 1f);
         PaintStroke stroke = new(from, to, color, thickness);
         SpawnInk(SceneAs<Level>(), stroke, paintOwner);
