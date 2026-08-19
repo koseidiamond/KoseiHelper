@@ -21,13 +21,11 @@ public class ReplaceEntitiesTrigger : Trigger
     {
         onlyOnce = data.Bool("onlyOnce", false);
 
-        // todo: properly test
         fromEntityType = KoseiHelperUtils.GetTypeFromString(data.Attr("fromEntity", "Celeste.CrystalStaticSpinner"));
         if (fromEntityType == null)
         {
             Logger.Log(LogLevel.Error, "KoseiHelper", $"Failed to get entity: Requested type '{data.Attr("fromEntity", "Celeste.CrystalStaticSpinner")}' does not exist");
         }
-
         toEntityType = KoseiHelperUtils.GetTypeFromString(data.Attr("toEntity", "Celeste.Booster"));
         if (toEntityType == null)
         {

@@ -251,6 +251,8 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
         private void OnLoadLevel(Level level, Player.IntroTypes playerIntro, bool isFromLoader)
         {
             this.level = level;
+            shotCooldown = 0;
+            recoilCooldown = 0;
             GunInput.CursorPosition = new Vector2(1920 / 2, 1080 / 2);
         }
 
@@ -273,7 +275,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 GunInput.UpdateInput(self);
                 if (shotCooldown > 0)
                     shotCooldown--;
-                if (recoilCooldown > 0 && !KoseiHelperModule.Settings.GunSettings.RecoilOnlyOnInteraction)
+                if (recoilCooldown > 0)
                     recoilCooldown--;
 
                 if (self.Scene?.TimeActive > 0 && GunWasShot && (TalkComponent.PlayerOver == null || !Input.Talk.Pressed))
@@ -284,7 +286,9 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                         if (self.StateMachine.state != 11 && self.StateMachine.state != 17 &&
                             (self.StateMachine.state != 19 || KoseiHelperModule.Settings.GunSettings.CanShootInFeather))
                             Gunshot(self, CursorPos);
-                        if ((recoilCooldown <= 0 || Extensions.recoilingOnInteraction) && !KoseiHelperModule.Settings.GunSettings.MachineGunMode && self.InControl)
+
+                        // Non-Interaction recoils (interaction ones are handled in the Bullet class)
+                        if (!KoseiHelperModule.Settings.GunSettings.RecoilOnlyOnInteraction && recoilCooldown <= 0 && !KoseiHelperModule.Settings.GunSettings.MachineGunMode && self.InControl)
                         {
                             if (GetEightDirectionalAim(KoseiHelperModule.Settings.GunSettings.gunDirections).Y < Math.Sqrt(2) / 2 &&
                             GetEightDirectionalAim(KoseiHelperModule.Settings.GunSettings.gunDirections).Y > -Math.Sqrt(2) / 2 &&
@@ -309,7 +313,6 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                                 }
                             }
                             recoilCooldown = KoseiHelperModule.Settings.GunSettings.RecoilCooldown;
-                            Extensions.recoilingOnInteraction = false;
                         }
                         Celeste.Freeze(Engine.DeltaTime * KoseiHelperModule.Settings.GunSettings.FreezeFrames);
                         (self.level).DirectionalShake(GetGunVector(self, CursorPos, self.Facing) / 5);

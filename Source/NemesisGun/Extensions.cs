@@ -24,7 +24,6 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
         public static string customParticleTexture = "particles/KoseiHelper/star";
         public static int bulletWidth = 6, bulletHeight = 6, bulletXOffset, bulletYOffset;
         public static bool particleDoesntRotate;
-        public static bool recoilingOnInteraction;
         public static bool forceGrabButton = false;
         public static bool shotInput
         {

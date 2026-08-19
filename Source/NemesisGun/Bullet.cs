@@ -1237,6 +1237,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
 
         private void RecoilOnInteraction(Player player, Entity entity)
         {
+            if (dead) return;
             if (!KoseiHelperModule.Settings.GunSettings.RecoilUpwards)
             {
                 if (entity.Right < player.Left + 1 || entity.Left > player.Right - 1)
@@ -1258,7 +1259,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
             {
                 player.Speed.Y -= KoseiHelperModule.Settings.GunSettings.Recoil;
             }
-            RemoveSelf();
+            dead = true;
         }
 
         private bool BootlegStunSeeker(Seeker seeker)
@@ -1308,6 +1309,8 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
         // Removes bullets
         public void DestroyBullet()
         {
+            if (dead)
+                return;
             if (CanDoShit(owner) && Extensions.bulletExplosion)
             {
                 for (int i = 0; i < 6; i++)
@@ -1316,10 +1319,21 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 }
             }
             dead = true;
-            (Scene as Level).Session.SetFlag("KoseiHelper_playerIsShooting", false);
-            if (owner != null && this != null)
-                RemoveSelf();
-        }
+
+            bool otherBulletExists = false;
+            foreach (Bullet bullet in SceneAs<Level>().Tracker.GetEntities<Bullet>())
+            {
+                if (bullet != this && !bullet.dead)
+                {
+                    otherBulletExists = true;
+                    break;
+                }
+            }
+                if (!otherBulletExists)
+                    (Scene as Level).Session.SetFlag("KoseiHelper_playerIsShooting", false);
+                if (owner != null && this != null)
+                    RemoveSelf();
+            }
 
         public override void DebugRender(Camera camera)
         {
