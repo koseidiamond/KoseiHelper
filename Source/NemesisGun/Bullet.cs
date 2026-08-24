@@ -303,12 +303,19 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
         [MethodImpl(MethodImplOptions.NoInlining)]
         private void CollisionCheck_FrostHelper()
         {
-            if (owner.Scene.CollideFirst<FrostHelper.CustomSpinner>(Hitbox) is FrostHelper.CustomSpinner customSpinner &&
-                KoseiHelperModule.Settings.GunInteractions.BreakSpinners && !dead)
+            if (owner.Scene.CollideFirst<FrostHelper.CustomSpinner>(Hitbox) is FrostHelper.CustomSpinner customSpinner && KoseiHelperModule.Settings.GunInteractions.BreakSpinners && !dead)
             {
                 customSpinner.Destroy();
                 if (KoseiHelperModule.Settings.GunSettings.RecoilOnlyOnInteraction && SceneAs<Level>().Session.GetFlag("KoseiHelper_playerIsShooting") && owner is Player pRecoil)
                     RecoilOnInteraction(pRecoil, customSpinner);
+                DestroyBullet();
+                return;
+            }
+            if (owner.Scene.CollideFirst<FrostHelper.ToggleSwapBlock>(Hitbox) is FrostHelper.ToggleSwapBlock toggleSwapBlock && KoseiHelperModule.Settings.GunInteractions.MoveSwapBlocks && !dead)
+            {
+                new DynamicData(toggleSwapBlock).Invoke("OnDash", Vector2.Zero);
+                if (KoseiHelperModule.Settings.GunSettings.RecoilOnlyOnInteraction && SceneAs<Level>().Session.GetFlag("KoseiHelper_playerIsShooting") && owner is Player pRecoil)
+                    RecoilOnInteraction(pRecoil, toggleSwapBlock);
                 DestroyBullet();
                 return;
             }
@@ -436,7 +443,8 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
             {
                 if (KoseiHelperModule.Settings.GunSettings.RecoilOnlyOnInteraction && SceneAs<Level>().Session.GetFlag("KoseiHelper_playerIsShooting") && owner is Player pRecoil)
                     RecoilOnInteraction(pRecoil, entity);
-                DestroyBullet();
+                if (entity is not Cloud || entity is Cloud cloud && (!cloud.fragile || cloud.respawnTimer <= 0f))
+                    DestroyBullet();
             }
 
             if (entity is MaxHelpingHand.Entities.UpsideDownJumpThru upsideDownJT && velocity.Y < 0)
@@ -1124,6 +1132,12 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                                 RecoilOnInteraction(pRecoil, jumpthru);
                             DestroyBullet();
                         }
+                    }
+                    if (entity is Cloud cloud && cloud.fragile && cloud.respawnTimer <= 0f)
+                    {
+                        cloud.Collidable = false;
+                        cloud.sprite.Play("fade");
+                        cloud.respawnTimer = 2.5f;
                     }
                     return;
                 }

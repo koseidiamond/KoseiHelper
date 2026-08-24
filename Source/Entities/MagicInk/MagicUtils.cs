@@ -9,7 +9,7 @@ namespace Celeste.Mod.KoseiHelper;
 public static class MagicUtils
 {
     public static ColliderList BuildCollider(List<PaintStroke> lines)
-    {
+    { // If someone knows how to improve this, please help
         ColliderList list = new();
         foreach (PaintStroke line in lines)
         {
