@@ -667,10 +667,29 @@ public class CustomPlayerSeeker : Actor
             Input.Rumble(RumbleStrength.Strong, RumbleLength.Long);
             (data.Hit as DashBlock).Break(Position, Position, true);
         }
-        if (data.Hit is CrushBlock)
+        if (data.Hit is CrushBlock cBlock)
         {
-            Celeste.Freeze(0.03f);
-            (data.Hit as CrushBlock).Attack(-data.Direction.FourWayNormal());
+            float leftDist = Math.Abs(Left - cBlock.Right);
+            float rightDist = Math.Abs(Right - cBlock.Left);
+            float topDist = Math.Abs(Top - cBlock.Bottom);
+            float bottomDist = Math.Abs(Bottom - cBlock.Top);
+            float min = Math.Min(Math.Min(leftDist, rightDist), Math.Min(topDist, bottomDist));
+            Vector2 cBlockDirection;
+
+            if (min == leftDist)
+                cBlockDirection = Vector2.UnitX;
+            else if (min == rightDist)
+                cBlockDirection = -Vector2.UnitX;
+            else if (min == topDist)
+                cBlockDirection = Vector2.UnitY;
+            else
+                cBlockDirection = -Vector2.UnitY;
+
+            if (cBlock.CanActivate(cBlockDirection))
+            {
+                Celeste.Freeze(0.03f);
+                cBlock.Attack(cBlockDirection);
+            }
         }
         if (data.Hit is BounceBlock)
         {
