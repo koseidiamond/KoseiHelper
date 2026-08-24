@@ -63,12 +63,6 @@ public class MagicInkController : Entity
         {
 
             player.Die((player.Center).SafeNormalize());
-            List<PaintDecal> decals = level.Tracker.GetEntities<PaintDecal>().OfType<PaintDecal>().ToList();
-            foreach (PaintDecal decal in decals)
-            {
-                if (decal.Scene == level)
-                    decal.Shatter(Vector2.Zero);
-            }
         }
     }
 
@@ -79,6 +73,7 @@ public class MagicInkController : Entity
             scene.Add(new InkDisplay(renderCursor));
     }
 
+
     public override void Update()
     {
         base.Update();
@@ -87,6 +82,18 @@ public class MagicInkController : Entity
         if (level == null) return;
         Player player = level.Tracker.GetEntity<Player>();
 
+        if (player == null || player.Dead)
+        {
+            if (Audio.IsPlaying(drawingSound))
+                Audio.Stop(drawingSound);
+
+            currentStroke.Clear();
+            lastMouse = null;
+            clearNextFrame = false;
+            ShatterAllPaint(level);
+
+            return;
+        }
 
         if (killIfNoInk && currentInk < 1f)
             regenerationRate = -600f; // ensure the player is killed if we effectively have no ink
@@ -97,7 +104,7 @@ public class MagicInkController : Entity
         if (level.Tracker.GetEntity<InkDisplay>() == null)
             level.Add(new InkDisplay(renderCursor));
 
-        if (!MInput.Mouse.CheckLeftButton && regenerationCooldown == 0f)
+        if ((!renderCursor || !MInput.Mouse.CheckLeftButton) && regenerationCooldown == 0f)
         {
             float maxAvailable = Math.Max(0f, maxInk - spentInk);
             if (currentInk < maxAvailable)
@@ -113,13 +120,13 @@ public class MagicInkController : Entity
         float scaleY = (float)(level.Camera.Viewport.Height) / 1080f;
         Vector2 screenMouse = level.Camera.Position + new Vector2(mouse.X * scaleX, mouse.Y * scaleY);
 
-        if (MInput.Mouse.PressedLeftButton)
+        if (renderCursor && MInput.Mouse.PressedLeftButton)
         {
             currentStroke.Clear();
             lastMouse = screenMouse;
         }
 
-        if (MInput.Mouse.CheckLeftButton)
+        if (renderCursor && MInput.Mouse.CheckLeftButton)
         {
             if (currentInk <= 0f)
             {
@@ -160,18 +167,20 @@ public class MagicInkController : Entity
             clearNextFrame = false;
         }
 
-
-        if (MInput.Mouse.ReleasedLeftButton)
+        if (renderCursor)
         {
-            Audio.Stop(drawingSound);
-            currentStroke.Clear();
-            lastMouse = null;
-            clearNextFrame = true;
-        }
-        if (Audio.IsPlaying(drawingSound))
-        {
-            if (!MInput.Mouse.CheckLeftButton || player == null || player.Dead)
+            if (MInput.Mouse.ReleasedLeftButton)
+            {
                 Audio.Stop(drawingSound);
+                currentStroke.Clear();
+                lastMouse = null;
+                clearNextFrame = true;
+            }
+            if (Audio.IsPlaying(drawingSound))
+            {
+                if (!MInput.Mouse.CheckLeftButton || player == null || player.Dead)
+                    Audio.Stop(drawingSound);
+            }
         }
     }
 
@@ -256,8 +265,6 @@ public class MagicInkController : Entity
         return true;
     }
 
-
-
     private bool IsInPreventionArea(Vector2 position)
     {
         foreach (MagicPreventionArea area in Scene.Tracker.GetEntities<MagicPreventionArea>())
@@ -268,106 +275,122 @@ public class MagicInkController : Entity
 
         return false;
     }
-}
 
-[CustomEntity("KoseiHelper/InkDisplay")]
-[Tracked]
-public class InkDisplay : Entity
-{
-    // The reason for this class to exist is to render it in the SubHUD, unlike the ink which is not HUD
-    private bool renderCursor;
-    public InkDisplay(bool renderCursor)
+    private void ShatterAllPaint(Level level)
     {
-        this.renderCursor = renderCursor;
-        base.AddTag(Tags.TransitionUpdate);
-        base.AddTag(TagsExt.SubHUD);
-    }
-
-    public override void Update()
-    {
-        base.Update();
-        Level level = SceneAs<Level>();
-        MagicInkController controller = level.Tracker.GetEntity<MagicInkController>();
-        if (controller == null)
-            return;
-
-        if (!KoseiHelperUtils.CheckFlag(level, controller.flag))
-            RemoveSelf();
-    }
-
-    public override void Render()
-    {
-        base.Render();
-        Level level = SceneAs<Level>();
-        MagicInkController controller = level.Tracker.GetEntity<MagicInkController>();
-        if (controller == null)
-            return;
-
-        int positionX = 20, positionY = 20;
-        int width = (int)(controller.maxInk / 2);
-        const int height = 12;
-
-        if (KoseiHelperModule.Settings.InkBarAbovePlayer)
+        foreach (PaintDecal decal in level.Tracker.GetEntities<PaintDecal>().OfType<PaintDecal>().ToList())
         {
-            Player player = level.Tracker.GetEntity<Player>();
-
-            if (player != null)
-            {
-                positionX = (int)((level.Camera.CameraToScreen(player.Center) * 6f).X - width / 2f);
-                positionY = (int)((level.Camera.CameraToScreen(player.Center) * 6f).Y - 92f);
-            }
-        }
-
-        float percent = controller.currentInk / controller.maxInk;
-        float normalPercent = Math.Min(percent, 1f);
-        float overfillPercent = Math.Max(percent - 1f, 0f);
-
-        Draw.Rect(positionX, positionY, width, height, Color.Black);
-        int filled = (int)(width * normalPercent);
-
-        for (int i = 0; i < filled; i++)
-        {
-            Color c = Calc.HsvToColor(((i / (float)width) + SceneAs<Level>().TimeActive * 0.2f) % 1f, 1f, 1f);
-            Draw.Rect(positionX + i, positionY, 1, height, c);
-        }
-        Draw.HollowRect(positionX, positionY, width, height, Color.White);
-
-        // Overfill
-        if (overfillPercent > 0f)
-        {
-            int overfillWidth = (int)(width * overfillPercent);
-
-            for (int i = 0; i < overfillWidth; i++)
-            {
-                Color c = Calc.HsvToColor((((width + i) / (float)width) + SceneAs<Level>().TimeActive * 0.2f) % 1f, 1f, 1f);
-                Draw.Rect(positionX + width + i, positionY, 1, height, c);
-            }
-            Draw.HollowRect(positionX + width, positionY, overfillWidth, height, Color.White);
-        }
-
-        if (controller.debug)
-        {
-            Player player = level.Tracker.GetEntity<Player>();
-            if (player != null)
-            {
-                if (KoseiHelperModule.Settings.InkBarAbovePlayer)
-                    Draw.Text(Draw.DefaultFont, controller.currentInk.ToString("0"),
-                        level.Camera.CameraToScreen(player.Center) * 6f - new Vector2(Draw.DefaultFont.MeasureString(controller.currentInk.ToString("0")).X * 0.5f - 96f, 96f), Color.White);
-            }
-            if (!KoseiHelperModule.Settings.InkBarAbovePlayer)
-            {
-                //Draw.Text(Draw.DefaultFont, controller.currentInk.ToString("0"), new Vector2(180f, 16f), Color.White);
-                Draw.Text(Draw.DefaultFont, $"current: {controller.currentInk:0}\n" + $"spent: {controller.spentInk:0}", new Vector2(180f, 16f), Color.White);
-            }
-        }
-
-        if (renderCursor)
-        {
-            Image image = new Image(GFX.Gui["dot_outline"]);
-            image.Color = Calc.HsvToColor((level.TimeActive * 0.25f) % 1f, 1f, 1f);
-            image.Position = new Vector2(MInput.Mouse.Position.X * ((float)level.Camera.Viewport.Width / 1920f) * 6f * (320f / (float)level.Camera.Viewport.Width) - image.Width / 2f,
-                MInput.Mouse.Position.Y * ((float)level.Camera.Viewport.Height / 1080f) * 6f * (180f / (float)level.Camera.Viewport.Height) - image.Height / 2f);
-            image.Render();
+            if (decal.Scene == level)
+                decal.Shatter(Vector2.Zero);
         }
     }
 }
+
+    [CustomEntity("KoseiHelper/InkDisplay")]
+    [Tracked]
+    public class InkDisplay : Entity
+    {
+        // The reason for this class to exist is to render it in the SubHUD, unlike the ink which is not HUD
+        private bool renderCursor;
+        public InkDisplay(bool renderCursor)
+        {
+            this.renderCursor = renderCursor;
+            base.AddTag(Tags.TransitionUpdate);
+            base.AddTag(TagsExt.SubHUD);
+        }
+
+        public InkDisplay(EntityData data, bool renderCursor)
+        {
+            this.renderCursor = renderCursor;
+            base.AddTag(Tags.TransitionUpdate);
+            base.AddTag(TagsExt.SubHUD);
+        }
+
+        public override void Update()
+        {
+            base.Update();
+            Level level = SceneAs<Level>();
+            MagicInkController controller = level.Tracker.GetEntity<MagicInkController>();
+            if (controller == null)
+                return;
+
+            if (!KoseiHelperUtils.CheckFlag(level, controller.flag))
+                RemoveSelf();
+        }
+
+        public override void Render()
+        {
+            base.Render();
+            Level level = SceneAs<Level>();
+            MagicInkController controller = level.Tracker.GetEntity<MagicInkController>();
+            if (controller == null)
+                return;
+
+            int positionX = 20, positionY = 20;
+            int width = (int)(controller.maxInk / 2);
+            const int height = 12;
+
+            if (KoseiHelperModule.Settings.InkBarAbovePlayer)
+            {
+                Player player = level.Tracker.GetEntity<Player>();
+
+                if (player != null)
+                {
+                    positionX = (int)((level.Camera.CameraToScreen(player.Center) * 6f).X - width / 2f);
+                    positionY = (int)((level.Camera.CameraToScreen(player.Center) * 6f).Y - 92f);
+                }
+            }
+
+            float percent = controller.currentInk / controller.maxInk;
+            float normalPercent = Math.Min(percent, 1f);
+            float overfillPercent = Math.Max(percent - 1f, 0f);
+
+            Draw.Rect(positionX, positionY, width, height, Color.Black);
+            int filled = (int)(width * normalPercent);
+
+            for (int i = 0; i < filled; i++)
+            {
+                Color c = Calc.HsvToColor(((i / (float)width) + SceneAs<Level>().TimeActive * 0.2f) % 1f, 1f, 1f);
+                Draw.Rect(positionX + i, positionY, 1, height, c);
+            }
+            Draw.HollowRect(positionX, positionY, width, height, Color.White);
+
+            // Overfill
+            if (overfillPercent > 0f)
+            {
+                int overfillWidth = (int)(width * overfillPercent);
+
+                for (int i = 0; i < overfillWidth; i++)
+                {
+                    Color c = Calc.HsvToColor((((width + i) / (float)width) + SceneAs<Level>().TimeActive * 0.2f) % 1f, 1f, 1f);
+                    Draw.Rect(positionX + width + i, positionY, 1, height, c);
+                }
+                Draw.HollowRect(positionX + width, positionY, overfillWidth, height, Color.White);
+            }
+
+            if (controller.debug)
+            {
+                Player player = level.Tracker.GetEntity<Player>();
+                if (player != null)
+                {
+                    if (KoseiHelperModule.Settings.InkBarAbovePlayer)
+                        Draw.Text(Draw.DefaultFont, controller.currentInk.ToString("0"),
+                            level.Camera.CameraToScreen(player.Center) * 6f - new Vector2(Draw.DefaultFont.MeasureString(controller.currentInk.ToString("0")).X * 0.5f - 96f, 96f), Color.White);
+                }
+                if (!KoseiHelperModule.Settings.InkBarAbovePlayer)
+                {
+                    //Draw.Text(Draw.DefaultFont, controller.currentInk.ToString("0"), new Vector2(180f, 16f), Color.White);
+                    Draw.Text(Draw.DefaultFont, $"current: {controller.currentInk:0}\n" + $"spent: {controller.spentInk:0}", new Vector2(180f, 16f), Color.White);
+                }
+            }
+
+            if (renderCursor)
+            {
+                Image image = new Image(GFX.Gui["dot_outline"]);
+                image.Color = Calc.HsvToColor((level.TimeActive * 0.25f) % 1f, 1f, 1f);
+                image.Position = new Vector2(MInput.Mouse.Position.X * ((float)level.Camera.Viewport.Width / 1920f) * 6f * (320f / (float)level.Camera.Viewport.Width) - image.Width / 2f,
+                    MInput.Mouse.Position.Y * ((float)level.Camera.Viewport.Height / 1080f) * 6f * (180f / (float)level.Camera.Viewport.Height) - image.Height / 2f);
+                image.Render();
+            }
+        }
+    }

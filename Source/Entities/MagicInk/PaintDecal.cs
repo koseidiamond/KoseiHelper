@@ -46,6 +46,19 @@ public class PaintDecal : Entity
         Depth = depth;
     }
 
+    public PaintDecal(EntityData data, Vector2 position, List<PaintStroke> source, int depth, float ttl) : base(position)
+    {
+        lines = new(source);
+        timer = initialTimer = ttl;
+        if (timer == -1f)
+        {
+            base.AddTag(Tags.Persistent);
+            base.AddTag(Tags.Global);
+        }
+        base.AddTag(Tags.TransitionUpdate);
+        Depth = depth;
+    }
+
     public override void Update()
     {
         base.Update();
@@ -100,6 +113,23 @@ public class PaintBarrier : Solid
     public float InkCost { get; }
     public Entity PaintOwner { get; }
     public PaintBarrier(Vector2 position, Collider collider, PaintDecal decal, float ttl, int surfaceSoundIndex = 8, float inkCost = 0, Entity paintOwner = null) : base(position, 1, 1, safe: false)
+    {
+        Collider = collider;
+        Decal = decal;
+        timer = ttl;
+        InkCost = inkCost;
+        if (timer == -1f)
+        {
+            base.AddTag(Tags.Persistent);
+            base.AddTag(Tags.Global);
+        }
+        base.AddTag(Tags.TransitionUpdate);
+        SurfaceSoundIndex = surfaceSoundIndex;
+        InkCost = inkCost;
+        PaintOwner = paintOwner;
+    }
+
+    public PaintBarrier(EntityData data, Vector2 position, Collider collider, PaintDecal decal, float ttl, int surfaceSoundIndex = 8, float inkCost = 0, Entity paintOwner = null) : base(position, 1, 1, safe: false)
     {
         Collider = collider;
         Decal = decal;

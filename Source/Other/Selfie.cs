@@ -23,6 +23,12 @@ public class Selfie : Entity
         this.level = level;
     }
 
+    public Selfie(EntityData data, Level level)
+    {
+        base.Tag = Tags.HUD;
+        this.level = level;
+    }
+
     public IEnumerator PictureRoutine(string photo, string textboxbutton, string photoInSound, string photoOutSound, string inputSound,
         float timeToOpen, bool flash, string openEaser, string endEaser)
     {

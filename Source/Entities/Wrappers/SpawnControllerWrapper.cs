@@ -18,4 +18,10 @@ public class EntityWithTTL
         TimeToLive = ttl;
         TTLFlag = ttlFlag;
     }
+    public EntityWithTTL(EntityData data, Entity entity, float ttl, string ttlFlag)
+    {
+        Entity = entity;
+        TimeToLive = ttl;
+        TTLFlag = ttlFlag;
+    }
 }

@@ -275,7 +275,7 @@ entities.KoseiHelper/MagicInkController.attributes.description.flag=The Magic In
 entities.KoseiHelper/MagicInkController.attributes.description.depth=The depth at which paintstrokes (and magic prevention areas) are drawn.
 entities.KoseiHelper/MagicInkController.attributes.description.recoverInkUponShattering=Whether the shattered fragments of a paintstroke should be immediately added to the ink reserves.\nMagic paint can be shattered by Oshiro, Badeline Bosses or the Nemesis Gun.
 entities.KoseiHelper/MagicInkController.attributes.description.global=Whether this controller should stay loaded for the entire map after it has been loaded once.\n\nWARNING: Global entities unload if you open the Debug Map, F5, restart game, or save & quit.\nIf you need a trully global controller, you can use bits&bolts and place it in a room called _bb_global.
-entities.KoseiHelper/MagicInkController.attributes.description.renderCursor=Whether the mouse cursor should be rendered.\nDisable if you're not using the cursor (for example, if you only need the controller for Magic Ink Boxes).
+entities.KoseiHelper/MagicInkController.attributes.description.renderCursor=Whether the mouse cursor should be rendered.\nDisable if you're not using the cursor (for example, if you only need the controller for Magic Ink Boxes).\nYou can't draw ink manually if the cursor is not rendered!
 # Magic Box
 entities.KoseiHelper/MagicInkBox.placements.name.MagicInkBox=Magic Ink Box
 entities.KoseiHelper/MagicInkBox.placements.description.MagicInkBox=Box that creates a trail of magic ink and moves away when the player dashes onto it.

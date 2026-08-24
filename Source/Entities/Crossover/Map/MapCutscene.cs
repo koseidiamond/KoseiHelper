@@ -1,4 +1,3 @@
-using Celeste.Mod.Entities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Monocle;
@@ -7,8 +6,8 @@ using System.Collections.Generic;
 
 namespace Celeste.Mod.KoseiHelper.Entities.Crossover;
 
-[CustomEntity("KoseiHelper/MapCutscene")]
-[Tracked]
+//[CustomEntity("KoseiHelper/MapCutscene")]
+//[Tracked]
 // Original entity by EllaTAS!
 public class MapCutscene(Player player) : CutsceneEntity
 {
@@ -63,6 +62,7 @@ public class MapCutscene(Player player) : CutsceneEntity
             Tag = Tags.HUD;
             Add(new BeforeRenderHook(BeforeRender));
         }
+
 
         public IEnumerator EaseIn()
         {
