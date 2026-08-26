@@ -304,9 +304,12 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                         if (self.StateMachine.state != 11 && self.StateMachine.state != 17 &&
                             (self.StateMachine.state != 19 || KoseiHelperModule.Settings.GunSettings.CanShootInFeather))
                         {
-                            Gunshot(self, CursorPos);
+                            Vector2 gunVector = GetGunVector(self, CursorPos, self.Facing);
+
+                            Gunshot(self, gunVector);
+
                             if (celesteNetLoaded)
-                                CelesteNetSendGunshot(self, GetGunVector(self, CursorPos, self.Facing), (int)self.Facing);
+                                CelesteNetSendGunshot(self, gunVector);
                         }
 
                         // Non-Interaction recoils (interaction ones are handled in the Bullet class)
@@ -418,13 +421,11 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
         private static Vector2 ToCursor(Actor player, Vector2 cursorPos)
             => Vector2.Normalize((cursorPos / 6) - PlayerPosScreenSpace(player));
 
-        public static void Gunshot(Actor actor, Vector2 cursorPos, Facings facing = Facings.Left)
+        public static void Gunshot(Actor actor, Vector2 velocity)
         {
             if (actor == null || actor.Scene == null)
                 return;
             Vector2 actualPlayerPos = actor.Center + new Vector2(-3, -1);
-            if (actor is Player player)
-                facing = player.Facing;
             // This was supposed to support player clones but it breaks some interactions (like dash blocks) :(
             /*foreach (Entity entity in (actor.Scene as Level).Entities)
             {
@@ -432,7 +433,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 if (entity is Player extraPlayer)
                     new Bullet(extraPlayer.Center + new Vector2(-3, -1), GetGunVector(actor, cursorPos, facing), actor);
             }*/
-            new Bullet(actualPlayerPos, GetGunVector(actor, cursorPos, facing), actor);
+            new Bullet(actualPlayerPos, velocity, actor);
             Audio.Play(Extensions.gunshotSound, actualPlayerPos);
         }
 
@@ -451,12 +452,12 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
         }
 
         [MethodImpl(MethodImplOptions.NoInlining)]
-        private void CelesteNetSendGunshot(Player player, Vector2 velocity, int facing)
+        private void CelesteNetSendGunshot(Player player, Vector2 velocity)
         {
             CelesteNetClientModule client = CelesteNetClientModule.Instance;
             if (client?.Context?.Client == null || client.Client.PlayerInfo == null)
                 return;
-            client.Context.Client.Send(new CelesteNetGunshotData { Player = client.Client.PlayerInfo, Velocity = velocity, Facing = facing });
+            client.Context.Client.Send(new CelesteNetGunshotData { Player = client.Client.PlayerInfo, Velocity = velocity });
         }
 
         [MethodImpl(MethodImplOptions.NoInlining)]

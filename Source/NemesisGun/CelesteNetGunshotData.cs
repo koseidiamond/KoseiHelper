@@ -9,7 +9,6 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
     {
         public DataPlayerInfo Player;
         public Vector2 Velocity;
-        public int Facing;
 
         static CelesteNetGunshotData()
         {
@@ -19,13 +18,11 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
         protected override void Read(CelesteNetBinaryReader reader)
         {
             Velocity = reader.ReadVector2();
-            Facing = reader.ReadInt32();
         }
 
         protected override void Write(CelesteNetBinaryWriter writer)
         {
             writer.Write(Velocity);
-            writer.Write(Facing);
         }
 
         public override MetaType[] GenerateMeta(DataContext ctx)

@@ -128,7 +128,7 @@ public class KoseiHelperModuleSettings : EverestModuleSettings
     [SettingSubMenu]
     public class NemesisInteractions
     {
-        [SettingSubText("Whether bullets should be able to kill you upon contact if they bounce back from a bumper/spring,\nor if they shoot at their golden/silver berry.")]
+        [SettingSubText("Whether bullets should be able to kill you upon contact if they bounce back from a bumper/spring,\nor if they shoot at their golden/silver berry.\nIf you play on CelesteNet, other players will be able to kill you too.")]
         public bool CanKillPlayer { get; set; } = false;
 
         [SettingSubText("Whether bounce blocks (core blocks) should break when shot.")]
