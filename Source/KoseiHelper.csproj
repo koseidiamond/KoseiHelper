@@ -39,5 +39,7 @@
 	<Reference Include="FemtoHelper" HintPath="$(CelestePrefix)\Mods\Cache\FemtoHelper.FemtoHelper.dll" />
     <Reference Include="LuaCutscenes" HintPath="$(CelestePrefix)\Mods\Cache\LuaCutscenes.LuaCutscenes.dll" />
     <Reference Include="MaxHelpingHand" HintPath="$(CelestePrefix)\Mods\Cache\MaxHelpingHand.MaxHelpingHand.dll" />
+	<Reference Include="CelesteNet.Client" HintPath="$(CelestePrefix)\Mods\Cache\CelesteNet.Client.CelesteNet.Client.dll" />
+	<Reference Include="CelesteNet.Shared" HintPath="$(CelestePrefix)\Mods\Cache\CelesteNet.Client.CelesteNet.Shared.dll" />
   </ItemGroup>
 </Project>

@@ -39,15 +39,14 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
         public Bullet(Vector2 position, Vector2 velocity, Actor owner)
         {
             base.Collider = new Hitbox(colliderWidth, colliderHeight, colliderxOffset, collideryOffset);
-            Player player = (Player)owner;
-            if (player.Ducking == true)
-                position.Y = position.Y - 2;
+            if (owner is Player player && player.Ducking)
+                position.Y -= 2;
             else
-                position.Y = position.Y - 4;
+                position.Y -= 4;
             Position = position;
             this.startVelocity = this.velocity = velocity;
             this.owner = owner;
-            lifetime = KoseiHelperModule.Settings.GunSettings.Lifetime;
+            lifetimeUpdate = lifetime = KoseiHelperModule.Settings.GunSettings.Lifetime;
             BouncedOffBumper = new List<Bumper>();
             BouncedOffSpring = new List<Spring>();
             bulletTexture = GFX.Game[Extensions.bulletTexture];
@@ -67,15 +66,14 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
         public Bullet(EntityData data, Vector2 position, Vector2 velocity, Actor owner)
         {
             base.Collider = new Hitbox(colliderWidth, colliderHeight, colliderxOffset, collideryOffset);
-            Player player = (Player)owner;
-            if (player.Ducking == true)
-                position.Y = position.Y - 2;
+            if (owner is Player player && player.Ducking)
+                position.Y -= 2;
             else
-                position.Y = position.Y - 4;
+                position.Y -= 4;
             Position = position;
             this.startVelocity = this.velocity = velocity;
             this.owner = owner;
-            lifetime = KoseiHelperModule.Settings.GunSettings.Lifetime;
+            lifetimeUpdate = lifetime = KoseiHelperModule.Settings.GunSettings.Lifetime;
             BouncedOffBumper = new List<Bumper>();
             BouncedOffSpring = new List<Spring>();
             bulletTexture = GFX.Game[Extensions.bulletTexture];

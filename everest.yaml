@@ -15,3 +15,5 @@
       Version: 1.0.0
     - Name: FemtoHelper
       Version: 1.15.12
+    - Name: CelesteNet.Client
+      Version: 2.4.2

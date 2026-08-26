@@ -1,8 +1,12 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Celeste.Mod.CelesteNet;
+using Celeste.Mod.CelesteNet.Client;
+using Celeste.Mod.CelesteNet.Client.Entities;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Monocle;
 using System;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 
 namespace Celeste.Mod.KoseiHelper.NemesisGun
 {
@@ -14,6 +18,8 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
         {
             Instance = this;
         }
+
+        private bool celesteNetLoaded;
 
         public static FieldInfo seekerDead;
         public static FieldInfo oshiroStateMachine;
@@ -42,6 +48,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
         public Level level;
         private static Vector2 lastHeldDirection = Vector2.Zero;
         private static bool isPlayerUnderwater = false;
+        private float lastGunRotation = 0f;
 
         private static Vector2 GetEightDirectionalAim(KoseiHelperModuleSettings.NemesisSettings.GunDirections gunDirections)
         {
@@ -55,7 +62,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 return Vector2.Zero;
             }
 
-            float angle = value.Angle();
+            float angle = Calc.Angle(value);
             float angleThreshold = (float)Math.PI / 8f;
             /*if (angle < 0)
             {
@@ -160,13 +167,13 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 rotation = 3 * MathHelper.Pi / 2;
             if (KoseiHelperModule.Settings.GunSettings.gunDirections == KoseiHelperModuleSettings.NemesisSettings.GunDirections.EightDirections)
             {
-                if (Calc.AbsAngleDiff(aim.Angle(), (float)Math.PI / 4) < MathHelper.Pi / 8)
+                if (Calc.AbsAngleDiff(Calc.Angle(aim), (float)Math.PI / 4) < MathHelper.Pi / 8)
                     rotation = (float)Math.PI / 4 - (float)Math.PI;
-                else if (Calc.AbsAngleDiff(aim.Angle(), 3 * (float)Math.PI / 4) < MathHelper.Pi / 8)
+                else if (Calc.AbsAngleDiff(Calc.Angle(aim), 3 * (float)Math.PI / 4) < MathHelper.Pi / 8)
                     rotation = 3 * (float)Math.PI / 4 - (float)Math.PI;
-                else if (Calc.AbsAngleDiff(aim.Angle(), -3 * (float)Math.PI / 4) < MathHelper.Pi / 8)
+                else if (Calc.AbsAngleDiff(Calc.Angle(aim), -3 * (float)Math.PI / 4) < MathHelper.Pi / 8)
                     rotation = -3 * (float)Math.PI / 4 - (float)Math.PI;
-                else if (Calc.AbsAngleDiff(aim.Angle(), (float)-Math.PI / 4) < MathHelper.Pi / 8)
+                else if (Calc.AbsAngleDiff(Calc.Angle(aim), (float)-Math.PI / 4) < MathHelper.Pi / 8)
                     rotation = (float)-Math.PI / 4 - (float)Math.PI;
 
             }
@@ -220,6 +227,11 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
             On.Celeste.Player.Update += PlayerUpdated;
             On.Celeste.Player.Render += PlayerRendered;
             Everest.Events.Level.OnLoadLevel += OnLoadLevel;
+            if (Everest.Loader.DependencyLoaded(new EverestModuleMetadata { Name = "CelesteNet.Client", Version = new Version(2, 0, 0) }))
+            {
+                celesteNetLoaded = true;
+                RegisterCelesteNet();
+            }
         }
 
         public override void Unload()
@@ -246,6 +258,12 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
             On.Celeste.Player.Update -= PlayerUpdated;
             On.Celeste.Player.Render -= PlayerRendered;
             Everest.Events.Level.OnLoadLevel -= OnLoadLevel;
+
+            if (celesteNetLoaded)
+            {
+                UnregisterCelesteNet();
+                celesteNetLoaded = false;
+            }
         }
 
         private void OnLoadLevel(Level level, Player.IntroTypes playerIntro, bool isFromLoader)
@@ -285,7 +303,11 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                     {
                         if (self.StateMachine.state != 11 && self.StateMachine.state != 17 &&
                             (self.StateMachine.state != 19 || KoseiHelperModule.Settings.GunSettings.CanShootInFeather))
+                        {
                             Gunshot(self, CursorPos);
+                            if (celesteNetLoaded)
+                                CelesteNetSendGunshot(self, GetGunVector(self, CursorPos, self.Facing), (int)self.Facing);
+                        }
 
                         // Non-Interaction recoils (interaction ones are handled in the Bullet class)
                         if (!KoseiHelperModule.Settings.GunSettings.RecoilOnlyOnInteraction && recoilCooldown <= 0 && !KoseiHelperModule.Settings.GunSettings.MachineGunMode && self.InControl)
@@ -356,7 +378,6 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
             }
         }
 
-        private float lastGunRotation = 0f;
         private void RenderGun(Actor player, Facings facing, Vector2? overrideCursorPos = null)
         {
             gunTexture = GFX.Game[Extensions.gunTexture];
@@ -388,7 +409,6 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 gunTexture.DrawCentered(player.Center, Color.White, 1, lastGunRotation, effects);
                 if (level.Session.GetFlag("KoseiHelper_NemesisGunDrawOutline"))
                     gunTexture.DrawOutline(player.Center, new Vector2(gunTexture.Width / 2, gunTexture.Height / 2), Color.Black, 1, lastGunRotation, effects);
-
             }
         }
 
@@ -414,6 +434,48 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
             }*/
             new Bullet(actualPlayerPos, GetGunVector(actor, cursorPos, facing), actor);
             Audio.Play(Extensions.gunshotSound, actualPlayerPos);
+        }
+
+        // CelesteNet compatibility (based on https://github.com/oli-x64/Guneline/blob/master/Guneline.cs)
+
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        private void RegisterCelesteNet()
+        {
+            CelesteNetClientContext.OnInit += OnCelesteNetInit;
+        }
+
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        private void UnregisterCelesteNet()
+        {
+            CelesteNetClientContext.OnInit -= OnCelesteNetInit;
+        }
+
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        private void CelesteNetSendGunshot(Player player, Vector2 velocity, int facing)
+        {
+            CelesteNetClientModule client = CelesteNetClientModule.Instance;
+            if (client?.Context?.Client == null || client.Client.PlayerInfo == null)
+                return;
+            client.Context.Client.Send(new CelesteNetGunshotData { Player = client.Client.PlayerInfo, Velocity = velocity, Facing = facing });
+        }
+
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        public void OnCelesteNetInit(CelesteNetClientContext ctx)
+        {
+            if (ctx?.Client == null)
+                return;
+            ctx.Client.Data.RegisterHandlersIn(this);
+        }
+
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        public void Handle(CelesteNetConnection con, CelesteNetGunshotData gData)
+        {
+            if (level == null || gData.Player == null || CelesteNetClientModule.Instance?.Client?.PlayerInfo == null ||
+                gData.Player.ID == CelesteNetClientModule.Instance.Client.PlayerInfo.ID || level.Paused ||
+                !CelesteNetClientModule.Instance.Context.Main.Ghosts.TryGetValue(gData.Player.ID, out Ghost ghost) ||
+                (!KoseiHelperModule.Settings.GunSettings.GunEnabled && !level.Session.GetFlag("EnableNemesisGun")))
+                return;
+            Gunshot(ghost, gData.Velocity);
         }
     }
 }

@@ -270,7 +270,7 @@ entities.KoseiHelper/MagicInkController.placements.description.MagicInkControlle
 entities.KoseiHelper/MagicInkController.attributes.description.timeToLive=The time before each paintstroke disappears.
 entities.KoseiHelper/MagicInkController.attributes.description.maxInk=The maximum amount of ink that the player can carry.
 entities.KoseiHelper/MagicInkController.attributes.description.regenerationRate=How much ink per second is regenerated.\nLeave at 0 if you don't want natural regen.
-entities.KoseiHelper/MagicInkController.attributes.description.thickness=The thickness of the paintstrokes.
+entities.KoseiHelper/MagicInkController.attributes.description.thickness=The thickness of the paintstrokes.\nNote that high values might have completely accurate colliders.
 entities.KoseiHelper/MagicInkController.attributes.description.flag=The Magic Ink will only be available when this flag is true.\nYou can invert the flag with the preffix "!".\nLeave this field empty if you don't need any flags.
 entities.KoseiHelper/MagicInkController.attributes.description.depth=The depth at which paintstrokes (and magic prevention areas) are drawn.
 entities.KoseiHelper/MagicInkController.attributes.description.recoverInkUponShattering=Whether the shattered fragments of a paintstroke should be immediately added to the ink reserves.\nMagic paint can be shattered by Oshiro, Badeline Bosses or the Nemesis Gun.

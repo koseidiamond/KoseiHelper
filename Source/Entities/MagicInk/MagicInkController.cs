@@ -35,7 +35,7 @@ public class MagicInkController : Entity
         timeToLive = data.Float("timeToLive", 3f);
         maxInk = data.Float("maxInk", 300f);
         regenerationRate = data.Float("regenerationRate", 20f);
-        thickness = data.Int("thickness", 8);
+        thickness = data.Int("thickness", 4);
         surfaceSoundIndex = data.Int("surfaceSoundIndex", 32);
         renderCursor = data.Bool("renderCursor", true);
         flag = data.Attr("flag", "");
