@@ -227,7 +227,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
             On.Celeste.Player.Update += PlayerUpdated;
             On.Celeste.Player.Render += PlayerRendered;
             Everest.Events.Level.OnLoadLevel += OnLoadLevel;
-            if (Everest.Loader.DependencyLoaded(new EverestModuleMetadata { Name = "CelesteNet.Client", Version = new Version(2, 0, 0) }))
+            if (Everest.Loader.DependencyLoaded(new EverestModuleMetadata { Name = "CelesteNet.Client", Version = new Version(2, 4, 2) }))
             {
                 celesteNetLoaded = true;
                 RegisterCelesteNet();

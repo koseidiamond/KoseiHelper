@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework;
 using Monocle;
 using System.Collections;
 
-namespace Celeste.Mod.KoseiHelper.Entities.Crossover;
+namespace Celeste.Mod.KoseiHelper.Entities;
 
 [CustomEntity("KoseiHelper/MagicInkCollectable")]
 [Tracked]

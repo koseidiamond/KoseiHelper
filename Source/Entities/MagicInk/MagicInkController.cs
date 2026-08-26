@@ -1,3 +1,4 @@
+using Celeste.Mod.CelesteNet.Client;
 using Celeste.Mod.Entities;
 using Celeste.Mod.KoseiHelper.Apps;
 using FMOD.Studio;
@@ -6,6 +7,7 @@ using Monocle;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 
 namespace Celeste.Mod.KoseiHelper.Entities;
 
@@ -193,7 +195,11 @@ public class MagicInkController : Entity
         }
     }
 
-    private void SpawnInk(Level level, PaintStroke stroke, Entity paintOwner = null)
+    /// <summary>
+    ///  Spawns Ink from the mouse or from an entity.
+    /// </summary>
+    /// <param name="sendNetwork">Used to prevent spawning ink twice (locally and from CelesteNet).</param>
+    private void SpawnInk(Level level, PaintStroke stroke, Entity paintOwner = null, bool sendNetwork = true)
     {
         List<PaintStroke> lines = new() { stroke };
         ColliderList collider = MagicUtils.BuildCollider(lines);
@@ -202,6 +208,8 @@ public class MagicInkController : Entity
         level.Add(decal);
         level.Add(barrier);
         regenerationCooldown = cooldown;
+        if (sendNetwork && KoseiHelperModule.Instance.celesteNetLoaded)
+            SendNetworkInk(level, stroke);
     }
 
     /// <summary>
@@ -283,6 +291,28 @@ public class MagicInkController : Entity
             if (decal.Scene == level)
                 decal.Shatter(Vector2.Zero);
         }
+    }
+
+    /// <summary>
+    /// Used in KoseiHelperModule's Handle method.
+    /// </summary>
+    public void SpawnNetworkInk(CelesteNetMagicInkData data)
+    {
+        Level level = SceneAs<Level>();
+        if (level == null)
+            return;
+        // ink from other players is faded out
+        PaintStroke stroke = new(data.From, data.To, Color.Lerp((Calc.HsvToColor((level.TimeActive * 0.25f) % 1f, 1f, 1f)) * 0.65f, Color.DarkGray, 0.65f), thickness);
+        SpawnInk(level, stroke, null, false);
+    }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    private void SendNetworkInk(Level level, PaintStroke stroke)
+    {
+        CelesteNetClientModule client = CelesteNetClientModule.Instance;
+        if (client?.Context?.Client == null || client.Client.PlayerInfo == null)
+            return;
+        client.Context.Client.Send(new CelesteNetMagicInkData { Player = client.Client.PlayerInfo, From = stroke.From, To = stroke.To });
     }
 }
 

@@ -1,4 +1,7 @@
-﻿using Celeste.Mod.KoseiHelper.DecalRegistry;
+﻿using Celeste.Mod.CelesteNet;
+using Celeste.Mod.CelesteNet.Client;
+using Celeste.Mod.KoseiHelper.Apps;
+using Celeste.Mod.KoseiHelper.DecalRegistry;
 using Celeste.Mod.KoseiHelper.Entities;
 using Celeste.Mod.KoseiHelper.Entities.Crossover;
 using Microsoft.Xna.Framework;
@@ -7,6 +10,7 @@ using MonoMod.ModInterop;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace Celeste.Mod.KoseiHelper;
 
@@ -28,6 +32,7 @@ public class KoseiHelperModule : EverestModule
     public bool helpingHandLoaded = false;
     public bool doonvHelperLoaded = false;
     public bool femtoHelperLoaded = false;
+    public bool celesteNetLoaded = false;
 
     public static TextMenu ReturnToGDMenu;
 
@@ -90,6 +95,11 @@ public class KoseiHelperModule : EverestModule
             doonvHelperLoaded = true;
         if (!femtoHelperLoaded && Everest.Loader.DependencyLoaded(new EverestModuleMetadata { Name = "FemtoHelper", Version = new Version(1, 15, 12) }))
             femtoHelperLoaded = true;
+        if (!celesteNetLoaded && Everest.Loader.DependencyLoaded(new EverestModuleMetadata { Name = "CelesteNet.Client", Version = new Version(2, 4, 2) }))
+        {
+            celesteNetLoaded = true;
+            RegisterCelesteNet(); // This is also on the other EverestModule (sob)
+        }
 
         Mod.DecalRegistry.AddPropertyHandler<KillDecalRegistryHandler>();
         Mod.DecalRegistry.AddPropertyHandler<MovingDecalRegistryHandler>();
@@ -129,6 +139,8 @@ public class KoseiHelperModule : EverestModule
         collabUtils2Loaded = false;
         doonvHelperLoaded = false;
         femtoHelperLoaded = false;
+        celesteNetLoaded = false;
+        UnregisterCelesteNet();
     }
 
     private static bool ClimbCheck(On.Celeste.Player.orig_ClimbBoundsCheck orig, Player self, int dir)
@@ -245,4 +257,38 @@ public class KoseiHelperModule : EverestModule
             }
         }
     }*/
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    private void RegisterCelesteNet()
+    {
+        CelesteNetClientContext.OnInit += OnCelesteNetInit;
+    }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    private void UnregisterCelesteNet()
+    {
+        CelesteNetClientContext.OnInit -= OnCelesteNetInit;
+    }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    private void OnCelesteNetInit(CelesteNetClientContext ctx)
+    {
+        if (ctx?.Client == null)
+            return;
+
+        ctx.Client.Data.RegisterHandlersIn(this);
+    }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public void Handle(CelesteNetConnection con, CelesteNetMagicInkData data) // Uhh, we'll see if I ever need to add data from other entities
+    {
+        // idk how unsafe it is to get the level from here, but it seems to work
+        if (data.Player == null || Engine.Scene is not Level level)
+            return;
+        CelesteNetClientModule client = CelesteNetClientModule.Instance;
+        MagicInkController controller = level.Tracker.GetEntity<MagicInkController>();
+        if (client?.Client?.PlayerInfo == null || data.Player.ID == client.Client.PlayerInfo.ID || level.Paused || controller == null)
+            return;
+        controller.SpawnNetworkInk(data);
+    }
 }
