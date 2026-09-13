@@ -11,7 +11,8 @@ TheoPetController.placements = {
 		affectAllTheos = false,
 		global = false,
 		minDistanceX = 14,
-		minDistanceY = 150
+		minDistanceY = 150,
+		flag = ""
 		}
 	}
 }

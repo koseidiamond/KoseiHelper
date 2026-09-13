@@ -13,6 +13,7 @@ public class TheoPetController : Entity
     public float jumpStrength;
     public bool affectAllTheos;
     public float minDistanceX, minDistanceY;
+    public string enableFlag;
 
     public TheoPetController(EntityData data, Vector2 offset) : base(data.Position + offset)
     {
@@ -23,6 +24,7 @@ public class TheoPetController : Entity
         affectAllTheos = data.Bool("affectAllTheos", false);
         minDistanceX = data.Float("minDistanceX", 14f);
         minDistanceY = data.Float("minDistanceY", 150f);
+        enableFlag = data.String("flag", "");
     }
 
     public override void Update()
@@ -31,7 +33,8 @@ public class TheoPetController : Entity
 
         Level level = SceneAs<Level>();
         Player player = level.Tracker.GetEntity<Player>();
-        if (player != null)
+        // empty or null flag => always active, otherwise check the non-empty flag
+        if (player != null && (string.IsNullOrWhiteSpace(enableFlag) || level.Session.GetFlag(enableFlag)))
         {
             if (player.JustRespawned || player.IsIntroState)
                 return;
@@ -65,6 +68,6 @@ public class TheoPetController : Entity
         }
 
         if (!theo.OnGround())
-            theo.MoveTowardsX((player.CenterX, 0.5f + Math.Abs(speed) / 10f * Math.Abs(player.Speed.X) / 100f + Math.Abs(speed) / 10f) * Engine.DeltaTime * 60f);
+            theo.MoveTowardsX(player.CenterX, (0.5f + (Math.Abs(speed) / 10f * Math.Abs(player.Speed.X) / 100f) + (Math.Abs(speed) / 10f)) * Engine.DeltaTime * 60f);
     }
 }

@@ -1038,6 +1038,7 @@ entities.KoseiHelper/TheoPetController.attributes.description.affectAllTheos=Whe
 entities.KoseiHelper/TheoPetController.attributes.description.global=This controller will affect the entire map if this option is checked.\n\nWARNING: Global entities unload if you open the Debug Map, F5, restart game, or save & quit.\nIf you need a trully global controller, you can use bits&bolts and place it in a room called _bb_global.
 entities.KoseiHelper/TheoPetController.attributes.description.minDistanceX=The minimum horizontal distance that Theo needs to follow you.
 entities.KoseiHelper/TheoPetController.attributes.description.minDistanceY=The minimum vertical distance that Theo needs to follow you.\nNote that if Theo is above you, this distance will be duplicated (he likes falling down).
+entities.KoseiHelper/TheoPetController.attributes.description.flag=Flag required for the controller to be active.\nLeave empty for no required flag.
 
 # Top Down View Controller
 #entities.KoseiHelper/TopDownViewController.placements.name.TopDownViewController=Top Down View Controller
