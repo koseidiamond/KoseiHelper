@@ -40,14 +40,14 @@ public class TheoPetController : Entity
             {
                 foreach (TheoCrystal theo in level.Tracker.GetEntities<TheoCrystal>())
                 {
-                    if (theo != null)
+                    if (theo != null && !theo.dead)
                         UpdateTheo(theo, player);
                 }
             }
             else
             {
                 TheoCrystal theo = level.Tracker.GetNearestEntity<TheoCrystal>(player.Center);
-                if (theo != null)
+                if (theo != null && !theo.dead)
                     UpdateTheo(theo, player);
             }
         }
