@@ -65,6 +65,6 @@ public class TheoPetController : Entity
         }
 
         if (!theo.OnGround())
-            theo.MoveTowardsX(player.CenterX, 0.5f + Math.Abs(speed) / 10f * Math.Abs(player.Speed.X) / 100f + Math.Abs(speed) / 10f);
+            theo.MoveTowardsX((player.CenterX, 0.5f + Math.Abs(speed) / 10f * Math.Abs(player.Speed.X) / 100f + Math.Abs(speed) / 10f) * Engine.DeltaTime * 60f);
     }
 }
