@@ -14,6 +14,7 @@ public class TheoPetController : Entity
     public bool affectAllTheos;
     public float minDistanceX, minDistanceY;
     public string enableFlag;
+    public bool invertFlag;
 
     public TheoPetController(EntityData data, Vector2 offset) : base(data.Position + offset)
     {
@@ -25,6 +26,7 @@ public class TheoPetController : Entity
         minDistanceX = data.Float("minDistanceX", 14f);
         minDistanceY = data.Float("minDistanceY", 150f);
         enableFlag = data.String("flag", "");
+        invertFlag = data.Bool("invertFlag", false);
     }
 
     public override void Update()
@@ -34,7 +36,7 @@ public class TheoPetController : Entity
         Level level = SceneAs<Level>();
         Player player = level.Tracker.GetEntity<Player>();
         // empty or null flag => always active, otherwise check the non-empty flag
-        if (player != null && (string.IsNullOrWhiteSpace(enableFlag) || level.Session.GetFlag(enableFlag)))
+        if (player != null && ((string.IsNullOrWhiteSpace(enableFlag) || level.Session.GetFlag(enableFlag)) ^ invertFlag))
         {
             if (player.JustRespawned || player.IsIntroState)
                 return;

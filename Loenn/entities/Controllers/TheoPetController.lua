@@ -6,13 +6,14 @@ TheoPetController.placements = {
 	{
 		name = "TheoPetController",
 		data = {
-		speed = 8,
-		jumpStrength = 1,
-		affectAllTheos = false,
-		global = false,
-		minDistanceX = 14,
-		minDistanceY = 150,
-		flag = ""
+			speed = 8,
+			jumpStrength = 1,
+			affectAllTheos = false,
+			global = false,
+			minDistanceX = 14,
+			minDistanceY = 150,
+			flag = "",
+			invertFlag = false,
 		}
 	}
 }

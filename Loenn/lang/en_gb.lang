@@ -1039,6 +1039,7 @@ entities.KoseiHelper/TheoPetController.attributes.description.global=This contro
 entities.KoseiHelper/TheoPetController.attributes.description.minDistanceX=The minimum horizontal distance that Theo needs to follow you.
 entities.KoseiHelper/TheoPetController.attributes.description.minDistanceY=The minimum vertical distance that Theo needs to follow you.\nNote that if Theo is above you, this distance will be duplicated (he likes falling down).
 entities.KoseiHelper/TheoPetController.attributes.description.flag=Flag required for the controller to be active.\nLeave empty for no required flag.
+entities.KoseiHelper/TheoPetController.attributes.description.invertFlag=Inverts the flag requirement.\nDoes nothing if "Flag" is empty.
 
 # Top Down View Controller
 #entities.KoseiHelper/TopDownViewController.placements.name.TopDownViewController=Top Down View Controller
