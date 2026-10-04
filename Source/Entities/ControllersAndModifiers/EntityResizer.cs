@@ -4,6 +4,7 @@ using Monocle;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml;
 
 namespace Celeste.Mod.KoseiHelper.Entities;
 
@@ -24,6 +25,13 @@ public class EntityResizer : Entity
     private bool onlyOnce;
     private bool resized;
     private float scale, maxScale;
+    private enum ResizeMode
+    {
+        OnlyHitbox,
+        OnlySprite,
+        Both
+    };
+    private ResizeMode resizeMode;
     private bool everyFrame;
     private readonly Dictionary<Sprite, Vector2> originalSpriteScales = new();
     private readonly Dictionary<Sprite, Vector2> originalSpritePositions = new();
@@ -34,6 +42,7 @@ public class EntityResizer : Entity
     public EntityResizer(EntityData data, Vector2 offset) : base(data.Position + offset)
     {
         allEntities = data.Bool("allEntities", true);
+        resizeMode = data.Enum("resizeMode", ResizeMode.Both);
         scale = data.Float("scale", 1f);
         maxScale = data.Float("maxScale", 1f);
         everyFrame = data.Bool("everyFrame", false);
@@ -138,34 +147,40 @@ public class EntityResizer : Entity
             {
                 case Sprite sprite:
                     {
-                        if (!originalSpriteScales.TryGetValue(sprite, out Vector2 baseScale))
+                        if (resizeMode != ResizeMode.OnlyHitbox)
                         {
-                            baseScale = sprite.Scale;
-                            originalSpriteScales[sprite] = baseScale;
+                            if (!originalSpriteScales.TryGetValue(sprite, out Vector2 baseScale))
+                            {
+                                baseScale = sprite.Scale;
+                                originalSpriteScales[sprite] = baseScale;
+                            }
+                            if (!originalSpritePositions.TryGetValue(sprite, out Vector2 basePosition))
+                            {
+                                basePosition = sprite.Position;
+                                originalSpritePositions[sprite] = basePosition;
+                            }
+                            sprite.Scale = baseScale * scale;
+                            sprite.Position = basePosition * scale;
                         }
-                        if (!originalSpritePositions.TryGetValue(sprite, out Vector2 basePosition))
-                        {
-                            basePosition = sprite.Position;
-                            originalSpritePositions[sprite] = basePosition;
-                        }
-                        sprite.Scale = baseScale * scale;
-                        sprite.Position = basePosition * scale;
                         break;
                     }
                 case Image image:
                     {
-                        if (!originalImageScales.TryGetValue(image, out Vector2 baseScale))
+                        if (resizeMode != ResizeMode.OnlyHitbox)
                         {
-                            baseScale = image.Scale;
-                            originalImageScales[image] = baseScale;
+                            if (!originalImageScales.TryGetValue(image, out Vector2 baseScale))
+                            {
+                                baseScale = image.Scale;
+                                originalImageScales[image] = baseScale;
+                            }
+                            if (!originalImagePositions.TryGetValue(image, out Vector2 basePosition))
+                            {
+                                basePosition = image.Position;
+                                originalImagePositions[image] = basePosition;
+                            }
+                            image.Scale = baseScale * scale;
+                            image.Position = basePosition * scale;
                         }
-                        if (!originalImagePositions.TryGetValue(image, out Vector2 basePosition))
-                        {
-                            basePosition = image.Position;
-                            originalImagePositions[image] = basePosition;
-                        }
-                        image.Scale = baseScale * scale;
-                        image.Position = basePosition * scale;
                         break;
                     }
                 case PlayerCollider playerCollider:
@@ -181,6 +196,8 @@ public class EntityResizer : Entity
 
     private void ResizeCollider(Collider collider, float scale)
     {
+        if (resizeMode == ResizeMode.OnlySprite)
+            return;
         switch (collider)
         {
             case Hitbox hitbox:
@@ -229,48 +246,53 @@ public class EntityResizer : Entity
 
     private void RestoreCustomization()
     {
-        foreach (var pair in originalSpritePositions)
+        if (resizeMode != ResizeMode.OnlyHitbox)
         {
-            if (pair.Key.Entity != null)
-                pair.Key.Position = pair.Value;
-        }
-        originalSpritePositions.Clear();
-        originalSpriteScales.Clear();
-        foreach (var pair in originalImageScales)
-        {
-            if (pair.Key.Entity != null)
-                pair.Key.Scale = pair.Value;
-        }
-        originalImageScales.Clear();
-        foreach (var pair in originalImagePositions)
-        {
-            if (pair.Key.Entity != null)
-                pair.Key.Position = pair.Value;
-        }
-
-        originalImagePositions.Clear();
-
-        foreach (var pair in originalHitboxes)
-        {
-            Hitbox hitbox = pair.Key;
-
-            if (hitbox.Entity != null)
+            foreach (var pair in originalSpritePositions)
             {
-                hitbox.Width = pair.Value.Width;
-                hitbox.Height = pair.Value.Height;
-                hitbox.Left = pair.Value.Left;
-                hitbox.Top = pair.Value.Top;
+                if (pair.Key.Entity != null)
+                    pair.Key.Position = pair.Value;
             }
-        }
-        foreach (var pair in originalCircles)
-        {
-            if (pair.Key.Entity != null)
+            originalSpritePositions.Clear();
+            originalSpriteScales.Clear();
+            foreach (var pair in originalImageScales)
             {
-                pair.Key.Radius = pair.Value.Radius;
-                pair.Key.Position = pair.Value.Position;
+                if (pair.Key.Entity != null)
+                    pair.Key.Scale = pair.Value;
             }
+            originalImageScales.Clear();
+            foreach (var pair in originalImagePositions)
+            {
+                if (pair.Key.Entity != null)
+                    pair.Key.Position = pair.Value;
+            }
+            originalImagePositions.Clear();
         }
-        originalCircles.Clear();
-        originalHitboxes.Clear();
+
+        if (resizeMode != ResizeMode.OnlySprite)
+        {
+            foreach (var pair in originalHitboxes)
+            {
+                Hitbox hitbox = pair.Key;
+
+                if (hitbox.Entity != null)
+                {
+                    hitbox.Width = pair.Value.Width;
+                    hitbox.Height = pair.Value.Height;
+                    hitbox.Left = pair.Value.Left;
+                    hitbox.Top = pair.Value.Top;
+                }
+            }
+            foreach (var pair in originalCircles)
+            {
+                if (pair.Key.Entity != null)
+                {
+                    pair.Key.Radius = pair.Value.Radius;
+                    pair.Key.Position = pair.Value.Position;
+                }
+            }
+            originalCircles.Clear();
+            originalHitboxes.Clear();
+        }
     }
 }

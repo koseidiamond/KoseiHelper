@@ -51,7 +51,6 @@ public class CustomBirdTutorialGui : BirdTutorialGui
             Draw.Rect(x - border, y - border, width + border * 2f, border, lineColor); // top
             Draw.Rect(x - border, y, border, height, lineColor); // left
             Draw.Rect(x + width, y, border, height, lineColor); // right
-            //Draw.Rect(x - border, y + height, width + border * 2f, border, lineColor); // bottom (full line, unused because triangle)
 
             if (renderTriangleBelow)
             {
@@ -79,6 +78,10 @@ public class CustomBirdTutorialGui : BirdTutorialGui
                         Draw.Rect(tailLeft, y + height + i, tailWidth, 1f, lineColor);
                     }
                 }
+            }
+            else
+            {
+                Draw.Rect(x - border, y + height, width + border * 2f, border, lineColor); // bottom (full line)
             }
         }
         else

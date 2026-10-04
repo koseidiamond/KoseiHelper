@@ -156,7 +156,7 @@ public class GameDataController : Entity
             if (!string.IsNullOrEmpty(death))
                 session.SetCounter(death, session.DeathsInCurrentLevel);
 
-            if (player.StartedDashing && !string.IsNullOrEmpty(timesDashed))
+            if (!string.IsNullOrEmpty(timesDashed) && player.StartedDashing)
                 session.IncrementCounter(timesDashed);
             if (!string.IsNullOrEmpty(timesJumped))
             {

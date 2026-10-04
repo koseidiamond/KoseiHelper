@@ -24,7 +24,8 @@ EntityResizer.placements = {
 			onlyOnce = true,
 			scale = 1,
 			maxScale = 1,
-			everyFrame = false
+			everyFrame = false,
+			resizeMode = "Both"
 		}
 	},
 	{
@@ -44,7 +45,8 @@ EntityResizer.placements = {
 			onlyOnce = false,
 			scale = 1,
 			maxScale = 1,
-			everyFrame = false
+			everyFrame = false,
+			resizeMode = "Both"
 		}
 	}
 }
@@ -116,9 +118,17 @@ EntityResizer.fieldInformation = {
 			"WallBooster",
 			"WhiteBlock"
 			}
-			},
+		},
 		editable = true
-		}
+	},
+	resizeMode = {
+		options = {
+			"Both",
+			"OnlySprite",
+			"OnlyHitbox"
+		},
+		editable = false
+	}
 }
 
 EntityResizer.fieldOrder = {
@@ -132,6 +142,7 @@ EntityResizer.fieldOrder = {
 	"sliderCounterMinValue",
 	"sliderCounterMaxValue",
 	"flag",
+	"resizeMode",
 	"allEntities",
 	"global",
 	"transitionUpdate",

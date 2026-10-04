@@ -134,6 +134,7 @@ entities.KoseiHelper/MapController.attributes.description.pinMadeline=The path t
 entities.KoseiHelper/MapController.attributes.description.rootPath=The path to your folder where you have all map images, relative to Atlases/Gui/.
 entities.KoseiHelper/MapController.attributes.description.onlyOnSafeGround=Whether the map can be opened only on safe ground (e.g. not above trigger spikes, clouds, swap blocks and such).\n\nPro tip: place Flag Zones (GameHelper) in places where jank behavior or unfair deaths would occur (such as the path of a fireball) with the Map Disabled Flag.
 entities.KoseiHelper/MapController.attributes.description.mapDisabledFlag=The player will be unable to open the map while this flag is true.
+entities.KoseiHelper/MapController.attributes.description.upscale=Whether images that are not fully HD should be automatically upscaled to fill the screen.\nNote that while HD looks better, loading a lot of uncompressed layers can impact performance.
 
 # Move Block Crystal
 entities.KoseiHelper/MoveBlockCrystal.placements.name.MoveBlockCrystal=Move Block Crystal (Crossover)
@@ -246,6 +247,7 @@ entities.KoseiHelper/EntityResizer.attributes.name.sliderCounterMaxValue=Slider/
 entities.KoseiHelper/EntityResizer.attributes.description.sliderCounterMaxValue=The maximum value that will match the Max Scale.
 entities.KoseiHelper/EntityResizer.attributes.description.flag=Whether the Resizer should wait for a certain flag to be true before applying the scales.\nIf the flag starts with "!", the Resizer will wait for the flag to be false.\nNote that the Resizer will only react to the Flag value on room enter/respawn unless Every Frame is checked!
 entities.KoseiHelper/EntityResizer.attributes.description.onlyOnce=Whether the Resizer should remove itself after successfully recoloring the entities.\nUseful for improving performance.\nSome entities need this to work correctly, like PlaybackBillboard and StarJumpBlock.
+entities.KoseiHelper/EntityResizer.attributes.description.resizeMode=Whether the Resizer should only affect the visuals, the hitboxes, or everything.
 
 # Magic Ink
 # Prevention Areas

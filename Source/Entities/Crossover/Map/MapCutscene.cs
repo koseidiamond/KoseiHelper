@@ -1,6 +1,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Monocle;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -104,13 +105,15 @@ public class MapCutscene(Player player) : CutsceneEntity
         public void BeforeRender()
         {
             Level level = SceneAs<Level>();
-            target ??= VirtualContent.CreateRenderTarget("oshiro-memo", 1920, 1080);
+            bool upscale = (bool)(level.Entities.FindFirst<MapController>()?.upscale);
+            target ??= VirtualContent.CreateRenderTarget("oshiro-memo", 1920,1080);
             Engine.Graphics.GraphicsDevice.SetRenderTarget(target);
             Engine.Graphics.GraphicsDevice.Clear(Color.Transparent);
             Draw.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
             foreach (MTexture texture in segments)
             {
-                texture.Draw(Vector2.Zero, Vector2.Zero, Color.White, 0.5f);
+                float textureScale = upscale && texture.Width <= 1980f ? target.Width / texture.Width : 0.5f;
+                texture.Draw(Vector2.Zero, Vector2.Zero, Color.White, upscale ? textureScale : 0.5f);
             }
             if (level.Session.GetFlag("map_CollectorsMap"))
             {
@@ -202,8 +205,13 @@ public class MapCutscene(Player player) : CutsceneEntity
         public override void Render()
         {
             Level level = Scene as Level;
-            if (level?.RetryPlayerCorpse == null && target != null) // Idk why I substracted -2 to the X's origin but it works
-                Draw.SpriteBatch.Draw(target, Position, target.Bounds, Color.White * alpha, 0, new Vector2(target.Width - 2f, 0f) / 2f, 1f, SpriteEffects.None, 0f);
+            bool upscale = (bool)(level.Entities.FindFirst<MapController>()?.upscale);
+            if (level?.RetryPlayerCorpse == null && target != null)
+            {
+                float scale = upscale ? 6f * Math.Max((float)(level.Camera.Viewport.Width) / 1920f, (float)(level.Camera.Viewport.Height) / 1080f) : 1f;
+                // Idk why I substracted -1 to the X's origin but it works
+                Draw.SpriteBatch.Draw(target, Position, target.Bounds, Color.White * alpha, 0, new Vector2(target.Width - 1f, 0f) / 2f, scale, SpriteEffects.None, 0f);
+            }
         }
     }
 

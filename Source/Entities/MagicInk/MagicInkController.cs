@@ -288,7 +288,7 @@ public class MagicInkController : Entity
     {
         foreach (PaintDecal decal in level.Tracker.GetEntities<PaintDecal>().OfType<PaintDecal>().ToList())
         {
-            if (decal.Scene == level)
+            if (decal.Scene == level && !decal.shattering)
                 decal.Shatter(Vector2.Zero);
         }
     }
@@ -355,6 +355,9 @@ public class InkDisplay : Entity
         MagicInkController controller = level.Tracker.GetEntity<MagicInkController>();
         if (controller == null)
             return;
+        Player player = level.Tracker.GetEntity<Player>();
+        if (player == null)
+            return;
 
         int positionX = 20, positionY = 20;
         int width = (int)(controller.maxInk / 2);
@@ -362,13 +365,8 @@ public class InkDisplay : Entity
 
         if (KoseiHelperModule.Settings.InkBarAbovePlayer)
         {
-            Player player = level.Tracker.GetEntity<Player>();
-
-            if (player != null)
-            {
-                positionX = (int)((level.Camera.CameraToScreen(player.Center) * 6f).X - width / 2f);
-                positionY = (int)((level.Camera.CameraToScreen(player.Center) * 6f).Y - 92f);
-            }
+            positionX = (int)((level.Camera.CameraToScreen(player.Center) * 6f).X - width / 2f);
+            positionY = (int)((level.Camera.CameraToScreen(player.Center) * 6f).Y - 92f);
         }
 
         float percent = controller.currentInk / controller.maxInk;
@@ -400,14 +398,12 @@ public class InkDisplay : Entity
 
         if (controller.debug)
         {
-            Player player = level.Tracker.GetEntity<Player>();
-            if (player != null)
+            if (KoseiHelperModule.Settings.InkBarAbovePlayer)
             {
-                if (KoseiHelperModule.Settings.InkBarAbovePlayer)
-                    Draw.Text(Draw.DefaultFont, controller.currentInk.ToString("0"),
-                        level.Camera.CameraToScreen(player.Center) * 6f - new Vector2(Draw.DefaultFont.MeasureString(controller.currentInk.ToString("0")).X * 0.5f - 96f, 96f), Color.White);
+                Draw.Text(Draw.DefaultFont, controller.currentInk.ToString("0"),
+                    level.Camera.CameraToScreen(player.Center) * 6f - new Vector2(Draw.DefaultFont.MeasureString(controller.currentInk.ToString("0")).X * 0.5f - 96f, 96f), Color.White);
             }
-            if (!KoseiHelperModule.Settings.InkBarAbovePlayer)
+            else
             {
                 //Draw.Text(Draw.DefaultFont, controller.currentInk.ToString("0"), new Vector2(180f, 16f), Color.White);
                 Draw.Text(Draw.DefaultFont, $"current: {controller.currentInk:0}\n" + $"spent: {controller.spentInk:0}", new Vector2(180f, 16f), Color.White);

@@ -13,6 +13,7 @@ public class MapController : Entity
     public string rootPath;
     public bool onlyOnSafeGround;
     public string mapDisabledFlag;
+    public bool upscale;
     public MapController(EntityData data, Vector2 offset) : base(data.Position + offset)
     {
         base.Tag = Tags.Global;
@@ -22,5 +23,6 @@ public class MapController : Entity
         rootPath = data.Attr("rootPath", "");
         onlyOnSafeGround = data.Bool("onlyOnSafeGround", false);
         mapDisabledFlag = data.Attr("mapDisabledFlag", "KoseiHelper_CantOpenMap");
+        upscale = data.Bool("upscale", false);
     }
 }

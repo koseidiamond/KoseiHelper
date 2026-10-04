@@ -21,6 +21,7 @@ public class PaintDecal : Entity
 {
     private readonly List<PaintStroke> lines;
     private float timer, initialTimer;
+    public bool shattering = false;
     private ParticleType PaintParticles = new ParticleType
     {
         Source = GFX.Game["particles/triggerspike"],
@@ -37,6 +38,7 @@ public class PaintDecal : Entity
     {
         lines = new(source);
         timer = initialTimer = ttl;
+        shattering = false;
         if (timer == -1f)
         {
             base.AddTag(Tags.Persistent);
@@ -50,6 +52,7 @@ public class PaintDecal : Entity
     {
         lines = new(source);
         timer = initialTimer = ttl;
+        shattering = false;
         if (timer == -1f)
         {
             base.AddTag(Tags.Persistent);
@@ -81,8 +84,8 @@ public class PaintDecal : Entity
 
     public void Shatter(Vector2 forceDirection)
     {
+        shattering = true;
         Level level = SceneAs<Level>();
-
         forceDirection = forceDirection.SafeNormalize();
         Audio.Play("event:/KoseiHelper/magicShatter", Position);
         foreach (PaintStroke stroke in lines)
@@ -96,6 +99,7 @@ public class PaintDecal : Entity
                 PaintParticles.Color = stroke.Color;
                 PaintParticles.Color2 = Color.Lerp(stroke.Color, Color.White, 0.3f);
                 float angle = forceDirection.Angle() + Calc.Random.Range(-0.8f, 0.8f);
+                if (level != null)
                 level.ParticlesFG.Emit(PaintParticles, 1, pos, Vector2.One * 2f, stroke.Color, angle);
             }
         }
