@@ -313,28 +313,31 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                         }
 
                         // Non-Interaction recoils (interaction ones are handled in the Bullet class)
-                        if (!KoseiHelperModule.Settings.GunSettings.RecoilOnlyOnInteraction && recoilCooldown <= 0 && !KoseiHelperModule.Settings.GunSettings.MachineGunMode && self.InControl)
+                        if (!KoseiHelperModule.Settings.GunSettings.RecoilOnlyOnInteraction && recoilCooldown <= 0
+                            && !KoseiHelperModule.Settings.GunSettings.MachineGunMode && self.InControl)
                         {
+                            float recoil = KoseiHelperModule.Settings.GunSettings.Recoil * (KoseiHelperModule.Settings.GunSettings.OppositeRecoil ? -1f : 1f);
                             if (GetEightDirectionalAim(KoseiHelperModule.Settings.GunSettings.gunDirections).Y < Math.Sqrt(2) / 2 &&
                             GetEightDirectionalAim(KoseiHelperModule.Settings.GunSettings.gunDirections).Y > -Math.Sqrt(2) / 2 &&
                             !KoseiHelperModule.Settings.GunSettings.RecoilUpwards)
                             {
                                 if (self.StateMachine != 1 || (self.StateMachine == 1 && KoseiHelperModule.Settings.GunSettings.RecoilWhileClimbing))
-                                    self.Speed.X += KoseiHelperModule.Settings.GunSettings.Recoil * (float)(0 - self.Facing); // Horizontal recoil, by default 80f, same as vanilla backboosts
+                                    self.Speed.X += recoil * (float)(0 - self.Facing); // Horizontal recoil, by default 80f, same as vanilla backboosts
                             }
                             else if (KoseiHelperModule.Settings.GunSettings.RecoilUpwards)
-                                self.Speed.Y -= KoseiHelperModule.Settings.GunSettings.Recoil;
+                                self.Speed.Y -= recoil;
                             // Recoil for all player clones and such (does not work anyways lol)
                             foreach (Entity entity in self.level.Entities)
                             {
                                 if (entity is Player extraPlayer && extraPlayer != self)
                                 {
                                     if (GetEightDirectionalAim(KoseiHelperModule.Settings.GunSettings.gunDirections).Y < Math.Sqrt(2) / 2 &&
-                            GetEightDirectionalAim(KoseiHelperModule.Settings.GunSettings.gunDirections).Y > -Math.Sqrt(2) / 2 && !KoseiHelperModule.Settings.GunSettings.RecoilUpwards)
+                                    GetEightDirectionalAim(KoseiHelperModule.Settings.GunSettings.gunDirections).Y > -Math.Sqrt(2) / 2 &&
+                                    !KoseiHelperModule.Settings.GunSettings.RecoilUpwards)
                                         // Horizontal recoil, by default 80f, same as vanilla backboosts
-                                        extraPlayer.Speed.X += KoseiHelperModule.Settings.GunSettings.Recoil * (float)(0 - extraPlayer.Facing);
+                                        extraPlayer.Speed.X += recoil * (float)(0 - extraPlayer.Facing);
                                     else if (KoseiHelperModule.Settings.GunSettings.RecoilUpwards)
-                                        extraPlayer.Speed.Y -= KoseiHelperModule.Settings.GunSettings.Recoil;
+                                        extraPlayer.Speed.Y -= recoil;
                                 }
                             }
                             recoilCooldown = KoseiHelperModule.Settings.GunSettings.RecoilCooldown;

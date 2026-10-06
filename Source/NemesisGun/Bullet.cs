@@ -1277,26 +1277,28 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
         private void RecoilOnInteraction(Player player, Entity entity)
         {
             if (dead) return;
+            float recoil = KoseiHelperModule.Settings.GunSettings.Recoil * (KoseiHelperModule.Settings.GunSettings.OppositeRecoil ? -1f : 1f);
+
             if (!KoseiHelperModule.Settings.GunSettings.RecoilUpwards)
             {
                 if (entity.Right < player.Left + 1 || entity.Left > player.Right - 1)
                 {
                     if (entity.Right < player.Left + 1) // entity is on the left of the player
-                        player.Speed.X += KoseiHelperModule.Settings.GunSettings.Recoil; // Player goes left
+                        player.Speed.X += recoil; // Player goes left
                     if (entity.Left > player.Right - 1) // entity is on the right of the player
-                        player.Speed.X -= KoseiHelperModule.Settings.GunSettings.Recoil; // Player goes right
+                        player.Speed.X -= recoil; // Player goes right
                 }
                 else
                 {
                     if (entity.Bottom < player.Top + 1) // entity is above the player
-                        player.Speed.Y += KoseiHelperModule.Settings.GunSettings.Recoil;
+                        player.Speed.Y += recoil;
                     if (entity.Top > player.Bottom - 1) // entity is below the player
-                        player.Speed.Y -= KoseiHelperModule.Settings.GunSettings.Recoil;
+                        player.Speed.Y -= recoil;
                 }
             }
             else
             {
-                player.Speed.Y -= KoseiHelperModule.Settings.GunSettings.Recoil;
+                player.Speed.Y -= recoil;
             }
             dead = true;
         }

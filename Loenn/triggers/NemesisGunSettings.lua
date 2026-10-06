@@ -25,6 +25,7 @@ NemesisGunSettings.placements = {
 		speedMultiplier = 1,
 		recoilStrength = 80,
 		recoilCooldown = 16,
+		recoilOpposite = false,
 		recoilUpwards = false,
 		recoilOnInteraction = false,
 		recoilWhileClimbing = true,
@@ -48,6 +49,7 @@ function NemesisGunSettings.ignoredFields(entity)
 	"_id",
 	"customParticleTexture",
 	"recoilCooldown",
+	"recoilOpposite",
 	"recoilUpwards",
 	"recoilOnInteraction",
 	"recoilWhileClimbing",
@@ -65,6 +67,7 @@ function NemesisGunSettings.ignoredFields(entity)
 		doNotIgnore("customParticleTexture")
 	end
 	if entity.recoilStrength > 0 then
+		doNotIgnore("recoilOpposite")
 		doNotIgnore("recoilCooldown")
 		doNotIgnore("recoilUpwards")
 		doNotIgnore("recoilOnInteraction")
@@ -195,6 +198,7 @@ NemesisGunSettings.fieldOrder =
 	"bulletTexture",
 	"enabled",
 	"loseGunOnRespawn",
+	"recoilOpposite",
 	"recoilUpwards",
 	"recoilOnInteraction",
 	"recoilWhileClimbing",

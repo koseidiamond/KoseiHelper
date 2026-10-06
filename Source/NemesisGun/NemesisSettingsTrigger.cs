@@ -11,7 +11,7 @@ public class NemesisGunSettingsTrigger : Trigger
     private bool enabled = true, bulletExplosion = true, loseGunOnRespawn = true;
     private string gunshotSound, gunTexture, bulletTexture, customParticleTexture;
     private int cooldown, recoilCooldown, lifetime;
-    private bool recoilUpwards, recoilOnInteraction, recoilWhileClimbing;
+    private bool recoilUpwards, recoilOnInteraction, recoilWhileClimbing, recoilOpposite;
     private TriggerMode triggerMode;
     private Color color1, color2;
     private DustType shotDustType;
@@ -47,6 +47,7 @@ public class NemesisGunSettingsTrigger : Trigger
         lifetime = data.Int("lifetime", 600);
         speedMultiplier = data.Float("speedMultiplier", 1f);
         recoil = data.Float("recoilStrength", 80f);
+        recoilOpposite = data.Bool("recoilOpposite", false);
         recoilUpwards = data.Bool("recoilUpwards", false);
         recoilOnInteraction = data.Bool("recoilOnInteraction", false);
         recoilWhileClimbing = data.Bool("recoilWhileClimbing", true);
@@ -96,6 +97,7 @@ public class NemesisGunSettingsTrigger : Trigger
         KoseiHelperModule.Settings.GunSettings.Lifetime = lifetime;
         KoseiHelperModule.Settings.GunSettings.SpeedMultiplier = speedMultiplier;
         KoseiHelperModule.Settings.GunSettings.Recoil = recoil;
+        KoseiHelperModule.Settings.GunSettings.OppositeRecoil = recoilOpposite;
         KoseiHelperModule.Settings.GunSettings.RecoilUpwards = recoilUpwards;
         KoseiHelperModule.Settings.GunSettings.RecoilOnlyOnInteraction = recoilOnInteraction;
         KoseiHelperModule.Settings.GunSettings.RecoilWhileClimbing = recoilWhileClimbing;

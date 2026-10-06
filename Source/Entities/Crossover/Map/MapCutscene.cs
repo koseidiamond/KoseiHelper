@@ -106,7 +106,7 @@ public class MapCutscene(Player player) : CutsceneEntity
         {
             Level level = SceneAs<Level>();
             bool upscale = (bool)(level.Entities.FindFirst<MapController>()?.upscale);
-            target ??= VirtualContent.CreateRenderTarget("oshiro-memo", 1920,1080);
+            target ??= VirtualContent.CreateRenderTarget("oshiro-memo", 1920, 1080);
             Engine.Graphics.GraphicsDevice.SetRenderTarget(target);
             Engine.Graphics.GraphicsDevice.Clear(Color.Transparent);
             Draw.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);

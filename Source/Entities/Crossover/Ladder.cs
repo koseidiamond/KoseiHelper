@@ -333,7 +333,7 @@ public class Ladder : Entity
 
         if (climbingVertical || climbingHorizontal)
         {
-            if (Scene.OnInterval(0.35f)) // Plays sounds while climbing
+            if (player.Scene.OnInterval(0.35f)) // Plays sounds while climbing
             {
 
                 if (sound != "event:/char/madeline/handhold")
@@ -595,6 +595,21 @@ public class Ladder : Entity
 
     private static int StLadderUpdate(Player player)
     {
+        if (player.Get<LadderStateComponent>().CurrentLadder == null || player.Get<LadderStateComponent>().CurrentLadder.Scene != player.Scene)
+        { // If the player transitions while climbing, remove the ladder state (unfortunately this forces you to regrab new ladders in the new scene)
+            player.Get<LadderStateComponent>().CurrentLadder = null;
+            player.Get<LadderStateComponent>().disableUntilLeave = false;
+            player.Get<LadderStateComponent>().regrabTimer = 0f;
+            player.Get<LadderStateComponent>().jumpTimer = 0f;
+            player.DummyGravity = true;
+            player.DummyAutoAnimate = true;
+            player.StateMachine.Locked = false;
+            player.ForceCameraUpdate = false;
+            player.IgnoreJumpThrus = false;
+            player.Sprite.Y = 0;
+            return Player.StNormal;
+        }
+
         float maxDeceleration = 800.0f;
         float decelerationThreshold = 50.0f;
         float zeroThreshold = 1.5f;

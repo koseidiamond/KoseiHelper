@@ -64,6 +64,9 @@ public class KoseiHelperModuleSettings : EverestModuleSettings
         [SettingRange(min: 0, max: 999)]
         public int RecoilCooldown { get; set; } = 16;
 
+        [SettingSubText("Whether the recoil should work in the same direction as the bullet is travelling, pulling you towards it.")]
+        public bool OppositeRecoil { get; set; } = false;
+
         [SettingSubText("Whether the recoil should push you upwards instead of working like an horizontal backboost.")]
         public bool RecoilUpwards { get; set; } = false;
 

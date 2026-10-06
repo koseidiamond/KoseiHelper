@@ -100,7 +100,7 @@ public class PaintDecal : Entity
                 PaintParticles.Color2 = Color.Lerp(stroke.Color, Color.White, 0.3f);
                 float angle = forceDirection.Angle() + Calc.Random.Range(-0.8f, 0.8f);
                 if (level != null)
-                level.ParticlesFG.Emit(PaintParticles, 1, pos, Vector2.One * 2f, stroke.Color, angle);
+                    level.ParticlesFG.Emit(PaintParticles, 1, pos, Vector2.One * 2f, stroke.Color, angle);
             }
         }
 

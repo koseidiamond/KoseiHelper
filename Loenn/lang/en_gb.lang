@@ -1514,6 +1514,7 @@ triggers.KoseiHelper/NemesisGunSettings.attributes.description.lifetime=How long
 triggers.KoseiHelper/NemesisGunSettings.attributes.description.speedMultiplier=The default speed will be multiplier by this factor.
 triggers.KoseiHelper/NemesisGunSettings.attributes.description.recoilStrength=How much shooting should push the player backwards.\nThe default value is the same speed that vanilla backboosts give.\nLeave as 0 for no recoil (other recoil settings will not appear if there is no recoil).
 triggers.KoseiHelper/NemesisGunSettings.attributes.description.recoilCooldown=How much time needs to pass until the player can be pushed backwards again from shooting.\nLow values can allow infinite speedbuilding with the default strength.
+triggers.KoseiHelper/NemesisGunSettings.attributes.description.recoilOpposite=Whether the recoil should work in the same direction as the bullet is travelling, pulling you towards it.
 triggers.KoseiHelper/NemesisGunSettings.attributes.description.recoilUpwards=Whether the recoil should happen upwards instead of horizontally, for rocketlauncher-like weapons.
 triggers.KoseiHelper/NemesisGunSettings.attributes.description.recoilOnInteraction=Whether the recoil should happen only when the bullet interacts with an entity (e.g. during spinner shattering).
 triggers.KoseiHelper/NemesisGunSettings.attributes.description.recoilWhileClimbing=Whether the recoil can happen even while the player is grabbing a wall, forcing them to stop climbing.
