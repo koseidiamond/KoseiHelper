@@ -30,7 +30,7 @@ public class PufferRefill : Entity
     public PufferRefill(Vector2 position, bool oneUse, float respawnTime, bool twoDashes) : base(position)
     {
         base.Collider = new Hitbox(16f, 16f, -8f, -8f);
-        base.Add(new PlayerCollider(new Action<Player>(this.OnPlayer), null, null));
+
         this.oneUse = oneUse;
         this.respawnTime = respawnTime;
         this.twoDashes = twoDashes;

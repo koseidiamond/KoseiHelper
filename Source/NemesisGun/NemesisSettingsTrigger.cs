@@ -26,6 +26,7 @@ public class NemesisGunSettingsTrigger : Trigger
     private bool particleDoesntRotate;
     private bool forceGrabButton;
     private bool machineGunMode;
+    private bool resetCooldown;
 
     public KoseiHelperModuleSettings.NemesisSettings.GunDirections gunDirections;
 
@@ -65,6 +66,7 @@ public class NemesisGunSettingsTrigger : Trigger
         particleDoesntRotate = data.Bool("particleDoesntRotate", false);
         forceGrabButton = data.Bool("forceGrabButton", false);
         machineGunMode = data.Bool("machineGunMode", false);
+        resetCooldown = data.Bool("resetCooldown", false);
     }
 
     public override void OnEnter(Player player)
@@ -127,5 +129,7 @@ public class NemesisGunSettingsTrigger : Trigger
             (Scene as Level).Session.SetFlag("EnableNemesisGun", true);
         else
             (Scene as Level).Session.SetFlag("EnableNemesisGun", false);
+        if (resetCooldown)
+            NemesisGun.shotCooldown = 0;
     }
 }

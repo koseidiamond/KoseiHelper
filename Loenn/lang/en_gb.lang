@@ -1524,6 +1524,7 @@ triggers.KoseiHelper/NemesisGunSettings.attributes.description.horizontalAcceler
 triggers.KoseiHelper/NemesisGunSettings.attributes.description.verticalAcceleration=How much the bullet should accelerate vertically on each frame.\nBoth accelerations combined can result in curved trajectories!\nRecommended values are between -0.2 (upwards) and 0.2 (downwards).
 triggers.KoseiHelper/NemesisGunSettings.attributes.description.machineGunMode=Whether the gun should keep shooting as long as the button is held.
 triggers.KoseiHelper/NemesisGunSettings.attributes.description.forceGrabButton=Whether the gun should be set to use the grab button on this map.\nFor those who don't want to force players to use a custom keybind.
+triggers.KoseiHelper/NemesisGunSettings.attributes.description.resetCooldown=Whether enabling the trigger should reset the shooting cooldown.\nIn other words, the player will be able to shoot again regardless of the cooldown.
 
 triggers.KoseiHelper/NemesisGunInteractions.placements.name.NemesisGunInteractions=Nemesis Gun Interactions
 triggers.KoseiHelper/NemesisGunInteractions.placements.description.NemesisGunInteractions=Configure which entities the Nemesis Gun can affect.

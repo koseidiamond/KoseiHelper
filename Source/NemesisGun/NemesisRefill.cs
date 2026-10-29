@@ -24,6 +24,7 @@ public class NemesisRefill : Entity
     private float respawnTimer;
     private string str;
     public float respawnTime = 2.5f;
+    private string flagName;
     public enum NemesisRefillAction
     {
         RefillDash,
@@ -42,54 +43,21 @@ public class NemesisRefill : Entity
         ExplodeLaunch,
         GreenBoost,
         RedBoost,
-        Die
+        Die,
+        SetFlag
     };
     private NemesisRefillAction refillAction;
 
-    public NemesisRefill(Vector2 position, bool oneUse, float respawnTime, NemesisRefillAction refillAction) : base(position)
+    public NemesisRefill(EntityData data, Vector2 offset) : base(data.Position + offset)
     {
         base.Collider = new Hitbox(16f, 16f, -8f, -8f);
-        this.oneUse = oneUse;
-        this.respawnTime = respawnTime;
-        this.refillAction = refillAction;
-        str = "objects/KoseiHelper/Refills/NemesisRefill/";
-        base.Add(this.outline = new Image(GFX.Game[str + "outline"]));
-        this.outline.CenterOrigin();
-        this.outline.Visible = false;
-        base.Add(this.sprite = new Sprite(GFX.Game, str + "idle"));
-        this.sprite.AddLoop("idle", "", 0.1f);
-        this.sprite.Play("idle", false, false);
-        this.sprite.Visible = false;
-        this.sprite.CenterOrigin();
-        base.Add(this.flash = new Sprite(GFX.Game, str + "flash"));
-        this.flash.Add("flash", "", 0.05f);
-        this.flash.OnFinish = delegate (string anim)
-        {
-            this.flash.Visible = false;
-        };
-        this.flash.CenterOrigin();
-        base.Add(this.wiggler = Wiggler.Create(1f, 4f, delegate (float v)
-        {
-            this.sprite.Scale = (this.flash.Scale = Vector2.One * (1f + v * 0.2f));
-        }, false, false));
-        base.Add(new MirrorReflection());
-        base.Add(this.bloom = new BloomPoint(0.8f, 16f));
-        base.Add(this.light = new VertexLight(Color.White, 1f, 16, 48));
-        base.Add(this.sine = new SineWave(0.6f, 0f));
-        this.sine.Randomize();
-        this.UpdateY();
-        base.Depth = -100;
-    }
-    public NemesisRefill(EntityData data, Vector2 offset) : this(
-        data.Position + offset,
-        data.Bool("oneUse", false),
-        data.Float("respawnTime", 2.5f),
-        data.Enum("refillAction", NemesisRefillAction.ForceDash))
-    {
-        base.Collider = new Hitbox(16f, 16f, -8f, -8f);
+        if (data.Bool("collectableByPlayer"))
+            base.Add(new PlayerCollider(new Action<Player>(this.OnPlayer), null, null));
         this.oneUse = data.Bool("oneUse", false);
         this.respawnTime = data.Float("respawnTime", 2.5f);
+        this.refillAction = data.Enum("refillAction", NemesisRefillAction.ForceDash);
         str = data.Attr("sprite", "objects/KoseiHelper/Refills/NemesisRefill/");
+        flagName = data.Attr("flagName", "NemesisRefillFlag");
         base.Add(this.outline = new Image(GFX.Game[str + "outline"]));
         this.outline.CenterOrigin();
         this.outline.Visible = false;
@@ -99,10 +67,7 @@ public class NemesisRefill : Entity
         this.sprite.CenterOrigin();
         base.Add(this.flash = new Sprite(GFX.Game, str + "flash"));
         this.flash.Add("flash", "", 0.05f);
-        this.flash.OnFinish = delegate (string anim)
-        {
-            this.flash.Visible = false;
-        };
+        this.flash.OnFinish = delegate (string anim) { this.flash.Visible = false; };
         this.flash.CenterOrigin();
         base.Add(this.wiggler = Wiggler.Create(1f, 4f, delegate (float v)
         {
@@ -263,6 +228,9 @@ public class NemesisRefill : Entity
             case NemesisRefillAction.Die:
                 player.Die((player.Center - Center).SafeNormalize());
                 break;
+            case NemesisRefillAction.SetFlag:
+                KoseiHelperUtils.SetFlag(SceneAs<Level>(), flagName);
+                break;
             default:
                 break;
         }
@@ -275,6 +243,20 @@ public class NemesisRefill : Entity
 
         if (!oneUse)
             respawnTimer = respawnTime;
+    }
+
+    private void OnPlayer(Player player) // todo
+    {
+        if (KoseiHelperModule.Session.HasPufferDash == false)
+        {
+            Audio.Play("event:/game/general/diamond_touch", this.Position);
+            Input.Rumble(RumbleStrength.Medium, RumbleLength.Medium);
+            this.Collidable = false;
+            base.Add(new Coroutine(this.RefillRoutine(player), true));
+            player.UseRefill(false);
+            KoseiHelperModule.Session.HasPufferDash = true;
+            this.respawnTimer = respawnTime;
+        }
     }
 
     private IEnumerator RefillRoutine(Player player)

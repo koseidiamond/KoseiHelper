@@ -144,16 +144,29 @@ public static class KoseiHelperUtils
     }
 
     /// <summary>
-    /// Checks if a flag exists and is true and returns true.
+    /// Checks if a flag exists and returns the flag value. Compatible with the "!" prefix.
     /// </summary>
     /// <param name="level">The current level.</param>
-    /// <param name="flag">The flag name. It can be preceeded by a "!" to will check whether the flag is false instead.</param>
+    /// <param name="flag">The flag name. It can be preceeded by a "!" to check whether the flag is false instead.</param>
     /// <returns></returns>
     public static bool CheckFlag(Level level, string flag)
     {
         string flagName;
         flagName = flag.StartsWith("!") ? flag.Substring(1) : flagName = flag;
         return string.IsNullOrEmpty(flag) || flag.StartsWith("!") ? !level.Session.GetFlag(flagName) : level.Session.GetFlag(flagName);
+    }
+
+    /// <summary>
+    /// Sets a flag to true, or to false if it starts with "!".
+    /// </summary>
+    /// <param name="level">The current level.</param>
+    /// <param name="flag">The flag name. It can be preceeded by a "!" to check whether the flag should be set to false instead.</param>
+    /// <returns></returns>
+    public static void SetFlag(Level level, string flag)
+    {
+        string flagName;
+        flagName = flag.StartsWith("!") ? flag.Substring(1) : flagName = flag;
+        level.Session.SetFlag(flagName, flag.StartsWith("!") ? false : true);
     }
 
     /// <summary>

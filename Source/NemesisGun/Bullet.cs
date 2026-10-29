@@ -1189,6 +1189,19 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                     return;
                 }
 
+                if (solid is NemesisZipMover nemesisZipMover && !dead)
+                {
+                    if (owner is Player p_nemesisZipMover)
+                    {
+                        if (nemesisZipMover.State == NemesisZipMover.StreetlightState.BeforeRed)
+                            nemesisZipMover.Add(new Coroutine(nemesisZipMover.Sequence()));
+                        if (KoseiHelperModule.Settings.GunSettings.RecoilOnlyOnInteraction && SceneAs<Level>().Session.GetFlag("KoseiHelper_playerIsShooting") && owner is Player pRecoil)
+                            RecoilOnInteraction(pRecoil, p_nemesisZipMover);
+                        DestroyBullet();
+                    }
+                    return;
+                }
+
                 if (solid is CrushBlock cBlock && KoseiHelperModule.Settings.GunInteractions.DashOnKevins)
                 {
                     float leftDist = Math.Abs(Left - cBlock.Right);

@@ -34,7 +34,8 @@ NemesisGunSettings.placements = {
 		horizontalAcceleration = 0,
 		verticalAcceleration = 0,
 		forceGrabButton = false,
-		machineGunMode = false
+		machineGunMode = false,
+		resetCooldown = false
 		--bulletHeight = 6,
         --bulletWidth = 6,
 		--bulletXOffset = 0,
@@ -205,7 +206,8 @@ NemesisGunSettings.fieldOrder =
 	"canShootInFeather",
 	"bulletExplosion",
 	"machineGunMode",
-	"forceGrabButton"
+	"forceGrabButton",
+	"resetCooldown"
 }
 
 return NemesisGunSettings
