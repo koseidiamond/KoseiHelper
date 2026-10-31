@@ -1193,7 +1193,7 @@ namespace Celeste.Mod.KoseiHelper.NemesisGun
                 {
                     if (owner is Player p_nemesisZipMover)
                     {
-                        if (nemesisZipMover.State == NemesisZipMover.StreetlightState.BeforeRed)
+                        if (nemesisZipMover.triggerable)
                             nemesisZipMover.Add(new Coroutine(nemesisZipMover.Sequence()));
                         if (KoseiHelperModule.Settings.GunSettings.RecoilOnlyOnInteraction && SceneAs<Level>().Session.GetFlag("KoseiHelper_playerIsShooting") && owner is Player pRecoil)
                             RecoilOnInteraction(pRecoil, p_nemesisZipMover);

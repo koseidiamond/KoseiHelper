@@ -42,7 +42,43 @@ NemesisZipMover.fieldInformation = {
     theme = {
         options = themes,
         editable = false
-    }
+    },
+	sfxPath = {
+		options = {
+			"event:/game/01_forsaken_city/zip_mover",
+			"event:/new_content/game/10_farewell/zip_mover"
+		},
+		editable = true
+	},
+	blockPath = {
+		options = {
+			"objects/zipmover/block",
+			"objects/zipmover/block2",
+			"objects/zipmover/moon/block"
+		},
+		editable = true
+	},
+	cogPath = {
+		options = {
+			"objects/zipmover/cog",
+			"objects/zipmover/moon/cog"
+		},
+		editable = true
+	},
+	innerCogPath = {
+		options = {
+			"objects/zipmover/innercog",
+			"objects/zipmover/moon/innercog"
+		},
+		editable = true
+	},
+	lightPath = {
+		options = {
+			"objects/zipmover/light01",
+			"objects/zipmover/moon/light01"
+		},
+		editable = true
+	}
 }
 NemesisZipMover.placements = {
 	{
@@ -50,7 +86,12 @@ NemesisZipMover.placements = {
 		data = {
 			width = 16,
             height = 16,
-            theme = "Normal"
+            theme = "Normal", -- obsolete
+			sfxPath = "event:/game/01_forsaken_city/zip_mover",
+			blockPath = "objects/zipmover/block",
+			cogPath = "objects/zipmover/cog",
+			innerCogPath = "objects/zipmover/innercog",
+			lightPath = "objects/zipmover/light01"
 		}
 	}
 }
