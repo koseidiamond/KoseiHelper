@@ -27,6 +27,9 @@ public class NemesisZipMover : Solid
     public SoundSource sfx = new SoundSource();
     public bool triggerable = true;
     public string sfxPath, blockPath, cogPath, innerCogPath, lightPath;
+    public float normalSpeedMultiplier, retractionSpeedMultiplier;
+    public float timeBeforeRetraction, timeAfterRetraction, timeBeforeMoving;
+    public bool triggeredByPlayer;
 
     public NemesisZipMover(EntityData data, Vector2 offset) : base(data.Position + offset, data.Width, data.Height, false)
     {
@@ -34,11 +37,22 @@ public class NemesisZipMover : Solid
         target = data.Nodes[0] + offset;
         start = Position;
         Add(new LightOcclude());
+        sfxPath = data.Attr("sfxPath", "event:/game/01_forsaken_city/zip_mover");
         lightPath = data.Attr("lightPath", "objects/zipmover/light");
         blockPath = data.Attr("blockPath", "objects/zipmover/block");
         innerCogPath = data.Attr("innerCogPath", "objects/zipmover/innercog");
         cogPath = data.Attr("cogPath", "objects/zipmover/cog");
-        drawBlackBorder = data.Bool("drawBlackBorder", false);
+        drawBlackBorder = data.Bool("drawBlackBorder", true);
+        normalSpeedMultiplier = data.Float("normalSpeedMultiplier", 1f);
+        retractionSpeedMultiplier = data.Float("retractionSpeedMultiplier", 1f);
+
+        timeBeforeRetraction = data.Float("timeBeforeRetraction", 0.5f);
+        timeAfterRetraction = data.Float("timeAfterRetraction", 0.5f);
+        timeBeforeMoving = data.Float("timeBeforeMoving", 0.1f);
+
+        ropeColor = KoseiHelperUtils.ParseHexColor(data.Values.TryGetValue("ropeColor", out object c1) ? c1.ToString() : null, Calc.HexToColor("663931"));
+        ropeLightColor = KoseiHelperUtils.ParseHexColor(data.Values.TryGetValue("ropeLightColor", out object c2) ? c2.ToString() : null, Calc.HexToColor("9b6157"));
+        triggeredByPlayer = data.Bool("triggeredByPlayer", false);
 
         innerCogs = GFX.Game.GetAtlasSubtextures(innerCogPath);
         Add(streetlight = new Sprite(GFX.Game, lightPath));
@@ -47,7 +61,7 @@ public class NemesisZipMover : Solid
         streetlight.Active = false;
         streetlight.SetAnimationFrame(1);
         streetlight.Position = new Vector2(base.Width / 2f - streetlight.Width / 2f, 0f);
-        Add(bloom = new BloomPoint(1f, 6f));
+        Add(bloom = new BloomPoint(data.Float("bloomAlpha", 1f), data.Float("bloomRadius", 6f)));
         bloom.Position = new Vector2(base.Width / 2f, 4f);
         for (int i = 0; i < 3; i++)
         {
@@ -78,6 +92,11 @@ public class NemesisZipMover : Solid
     {
         base.Update();
         bloom.Y = streetlight.CurrentAnimationFrame * 3;
+        if (triggeredByPlayer)
+        {
+            if (triggerable && HasPlayerRider())
+                Add(new Coroutine(Sequence()));
+        }
     }
 
     public void ScrapeParticlesCheck(Vector2 to)
@@ -142,17 +161,19 @@ public class NemesisZipMover : Solid
     {
         triggerable = false;
         Vector2 start = Position;
-        sfx.Play(sfxPath);
+        sfx.Play(sfxPath); // made small corrections to try to improve the sound if different speeds/timings are set
         Input.Rumble(RumbleStrength.Medium, RumbleLength.Short);
         StartShaking(0.1f);
-        yield return 0.1f;
+        yield return timeBeforeMoving;
+        if (sfx?.instance != null && sfx.instance.getTimelinePosition(out int sfxImpact) == FMOD.RESULT.OK && sfxImpact > 490)
+            sfx.instance.setTimelinePosition(600); // jumps to the "impact" label (ensuring at least most of the "touch" label has been played first)
         streetlight.SetAnimationFrame(3); // green
         StopPlayerRunIntoAnimation = false;
         float at2 = 0f;
         while (at2 < 1f)
         {
             yield return null;
-            at2 = Calc.Approach(at2, 1f, 2f * Engine.DeltaTime);
+            at2 = Calc.Approach(at2, 1f, 2f * Engine.DeltaTime * normalSpeedMultiplier);
             percent = Ease.SineIn(at2);
             Vector2 vector = Vector2.Lerp(start, target, percent);
             ScrapeParticlesCheck(vector);
@@ -164,14 +185,16 @@ public class NemesisZipMover : Solid
         Input.Rumble(RumbleStrength.Strong, RumbleLength.Medium);
         SceneAs<Level>().Shake();
         StopPlayerRunIntoAnimation = true;
-        yield return 0.5f;
+        yield return timeBeforeRetraction;
+        if (sfx?.instance != null && sfx.instance.getTimelinePosition(out int sfxReturn) == FMOD.RESULT.OK && sfxReturn > 950)
+        sfx?.instance?.setTimelinePosition(1100); // jumps to the "return" label
         StopPlayerRunIntoAnimation = false;
         streetlight.SetAnimationFrame(2); // yellow
         at2 = 0f;
         while (at2 < 1f)
         {
             yield return null;
-            at2 = Calc.Approach(at2, 1f, 0.5f * Engine.DeltaTime);
+            at2 = Calc.Approach(at2, 1f, 0.5f * Engine.DeltaTime * retractionSpeedMultiplier);
             percent = 1f - Ease.SineIn(at2);
             Vector2 position = Vector2.Lerp(target, start, Ease.SineIn(at2));
             MoveTo(position);
@@ -180,7 +203,10 @@ public class NemesisZipMover : Solid
         StopPlayerRunIntoAnimation = true;
         StartShaking(0.2f);
         streetlight.SetAnimationFrame(1); // red
-        yield return 0.5f;
+        yield return timeAfterRetraction;
+        // jumps to the resetting label, but for some reason, vanilla events have different timings: "reset" and "but actually" labels
+        if (sfx?.instance != null && sfx.instance.getTimelinePosition(out int sfxReset) == FMOD.RESULT.OK && sfxReset > 1500)
+            sfx?.instance?.setTimelinePosition(sfxPath == "event:/new_content/game/10_farewell/zip_mover" ? 3116 : 3000);
         Remove(Get<Coroutine>());
         triggerable = true;
         yield return null;

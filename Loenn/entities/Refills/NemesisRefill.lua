@@ -35,7 +35,8 @@ NemesisRefill.fieldInformation = {
 			"ExplodeLaunch",
 			"GreenBoost",
 			"RedBoost",
-			"Die"
+			"Die",
+			"SetFlag"
 		},
 		editable = false
 	},
