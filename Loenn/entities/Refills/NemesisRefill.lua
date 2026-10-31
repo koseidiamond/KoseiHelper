@@ -10,12 +10,32 @@ NemesisRefill.placements = {
 			oneUse = false,
 			sprite = "objects/KoseiHelper/Refills/NemesisRefill/",
 			respawnTime = 2.5,
-			refillAction = "ForceDash"
+			refillAction = "ForceDash",
+			collectableByPlayer = false,
+			flagName = "NemesisRefillFlag"
 		}
 	}
 }
 
-
+function NemesisRefill.ignoredFields(entity)
+	local ignored = {
+	"_name",
+    "_id",
+	"flagName"
+	}
+    local function doNotIgnore(value)
+        for i = #ignored, 1, -1 do
+            if ignored[i] == value then
+                table.remove(ignored, i)
+                return
+            end
+        end
+    end
+	if entity.refillAction == "SetFlag" then
+		doNotIgnore("flagName")
+	end
+	return ignored
+end
 
 NemesisRefill.fieldInformation = {
 	refillAction = {

@@ -52,7 +52,7 @@ public class NemesisRefill : Entity
     {
         base.Collider = new Hitbox(16f, 16f, -8f, -8f);
         if (data.Bool("collectableByPlayer"))
-            base.Add(new PlayerCollider(new Action<Player>(this.OnPlayer), null, null));
+            Add(new PlayerCollider(OnPlayer));
         this.oneUse = data.Bool("oneUse", false);
         this.respawnTime = data.Float("respawnTime", 2.5f);
         this.refillAction = data.Enum("refillAction", NemesisRefillAction.ForceDash);
@@ -81,6 +81,7 @@ public class NemesisRefill : Entity
         this.UpdateY();
         base.Depth = -100;
     }
+
     public override void Added(Scene scene)
     {
         P_Shatter = new ParticleType(Refill.P_ShatterTwo)
@@ -107,11 +108,8 @@ public class NemesisRefill : Entity
         if (Collidable && respawnTimer <= 0f)
         {
             Bullet bullet = CollideFirst<Bullet>();
-
             if (bullet != null)
-            {
                 OnBullet(bullet);
-            }
         }
         bool flag = this.respawnTimer > 0f;
         if (flag)
@@ -166,13 +164,22 @@ public class NemesisRefill : Entity
 
     private void OnBullet(Bullet bullet)
     {
-        Player player = Scene.Tracker.GetEntity<Player>();
-
+        Player player = SceneAs<Level>().Tracker.GetEntity<Player>();
         if (player == null)
             return;
         bullet.DestroyBullet();
+
+        DoTheAction(player);
+    }
+
+    private void OnPlayer(Player player)
+    {
+        DoTheAction(player);
+    }
+
+    private void DoTheAction(Player player)
+    {
         int playerDir = Math.Sign(player.Position.X - Position.X); // relative to the refill, for certain actions
-        // force dash
         switch (refillAction)
         {
             case NemesisRefillAction.ForceDash:
@@ -235,36 +242,20 @@ public class NemesisRefill : Entity
                 break;
         }
 
-        Audio.Play("event:/game/general/diamond_touch", Position);
+        Audio.Play("event:/game/general/diamond_touch", this.Position);
         Input.Rumble(RumbleStrength.Medium, RumbleLength.Medium);
-
         Collidable = false;
-        Add(new Coroutine(RefillRoutine(player), true));
-
+        Add(new Coroutine(TheRoutine(player), true));
         if (!oneUse)
             respawnTimer = respawnTime;
     }
 
-    private void OnPlayer(Player player) // todo
-    {
-        if (KoseiHelperModule.Session.HasPufferDash == false)
-        {
-            Audio.Play("event:/game/general/diamond_touch", this.Position);
-            Input.Rumble(RumbleStrength.Medium, RumbleLength.Medium);
-            this.Collidable = false;
-            base.Add(new Coroutine(this.RefillRoutine(player), true));
-            player.UseRefill(false);
-            KoseiHelperModule.Session.HasPufferDash = true;
-            this.respawnTimer = respawnTime;
-        }
-    }
-
-    private IEnumerator RefillRoutine(Player player)
+    private IEnumerator TheRoutine(Player player)
     {
         Celeste.Freeze(0.05f);
         yield return null;
         SceneAs<Level>().Shake(0.3f);
-        this.sprite.Visible = (this.flash.Visible = false);
+        this.sprite.Visible = this.flash.Visible = false;
         bool flag = !this.oneUse;
         if (flag)
             this.outline.Visible = true;

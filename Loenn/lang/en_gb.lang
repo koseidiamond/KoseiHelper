@@ -1241,7 +1241,9 @@ entities.KoseiHelper/NemesisRefill.placements.description.NemesisRefill=When sho
 entities.KoseiHelper/NemesisRefill.attributes.description.oneUse=If the refill should disappear upon use or respawn after a while.
 entities.KoseiHelper/NemesisRefill.attributes.description.sprite=The path to your custom sprite.\nIt needs flash and idle animations, an an outline image.
 entities.KoseiHelper/NemesisRefill.attributes.description.respawnTime=The time that the refill takes to reappear after being consumed.
-entities.KoseiHelper/NemesisRefill.attributes.description.refillAction=The action that the refill should force on the player upon collision with a bullet.\nFeel free to try them out!\n(SetFlag can unset a flag if it has the preffix "!", e.g.: "!flag")
+entities.KoseiHelper/NemesisRefill.attributes.description.refillAction=The action that the refill should force on the player upon collision with a bullet.\nFeel free to try them out!
+entities.KoseiHelper/NemesisRefill.attributes.description.collectableByPlayer=Whether the refill should also be collectable by the player and not just bullets.
+entities.KoseiHelper/NemesisRefill.attributes.description.flagName=\nThe name of the flag that you want to set.\nYou can also can unset a flag if it has the preffix "!", e.g.: "!flag".
 
 entities.KoseiHelper/NemesisZipMover.placements.name.NemesisZipMover=Nemesis Zip Mover
 entities.KoseiHelper/NemesisZipMover.placements.description.NemesisRefill=Customizable Zip Movers that can be triggered by a bullet (Nemesis Gun).

@@ -187,7 +187,7 @@ public class NemesisZipMover : Solid
         StopPlayerRunIntoAnimation = true;
         yield return timeBeforeRetraction;
         if (sfx?.instance != null && sfx.instance.getTimelinePosition(out int sfxReturn) == FMOD.RESULT.OK && sfxReturn > 950)
-        sfx?.instance?.setTimelinePosition(1100); // jumps to the "return" label
+            sfx?.instance?.setTimelinePosition(1100); // jumps to the "return" label
         StopPlayerRunIntoAnimation = false;
         streetlight.SetAnimationFrame(2); // yellow
         at2 = 0f;
